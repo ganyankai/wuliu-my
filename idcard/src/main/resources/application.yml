@@ -1,0 +1,94 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 7171
+
+spring:
+  profiles:
+    active: dev
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 100Mb
+  jpa:
+    database: MYSQL
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: none
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        hbm2ddl:
+            auto: none
+        temp:
+            use_jdbc_metadata_defaults: false
+  datasource:
+    continue-on-error: true
+    hikari:
+      connection-test-query: SELECT DISTINCT 1 FROM employee
+      maximum-pool-size: 50
+      connection-timeout: 3000
+      validation-timeout: 3000
+  output:
+    ansi:
+      enabled: detect
+  aop:
+    auto: true
+    proxy-target-class: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: utf-8
+
+pool:
+    maxActive: 50
+    maxIdle: 10
+    minIdle: 5
+    maxWait: 3000
+    testOnBorrow: true
+    testOnReturn: true
+    softMinEvictableIdleTimeMillis: -1
+    lifo: false
+
+logging:
+  level:
+    com.zrytech.framework.*.mapper: trace
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+wechat:
+  pay:
+    appId: wx4ba088dd9c63f22d
+    mchId: 1507226251
+    mchKey: 96926f935117426c85c5861918b68bd9
+    subAppId:
+    subMchId:
+    keyPath: classpath:/apiclient_cert.p12
+    notifyDomain: http://203.195.191.128:8380
+    planId: 121324
+  mp:
+    appId: wx4ba088dd9c63f22d
+    secret: 5c1eae68251734a0a68f69a77c9261af
+    token:
+    aesKey:
+    notifyDomain: http://ydxfp9.natappfree.cc
+tx:
+  sms:
+    appId: 1400093221
+    appKey: a9d06a13b8efd49b7b6961f35539d5ee
+    template1: 122254
+    sign: 144459
+    nationCode: 86
+
+im:
+  alibc:
+    aliUrl: http://gw.api.taobao.com/router/rest
+    aliAppKey: 25028535
+    aliSecret: fa21535ec834fbc56e35a53c4e4a5f8d
+file:
+  tmp:
+    dir: /home/zry/tmp
+#    dir: D:\tmp
