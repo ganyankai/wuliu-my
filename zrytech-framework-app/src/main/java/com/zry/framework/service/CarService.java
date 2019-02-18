@@ -5,11 +5,12 @@ import org.springframework.stereotype.Service;
 
 import com.zry.framework.dto.CarPageDto;
 import com.zry.framework.entity.Car;
+import com.zrytech.framework.base.entity.ServerResponse;
 
 @Service
 public interface CarService {
 
-	public Page<Car> page(CarPageDto carPageDto, Integer pageNum, Integer pageSize);
+	public ServerResponse page(CarPageDto carPageDto, Integer pageNum, Integer pageSize);
 	
 	public Integer save(Car car);
 	

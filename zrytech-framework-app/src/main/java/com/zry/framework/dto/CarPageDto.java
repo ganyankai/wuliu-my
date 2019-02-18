@@ -1,5 +1,7 @@
 package com.zry.framework.dto;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,7 @@ public class CarPageDto {
 	
 	private Integer id;
 	
+	@NotEmpty(message = "牌照不能为空")
 	private String carNo;
 	
 	
