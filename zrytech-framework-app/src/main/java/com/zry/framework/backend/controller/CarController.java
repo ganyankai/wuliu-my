@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zry.framework.dto.CarPageDto;
+import com.zry.framework.dto.CheckDto;
+import com.zry.framework.dto.DetailsDto;
 import com.zry.framework.service.CarService;
 import com.zrytech.framework.base.annotation.CurrentUser;
 import com.zrytech.framework.base.entity.RequestParams;
@@ -29,5 +31,22 @@ public class CarController {
 		return carService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
 				requestParams.getPage().getPageSize());
 	}
+	
+	
+	@Valid
+	@RequestMapping("/details")
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
+			@CurrentUser User user) {
+		return carService.details(requestParams.getParams().getId());
+	}
 
+	
+	@Valid
+	@RequestMapping("/check")
+	public ServerResponse check(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result,
+			@CurrentUser User user) {
+		return carService.check(requestParams.getParams());
+	}
+	
+	
 }

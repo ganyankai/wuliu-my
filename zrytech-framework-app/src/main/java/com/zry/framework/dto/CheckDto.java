@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 public class CheckDto {
 	
-	private Integer id; 
+	private Integer businessId; 
 	
 	private String content; 
 	
-	private String result;
+	private Boolean result;
 	
 }
