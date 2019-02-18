@@ -38,8 +38,8 @@ public class CarPersonServiceImpl implements CarPersonService {
 		CarPerson carPerson = new CarPerson();
 		BeanUtils.copyProperties(dto, carPerson);
 		
-		Sort sort = Sort.by(Direction.DESC, "createDate");
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+		Sort sort = new Sort(Direction.DESC, "createDate");
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
 		
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("name", GenericPropertyMatchers.contains());
@@ -52,7 +52,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	
 	
 	public CarPerson details(Integer id) {
-		CarPerson carPerson = carPersonRepository.findById(id).get();
+		CarPerson carPerson = carPersonRepository.findOne(id);
 		
 		return carPerson;
 	}

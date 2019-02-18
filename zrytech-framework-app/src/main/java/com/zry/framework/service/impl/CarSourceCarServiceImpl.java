@@ -33,8 +33,8 @@ public class CarSourceCarServiceImpl implements CarSourceCarService {
 		CarSourceCar carSourceCar = new CarSourceCar();
 		BeanUtils.copyProperties(dto, carSourceCar);
 		
-		Sort sort = Sort.by(Direction.DESC, "createDate");
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+		Sort sort = new Sort(Direction.DESC, "createDate");
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
 		
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("carType", GenericPropertyMatchers.contains());

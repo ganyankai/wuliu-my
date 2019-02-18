@@ -40,8 +40,7 @@ public class CarServiceImpl implements CarService {
 	 * @return
 	 */
 	public Car details(Integer id) {
-		Car car = carRepository.findById(id).get();
-		
+		Car car = carRepository.findOne(id);
 		// TODO 车主
 		// TODO 司机
 		// TODO 压货人
@@ -60,9 +59,9 @@ public class CarServiceImpl implements CarService {
 		Car car = new Car();
 		car.setCarNo(carPageDto.getCarNo());
 		// 排序
-		Sort sort = Sort.by(Direction.DESC, "id");
+		Sort sort = new Sort(Direction.DESC, "id");
 		// 分页（JPA分页中pageNumber从0开始）
-		Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
+		Pageable pageable = new PageRequest(pageNum - 1, pageSize, sort);
 	
 		// 模糊搜索，忽略字段等
 		ExampleMatcher matcher = ExampleMatcher.matching()

@@ -37,7 +37,7 @@ public class CarRecordPlaceServiceImpl implements CarRecordPlaceService {
 		CarRecordPlace carRecordPlace = new CarRecordPlace();
 		BeanUtils.copyProperties(dto, carRecordPlace);
 
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize);
 
 		Example<CarRecordPlace> example = Example.of(carRecordPlace);
 
@@ -53,7 +53,7 @@ public class CarRecordPlaceServiceImpl implements CarRecordPlaceService {
 	 */
 	@Override
 	public CarRecordPlace details(Integer id) {
-		return carRecordPlaceRepository.findById(id).get();
+		return carRecordPlaceRepository.findOne(id);
 	}
 
 	/**
