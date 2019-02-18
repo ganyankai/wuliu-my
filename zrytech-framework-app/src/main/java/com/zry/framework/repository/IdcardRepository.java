@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
  * @author: lw
  * @create: 2018-09-18 10:45
  **/
+@Deprecated
 @Repository
 public interface IdcardRepository extends JpaRepository<Idcard,Long> {
 }

@@ -10,6 +10,7 @@ import com.zrytech.framework.base.entity.ServerResponse;
 /**
  * 企业收数清单表
  */
+@Deprecated
 @RestController
 @RequestMapping("/idcard")
 public class IdcardParserController {

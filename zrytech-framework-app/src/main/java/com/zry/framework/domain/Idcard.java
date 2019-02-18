@@ -12,6 +12,7 @@ import javax.persistence.*;
  * @author: lw
  * @create: 2018-09-18 10:46
  **/
+@Deprecated
 @Data
 @Entity
 @Table(name = "idcard_check")
