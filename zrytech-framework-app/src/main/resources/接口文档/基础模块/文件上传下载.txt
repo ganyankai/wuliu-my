@@ -1,0 +1,35 @@
+1,文件上传接口
+url： /upload
+请求参数：file //文件对象
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "fileOriginName": "1111.jpg",
+        "fileSuffixes": ".jpg",
+        "filePath": "/img",
+        "fileFullyQualifiedPath": "/img/1111.jpg",
+        "fileSize": 69241,
+        "fileRewriteName": "1111_1525330510752.jpg",
+        "fileRewriteFullyQualifiedPath": "/img/1111_1525330510752.jpg",
+        "fileId": 3,
+        "createTime": null,
+        "updateTime": null
+    }
+}
+
+2,图片原图查看接口
+url：  /view/{fileId}
+请求参数： fileId  //文件id
+响应： 图片输出流
+
+3,图片缩略图缩略图查看接口
+url：  /view/thumb/{fileId}
+请求参数： fileId  //文件id
+响应： 图片输出流
+
+4,下载接口
+url: /download/{fileId}
+请求参数：fileId  //文件id
+响应：下载输出流

@@ -1,0 +1,28 @@
+1 搭建ftp服务器
+  sudo apt-get install vsftpd （如果版本不够用，需要先 sudo apt-get update）
+
+  sudo service vsftpd start（启动）
+  service vsftpd status（查看ftp运行状态）
+
+
+2配置ftp环境
+
+ 2-1添加用户
+   useradd -d /opt/reconciliation -s /sbin/nologin -g ftpGroup -G root ftpUser
+        解析：
+              useradd 添加用户ftpUser
+              -d 指定用户根目录为/opt/reconciliation
+              -s 指定shell脚本为/sbin/nologin，表示不允许shell登录
+              -g 创建分组ftpGroup
+              -G 指定root分组
+        PS：创建有问题可以删除重新创建 userdel -r ftpUser
+
+2-2 文件配置   vi /etc/vsftpd.conf
+  serlist_deny=NO
+  userlist_enable=YES
+  userlist_file=/etc/allowed_users
+  seccomp_sandbox=NO
+  local_root=/home/zhan/
+
+注意  要在 /etc/allowed_users 文件下添加将用户名放进去（每个用户一行）
+        /home/zhan/ 是文件上传的路径（如果不行将文件夹的权限改成 777 ）

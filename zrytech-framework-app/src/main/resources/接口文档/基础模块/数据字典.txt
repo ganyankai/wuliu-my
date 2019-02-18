@@ -1,0 +1,403 @@
+1.数据分类列表
+url：/dictcategory/Page
+请求参数：
+{
+	"params": {
+	      "dictCategoryName":  （选填）  分类名称，需要根据分类名称模糊查询
+	      "dictCategoryCode":   (选填）  分类编码，需要根据分类编码模糊查询
+	      "dictCategoryDesc":   (选填）  分类描述，需要根据分类描述模糊查询
+	      "parentId": 0   搜索里面默认是0
+	},
+	"token": "token_1533274016279",
+	"page": {
+		"pageNum": 1,
+		"pageSize": 10
+	}
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "total": 2,
+        "list": [
+            {
+                "id": 2,
+                "parentId": null,
+                "dictCategoryCode": null,
+                "dictCategoryName": "sex",
+                "dictCategoryDesc": "性别",
+                "needMaintain": null,
+                "hasMulti": null,
+                "createTime": 2018-08-03 20:26:11,
+                "updateTime": 2018-08-03 20:26:11
+            },
+            {
+                "id": 1,
+                "parentId": null,
+                "dictCategoryCode": null,
+                "dictCategoryName": "status",
+                "dictCategoryDesc": "状态",
+                "needMaintain": true,
+                "hasMulti": true,
+                "createTime": 2018-08-03 20:26:11,
+                "updateTime": 2018-08-03 20:26:11
+            }
+        ]
+    }
+}
+
+
+2.字典分类添加和修改
+url：/dictcategory/save
+请求参数：
+{
+	"params": {
+		"id": "1",     修改需要id，添加不需要id；
+		"dictCategoryCode": "123",
+		"dictCategoryName": "sex1",
+		"dictCategoryDesc": "性别1",
+		"needMaintain": 1,
+		"hasMulti": 1
+	},
+	"token": "token_1533274016279",
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": null
+}
+
+3.字典分类根据ID
+url：/dictcategory/get
+请求参数
+{
+	"params": {
+		"id": "1"
+	},
+	"token": "token_1533274016279",
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "id": 1,
+        "parentId": null,
+        "dictCategoryCode": "123",
+        "dictCategoryName": "sex1",
+        "dictCategoryDesc": "性别1",
+        "needMaintain": true,
+        "hasMulti": true,
+        "createTime": 2018-08-03 20:26:11,
+        "updateTime": 2018-08-03 20:26:11
+    }
+}
+
+
+4.分类Id删除
+url：/dictcategory/delete
+请求参数
+{
+	"params": {
+		"id": "1"
+	},
+	"token": "token_1533274016279",
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": null
+}
+
+
+
+
+《=========================================================================================》
+
+
+
+
+1,数据字典分页查询  ：根据seqNo排序
+url： /dict/page
+请求参数：
+{
+	"params":{
+        "dictCategoryId":1
+	},
+	"page":{
+		"pageNum":0,
+        "pageSize":10
+        },
+    "openid": "string",
+    "token": "string"
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "total": 4,
+        "list": [
+            {
+                "id": 4,
+                "dictCategoryId": 1,
+                "dictKey": null,
+                "seqNo": null,
+                "createTime": 2018-08-03 20:26:11,
+                "updateTime": 2018-08-03 20:26:11,
+                "dictValue": null
+            },
+            {
+                "id": 3,
+                "dictCategoryId": 1,
+                "dictKey": "3",
+                "seqNo": 3,
+                "createTime": 2018-08-03 20:26:11,
+                "updateTime": 2018-08-03 20:26:11,
+                "dictValue": "审核通过"
+            },
+            {
+                "id": 2,
+                "dictCategoryId": 1,
+                "dictKey": "2",
+                "seqNo": 2,
+                "createTime": 2018-08-03 20:26:11,
+                "updateTime": 2018-08-03 20:26:11,
+                "dictValue": "拒绝"
+            },
+            {
+                "id": 1,
+                "dictCategoryId": 1,
+                "dictKey": "1",
+                "seqNo": 1,
+                "createTime": 2018-08-03 20:26:11,
+                "updateTime": 2018-08-03 20:26:11,
+                "dictValue": "审核中"
+            }
+        ]
+    }
+}
+
+2,新增数据字典，
+url：/dict/save
+请求参数：
+{
+	"params":{
+              "dictCategoryId":3,
+              "dictKey":3,
+              "dictValue":"打鱼",
+              "seqNo":"1"
+             },
+    "openid": "string",
+    "token": "string"
+}
+
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": null
+}
+
+
+
+4,修改数据字典，
+url：/dict/update
+请求参数：
+{
+	"params":{
+               "dictValue":"已发货"
+               "id":4
+              },
+    "openid": "string",
+    "token": "string"
+}
+
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": null
+}
+
+5,数据字典删除
+url：/dict/delete
+请求参数：
+{
+	"params":{
+	        "id":4
+	},
+    "openid": "string",
+    "token": "string"
+}
+响应
+{
+    "code": 1,
+    "msg": "success",
+    "data": null
+}
+
+6,数据字典ID查询
+url：/dict/get
+请求参数：
+{
+	"params":{
+	        "id":4
+	},
+    "openid": "string",
+    "token": "string"
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "id": 9,
+        "dictCategoryId": 3,
+        "dictKey": "59",
+        "seqNo": 1,
+        "createTime": 2018-08-03 20:26:11,
+        "updateTime": 2018-08-03 20:26:11,
+        "dictValue": "打鱼"
+    }
+}
+
+
+7.根据数字分类编码找到所有的key————key
+url：/dict/getListValue
+请求参数：
+{
+
+    "params":{"categorys":["deviceType"]},
+
+    	"token": "token_1533777697420"
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "deviceType": {
+            "pc": "PC端",
+            "wechatdo": "微信公众号",
+            "ios": "苹果端",
+            "andro": "Android端"
+        }
+
+    }
+}
+
+
+7.根据数字分类编码找到所有的key————key
+url：/dictcategory/getByParentId
+请求参数：
+{
+
+    "params":{"parentId":23},
+
+    	"token": "token_1533777697420"
+}
+响应：
+{
+    "code": 1,
+    "msg": "success",
+    "data": [
+        {
+            "id": 22,
+            "parentId": 23,
+            "dictCategoryCode": "mark_push_num",
+            "dictCategoryName": "mark_push_num",
+            "dictCategoryDesc": "客户推送贸易商个数",
+            "needMaintain": false,
+            "hasMulti": false,
+            "createTime": "2018-08-10 10:06:47",
+            "updateTime": "2018-08-13 18:12:43",
+            "dictList": [
+                {
+                    "id": 60,
+                    "dictCategoryId": 22,
+                    "dictKey": "mark_number",
+                    "seqNo": null,
+                    "createTime": "2018-08-10 09:53:22",
+                    "updateTime": "2018-08-10 10:13:15",
+                    "dictValue": "20"
+                }
+            ]
+        },
+        {
+            "id": 23,
+            "parentId": 23,
+            "dictCategoryCode": "mark_push_weight",
+            "dictCategoryName": "mark_push_weight",
+            "dictCategoryDesc": "权重排序设置",
+            "needMaintain": false,
+            "hasMulti": false,
+            "createTime": "2018-08-10 10:07:55",
+            "updateTime": "2018-08-13 18:13:06",
+            "dictList": [
+                {
+                    "id": 61,
+                    "dictCategoryId": 23,
+                    "dictKey": "weight_qtn",
+                    "seqNo": null,
+                    "createTime": "2018-08-10 09:54:29",
+                    "updateTime": "2018-08-10 10:12:14",
+                    "dictValue": "9"
+                },
+                {
+                    "id": 62,
+                    "dictCategoryId": 23,
+                    "dictKey": "weight_level",
+                    "seqNo": null,
+                    "createTime": "2018-08-10 09:55:33",
+                    "updateTime": "2018-08-10 11:05:55",
+                    "dictValue": "8"
+                },
+                {
+                    "id": 63,
+                    "dictCategoryId": 23,
+                    "dictKey": "weight_turnover",
+                    "seqNo": null,
+                    "createTime": "2018-08-10 09:56:25",
+                    "updateTime": "2018-08-10 10:12:20",
+                    "dictValue": "7"
+                }
+            ]
+        }
+    ]
+}
+
+《=====================================================================================》
+供服务调用
+1，   /**
+       * 根据分类编码：查询该分类的值
+       * @param dictCategoryCode
+       * @return
+       */
+      public  Map<String,Object> getDictList(String dictCategoryCode){
+          return this.dictService.findValuePageByCode(dictCategoryCode);
+      }
+
+2，/**
+       * 根据字典分类编码，字典的value找到对应的值
+       * @param dictCategoryCode
+       * @param  dictKey
+       * @return
+       */
+      public  String getValue(String dictCategoryCode,String dictKey){
+          return this.dictService.getValue(dictCategoryCode,dictKey);
+      }
+
+
+ 3，/**
+        * 根据字典分类编码，字典的value找到对应的key
+        * @param dictCategoryName
+        * @param  dictValue
+        * @return
+        */
+       public  String getKey(String dictCategoryCode,String dictValue){
+           return this.dictService.getKey(dictCategoryCode,dictValue);
+       }
