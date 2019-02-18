@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>zrytech-framework-baseProject</artifactId>
+		<groupId>com.zrytech.framework</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>zrytech-framework-app</artifactId>
+	<packaging>jar</packaging>
+
+	<name>zrytech-framework-app</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<zrytech.framework.version>1.2.190218-SNAPSHOT</zrytech.framework.version>
+	</properties>
+
+	<dependencies>
+
+
+		<dependency>
+			<groupId>com.zrytech.framework</groupId>
+			<artifactId>zrytech-framework-base</artifactId>
+			<version>${zrytech.framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.zrytech.framework</groupId>
+			<artifactId>zrytech-framework-common</artifactId>
+			<version>${zrytech.framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.zrytech.framework</groupId>
+			<artifactId>zrytech-framework-link</artifactId>
+			<version>${zrytech.framework.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.0.11.Final</version>
+		</dependency>
+
+	</dependencies>
+
+
+</project>

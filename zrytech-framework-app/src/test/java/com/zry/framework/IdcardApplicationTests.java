@@ -1,7 +1,6 @@
 package com.zry.framework;
 
 import com.zry.framework.domain.Idcard;
-import com.zry.framework.service.IdcardCheck;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

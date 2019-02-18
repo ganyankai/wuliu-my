@@ -1,6 +1,5 @@
-package com.zry.framework.controller;
+package com.zry.framework.controller.api;
 
-import com.zry.framework.service.IdcardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,23 +14,11 @@ import com.zrytech.framework.base.entity.ServerResponse;
 @RequestMapping("/idcard")
 public class IdcardParserController {
 
-
-    @Autowired
-    private IdcardService idcardService;
-
     @RequestMapping("/export")
     public void idCardExport(HttpServletResponse response) throws Exception {
-        idcardService.excelExport(response);
+
     }
 
-    @RequestMapping("/import")
-    public ServerResponse idCardImport(@RequestParam("file") MultipartFile excelFile) {
-        return idcardService.excelImport( excelFile);
-    }
 
-    @RequestMapping("/check")
-    public ServerResponse idCardCheck() {
-        return idcardService.checkIdCard();
-    }
 
 }

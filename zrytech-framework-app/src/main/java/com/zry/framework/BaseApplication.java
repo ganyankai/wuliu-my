@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Bean;
 import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
-public class IdcardApplication extends BaseApp {
+public class BaseApplication extends BaseApp {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IdcardApplication.class, args);
+		SpringApplication.run(BaseApplication.class, args);
 	}
 
 	@Value("${upload.file.dir}")

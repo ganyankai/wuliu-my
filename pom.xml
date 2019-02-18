@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.zry</groupId>
-    <artifactId>zry.parent</artifactId>
+    <groupId>com.zrytech.framework</groupId>
+    <artifactId>zrytech-framework-baseProject</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -13,13 +13,13 @@
     </parent>
 
     <modules>
-        <module>idcard</module>
-        <module>api-gateway-demo-sign-java</module>
+        <module>zrytech-framework-app</module>
+        <!--<module>code-generator</module> -->
     </modules>
 
     <packaging>pom</packaging>
 
-    <name>zrytech-framework-parent</name>
+    <name>baseProject</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,7 @@
         <version.jar.plugin>2.4</version.jar.plugin>
         <version.source.plugin>2.2</version.source.plugin>
         <version.resources.plugin>2.6</version.resources.plugin>
+
         <poi.version>3.15</poi.version>
     </properties>
 
@@ -80,8 +81,6 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-
-
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -91,6 +90,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
 
@@ -102,26 +102,18 @@
             <scope>compile</scope>
         </dependency>
 
-		<dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>fastjson</artifactId>
-		    <version>1.2.47</version>
-		</dependency>
-		<dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>2.0.4</version>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
         </dependency>
 
         <!-- 分页插件 -->
         <dependency>
-		    <groupId>com.github.pagehelper</groupId>
-		    <artifactId>pagehelper-spring-boot-starter</artifactId>
-		    <version>1.2.5</version>
-		</dependency>
-
-
-
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.5</version>
+        </dependency>
 
         <!--swaggerui相关依赖-->
         <dependency>
@@ -202,9 +194,17 @@
                 </configuration>
             </plugin>
 
-             <!--<plugin>-->
-                <!--<groupId>org.springframework.boot</groupId>-->
-                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <!--<plugin>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
             <!--</plugin>-->
         </plugins>
     </build>
@@ -245,11 +245,11 @@
         </snapshotRepository>
     </distributionManagement>
 
-     <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>localRepository</id>-->
-            <!--<url>file:E:\gongju12</url>-->
-        <!--</repository>-->
+    <!--<distributionManagement>-->
+    <!--<repository>-->
+    <!--<id>localRepository</id>-->
+    <!--<url>file:E:\gongju12</url>-->
+    <!--</repository>-->
     <!--</distributionManagement>-->
 
 </project>

@@ -25,10 +25,7 @@ ftp:
   port: 21
   username: zry
   password: Zry@321#
-  
 
-    
-    
 pagehelper:
     helperDialect: mysql
     reasonable: true
