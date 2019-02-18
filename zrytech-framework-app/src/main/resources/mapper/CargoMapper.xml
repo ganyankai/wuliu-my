@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrytech.framework.price.mapper.CargoMapper">
+    <resultMap id="cargo" type="com.zrytech.framework.price.entity.Cargo">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="logo" property="logo"/>
+        <result column="qty" property="qty"/>
+        <result column="weight_unit" property="weightUnit"/>
+        <result column="tender_way" property="tenderWay"/>
+        <result column="mul_shipment" property="mulShipment"/>
+        <result column="mul_unload" property="mulUnload"/>
+        <result column="packaged" property="packaged"/>
+        <result column="matter_price" property="matterPrice"/>
+        <result column="real_price" property="realPrice"/>
+        <result column="market_price" property="marketPrice"/>
+        <result column="price_unit" property="priceUnit"/>
+        <result column="price_type" property="priceType"/>
+        <result column="start_province" property="startProvince"/>
+        <result column="start_city" property="startCity"/>
+        <result column="start_country" property="startCountry"/>
+        <result column="end_province" property="endProvince"/>
+        <result column="end_city" property="endCity"/>
+        <result column="end_country" property="endCountry"/>
+        <result column="line" property="line"/>
+        <result column="can_share" property="canShare"/>
+        <result column="car_type" property="carType"/>
+        <result column="status" property="status"/>
+        <result column="arrival_date" property="arrivalDate"/>
+        <result column="pickup_date" property="pickupDate"/>
+        <result column="end_date" property="endDate"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,name,logo,qty,weight_unit,tender_way,pay_type,mul_shipment,mul_unload,packaged,matter_price,real_price,market_price,price_unit,price_type,start_province,
+       start_city,start_country,end_province,end_city,end_country,line,can_share,car_type,status,arrival_date,pickup_date,end_date,remark,create_by,create_date
+    </sql>
+
+    <select id="cargoPage" resultMap="cargo">
+        select
+        <include refid="columns"/>
+        from cargo
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="cargo.name != null and cargo.name != ''">
+                and name like concat('%',#{cargo.name},'%')
+            </if>
+            <if test="cargo.startProvince != null and cargo.startProvince !=''">
+                and start_province=#{cargo.startProvince}
+            </if>
+            <if test="cargo.startCity != null and cargo.startCity !=''">
+                and start_city=#{cargo.startCity}
+            </if>
+            <if test="cargo.startCountry != null and cargo.startCountry !=''">
+                and start_country=#{cargo.startCountry}
+            </if>
+            <if test="cargo.endProvince != null and cargo.endProvince !=''">
+                and end_province=#{cargo.endProvince}
+            </if>
+            <if test="cargo.endCity != null and cargo.endCity !=''">
+                and end_city=#{cargo.endCity}
+            </if>
+            <if test="cargo.endCountry != null and cargo.endCountry !=''">
+                and end_country=#{cargo.endCountry}
+            </if>
+            <if test="cargo.status != null and cargo.status !=''">
+                and status=#{cargo.status}
+            </if>
+        </trim>
+        ORDER BY ${orderField} DESC
+    </select>
+
+    <insert id="pushSave" parameterType="com.zrytech.framework.price.entity.Cargo">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select last_insert_id() as id
+        </selectKey>
+        insert into cargo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="loginCounter != null and loginCounter !=''">
+                login_counter,
+            </if>
+            <if test="tel != null and tel !=''">
+                tel,
+            </if>
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="logo != null">
+                logo,
+            </if>
+            <if test="referrer != null">
+                referrer,
+            </if>
+            <if test="customerType != null and customerType !=''">
+                customer_type,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="loginCounter != null and loginCounter !=''">
+                #{loginCounter},
+            </if>
+            <if test="tel != null and tel !=''">
+                #{tel},
+            </if>
+            <if test="name != null and name !=''">
+                #{name},
+            </if>
+            <if test="logo != null">
+                #{logo},
+            </if>
+            <if test="referrer != null">
+                #{referrer},
+            </if>
+            <if test="customerType != null and customerType !=''">
+                #{customerType},
+            </if>
+            <if test="isActive != null">
+                #{isActive},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="get" resultMap="cargo">
+        select
+        <include refid="columns"/>
+        from cargo
+        where id =#{id}
+    </select>
+
+    <update id="updateAudit">
+        update cargo
+        <set>
+            <if test="status != null and status !=''">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

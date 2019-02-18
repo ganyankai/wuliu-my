@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrytech.framework.price.mapper.OftenAddressMapper">
+    <resultMap id="oftenAddress" type="com.zrytech.framework.price.entity.OftenAddress">
+        <id column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="cargo_name" property="cargoName"/>
+        <result column="begin_province" property="beginProvince"/>
+        <result column="begin_city" property="beginCity"/>
+        <result column="begin_county" property="beginCounty"/>
+        <result column="end_province" property="endProvince"/>
+        <result column="end_city" property="endCity"/>
+        <result column="end_county" property="endCounty"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <sql id="column">
+       id,customer_id,cargo_name,begin_province,begin_city,begin_county,end_province,end_city,end_county,create_date
+    </sql>
+
+    <insert id="batchSave" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into address
+        (customer_id,
+        cargo_name,
+        begin_province,
+        begin_city,
+        begin_county,
+        end_province,
+        end_city,
+        end_county,
+        create_date
+        )
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (
+            #{cargoId},
+            #{item.cargoName},
+            #{item.beginProvince},
+            #{item.beginCity},
+            #{item.beginCounty},
+            #{item.endProvince},
+            #{item.endCity},
+            #{item.endCounty},
+            #{date}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

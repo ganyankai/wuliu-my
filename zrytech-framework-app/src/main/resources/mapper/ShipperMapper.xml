@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrytech.framework.price.mapper.ShipperMapper">
+    <resultMap id="certification" type="com.zrytech.framework.price.entity.Certification">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="credit_code" property="creditCode"/>
+        <result column="business_license" property="businessLicense"/>
+        <result column="legaler_name" property="legalerName"/>
+        <result column="legaler_id_card_no" property="legalerIdCardNo"/>
+        <result column="legaler_id_card_front" property="legalerIdCardFront"/>
+        <result column="tel" property="tel"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="address_detail" property="addressDetail"/>
+        <result column="intro" property="intro"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="avoid_audit" property="avoidAudit"/>
+        <result column="close_rate" property="closeRate"/>
+        <result column="favorable_level" property="favorableLevel"/>
+        <result column="status" property="status"/>
+        <result column="cusomer_id" property="cusomerId"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,
+       province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date
+    </sql>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into car_cargo_ownner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="creditCode != null and creditCode !=''">
+                credit_code,
+            </if>
+            <if test="businessLicense != null and businessLicense !=''">
+                business_license,
+            </if>
+            <if test="legalerName != null and legalerName !=''">
+                legaler_name,
+            </if>
+            <if test="legalerIdCardNo != null">
+                legaler_id_card_no,
+            </if>
+            <if test="legalerIdCardFront != null and legalerIdCardFront !=''">
+                legaler_id_card_front,
+            </if>
+            <if test="tel != null and tel !=''">
+                tel,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="province != null and province !=''">
+                province,
+            </if>
+            <if test="city != null and city !=''">
+                city,
+            </if>
+            <if test="county != null and county !=''">
+                county,
+            </if>
+            <if test="addressDetail != null and addressDetail !=''">
+                address_detail,
+            </if>
+            <if test="intro != null and intro !=''">
+                intro,
+            </if>
+            <if test="customerType != null and customerType !=''">
+                customer_type,
+            </if>
+            <if test="avoidAudit != null">
+                avoid_audit,
+            </if>
+            <if test="closeRate != null">
+                close_rate,
+            </if>
+            <if test="favorableLevel != null">
+                favorable_level,
+            </if>
+            <if test="status != null and status !=''">
+                status,
+            </if>
+            <if test="cusomerId != null">
+                cusomer_id,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name !=''">
+                #{name} ,
+            </if>
+            <if test="creditCode != null and creditCode !=''">
+                #{creditCode} ,
+            </if>
+            <if test="businessLicense != null and businessLicense !=''">
+                #{businessLicense} ,
+            </if>
+            <if test="legalerName != null and legalerName !=''">
+                #{legalerName} ,
+            </if>
+            <if test="legalerIdCardNo != null">
+                #{legalerIdCardNo},
+            </if>
+            <if test="legalerIdCardFront != null and legalerIdCardFront !=''">
+                #{legalerIdCardFront},
+            </if>
+            <if test="tel != null and tel !=''">
+                #{tel},
+            </if>
+            <if test="longitude != null">
+                #{longitude},
+            </if>
+            <if test="latitude != null">
+                #{latitude},
+            </if>
+            <if test="province != null and province !=''">
+                #{province},
+            </if>
+            <if test="city != null and city !=''">
+                #{city},
+            </if>
+            <if test="county != null and county !=''">
+                #{county},
+            </if>
+            <if test="addressDetail != null and addressDetail !=''">
+                #{addressDetail},
+            </if>
+            <if test="intro != null and intro !=''">
+                #{intro},
+            </if>
+            <if test="customerType != null and customerType !=''">
+                #{customerType},
+            </if>
+            <if test="avoidAudit != null">
+                #{avoidAudit},
+            </if>
+            <if test="closeRate != null">
+                #{closeRate},
+            </if>
+            <if test="favorableLevel != null">
+                #{favorableLevel},
+            </if>
+            <if test="status != null and status !=''">
+                #{status},
+            </if>
+            <if test="cusomerId != null">
+                #{cusomerId},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateCertification">
+        update car_cargo_ownner
+        <set>
+            <if test="name != null and name !=''">
+                name = #{name},
+            </if>
+            <if test="creditCode != null and creditCode !=''">
+                credit_code = #{creditCode},
+            </if>
+            <if test="businessLicense != null and businessLicense !=''">
+                business_license = #{businessLicense},
+            </if>
+            <if test="legalerName != null and legalerName !=''">
+                legaler_name = #{legalerName},
+            </if>
+            <if test="legalerIdCardNo != null">
+                legaler_id_card_no = #{legalerIdCardNo},
+            </if>
+            <if test="legalerIdCardFront != null and legalerIdCardFront !=''">
+                legaler_id_card_front = #{legalerIdCardFront},
+            </if>
+            <if test="tel != null and tel !=''">
+                tel = #{tel},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude},
+            </if>
+            <if test="province != null and province !=''">
+                province = #{province},
+            </if>
+            <if test="city != null and city !=''">
+                city = #{city},
+            </if>
+            <if test="county != null and county !=''">
+                county = #{county},
+            </if>
+            <if test="addressDetail != null and addressDetail !=''">
+                address_detail = #{addressDetail},
+            </if>
+            <if test="intro != null and intro !=''">
+                intro = #{intro},
+            </if>
+            <if test="customerType != null and customerType !=''">
+                customer_type = #{customerType},
+            </if>
+            <if test="avoidAudit != null">
+                avoid_audit = #{avoidAudit},
+            </if>
+            <if test="closeRate != null">
+                close_rate = #{closeRate},
+            </if>
+            <if test="favorableLevel != null">
+                favorable_level = #{favorableLevel},
+            </if>
+            <if test="status != null and status !=''">
+                status = #{status},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate}
+            </if>
+        </set>
+        where cusomer_id = #{cusomerId}
+    </update>
+
+
+    <select id="certificationPage" resultMap="certification">
+        select
+        <include refid="columns"/>
+        from car_cargo_ownner
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="certification.name != null and certification.name != ''">
+                and name like concat('%',#{certification.name},'%')
+            </if>
+            <if test="certification.legalerName != null and certification.legalerName !=''">
+                and legaler_name like concat('%',#{certification.legalerName},'%')
+            </if>
+            <if test="certification.tel != null and certification.tel !=''">
+                and tel like concat('%',#{certification.tel},'%')
+            </if>
+            <if test="certification.status != null and certification.status !=''">
+                and status=#{certification.status}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="get" resultMap="certification">
+        select
+        <include refid="columns"/>
+        from car_cargo_ownner
+        where id =#{id}
+    </select>
+
+
+    <select id="getCustomerId" resultMap="certification">
+        select
+        <include refid="columns"/>
+        from car_cargo_ownner
+        where cusomer_id =#{customerId}
+    </select>
+
+
+    <update id="updateAudit">
+        update car_cargo_ownner
+        <set>
+            <if test="avoidAudit != null">
+                avoid_audit = #{avoidAudit},
+            </if>
+            <if test="status != null and status !=''">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="avoidAudit">
+        update car_cargo_ownner
+        <set>
+            <if test="avoidAudit != null">
+                avoid_audit = #{avoidAudit}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

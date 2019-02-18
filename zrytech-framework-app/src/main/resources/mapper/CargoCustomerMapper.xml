@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrytech.framework.price.mapper.CargoCustomerMapper">
+    <resultMap id="BaseResultMap" type="com.zrytech.framework.price.entity.CargoCustomer">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="login_counter" property="loginCounter"/>
+        <result column="tel" property="tel"/>
+        <result column="name" property="name"/>
+        <result column="logo" property="logo"/>
+        <result column="referrer" property="referrer"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="is_active" property="isActive"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_date" property="createDate"/>
+        <result column="pwd" property="pwd"/>
+    </resultMap>
+
+    <sql id="baseColumn">
+       id,login_counter,tel,name,logo,referrer,customer_type,is_active,create_by,create_date
+    </sql>
+
+    <sql id="pwdColumn">
+        id,login_counter,tel,name,logo,referrer,customer_type,is_active,create_by,create_date,pwd
+    </sql>
+
+    <insert id="insertCustomer" parameterType="com.zrytech.framework.price.entity.CargoCustomer">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select last_insert_id() as id
+        </selectKey>
+        insert into sys_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="loginCounter != null and loginCounter !=''">
+                login_counter,
+            </if>
+            <if test="tel != null and tel !=''">
+                tel,
+            </if>
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="logo != null">
+                logo,
+            </if>
+            <if test="referrer != null">
+                referrer,
+            </if>
+            <if test="customerType != null and customerType !=''">
+                customer_type,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="loginCounter != null and loginCounter !=''">
+                #{loginCounter},
+            </if>
+            <if test="tel != null and tel !=''">
+                #{tel},
+            </if>
+            <if test="name != null and name !=''">
+                #{name},
+            </if>
+            <if test="logo != null">
+                #{logo},
+            </if>
+            <if test="referrer != null">
+                #{referrer},
+            </if>
+            <if test="customerType != null and customerType !=''">
+                #{customerType},
+            </if>
+            <if test="isActive != null">
+                #{isActive},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectCargoCustomerPage" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from sys_customer
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="cargoCustomer.loginCounter != null and cargoCustomer.loginCounter != ''">
+                and real_name like concat('%',#{cargoCustomer.loginCounter},'%')
+            </if>
+            <if test="cargoCustomer.tel != null and cargoCustomer.tel !=''">
+                and tel like concat('%',#{cargoCustomer.tel},'%')
+            </if>
+            <if test="cargoCustomer.status != null and cargoCustomer.status !=''">
+                and status=#{cargoCustomer.status}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="checkTelOrCount" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from sys_customer
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="tel != null and tel !=''">
+                and tel=#{tel}
+            </if>
+            <if test="loginCounter != null and loginCounter !=''">
+                and login_counter=#{loginCounter}
+            </if>
+        </trim>
+    </select>
+
+    <select id="findByCargoCustomerCount" resultMap="BaseResultMap">
+        select
+        <include refid="pwdColumn"/>
+        from sys_customer
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="loginCounter != null and loginCounter !=''">
+                and login_counter= #{loginCounter}
+            </if>
+                and is_active=FALSE
+        </trim>
+    </select>
+
+    <select id="id" resultMap="BaseResultMap">
+        select
+        <include refid="pwdColumn"/>
+        from sys_customer
+        where id =#{id}
+    </select>
+
+    <select id="findByTelCargoCustomer" resultMap="BaseResultMap">
+        select
+        <include refid="pwdColumn"/>
+        from sys_customer
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="tel != null and tel !=''">
+                and tel= #{tel}
+            </if>
+            and is_active=FALSE
+        </trim>
+    </select>
+
+    <update id="update">
+        update sys_customer
+        <set>
+            <if test="logo != null and logo !=''">
+                logo = #{logo}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <update id="updatePhone">
+        update sys_customer
+        <set>
+            <if test="tel != null and tel !=''">
+                tel = #{tel}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="forget">
+        update sys_customer
+        <set>
+            <if test="pwd != null and pwd !=''">
+                pwd = #{pwd}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="setUpEnable">
+        update sys_customer
+        <set>
+            <if test="isActive != null">
+                is_active = #{isActive}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
