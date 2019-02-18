@@ -3,6 +3,7 @@ package com.zry.framework.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -19,13 +20,16 @@ import com.zry.framework.dto.CarPageDto;
 import com.zry.framework.dto.CheckDto;
 import com.zry.framework.entity.Car;
 import com.zry.framework.service.CarService;
+import com.zry.framework.utils.PageDataUtils;
+import com.zrytech.framework.base.entity.PageData;
+import com.zrytech.framework.base.entity.ServerResponse;
 
 @Service
 public class CarServiceImpl implements CarService {
 	
-	@Autowired
-	private CarRepository carRepository;
+	@Autowired private CarRepository carRepository;
 	
+	@Autowired private PageDataUtils<Car> pageDataUtils;
 	
 	public Integer save(Car car) {
 		Car save = carRepository.save(car);
@@ -55,25 +59,27 @@ public class CarServiceImpl implements CarService {
 	 * @return
 	 */
 	@Override
-	public Page<Car> page(CarPageDto carPageDto, Integer pageNum, Integer pageSize){
+	public ServerResponse page(CarPageDto dto, Integer pageNum, Integer pageSize){
 		Car car = new Car();
-		car.setCarNo(carPageDto.getCarNo());
-		// 排序
-		Sort sort = new Sort(Direction.DESC, "id");
-		// 分页（JPA分页中pageNumber从0开始）
+		BeanUtils.copyProperties(dto, car);
+		
+		Sort sort = new Sort(Direction.DESC, "createDate");
+		
 		Pageable pageable = new PageRequest(pageNum - 1, pageSize, sort);
 	
-		// 模糊搜索，忽略字段等
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("carNo", GenericPropertyMatchers.contains())
 				.withIgnorePaths("id");
-		// 查询条件
+		
 		Example<Car> example = Example.of(car, matcher);
-		// 查询
+		
 		Page<Car> page = carRepository.findAll(example, pageable);
 		
-		return page;
+		PageData<Car> pageData = pageDataUtils.bindingData(page);
+		
+		return ServerResponse.successWithData(pageData);
 	}
+	
 	
 	
 	/**
