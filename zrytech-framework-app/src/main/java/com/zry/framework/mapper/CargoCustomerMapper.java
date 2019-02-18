@@ -1,8 +1,8 @@
 package com.zry.framework.mapper;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.entity.CargoCustomer;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.price.entity.CargoCustomer;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

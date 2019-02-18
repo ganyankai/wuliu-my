@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.price.mapper.CargoMapper">
-    <resultMap id="cargo" type="com.zrytech.framework.price.entity.Cargo">
+<mapper namespace="com.zry.framework.mapper.CargoMapper">
+    <resultMap id="cargo" type="com.zry.framework.entity.Cargo">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="logo" property="logo"/>
@@ -73,7 +73,7 @@
         ORDER BY ${orderField} DESC
     </select>
 
-    <insert id="pushSave" parameterType="com.zrytech.framework.price.entity.Cargo">
+    <insert id="pushSave" parameterType="com.zry.framework.entity.Cargo">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>
@@ -82,26 +82,89 @@
             <if test="id != null">
                 id,
             </if>
-            <if test="loginCounter != null and loginCounter !=''">
-                login_counter,
-            </if>
-            <if test="tel != null and tel !=''">
-                tel,
-            </if>
             <if test="name != null and name !=''">
                 name,
             </if>
-            <if test="logo != null">
+            <if test="logo != null and logo !=''">
                 logo,
             </if>
-            <if test="referrer != null">
-                referrer,
+            <if test="qty != null">
+                qty,
             </if>
-            <if test="customerType != null and customerType !=''">
-                customer_type,
+            <if test="weightUnit != null and weightUnit !=''">
+                weight_unit,
             </if>
-            <if test="isActive != null">
-                is_active,
+            <if test="tenderWay != null and tenderWay !=''">
+                tender_way,
+            </if>
+            <if test="payType != null and payType !=''">
+                pay_type,
+            </if>
+            <if test="mulShipment != null">
+                mul_shipment,
+            </if>
+            <if test="mulUnload != null">
+                mul_unload,
+            </if>
+            <if test="packaged != null">
+                packaged,
+            </if>
+            <if test="matterPrice != null">
+                matter_price,
+            </if>
+            <if test="realPrice != null">
+                real_price,
+            </if>
+            <if test="marketPrice != null">
+                market_price,
+            </if>
+            <if test="priceUnit != null and priceUnit !=''">
+                price_unit,
+            </if>
+            <if test="priceType != null and priceType !=''">
+                price_type,
+            </if>
+            <if test="startProvince != null and startProvince !=''">
+                start_province,
+            </if>
+            <if test="startCity != null and startCity !=''">
+                start_city,
+            </if>
+            <if test="startCountry != null and startCountry !=''">
+                start_country,
+            </if>
+            <if test="endProvince != null and endProvince !=''">
+                end_province,
+            </if>
+            <if test="endCity != null and endCity !=''">
+                end_city,
+            </if>
+            <if test="endCountry != null and endCountry !=''">
+                end_country,
+            </if>
+            <if test="line != null and line !=''">
+                line,
+            </if>
+            <if test="canShare != null">
+                can_share,
+            </if>
+            <if test="carType != null and carType !=''">
+                car_type,
+            </if>
+            <if test="status != null and status !=''">
+                status,
+            </if>
+            <if test="arrivalDate != null">
+                arrival_date,
+            </if>
+            <if test="pickupDate != null">
+                pickup_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+            <if test="remark != null and remark !=''">
+                remark,
             </if>
             <if test="createBy != null">
                 create_by,
@@ -110,31 +173,93 @@
                 create_date,
             </if>
         </trim>
-
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id},
             </if>
-            <if test="loginCounter != null and loginCounter !=''">
-                #{loginCounter},
-            </if>
-            <if test="tel != null and tel !=''">
-                #{tel},
-            </if>
             <if test="name != null and name !=''">
                 #{name},
             </if>
-            <if test="logo != null">
+            <if test="logo != null and logo !=''">
                 #{logo},
             </if>
-            <if test="referrer != null">
-                #{referrer},
+            <if test="qty != null">
+                #{qty},
             </if>
-            <if test="customerType != null and customerType !=''">
-                #{customerType},
+            <if test="weightUnit != null and weightUnit !=''">
+                #{weightUnit},
             </if>
-            <if test="isActive != null">
-                #{isActive},
+            <if test="tenderWay != null and tenderWay !=''">
+                #{tenderWay},
+            </if>
+            <if test="payType != null and payType !=''">
+                #{payType},
+            </if>
+            <if test="mulShipment != null">
+                #{mulShipment},
+            </if>
+            <if test="mulUnload != null">
+                #{mulUnload},
+            </if>
+            <if test="packaged != null">
+                #{packaged},
+            </if>
+            <if test="matterPrice != null">
+                #{matterPrice},
+            </if>
+            <if test="realPrice != null">
+                #{realPrice},
+            </if>
+            <if test="marketPrice != null">
+                #{marketPrice},
+            </if>
+            <if test="priceUnit != null and priceUnit !=''">
+                #{priceUnit},
+            </if>
+            <if test="priceType != null and priceType !=''">
+                #{priceType},
+            </if>
+            <if test="startProvince != null and startProvince !=''">
+                #{startProvince},
+            </if>
+            <if test="startCity != null and startCity !=''">
+                #{startCity},
+            </if>
+            <if test="startCountry != null and startCountry !=''">
+                #{startCountry},
+            </if>
+            <if test="endProvince != null and endProvince !=''">
+                #{endProvince},
+            </if>
+            <if test="endCity != null and endCity !=''">
+                #{endCity},
+            </if>
+            <if test="endCountry != null and endCountry !=''">
+                #{endCountry},
+            </if>
+            <if test="line != null and line !=''">
+                #{line},
+            </if>
+            <if test="canShare != null">
+                #{canShare},
+            </if>
+            <if test="carType != null and carType !=''">
+                #{carType},
+            </if>
+            <if test="status != null and status !=''">
+                #{status},
+            </if>
+            <if test="arrivalDate != null">
+                #{arrivalDate},
+            </if>
+            <if test="pickupDate != null">
+                #{pickupDate},
+            </if>
+            <if test="endDate != null">
+                #{endDate},
+            </if>
+            <if test="remark != null and remark !=''">
+                #{remark},
             </if>
             <if test="createBy != null">
                 #{createBy},

@@ -1,6 +1,7 @@
 package com.zry.framework.dao;
 
-import com.zrytech.framework.price.entity.Loading;
+
+import com.zry.framework.entity.Loading;
 
 import java.util.List;
 

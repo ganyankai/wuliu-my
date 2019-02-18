@@ -1,6 +1,6 @@
 package com.zry.framework.mapper;
 
-import com.zrytech.framework.price.entity.OftenAddress;
+import com.zry.framework.entity.OftenAddress;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

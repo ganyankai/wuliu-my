@@ -1,8 +1,8 @@
 package com.zry.framework.dao.impl;
 
-import com.zrytech.framework.price.dao.LoadingDao;
-import com.zrytech.framework.price.entity.Loading;
-import com.zrytech.framework.price.mapper.LoadingMapper;
+import com.zry.framework.dao.LoadingDao;
+import com.zry.framework.entity.Loading;
+import com.zry.framework.mapper.LoadingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

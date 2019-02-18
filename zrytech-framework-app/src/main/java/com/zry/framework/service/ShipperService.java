@@ -1,10 +1,10 @@
 package com.zry.framework.service;
 
+import com.zry.framework.dto.CargoCustomerDto;
+import com.zry.framework.dto.CertificationDto;
 import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.price.dto.CargoCustomerDto;
-import com.zrytech.framework.price.dto.CertificationDto;
 
 public interface ShipperService {
 

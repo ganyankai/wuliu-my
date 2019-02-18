@@ -1,10 +1,10 @@
 package com.zry.framework.dao.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.dao.CargoCustomerDao;
+import com.zry.framework.entity.CargoCustomer;
+import com.zry.framework.mapper.CargoCustomerMapper;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.price.dao.CargoCustomerDao;
-import com.zrytech.framework.price.entity.CargoCustomer;
-import com.zrytech.framework.price.mapper.CargoCustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

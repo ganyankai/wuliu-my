@@ -1,8 +1,8 @@
 package com.zry.framework.mapper;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.entity.Certification;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.price.entity.Certification;
 import org.apache.ibatis.annotations.Param;
 
 public interface ShipperMapper {

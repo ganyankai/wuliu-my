@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.price.mapper.LoadingMapper">
-    <resultMap id="loading" type="com.zrytech.framework.price.entity.Loading">
+<mapper namespace="com.zry.framework.mapper.LoadingMapper">
+    <resultMap id="loading" type="com.zry.framework.entity.Loading">
         <id column="id" property="id"/>
         <result column="cargo_id" property="cargoId"/>
         <result column="longitude" property="longitude"/>
@@ -46,6 +46,43 @@
         where id =#{id}
     </select>
 
-
+    <insert id="batchSave" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into cargo_location
+        (cargo_id,
+        longitude,
+        latitude,
+        province,
+        city,
+        county,
+        address_detail,
+        qty,
+        remark,
+        seq_no,
+        status,
+        load_date,
+        end_date,
+        type
+        )
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (
+            #{cargoId},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.province},
+            #{item.city},
+            #{item.county},
+            #{item.addressDetail},
+            #{item.qty},
+            #{item.remark},
+            #{item.seqNo},
+            #{item.status},
+            #{item.loadDate},
+            #{item.endDate},
+            #{loadingType}
+            )
+        </foreach>
+    </insert>
 
 </mapper>

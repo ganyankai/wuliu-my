@@ -1,21 +1,24 @@
 package com.zry.framework.service.impl;
 
+import com.zry.framework.constants.CargoConstant;
+import com.zry.framework.dao.CargoCustomerDao;
+import com.zry.framework.dao.OftenAddressDao;
+import com.zry.framework.dao.ShipperDao;
+import com.zry.framework.dto.CargoCustomerDto;
+import com.zry.framework.entity.CargoCustomer;
+import com.zry.framework.entity.Certification;
+import com.zry.framework.entity.OftenAddress;
+import com.zry.framework.enums.LogisticsResult;
+import com.zry.framework.enums.LogisticsResultEnum;
+import com.zry.framework.service.CargoCustomerService;
+import com.zry.framework.utils.CheckFieldUtils;
+import com.zry.framework.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.PasswordUtil;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
-import com.zrytech.framework.price.constants.CargoConstant;
-import com.zrytech.framework.price.dao.CargoCustomerDao;
-import com.zrytech.framework.price.dao.OftenAddressDao;
-import com.zrytech.framework.price.dao.ShipperDao;
-import com.zrytech.framework.price.dto.CargoCustomerDto;
-import com.zrytech.framework.price.entity.CargoCustomer;
-import com.zrytech.framework.price.entity.Certification;
-import com.zrytech.framework.price.entity.OftenAddress;
-import com.zrytech.framework.price.service.CargoCustomerService;
-import com.zrytech.framework.price.util.CheckFieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -57,11 +60,11 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         //TODO:手机号去重校验和账号校验
         List<CargoCustomer> checkTelList = cargoCustomerDao.checkTelOrCount(cargoCustomer.getTel(), null);
         if (checkTelList != null && checkTelList.size() > 0) {
-            throw new BusinessException(new CommonResult(ResultEnum.PHONE_EXISTED));
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PHONE_EXISTED));
         }
         List<CargoCustomer> checkLoginCounterList = cargoCustomerDao.checkTelOrCount(null, cargoCustomer.getLoginCounter());
         if (checkLoginCounterList != null && checkLoginCounterList.size() > 0) {
-            throw new BusinessException(new CommonResult(ResultEnum.LOGIN_COUNTER_EXISTED));
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.LOGIN_COUNTER_EXISTED));
         }
         cargoCustomer.setCreateBy(0);
         cargoCustomer.setCreateDate(new Date());
@@ -134,7 +137,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         if (cargo == null) {
             throw new BusinessException(new CommonResult(ResultEnum.CUSTOMER_NOT_EXIST));
         }
-        cargo.setPwd(PasswordUtil.encryptStringPassword(cargo.getPwd(), cargo.getLoginCounter()));
+        cargo.setPwd(PasswordUtils.encryptStringPassword(cargo.getPwd(), cargo.getLoginCounter()));
         int num = cargoCustomerDao.forget(cargo);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
@@ -155,7 +158,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         }
         CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
         if (cargoCustomer != null) {
-            cargoCustomer.setPwd(PasswordUtil.encryptStringPassword(cargoCustomerDto.getPwd(), cargoCustomer.getLoginCounter()));
+            cargoCustomer.setPwd(PasswordUtils.encryptStringPassword(cargoCustomerDto.getPwd(), cargoCustomer.getLoginCounter()));
         }
         int num = cargoCustomerDao.forget(cargoCustomer);
         CheckFieldUtils.assertSuccess(num);
@@ -175,7 +178,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getPwd());
         //TODO:短信验证码验证
         CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
-        String getPwd = PasswordUtil.encryptStringPassword(cargoCustomerDto.getPwd(), cargoCustomer.getLoginCounter());
+        String getPwd = PasswordUtils.encryptStringPassword(cargoCustomerDto.getPwd(), cargoCustomer.getLoginCounter());
         if (!getPwd.equals(cargoCustomer.getPwd())) {
             throw new BusinessException(new CommonResult(ResultEnum.Not_AGREE));
         }

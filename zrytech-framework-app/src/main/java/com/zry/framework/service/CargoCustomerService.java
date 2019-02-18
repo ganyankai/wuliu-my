@@ -1,8 +1,8 @@
 package com.zry.framework.service;
 
+import com.zry.framework.dto.CargoCustomerDto;
+import com.zry.framework.entity.CargoCustomer;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.price.dto.CargoCustomerDto;
-import com.zrytech.framework.price.entity.CargoCustomer;
 
 public interface CargoCustomerService {
 

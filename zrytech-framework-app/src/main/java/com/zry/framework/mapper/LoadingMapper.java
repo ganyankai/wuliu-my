@@ -1,6 +1,6 @@
 package com.zry.framework.mapper;
 
-import com.zrytech.framework.price.entity.Loading;
+import com.zry.framework.entity.Loading;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

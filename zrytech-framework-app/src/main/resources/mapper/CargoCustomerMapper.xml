@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.price.mapper.CargoCustomerMapper">
-    <resultMap id="BaseResultMap" type="com.zrytech.framework.price.entity.CargoCustomer">
+<mapper namespace="com.zry.framework.mapper.CargoCustomerMapper">
+    <resultMap id="BaseResultMap" type="com.zry.framework.entity.CargoCustomer">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="login_counter" property="loginCounter"/>
         <result column="tel" property="tel"/>

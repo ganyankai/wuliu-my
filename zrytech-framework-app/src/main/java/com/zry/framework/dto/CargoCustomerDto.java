@@ -1,8 +1,8 @@
 package com.zry.framework.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.zrytech.framework.price.entity.Certification;
-import com.zrytech.framework.price.entity.OftenAddress;
+import com.zry.framework.entity.Certification;
+import com.zry.framework.entity.OftenAddress;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

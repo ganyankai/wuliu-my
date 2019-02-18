@@ -1,8 +1,8 @@
 package com.zry.framework.dao.impl;
 
-import com.zrytech.framework.price.dao.OftenAddressDao;
-import com.zrytech.framework.price.entity.OftenAddress;
-import com.zrytech.framework.price.mapper.OftenAddressMapper;
+import com.zry.framework.dao.OftenAddressDao;
+import com.zry.framework.entity.OftenAddress;
+import com.zry.framework.mapper.OftenAddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,10 @@
 package com.zry.framework.backend.controller;
 
 
+import com.zry.framework.dto.CargoCustomerDto;
+import com.zry.framework.entity.CargoCustomer;
+import com.zry.framework.service.CargoCustomerService;
+import com.zry.framework.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -9,9 +13,6 @@ import com.zrytech.framework.base.util.PasswordUtil;
 import com.zrytech.framework.base.util.TokenUtil;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
-import com.zrytech.framework.price.dto.CargoCustomerDto;
-import com.zrytech.framework.price.entity.CargoCustomer;
-import com.zrytech.framework.price.service.CargoCustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +63,7 @@ public class CustomerController {
         DefaultCustomer defaultCustomer = requestParams.getParams();
         System.out.println(defaultCustomer.getLoginCounter() + ":" + defaultCustomer.getPwd());
         CargoCustomer currentCustomer = cargoCustomerService.findByCargoCustomerCount(defaultCustomer); //获取用户完全信息
-        defaultCustomer.setPwd(PasswordUtil.encryptStringPassword(defaultCustomer.getPwd(),defaultCustomer.getLoginCounter()));
+        defaultCustomer.setPwd(PasswordUtils.encryptStringPassword(defaultCustomer.getPwd(),defaultCustomer.getLoginCounter()));
         checkLogin(currentCustomer, defaultCustomer);
         String tokenStr = TokenUtil.obtainToken(currentCustomer);//放入redis缓存
         Map<String, Object> map = new HashMap<String, Object>();

@@ -1,8 +1,8 @@
 package com.zry.framework.service;
 
+import com.zry.framework.dto.OftenAddressDto;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.price.dto.OftenAddressDto;
 
 public interface OftenAddressService {
 

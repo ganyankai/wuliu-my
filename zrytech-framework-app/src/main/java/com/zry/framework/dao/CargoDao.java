@@ -1,8 +1,8 @@
 package com.zry.framework.dao;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.entity.Cargo;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.price.entity.Cargo;
 
 public interface CargoDao {
     PageInfo<Cargo> cargoPage(Cargo cargo, String orderField, Page page);

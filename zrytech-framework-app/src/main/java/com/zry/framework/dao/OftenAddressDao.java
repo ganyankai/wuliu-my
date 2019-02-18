@@ -1,6 +1,7 @@
 package com.zry.framework.dao;
 
-import com.zrytech.framework.price.entity.OftenAddress;
+
+import com.zry.framework.entity.OftenAddress;
 
 import java.util.Date;
 import java.util.List;

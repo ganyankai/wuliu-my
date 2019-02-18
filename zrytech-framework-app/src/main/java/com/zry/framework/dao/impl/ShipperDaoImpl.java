@@ -1,10 +1,10 @@
 package com.zry.framework.dao.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.dao.ShipperDao;
+import com.zry.framework.entity.Certification;
+import com.zry.framework.mapper.ShipperMapper;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.price.dao.ShipperDao;
-import com.zrytech.framework.price.entity.Certification;
-import com.zrytech.framework.price.mapper.ShipperMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
