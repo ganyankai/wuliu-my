@@ -37,8 +37,8 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		CargoMatter cargoMatter = new CargoMatter();
 		BeanUtils.copyProperties(dto, cargoMatter);
 		
-		Sort sort = Sort.by(Direction.DESC, "createDate");
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+		Sort sort = new Sort(Direction.DESC, "createDate");
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
 		
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("carNo", GenericPropertyMatchers.contains());
@@ -50,7 +50,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	
 	
 	public CargoMatter details(Integer id) {
-		CargoMatter cargoMatter = cargoMatterRepository.findById(id).get();
+		CargoMatter cargoMatter = cargoMatterRepository.findOne(id);
 		
 		return cargoMatter;
 	}

@@ -43,8 +43,8 @@ public class CarSourceServiceImpl implements CarSourceService {
 		CarSource carSource = new CarSource();
 		BeanUtils.copyProperties(dto, carSource);
 		
-		Sort sort = Sort.by(Direction.DESC, "createDate");
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+		Sort sort = new Sort(Direction.DESC, "createDate");
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
 		
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("carType", GenericPropertyMatchers.contains());
@@ -63,7 +63,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @return
 	 */
 	public CarSource details(Integer id) {
-		CarSource carSource = carSourceRepository.findById(id).get();
+		CarSource carSource = carSourceRepository.findOne(id);
 		List<CarRecordPlace> carRecordPlaces = carRecordPlaceRepository.findByCarSourceId(carSource.getId());
 		carSource.setCarRecordPlaces(carRecordPlaces);
 		return carSource;

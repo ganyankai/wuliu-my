@@ -1,5 +1,7 @@
 package com.zry.framework.service.impl;
 
+import javax.persistence.metamodel.Attribute;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
 import com.zry.framework.dto.CustomerPageDto;
@@ -33,12 +36,12 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @return
 	 */
 	public Page<Customer> page(Integer pageNumber, Integer pageSize, CustomerPageDto dto) {
-		
 		Customer customer = new Customer();
 		BeanUtils.copyProperties(dto, customer);
 		
-		Sort sort = Sort.by(Direction.DESC, "createDate");
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+		Sort sort = new Sort(Direction.DESC, "createDate");
+
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
 		
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("carType", GenericPropertyMatchers.contains());
@@ -46,7 +49,6 @@ public class CustomerServiceImpl implements CustomerService {
 		Example<Customer> example = Example.of(customer, matcher);
 		
 		return customerRepository.findAll(example, pageable);
-		
 	}
 	
 	

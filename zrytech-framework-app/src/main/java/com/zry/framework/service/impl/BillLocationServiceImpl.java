@@ -38,8 +38,8 @@ public class BillLocationServiceImpl implements BillLocationService {
 		BillLocation billLocation = new BillLocation();
 		BeanUtils.copyProperties(dto, billLocation);
 		
-		Sort sort = Sort.by(Direction.DESC, "createDate");
-		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+		Sort sort = new Sort(Direction.DESC, "createDate");
+		Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
 		
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withMatcher("name", GenericPropertyMatchers.contains());
@@ -57,7 +57,7 @@ public class BillLocationServiceImpl implements BillLocationService {
 	 * @return
 	 */
 	public BillLocation details(Integer id) {
-		return billLocationRepository.findById(id).get();
+		return billLocationRepository.findOne(id);
 	}
 	
 	
