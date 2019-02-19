@@ -8,14 +8,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zry.framework.constants.CarPersonConstants;
 
 import lombok.Data;
 
 /**
  * 车辆司机与压货人
+ * @author cat
  */
 @Data
 @Entity
@@ -54,7 +57,22 @@ public class CarPerson {
 	/**类型*/
 	@Column(name = "`person_type`")
     private String personType;
-
+	
+	/**类型*/
+	@Transient
+	private String personTypeCN;
+	
+	/**类型*/
+	public String getPersonTypeCN() {
+		if(CarPersonConstants.PERSON_TYPE_DRIVER.equals(personType)) {
+			return "司机";
+		}else if(CarPersonConstants.PERSON_TYPE_SUPERCARGO.equals(personType)) {
+			return "押货人";
+		}else {
+			return "";
+		}
+	}
+	
 	/**客户Id*/
 	@Column(name = "`customer_id`")
     private Integer customerId;
@@ -66,6 +84,15 @@ public class CarPerson {
 	/**状态*/
 	@Column(name = "`status`")
     private String status;
+	
+	/**状态*/
+	@Transient
+	private String statusCN;
+	
+	/**状态*/
+	public String getStatusCN() {
+		return "状态：待处理";// TODO
+	}
 	
 	/**删除标识*/
 	@Column(name = "`is_delete`")
@@ -80,5 +107,13 @@ public class CarPerson {
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`create_date`")
     private Date createDate;
+	
+	/**车主企业名称*/
+	@Transient
+	private String carOwnerName;
+	
+	/**车主*/
+	@Transient
+	private CarCargoOwnner carOwner;
 	
 }
