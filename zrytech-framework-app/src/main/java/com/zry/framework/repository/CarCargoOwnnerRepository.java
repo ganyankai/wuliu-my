@@ -1,5 +1,7 @@
 package com.zry.framework.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +20,7 @@ public interface CarCargoOwnnerRepository extends JpaRepository<CarCargoOwnner, 
 	@Query(value = "select name from CarCargoOwnner where id = ?1")
 	public String findNameById(Integer id);
 	
+	@Query(value = "select id from CarCargoOwnner where name like CONCAT('%', ?1, '%')")
+	public List<Integer> findIdByName(String name);
 }
+

@@ -56,7 +56,7 @@ pool:
 
 logging:
   level:
-    com.zrytech.framework.*.mapper: trace
+    com.zry.framework.mapper: trace
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
 wechat:

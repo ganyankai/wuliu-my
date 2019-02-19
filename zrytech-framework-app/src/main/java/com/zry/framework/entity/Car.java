@@ -42,10 +42,18 @@ public class Car {
 	@Column(name = "`car_unit`")
     private String carUnit;
 
+	/**车载量单位*/
+	@Transient
+    private String carUnitCN;
+	
 	/**车辆类型*/
 	@Column(name = "`car_type`")
     private String carType;
-
+	
+	/**车辆类型*/
+	@Transient
+	private String carTypeCN;
+	
 	/**司机Id*/
 	@Column(name = "`driver_id`")
     private Integer driverId;
@@ -77,7 +85,11 @@ public class Car {
 	/**车辆状态*/
 	@Column(name = "`status`")
     private String status;
-
+	
+	/**车辆状态*/
+	@Transient
+	private String statusCN;
+	
 	/**是否删除*/
 	@Column(name = "`is_delete`")
     private Boolean isDelete;
@@ -96,23 +108,39 @@ public class Car {
 	@Transient
 	private String carOwnerName;
 	
-	/**司机姓名*/
-	@Transient
-	private String driverName;
-	
-	/**压货人姓名*/
-	@Transient
-	private String supercargoName;
-	
 	/**车主*/
 	@Transient
 	private CarCargoOwnner carOwner;
+	
+	/**司机姓名*/
+	@Transient
+	private String driverName;
 	
 	/**司机*/
 	@Transient
 	private CarPerson driver;
 	
+	/**压货人姓名*/
+	@Transient
+	private String supercargoName;
+	
 	/**压货人*/
 	@Transient
 	private CarPerson supercargo;
+	
+	public String getCarUnitCN() {
+		return "车载量单位,待处理";	// TODO
+	}
+	
+	public String getCarTypeCN() {
+		return "车辆类型,待处理";	// TODO
+	}
+	
+	public String getStatusCN() {
+		return "车辆状态,待处理";	// TODO
+	}
+	
+	
+	
+	
 }

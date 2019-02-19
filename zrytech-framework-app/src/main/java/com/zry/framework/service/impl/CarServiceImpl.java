@@ -1,14 +1,18 @@
 package com.zry.framework.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
+import org.springframework.data.domain.ExampleMatcher.MatcherConfigurer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,20 +20,26 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
 import com.zry.framework.repository.CarPersonRepository;
 import com.zry.framework.repository.CarRepository;
+import com.github.pagehelper.PageHelper;
+import com.zry.framework.constants.ApproveLogConstants;
 import com.zry.framework.constants.CarConstants;
 import com.zry.framework.dto.CarPageDto;
 import com.zry.framework.dto.CheckDto;
+import com.zry.framework.entity.ApproveLog;
 import com.zry.framework.entity.Car;
 import com.zry.framework.entity.CarCargoOwnner;
 import com.zry.framework.entity.CarPerson;
+import com.zry.framework.mapper.CarMapper;
 import com.zry.framework.service.CarService;
 import com.zry.framework.utils.PageDataUtils;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.common.entity.User;
 
 /**
  * 车辆
@@ -49,10 +59,15 @@ public class CarServiceImpl implements CarService {
 	
 	@Autowired private CarPersonRepository carPersonRepository;
 	
+	@Autowired private ApproveLogRepository approveLogRepository;
+	
+	@Autowired private CarMapper carMapper;
+	
 	
 	/**
 	 * 车辆分页
 	 * @author cat
+	 * 
 	 * @param dto	查询条件，详见{@link CarPageDto}
 	 * @param pageNum
 	 * @param pageSize
@@ -60,31 +75,16 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse page(CarPageDto dto, Integer pageNum, Integer pageSize){
-		Car car = new Car();
-		BeanUtils.copyProperties(dto, car);
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		
-		Sort sort = new Sort(Direction.DESC, "createDate");
-		
-		Pageable pageable = new PageRequest(pageNum - 1, pageSize, sort);
-	
-		ExampleMatcher matcher = ExampleMatcher.matching()
-				.withMatcher("carNo", GenericPropertyMatchers.contains())
-				.withIgnorePaths("id");
-		
-		Example<Car> example = Example.of(car, matcher);
-		
-		Page<Car> page = carRepository.findAll(example, pageable);
-		
-		PageData<Car> pageData = pageDataUtils.bindingData(page);
-		
-		List<Car> content = page.getContent();
-		for (Car temp : content) {
+		List<Car> list = carMapper.selectSelective(dto);
+		for (Car temp : list) {
 			temp.setCarOwnerName(carCargoOwnnerRepository.findNameById(temp.getCreateBy()));
 			temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
 			temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
 		}
-		pageData.setList(content);
 		
+		PageData<Car> pageData = new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
 	}
 	
@@ -92,18 +92,16 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 车辆详情（包含车主、司机、压货人）
 	 * @author cat
+	 * 
 	 * @param id	车辆Id
 	 * @return
 	 */
 	@Override
 	public ServerResponse details(Integer id) {
 		Car car = carRepository.findOne(id);
-		// 车主
-		car = bindingCarOwner(car);
-		// 司机
-		car = bindingDriver(car);
-		// 压货人
-		car = bindingSupercargo(car);
+		car = bindingCarOwner(car);		// 车主
+		car = bindingDriver(car);		// 司机
+		car = bindingSupercargo(car);	// 压货人
 		return ServerResponse.successWithData(car);
 	}
 	
@@ -111,6 +109,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 为车辆绑定车主信息
 	 * @author cat
+	 * 
 	 * @param car
 	 * @return
 	 */
@@ -127,6 +126,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 为车辆绑定车司机信息
 	 * @author cat
+	 * 
 	 * @param car
 	 * @return
 	 */
@@ -143,6 +143,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 为车辆绑定车压货人信息
 	 * @author cat
+	 * 
 	 * @param car
 	 * @return
 	 */
@@ -156,15 +157,15 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	
-	
-	
-	
 	/**
 	 * 车辆审核
+	 * @author cat
 	 * 
 	 * @param checkDto 审核结果
+	 * @return
 	 */
-	public ServerResponse check(CheckDto checkDto) {
+	@Override
+	public ServerResponse check(CheckDto checkDto, User user) {
 		Integer businessId = checkDto.getBusinessId();
 		
 		Car car = this.assertCarExist(businessId);
@@ -172,24 +173,37 @@ public class CarServiceImpl implements CarService {
 		if(!CarConstants.CAR_STATUS_WAIT_CHECK.equalsIgnoreCase(car.getStatus())) {
 			throw new BusinessException(112, "审核失败：车辆状态不是待审核");
 		}
+		if(car.getIsDelete()) {
+			throw new BusinessException(112, "审核失败：车辆已被删除");
+		}
 		
 		// 修改车辆状态
-		Boolean result = checkDto.getResult();
-		if(result) {
+		String result = checkDto.getResult();
+		if(ApproveLogConstants.APPROVE_RESULT_PASS.equals(result)) {
 			car.setStatus(CarConstants.CAR_STATUS_UP);
 		}else {
 			car.setStatus(CarConstants.CAR_STATUS_DOWN);
 		}
 		carRepository.save(car);
 		
-		// 添加审核记录 TODO
+		// 添加审核记录
+		ApproveLog entity = new ApproveLog();
+		entity.setApproveBy(user.getId());
+		entity.setApproveContent(checkDto.getContent());
+		entity.setApproveResult(checkDto.getResult());
+		entity.setApproveTime(new Date());
+		entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_CAR);
+		entity.setBusinessId(businessId);
+		approveLogRepository.save(entity);
 		
-		return ServerResponse.success();
+		return ServerResponse.successWithData("审核成功");
 	}
 	
 	
 	/**
 	 * 断言车辆存在
+	 * @author cat
+	 * 
 	 * @param id 车辆Id
 	 * @return
 	 */
@@ -201,12 +215,6 @@ public class CarServiceImpl implements CarService {
 		return car;
 	}
 	
-	
-	public Integer save(Car car) {
-		Car save = carRepository.save(car);
-		
-		return save.getId();
-	}
 	
 	
 }
