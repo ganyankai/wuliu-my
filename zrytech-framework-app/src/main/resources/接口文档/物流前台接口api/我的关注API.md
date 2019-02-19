@@ -2,23 +2,21 @@
 **本文档接口提交方式统一为：POST**
 
 
-### 1.关注列表信息
+### 我的关注信息展示
 
-*** 描述:车主查看关注的路线或货主.
-
+*** 描述:主要展示当前登录用户所关注的线路或关注的企业(车主或货主)
 
 **URL**
->/focusOn/page
+>/focusOn/selectMyFocus
 
 **请求参数**
 
 ``` json
 {
   "openid": "string",
-  "page":{"pageNum":1, "pageSize":10},
   "params": 
-{
-   "focusType": "",//(选传)(string)关注类型;关注的是路线还是车主;
+ {
+                               "focuserId": 5//关注人Id(选传):当前登录的用户(车主或货主)
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
@@ -31,46 +29,39 @@
 {
 "code":1,
 "msg":"success",
-"data":
-{
-"pageNum":1,
-"pageSize":10,
-"size":2,
-"startRow":1,
-"endRow":2,
-"total":2,
-"pages":1,
-"list":
-[
-{
-                            "id": 8,//账号Id
-                            "focuserId": 5,//关注人Id
-                            "beFocuserId": 15,//被关注的人Id
-                            "focusType": "",//关注类型;关注的是路线还是货主;
-                            "createDate":"" //创建时间
-}
-],
-"prePage":0,
-"nextPage":0,
-"isFirstPage":true,
-"isLastPage":true,
-"hasPreviousPage":false,
-"hasNextPage":false,
-"navigatePages":8,
-"navigatepageNums":[1],
-"navigateFirstPage":1,
-"navigateLastPage":1,
-"firstPage":1,
-"lastPage":1
+"data":{
+                              "linList": [   //关注线路集合
+                                {
+                                     "id":1,//线路ID
+                                     "startProvince": "",//出发省
+                                     "startCity": "",//出发市
+                                     "startCountry": "",//出发县
+                                     "endProvince": ,//到达省
+                                     "endCity": "",//到达市
+                                     "endCountry": "",//到达县
+                                     "createBy":,//创建人
+                                     "createDate":""//创建日期
+                                }
+                              ],
+                              "focusList":[ //关注客户集合(货主或车主)
+                                 {
+                                     "id": 8,//账号Id
+                                     "beFocuserId": 15,//被关注的人Id
+                                     "focusType": "",//关注类型;关注的是路线还是货主;
+                                     "focusTypeCN": "",//关注类型;关注的是路线还是货主;
+                                     "name":""//被关注人的企业名称
+                                 }
+                              ]
 }
 }
 ```
 
 
 
-### 1.添加关注路线或车主
 
-*** 描述:添加要关注的路线或车主
+### 1.添加关注车主或货主
+
+*** 描述:添加要关注的车主或货主
 
 
 **URL**
@@ -87,8 +78,7 @@
 {
                                "focuserId": 5,//关注人Id
                                "beFocuserId": 15,//被关注的人Id
-                               "focusType": "",//关注类型;关注的是路线还是车主;
-                               "createDate":"" //创建时间
+                               "focusType": ""//关注类型;关注的是货主还是车主;
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
@@ -106,7 +96,42 @@
 
 
 
-### 1.关注详情
+
+
+### 1.关注删除
+
+*** 描述:删除关注的车主.
+
+**URL**
+>/focusOn/delete
+
+
+
+**请求参数**
+
+``` json
+{
+  "openid": "string",
+  "params": 
+{
+  	 "id": 8 //关注Id
+  },
+   "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
+}
+```
+
+
+**响应示例**
+
+``` json
+{
+"code":1,
+"msg":"success"
+}
+```
+
+
+### 1.关注详情(前端)
 
 *** 描述:查看关注的详情,如果关注的路线,则返回此路线相关货源信息列表,如果关注的是货主,则返回当前货主发布的货源信息列表.
 
@@ -142,6 +167,7 @@
     "msg": "success",
     "data":
     [
+       {
          "id": 7,//货源id
          "name": "",//货物介质
          "logo": 123,//logo头像
@@ -171,20 +197,22 @@
          "endDate":"",//截止日期
          "remark":"",//备注
          "createDate":"" //创建日期
+         }
     ]
 }
 ```
 
 
 
+===============================线路API===============================
 
+### 1.添加关注路线
 
-### 1.关注删除
+*** 描述:添加要关注的路线
 
-*** 描述:删除关注的路线或车主.
 
 **URL**
->/focusOn/delete
+>/line/add
 
 
 
@@ -195,7 +223,45 @@
   "openid": "string",
   "params": 
 {
-  	 "id": 8 //关注Id
+                                      "startProvince": "",//出发省
+                                      "startCity": "",//出发市
+                                      "startCountry": "",//出发县
+                                      "endProvince": ,//到达省
+                                      "endCity": "",//到达市
+                                      "endCountry": ""//到达县
+  },
+   "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
+}
+```
+
+
+**响应示例**
+
+``` json
+{
+    "code": 1,
+    "msg": "success"
+}
+```
+
+
+### 1.线路删除
+
+*** 描述:删除线路
+
+**URL**
+>/line/delete
+
+
+
+**请求参数**
+
+``` json
+{
+  "openid": "string",
+  "params": 
+{
+  	 "id": 8 //线路Id
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }

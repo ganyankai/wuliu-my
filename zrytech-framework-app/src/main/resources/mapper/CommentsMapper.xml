@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zry.framework.mapper.CommentsMapper">
+    <resultMap id="evaluation" type="com.zry.framework.entity.Evaluation">
+        <id column="id" property="id"/>
+        <result column="bill_no" property="billNo"/>
+        <result column="appraiser_id" property="appraiserId"/>
+        <result column="appraiser_by_id" property="appraiserById"/>
+        <result column="content" property="content"/>
+        <result column="evaluate_type" property="evaluateType"/>
+        <result column="evaluate_level" property="evaluateLevel"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,bill_no,appraiser_id,appraiser_by_id,content,evaluate_type,evaluate_level,create_date
+    </sql>
+
+    <select id="evaluationPage" resultMap="evaluation">
+        select
+        <include refid="columns"/>
+        from evaluate
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="evaluation.content != null and evaluation.content != ''">
+                and content like concat('%',#{evaluation.content},'%')
+            </if>
+            <if test="evaluation.billNo != null and evaluation.billNo !=''">
+                and bill_no=#{evaluation.billNo}
+            </if>
+            <if test="evaluation.appraiserId != null">
+                and appraiser_id=#{evaluation.appraiserId}
+            </if>
+            <if test="evaluation.appraiserById != null">
+                and appraiser_by_id=#{evaluation.appraiserById}
+            </if>
+            <if test="evaluation.evaluateType != null and evaluation.evaluateType !=''">
+                and evaluate_type=#{evaluation.evaluateType}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <insert id="addComments" useGeneratedKeys="true" keyProperty="id">
+        insert into evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="billNo != null and billNo !=''">
+                bill_no,
+            </if>
+            <if test="appraiserId != null">
+                appraiser_id,
+            </if>
+            <if test="appraiserById != null">
+                appraiser_by_id,
+            </if>
+            <if test="content != null and content !=''">
+                content,
+            </if>
+            <if test="evaluateType != null and evaluateType !=''">
+                evaluate_type,
+            </if>
+            <if test="evaluateLevel != null">
+                evaluate_level,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="billNo != null and billNo !=''">
+                #{billNo} ,
+            </if>
+            <if test="appraiserId != null">
+                #{appraiserId} ,
+            </if>
+            <if test="appraiserById != null">
+                #{appraiserById} ,
+            </if>
+            <if test="content != null and content !=''">
+                #{content} ,
+            </if>
+            <if test="evaluateType != null and evaluateType !=''">
+                #{evaluateType},
+            </if>
+            <if test="evaluateLevel != null">
+                #{evaluateLevel},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="get" resultMap="evaluation">
+        select
+        <include refid="columns"/>
+        from evaluate
+        where id =#{id}
+    </select>
+
+    <delete id="delete">
+        delete from evaluate
+        where id = #{id}
+    </delete>
+
+</mapper>

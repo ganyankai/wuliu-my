@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zry.framework.mapper.FocusOnMapper">
+    <resultMap id="focus" type="com.zry.framework.entity.Focus">
+        <id column="id" property="id"/>
+        <result column="focuser_id" property="focuserId"/>
+        <result column="be_focuser_id" property="beFocuserId"/>
+        <result column="focus_type" property="focusType"/>
+        <result column="create_date" property="createDate"/>
+        <result column="name" property="name"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,focuser_id,be_focuser_id,focus_type,create_date
+    </sql>
+
+    <select id="focusPage" resultMap="focus">
+        select
+        <include refid="columns"/>,owner.name
+        from my_focus_person focus JOIN car_cargo_ownner owner ON
+        focus.be_focuser_id=owner.cusomer_id
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="focusOn.focuserId != null">
+                and focus.focuser_id=#{focusOn.focuserId}
+            </if>
+            <if test="focusOn.beFocuserId != null">
+                and focus.be_focuser_id=#{focusOn.beFocuserId}
+            </if>
+            <if test="focusOn.focusType != null and focusOn.focusType !=''">
+                and focus.focus_type=#{focusOn.focusType}
+            </if>
+        </trim>
+        ORDER BY focus.create_date DESC
+    </select>
+
+    <insert id="addFocus" useGeneratedKeys="true" keyProperty="id">
+        insert into my_focus_person
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="focuserId != null">
+                focuser_id,
+            </if>
+            <if test="beFocuserId != null">
+                be_focuser_id,
+            </if>
+            <if test="focusType != null and focusType !=''">
+                focus_type,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="focuserId != null">
+                #{focuserId} ,
+            </if>
+            <if test="beFocuserId != null">
+                #{beFocuserId} ,
+            </if>
+            <if test="focusType != null and focusType !=''">
+                #{focusType} ,
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="get" resultMap="focus">
+        select
+        <include refid="columns"/>,owner.name
+        from my_focus_person focus JOIN car_cargo_ownner owner ON
+        focus.be_focuser_id=owner.cusomer_id
+        where id =#{id}
+    </select>
+
+    <delete id="delete">
+        delete from my_focus_person
+        where id = #{id}
+    </delete>
+
+    <select id="selectCreateBy" resultMap="focus">
+        select
+        <include refid="columns"/>,owner.name
+        from my_focus_person focus JOIN car_cargo_ownner owner ON
+        focus.be_focuser_id=owner.cusomer_id
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="focuserId != null">
+                and focus.focuser_id=#{focuserId}
+            </if>
+        </trim>
+        ORDER BY focus.create_date DESC
+    </select>
+
+</mapper>

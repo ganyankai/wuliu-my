@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zry.framework.mapper.FocusLineMapper">
+    <resultMap id="focusLine" type="com.zry.framework.entity.FocusLine">
+        <id column="id" property="id"/>
+        <result column="start_province" property="startProvince"/>
+        <result column="start_city" property="startCity"/>
+        <result column="start_country" property="startCountry"/>
+        <result column="end_province" property="endProvince"/>
+        <result column="end_city" property="endCity"/>
+        <result column="end_country" property="endCountry"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,start_province,start_city,start_country,end_province,end_city,end_country,create_by,create_date
+    </sql>
+
+    <select id="linePage" resultMap="focusLine">
+        select
+        <include refid="columns"/>
+        from my_focus_line
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="focusLine.startProvince != null and focusLine.startProvince !=''">
+                and start_province=#{focusLine.startProvince}
+            </if>
+            <if test="focusLine.startCity != null and focusLine.startCity !=''">
+                and start_city=#{focusLine.startCity}
+            </if>
+            <if test="focusLine.startCountry != null and focusLine.startCountry !=''">
+                and start_country=#{focusLine.startCountry}
+            </if>
+            <if test="focusLine.endProvince != null and focusLine.endProvince !=''">
+                and end_province=#{focusLine.endProvince}
+            </if>
+            <if test="focusLine.endCity != null and focusLine.endCity !=''">
+                and end_city=#{focusLine.endCity}
+            </if>
+            <if test="focusLine.endCountry != null and focusLine.endCountry !=''">
+                and end_country=#{focusLine.endCountry}
+            </if>
+            <if test="focusLine.createBy != null">
+                and create_by=#{focusLine.createBy}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <insert id="addFocusLine" useGeneratedKeys="true" keyProperty="id">
+        insert into my_focus_line
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="startProvince != null and startProvince !=''">
+                start_province,
+            </if>
+            <if test="startCity != null and startCity !=''">
+                start_city,
+            </if>
+            <if test="startCountry != null and startCountry !=''">
+                start_country,
+            </if>
+            <if test="endProvince != null and endProvince !=''">
+                end_province,
+            </if>
+            <if test="endCity != null and endCity !=''">
+                end_city,
+            </if>
+            <if test="endCountry != null and endCountry !=''">
+                end_country,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="startProvince != null and startProvince !=''">
+                #{startProvince} ,
+            </if>
+            <if test="startCity != null and startCity !=''">
+                #{startCity} ,
+            </if>
+            <if test="startCountry != null and startCountry !=''">
+                #{startCountry} ,
+            </if>
+            <if test="endProvince != null and endProvince !=''">
+                #{endProvince} ,
+            </if>
+            <if test="endCity != null and endCity !=''">
+                #{endCity} ,
+            </if>
+            <if test="endCountry != null and endCountry !=''">
+                #{endCountry} ,
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="get" resultMap="focusLine">
+        select
+        <include refid="columns"/>
+        from my_focus_line
+        where id =#{id}
+    </select>
+
+    <delete id="delete">
+        delete from my_focus_line
+        where id = #{id}
+    </delete>
+
+
+    <select id="selectCreateBy" resultMap="focusLine">
+        select
+        <include refid="columns"/>
+        from my_focus_line
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="focuserId != null">
+                and create_by=#{focuserId}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+</mapper>
