@@ -14,7 +14,7 @@
         <result column="create_date" property="createDate"/>
     </resultMap>
 
-    <sql id="column">
+    <sql id="columns">
        id,customer_id,cargo_name,begin_province,begin_city,begin_county,end_province,end_city,end_county,create_date
     </sql>
 
@@ -46,5 +46,80 @@
             )
         </foreach>
     </insert>
+
+    <select id="addressPage" resultMap="oftenAddress">
+        select
+        <include refid="columns"/>
+        from address
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="oftenAddress.cargoName != null and oftenAddress.cargoName != ''">
+                and cargo_name like concat('%',#{oftenAddress.cargoName},'%')
+            </if>
+            <if test="oftenAddress.beginProvince != null and oftenAddress.beginProvince !=''">
+                and begin_province=#{oftenAddress.beginProvince}
+            </if>
+            <if test="oftenAddress.beginCity != null and oftenAddress.beginCity !=''">
+                and begin_city=#{oftenAddress.beginCity}
+            </if>
+            <if test="oftenAddress.beginCountry != null and oftenAddress.beginCountry !=''">
+                and begin_county=#{oftenAddress.beginCountry}
+            </if>
+            <if test="oftenAddress.endProvince != null and oftenAddress.endProvince !=''">
+                and end_province=#{oftenAddress.endProvince}
+            </if>
+            <if test="oftenAddress.endCity != null and oftenAddress.endCity !=''">
+                and end_city=#{oftenAddress.endCity}
+            </if>
+            <if test="oftenAddress.endCountry != null and oftenAddress.endCountry !=''">
+                and end_country=#{oftenAddress.endCountry}
+            </if>
+            <if test="oftenAddress.customerId != null">
+                and customer_id=#{oftenAddress.customerId}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <update id="update">
+        update address
+        <set>
+            <if test="beginProvince != null and beginProvince !=''">
+                begin_province = #{beginProvince},
+            </if>
+            <if test="beginCity != null and beginCity !=''">
+                begin_city = #{beginCity},
+            </if>
+            <if test="beginCounty != null and beginCounty !=''">
+                begin_county= #{beginCounty},
+            </if>
+            <if test="endProvince != null and endProvince !=''">
+                end_province = #{endProvince},
+            </if>
+            <if test="endCity != null and endCity !=''">
+                end_city = #{endCity},
+            </if>
+            <if test="endCounty != null and endCounty !=''">
+                end_county = #{endCounty},
+            </if>
+            <if test="cargoName != null and cargoName !=''">
+                cargo_name = #{cargoName}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="get" resultMap="oftenAddress">
+        select
+        <include refid="columns"/>
+        from address
+        where id =#{id}
+    </select>
+
+    <delete id="delete">
+        delete from address
+        where id = #{id}
+    </delete>
 
 </mapper>

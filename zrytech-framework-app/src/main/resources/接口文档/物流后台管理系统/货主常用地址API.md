@@ -16,7 +16,7 @@
  "page":{"pageNum":1, "pageSize":10},
  "params": 
 {
-    "medium":"",  //货物介质
+    "cargoName":"",  //货物介质
 	"beginProvince":"湖北省",  //(选传)(string) 出发省
 	"beginCity": "黄冈",//(选传)(string)出发城市
 	"beginCounty": "罗田" //(选传)(string)出发县
