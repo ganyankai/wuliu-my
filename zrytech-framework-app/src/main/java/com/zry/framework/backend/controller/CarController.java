@@ -17,6 +17,12 @@ import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
 
+/**
+ * 后台管理系统 - 车辆
+ * 
+ * @author cat
+ *
+ */
 @RestController
 @RequestMapping("/admin/car")
 public class CarController {
@@ -24,6 +30,14 @@ public class CarController {
 	@Autowired
 	private CarService carService;
 
+	/**
+	 * 车辆分页
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
 	@Valid
 	@RequestMapping("/page")
 	public ServerResponse page(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result,
@@ -33,6 +47,14 @@ public class CarController {
 	}
 	
 	
+	/**
+	 * 车辆详情
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
 	@Valid
 	@RequestMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
@@ -41,6 +63,14 @@ public class CarController {
 	}
 
 	
+	/**
+	 * 车辆审核
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
 	@Valid
 	@RequestMapping("/check")
 	public ServerResponse check(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result,

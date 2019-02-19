@@ -1,7 +1,5 @@
 package com.zry.framework.dto;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,10 +28,20 @@ public class CarPageDto {
 	/**
 	 * 车辆类型
 	 */
-	private String cartype;
+	private String carType;
 
 	/**
 	 * 车主企业名称
 	 */
 	private String name;
+	
+	/**
+	 * 删除标识
+	 */
+	private Boolean isDelete;
+	
+	/**
+	 * 车辆状态
+	 */
+	private String status;
 }

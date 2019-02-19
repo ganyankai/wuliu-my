@@ -232,6 +232,21 @@
 	  	<if test="carNo != null and carNo != ''">
 	  		and `car_no` like CONCAT('%', #{carNo}, '%')
 	  	</if>
+	  	<if test="createBy != null">
+	  		and `create_by` = #{createBy}
+	  	</if>
+	  	<if test="status != null and status != ''">
+	  		and `status` = #{status}
+	  	</if>
+	  	<if test="carType != null and carType != ''">
+	  		and `car_type` = #{carType}
+	  	</if>
+	  	<if test="id != null">
+	  		and `id` = #{id}
+	  	</if>
+	  	<if test="isDelete != null">
+	  		and `is_delete` = #{isDelete}
+	  	</if>
   	</where>
   	order by `create_date` desc
   </select>

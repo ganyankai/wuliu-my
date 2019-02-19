@@ -60,6 +60,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 车辆分页
 	 * @author cat
+	 * 
 	 * @param dto	查询条件，详见{@link CarPageDto}
 	 * @param pageNum
 	 * @param pageSize
@@ -84,6 +85,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 车辆详情（包含车主、司机、压货人）
 	 * @author cat
+	 * 
 	 * @param id	车辆Id
 	 * @return
 	 */
@@ -100,6 +102,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 为车辆绑定车主信息
 	 * @author cat
+	 * 
 	 * @param car
 	 * @return
 	 */
@@ -116,6 +119,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 为车辆绑定车司机信息
 	 * @author cat
+	 * 
 	 * @param car
 	 * @return
 	 */
@@ -132,6 +136,7 @@ public class CarServiceImpl implements CarService {
 	/**
 	 * 为车辆绑定车压货人信息
 	 * @author cat
+	 * 
 	 * @param car
 	 * @return
 	 */
@@ -145,13 +150,12 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	
-	
-	
-	
 	/**
 	 * 车辆审核
+	 * @author cat
 	 * 
 	 * @param checkDto 审核结果
+	 * @return
 	 */
 	public ServerResponse check(CheckDto checkDto) {
 		Integer businessId = checkDto.getBusinessId();
@@ -179,6 +183,8 @@ public class CarServiceImpl implements CarService {
 	
 	/**
 	 * 断言车辆存在
+	 * @author cat
+	 * 
 	 * @param id 车辆Id
 	 * @return
 	 */
@@ -190,12 +196,6 @@ public class CarServiceImpl implements CarService {
 		return car;
 	}
 	
-	
-	public Integer save(Car car) {
-		Car save = carRepository.save(car);
-		
-		return save.getId();
-	}
 	
 	
 }
