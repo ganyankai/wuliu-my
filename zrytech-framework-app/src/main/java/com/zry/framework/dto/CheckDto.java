@@ -17,7 +17,7 @@ public class CheckDto {
 	@NotEmpty(message = "审核内容不能为空")
 	private String content; 
 	
-	@NotNull(message = "审核结果不能为空")
-	private Boolean result;
+	@NotEmpty(message = "审核结果不能为空")
+	private String result;
 	
 }

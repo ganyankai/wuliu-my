@@ -1,5 +1,6 @@
 package com.zry.framework.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -19,13 +20,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
 import com.zry.framework.repository.CarPersonRepository;
 import com.zry.framework.repository.CarRepository;
 import com.github.pagehelper.PageHelper;
+import com.zry.framework.constants.ApproveLogConstants;
 import com.zry.framework.constants.CarConstants;
 import com.zry.framework.dto.CarPageDto;
 import com.zry.framework.dto.CheckDto;
+import com.zry.framework.entity.ApproveLog;
 import com.zry.framework.entity.Car;
 import com.zry.framework.entity.CarCargoOwnner;
 import com.zry.framework.entity.CarPerson;
@@ -35,6 +39,7 @@ import com.zry.framework.utils.PageDataUtils;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.common.entity.User;
 
 /**
  * 车辆
@@ -53,6 +58,8 @@ public class CarServiceImpl implements CarService {
 	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
 	
 	@Autowired private CarPersonRepository carPersonRepository;
+	
+	@Autowired private ApproveLogRepository approveLogRepository;
 	
 	@Autowired private CarMapper carMapper;
 	
@@ -157,7 +164,8 @@ public class CarServiceImpl implements CarService {
 	 * @param checkDto 审核结果
 	 * @return
 	 */
-	public ServerResponse check(CheckDto checkDto) {
+	@Override
+	public ServerResponse check(CheckDto checkDto, User user) {
 		Integer businessId = checkDto.getBusinessId();
 		
 		Car car = this.assertCarExist(businessId);
@@ -165,19 +173,30 @@ public class CarServiceImpl implements CarService {
 		if(!CarConstants.CAR_STATUS_WAIT_CHECK.equalsIgnoreCase(car.getStatus())) {
 			throw new BusinessException(112, "审核失败：车辆状态不是待审核");
 		}
+		if(car.getIsDelete()) {
+			throw new BusinessException(112, "审核失败：车辆已被删除");
+		}
 		
 		// 修改车辆状态
-		Boolean result = checkDto.getResult();
-		if(result) {
+		String result = checkDto.getResult();
+		if(ApproveLogConstants.APPROVE_RESULT_PASS.equals(result)) {
 			car.setStatus(CarConstants.CAR_STATUS_UP);
 		}else {
 			car.setStatus(CarConstants.CAR_STATUS_DOWN);
 		}
 		carRepository.save(car);
 		
-		// 添加审核记录 TODO
+		// 添加审核记录
+		ApproveLog entity = new ApproveLog();
+		entity.setApproveBy(user.getId());
+		entity.setApproveContent(checkDto.getContent());
+		entity.setApproveResult(checkDto.getResult());
+		entity.setApproveTime(new Date());
+		entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_CAR);
+		entity.setBusinessId(businessId);
+		approveLogRepository.save(entity);
 		
-		return ServerResponse.success();
+		return ServerResponse.successWithData("审核成功");
 	}
 	
 	

@@ -250,7 +250,7 @@
     	"params": {
             "businessId": "",     （必填）（int）车辆Id
             "content": "",        （必填）（str）审核意见
-            "result": ""          （必填）（boolean）审核结果【true | false】
+            "result": ""          （必填）（str）审核结果【pass | no_pass】
     	},
     	"token": ""
 	}
