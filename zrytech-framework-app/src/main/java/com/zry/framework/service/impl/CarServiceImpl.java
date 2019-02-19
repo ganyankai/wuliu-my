@@ -22,12 +22,14 @@ import org.springframework.stereotype.Service;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
 import com.zry.framework.repository.CarPersonRepository;
 import com.zry.framework.repository.CarRepository;
+import com.github.pagehelper.PageHelper;
 import com.zry.framework.constants.CarConstants;
 import com.zry.framework.dto.CarPageDto;
 import com.zry.framework.dto.CheckDto;
 import com.zry.framework.entity.Car;
 import com.zry.framework.entity.CarCargoOwnner;
 import com.zry.framework.entity.CarPerson;
+import com.zry.framework.mapper.CarMapper;
 import com.zry.framework.service.CarService;
 import com.zry.framework.utils.PageDataUtils;
 import com.zrytech.framework.base.entity.PageData;
@@ -52,6 +54,8 @@ public class CarServiceImpl implements CarService {
 	
 	@Autowired private CarPersonRepository carPersonRepository;
 	
+	@Autowired private CarMapper carMapper;
+	
 	
 	/**
 	 * 车辆分页
@@ -63,37 +67,16 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse page(CarPageDto dto, Integer pageNum, Integer pageSize){
-		if(StringUtils.isNoneBlank(dto.getName())) {
-			List<Integer> ids = carCargoOwnnerRepository.findIdByName(dto.getName());
-		}
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		
-		
-		Car car = new Car();
-		BeanUtils.copyProperties(dto, car);
-		
-		Sort sort = new Sort(Direction.DESC, "createDate");
-		
-		Pageable pageable = new PageRequest(pageNum - 1, pageSize, sort);
-	
-		
-		ExampleMatcher matcher = ExampleMatcher.matching()
-				.withMatcher("carNo", GenericPropertyMatchers.contains());
-		
-		Example<Car> example = Example.of(car, matcher);
-	
-		Page<Car> page = carRepository.findAll(example, pageable);
-		
-		
-		PageData<Car> pageData = pageDataUtils.bindingData(page);
-		
-		List<Car> content = page.getContent();
-		for (Car temp : content) {
+		List<Car> list = carMapper.selectSelective(dto);
+		for (Car temp : list) {
 			temp.setCarOwnerName(carCargoOwnnerRepository.findNameById(temp.getCreateBy()));
 			temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
 			temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
 		}
-		pageData.setList(content);
 		
+		PageData<Car> pageData = new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
 	}
 	
@@ -107,12 +90,9 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public ServerResponse details(Integer id) {
 		Car car = carRepository.findOne(id);
-		// 车主
-		car = bindingCarOwner(car);
-		// 司机
-		car = bindingDriver(car);
-		// 压货人
-		car = bindingSupercargo(car);
+		car = bindingCarOwner(car);		// 车主
+		car = bindingDriver(car);		// 司机
+		car = bindingSupercargo(car);	// 压货人
 		return ServerResponse.successWithData(car);
 	}
 	

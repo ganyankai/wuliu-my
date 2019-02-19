@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zry.framework.mapper.CarMapper" >
+  <resultMap id="BaseResultMap" type="com.zry.framework.entity.Car" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="car_no" property="carNo" jdbcType="VARCHAR" />
+    <result column="car_load" property="carLoad" jdbcType="INTEGER" />
+    <result column="car_unit" property="carUnit" jdbcType="VARCHAR" />
+    <result column="car_type" property="carType" jdbcType="VARCHAR" />
+    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
+    <result column="supercargo_id" property="supercargoId" jdbcType="INTEGER" />
+    <result column="current_longitude" property="currentLongitude" jdbcType="DECIMAL" />
+    <result column="current_latitude" property="currentLatitude" jdbcType="DECIMAL" />
+    <result column="current_address" property="currentAddress" jdbcType="VARCHAR" />
+    <result column="mul_store" property="mulStore" jdbcType="BIT" />
+    <result column="store_qty" property="storeQty" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, car_no, car_load, car_unit, car_type, driver_id, supercargo_id, current_longitude, 
+    current_latitude, current_address, mul_store, store_qty, status, is_delete, create_by, 
+    create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from car
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zry.framework.entity.Car" >
+    insert into car (id, car_no, car_load, 
+      car_unit, car_type, driver_id, 
+      supercargo_id, current_longitude, current_latitude, 
+      current_address, mul_store, store_qty, 
+      status, is_delete, create_by, 
+      create_date)
+    values (#{id,jdbcType=INTEGER}, #{carNo,jdbcType=VARCHAR}, #{carLoad,jdbcType=INTEGER}, 
+      #{carUnit,jdbcType=VARCHAR}, #{carType,jdbcType=VARCHAR}, #{driverId,jdbcType=INTEGER}, 
+      #{supercargoId,jdbcType=INTEGER}, #{currentLongitude,jdbcType=DECIMAL}, #{currentLatitude,jdbcType=DECIMAL}, 
+      #{currentAddress,jdbcType=VARCHAR}, #{mulStore,jdbcType=BIT}, #{storeQty,jdbcType=INTEGER}, 
+      #{status,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, #{createBy,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zry.framework.entity.Car" >
+    insert into car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="carNo != null" >
+        car_no,
+      </if>
+      <if test="carLoad != null" >
+        car_load,
+      </if>
+      <if test="carUnit != null" >
+        car_unit,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+      <if test="driverId != null" >
+        driver_id,
+      </if>
+      <if test="supercargoId != null" >
+        supercargo_id,
+      </if>
+      <if test="currentLongitude != null" >
+        current_longitude,
+      </if>
+      <if test="currentLatitude != null" >
+        current_latitude,
+      </if>
+      <if test="currentAddress != null" >
+        current_address,
+      </if>
+      <if test="mulStore != null" >
+        mul_store,
+      </if>
+      <if test="storeQty != null" >
+        store_qty,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="carNo != null" >
+        #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="carLoad != null" >
+        #{carLoad,jdbcType=INTEGER},
+      </if>
+      <if test="carUnit != null" >
+        #{carUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="supercargoId != null" >
+        #{supercargoId,jdbcType=INTEGER},
+      </if>
+      <if test="currentLongitude != null" >
+        #{currentLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="currentLatitude != null" >
+        #{currentLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="currentAddress != null" >
+        #{currentAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="mulStore != null" >
+        #{mulStore,jdbcType=BIT},
+      </if>
+      <if test="storeQty != null" >
+        #{storeQty,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zry.framework.entity.Car" >
+    update car
+    <set >
+      <if test="carNo != null" >
+        car_no = #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="carLoad != null" >
+        car_load = #{carLoad,jdbcType=INTEGER},
+      </if>
+      <if test="carUnit != null" >
+        car_unit = #{carUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        car_type = #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        driver_id = #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="supercargoId != null" >
+        supercargo_id = #{supercargoId,jdbcType=INTEGER},
+      </if>
+      <if test="currentLongitude != null" >
+        current_longitude = #{currentLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="currentLatitude != null" >
+        current_latitude = #{currentLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="currentAddress != null" >
+        current_address = #{currentAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="mulStore != null" >
+        mul_store = #{mulStore,jdbcType=BIT},
+      </if>
+      <if test="storeQty != null" >
+        store_qty = #{storeQty,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zry.framework.entity.Car" >
+    update car
+    set car_no = #{carNo,jdbcType=VARCHAR},
+      car_load = #{carLoad,jdbcType=INTEGER},
+      car_unit = #{carUnit,jdbcType=VARCHAR},
+      car_type = #{carType,jdbcType=VARCHAR},
+      driver_id = #{driverId,jdbcType=INTEGER},
+      supercargo_id = #{supercargoId,jdbcType=INTEGER},
+      current_longitude = #{currentLongitude,jdbcType=DECIMAL},
+      current_latitude = #{currentLatitude,jdbcType=DECIMAL},
+      current_address = #{currentAddress,jdbcType=VARCHAR},
+      mul_store = #{mulStore,jdbcType=BIT},
+      store_qty = #{storeQty,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
+  	select * from `car` 
+  	<where>
+	  	<if test="name != null and name != ''">
+	  		`create_by` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{name}, '%'))
+	  	</if>
+	  	<if test="carNo != null and carNo != ''">
+	  		and `car_no` like CONCAT('%', #{carNo}, '%')
+	  	</if>
+  	</where>
+  	order by `create_date` desc
+  </select>
+</mapper>
