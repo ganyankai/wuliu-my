@@ -10,6 +10,4 @@ import java.util.List;
 
 @Repository
 public interface BillLocationRepository extends JpaRepository<BillLocation, Integer> {
-    @Query(value = "",nativeQuery = true)
-    List<BillLocation> findBillLocationByAddressDetail();
 }
