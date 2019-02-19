@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
+import org.springframework.data.domain.ExampleMatcher.MatcherConfigurer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +63,11 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse page(CarPageDto dto, Integer pageNum, Integer pageSize){
+		if(StringUtils.isNoneBlank(dto.getName())) {
+			List<Integer> ids = carCargoOwnnerRepository.findIdByName(dto.getName());
+		}
+		
+		
 		Car car = new Car();
 		BeanUtils.copyProperties(dto, car);
 		
@@ -67,13 +75,14 @@ public class CarServiceImpl implements CarService {
 		
 		Pageable pageable = new PageRequest(pageNum - 1, pageSize, sort);
 	
+		
 		ExampleMatcher matcher = ExampleMatcher.matching()
-				.withMatcher("carNo", GenericPropertyMatchers.contains())
-				.withIgnorePaths("id");
+				.withMatcher("carNo", GenericPropertyMatchers.contains());
 		
 		Example<Car> example = Example.of(car, matcher);
-		
+	
 		Page<Car> page = carRepository.findAll(example, pageable);
+		
 		
 		PageData<Car> pageData = pageDataUtils.bindingData(page);
 		
