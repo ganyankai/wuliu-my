@@ -1,10 +1,14 @@
 package com.zry.framework.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.zry.framework.dao.OftenAddressDao;
 import com.zry.framework.dto.OftenAddressDto;
+import com.zry.framework.entity.OftenAddress;
 import com.zry.framework.service.OftenAddressService;
+import com.zry.framework.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,7 +30,9 @@ public class OftenAddressServiceImpl implements OftenAddressService {
      */
     @Override
     public ServerResponse addressPage(OftenAddressDto oftenAddressDto, Page page) {
-        return null;
+        OftenAddress oftenAddress= BeanUtil.copy(oftenAddressDto,OftenAddress.class);
+        PageInfo<OftenAddress> pageInfo=oftenAddressDao.addressPage(oftenAddress,page);
+        return ServerResponse.successWithData(pageInfo);
     }
 
     /**
@@ -50,7 +56,9 @@ public class OftenAddressServiceImpl implements OftenAddressService {
      */
     @Override
     public ServerResponse get(OftenAddressDto oftenAddressDto) {
-        return null;
+        CheckFieldUtils.checkObjecField(oftenAddressDto.getId());
+        OftenAddress oftenAddress=oftenAddressDao.get(oftenAddressDto.getId());
+        return ServerResponse.successWithData(oftenAddress);
     }
 
     /**
@@ -62,7 +70,10 @@ public class OftenAddressServiceImpl implements OftenAddressService {
      */
     @Override
     public ServerResponse update(OftenAddressDto oftenAddressDto) {
-        return null;
+        OftenAddress oftenAddress=BeanUtil.copy(oftenAddressDto,OftenAddress.class);
+        int num=oftenAddressDao.update(oftenAddress);
+        CheckFieldUtils.assertSuccess(num);
+        return ServerResponse.success();
     }
 
     /**
@@ -74,6 +85,9 @@ public class OftenAddressServiceImpl implements OftenAddressService {
      */
     @Override
     public ServerResponse delete(OftenAddressDto oftenAddressDto) {
-        return null;
+        CheckFieldUtils.checkObjecField(oftenAddressDto.getId());
+        int num=oftenAddressDao.delete(oftenAddressDto.getId());
+        CheckFieldUtils.assertSuccess(num);
+        return ServerResponse.success();
     }
 }

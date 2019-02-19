@@ -23,7 +23,7 @@
         id,login_counter,tel,name,logo,referrer,customer_type,is_active,create_by,create_date,pwd
     </sql>
 
-    <insert id="insertCustomer" parameterType="com.zrytech.framework.price.entity.CargoCustomer">
+    <insert id="insertCustomer" parameterType="com.zry.framework.entity.CargoCustomer">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>
