@@ -1,7 +1,8 @@
 package com.zry.framework.service.impl;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,47 +16,46 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.zry.framework.repository.CarCargoOwnnerRepository;
+import com.zry.framework.repository.CarPersonRepository;
 import com.zry.framework.repository.CarRepository;
+import com.zry.framework.constants.CarConstants;
 import com.zry.framework.dto.CarPageDto;
 import com.zry.framework.dto.CheckDto;
 import com.zry.framework.entity.Car;
+import com.zry.framework.entity.CarCargoOwnner;
+import com.zry.framework.entity.CarPerson;
 import com.zry.framework.service.CarService;
 import com.zry.framework.utils.PageDataUtils;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.exception.BusinessException;
 
+/**
+ * 车辆
+ * 
+ * @author cat
+ *
+ */
 @Service
+@Transactional
 public class CarServiceImpl implements CarService {
 	
 	@Autowired private CarRepository carRepository;
 	
 	@Autowired private PageDataUtils<Car> pageDataUtils;
 	
-	public Integer save(Car car) {
-		Car save = carRepository.save(car);
-		
-		return save.getId();
-	}
+	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
+	
+	@Autowired private CarPersonRepository carPersonRepository;
 	
 	
 	/**
-	 * 详情
-	 * @param id
-	 * @return
-	 */
-	public Car details(Integer id) {
-		Car car = carRepository.findOne(id);
-		// TODO 车主
-		// TODO 司机
-		// TODO 压货人
-		
-		return car;
-	}
-	
-
-	
-	/**
-	 * 
+	 * 车辆分页
+	 * @author cat
+	 * @param dto	查询条件，详见{@link CarPageDto}
+	 * @param pageNum
+	 * @param pageSize
 	 * @return
 	 */
 	@Override
@@ -77,26 +77,136 @@ public class CarServiceImpl implements CarService {
 		
 		PageData<Car> pageData = pageDataUtils.bindingData(page);
 		
+		List<Car> content = page.getContent();
+		for (Car temp : content) {
+			temp.setCarOwnerName(carCargoOwnnerRepository.findNameById(temp.getCreateBy()));
+			temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
+			temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
+		}
+		pageData.setList(content);
+		
 		return ServerResponse.successWithData(pageData);
 	}
+	
+	
+	/**
+	 * 车辆详情（包含车主、司机、压货人）
+	 * @author cat
+	 * @param id	车辆Id
+	 * @return
+	 */
+	@Override
+	public ServerResponse details(Integer id) {
+		Car car = carRepository.findOne(id);
+		// 车主
+		car = bindingCarOwner(car);
+		// 司机
+		car = bindingDriver(car);
+		// 压货人
+		car = bindingSupercargo(car);
+		return ServerResponse.successWithData(car);
+	}
+	
+
+	/**
+	 * 为车辆绑定车主信息
+	 * @author cat
+	 * @param car
+	 * @return
+	 */
+	public Car bindingCarOwner(Car car) {
+		if(car.getCreateBy() != null) {
+			CarCargoOwnner carOwner = carCargoOwnnerRepository.findOne(car.getCreateBy());
+			car.setCarOwnerName(carOwner.getName());
+			car.setCarOwner(carOwner);
+		}
+		return car;
+	}
+	
+	
+	/**
+	 * 为车辆绑定车司机信息
+	 * @author cat
+	 * @param car
+	 * @return
+	 */
+	public Car bindingDriver(Car car) {
+		if(car.getDriverId() != null) {
+			CarPerson driver = carPersonRepository.findOne(car.getDriverId());
+			car.setDriver(driver);
+			car.setDriverName(driver.getName());
+		}
+		return car;
+	}
+	
+	
+	/**
+	 * 为车辆绑定车压货人信息
+	 * @author cat
+	 * @param car
+	 * @return
+	 */
+	public Car bindingSupercargo(Car car) {
+		if(car.getSupercargoId() != null) {
+			CarPerson supercargo = carPersonRepository.findOne(car.getSupercargoId());
+			car.setSupercargo(supercargo);
+			car.setSupercargoName(supercargo.getName());
+		}
+		return car;
+	}
+	
+	
 	
 	
 	
 	/**
 	 * 车辆审核
-	 * @param checkDto
+	 * 
+	 * @param checkDto 审核结果
 	 */
-	public void check(CheckDto checkDto) {
-		// 判断车辆是否存在 TODO
+	public ServerResponse check(CheckDto checkDto) {
+		Integer businessId = checkDto.getBusinessId();
 		
-		// 修改车辆状态 TODO
+		Car car = this.assertCarExist(businessId);
+		
+		if(!CarConstants.CAR_STATUS_WAIT_CHECK.equalsIgnoreCase(car.getStatus())) {
+			throw new BusinessException(112, "审核失败：车辆状态不是待审核");
+		}
+		
+		// 修改车辆状态
+		Boolean result = checkDto.getResult();
+		if(result) {
+			car.setStatus(CarConstants.CAR_STATUS_UP);
+		}else {
+			car.setStatus(CarConstants.CAR_STATUS_DOWN);
+		}
+		carRepository.save(car);
 		
 		// 添加审核记录 TODO
 		
-		
+		return ServerResponse.success();
 	}
 	
 	
+	/**
+	 * 断言车辆存在
+	 * @param id 车辆Id
+	 * @return
+	 */
+	public Car assertCarExist(Integer id) {
+		Car car = carRepository.findOne(id);
+		if(car == null) {
+			throw new BusinessException(112, "车辆不存在");
+		}
+		return car;
+	}
+	
+	
+	public Integer save(Car car) {
+		Car save = carRepository.save(car);
+		
+		return save.getId();
+	}
 	
 	
 }

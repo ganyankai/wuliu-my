@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -91,7 +92,27 @@ public class Car {
 	@Column(name = "`create_date`")
     private Date createDate;
 	
+	/**车主企业名称*/
+	@Transient
+	private String carOwnerName;
 	
+	/**司机姓名*/
+	@Transient
+	private String driverName;
 	
-    
+	/**压货人姓名*/
+	@Transient
+	private String supercargoName;
+	
+	/**车主*/
+	@Transient
+	private CarCargoOwnner carOwner;
+	
+	/**司机*/
+	@Transient
+	private CarPerson driver;
+	
+	/**压货人*/
+	@Transient
+	private CarPerson supercargo;
 }
