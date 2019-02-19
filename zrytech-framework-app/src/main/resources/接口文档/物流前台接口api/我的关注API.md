@@ -21,7 +21,7 @@
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
 ```
-
+ 
 
 **响应示例**
 

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zry.framework.mapper.MessageMapper">
+    <resultMap id="message" type="com.zry.framework.entity.Message">
+        <id column="id" property="id"/>
+        <result column="msg_type" property="msgType"/>
+        <result column="sender_id" property="senderId"/>
+        <result column="sender_type" property="senderType"/>
+        <result column="sender_date" property="senderDate"/>
+        <result column="content" property="content"/>
+        <result column="reveicer_id" property="reveicerId"/>
+        <result column="reveicer_type" property="reveicerType"/>
+        <result column="mark_read" property="markRead"/>
+        <result column="read_date" property="readDate"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,msg_type,sender_id,sender_type,sender_date,content,reveicer_id,reveicer_type,mark_read,read_date
+    </sql>
+
+    <select id="messagePage" resultMap="message">
+        select
+        <include refid="columns"/>
+        from sys_message
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="message.msgType != null and message.msgType !=''">
+                and msg_type=#{message.msgType}
+            </if>
+            <if test="message.content != null and message.content !=''">
+                and content=#{message.content}
+            </if>
+            <if test="message.markRead != null">
+                and mark_read=#{message.markRead}
+            </if>
+            <if test="message.senderId != null">
+                and sender_id=#{message.senderId}
+            </if>
+            <if test="message.reveicerId != null">
+                and reveicer_id=#{message.reveicerId}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <insert id="addMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msgType != null and msgType !=''">
+                msg_type,
+            </if>
+            <if test="senderId != null">
+                sender_id,
+            </if>
+            <if test="senderType != null and senderType !=''">
+                sender_type,
+            </if>
+            <if test="senderDate != null">
+                sender_date,
+            </if>
+            <if test="content != null and content !=''">
+                content,
+            </if>
+            <if test="reveicerId != null">
+                reveicer_id,
+            </if>
+            <if test="reveicerType != null and reveicerType !=''">
+                reveicer_type,
+            </if>
+            <if test="markRead != null">
+                mark_read,
+            </if>
+            <if test="readDate != null">
+                read_date,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msgType != null and msgType !=''">
+                #{msgType} ,
+            </if>
+            <if test="senderId != null">
+                #{senderId} ,
+            </if>
+            <if test="senderType != null and senderType !=''">
+                #{senderType} ,
+            </if>
+            <if test="senderDate != null">
+                #{senderDate} ,
+            </if>
+            <if test="content != null and content !=''">
+                #{content} ,
+            </if>
+            <if test="reveicerId != null">
+                #{reveicerId} ,
+            </if>
+            <if test="reveicerType != null and reveicerType !=''">
+                #{reveicerType},
+            </if>
+            <if test="markRead != null">
+                #{markRead},
+            </if>
+            <if test="readDate != null">
+                #{readDate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="get" resultMap="message">
+        select
+        <include refid="columns"/>
+        from sys_message
+        where id =#{id}
+    </select>
+
+    <delete id="delete">
+        delete from sys_message
+        where id = #{id}
+    </delete>
+
+
+    <select id="selectMsgList" resultMap="message">
+        select
+        <include refid="columns"/>
+        from sys_message
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="senderId != null">
+                and sender_id=#{senderId}
+            </if>
+            <if test="reveicerId != null">
+                and reveicer_id=#{reveicerId}
+            </if>
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+</mapper>
