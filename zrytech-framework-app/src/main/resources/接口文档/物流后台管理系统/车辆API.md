@@ -62,10 +62,10 @@
     	"params": {
             "id":"",                  （选填）（int）车辆Id
             "createBy":"",            （选填）（int）车主Id
-            "carNo": "",              （选填）（str）车牌号（采用迷糊搜索）
+            "carNo": "",              （选填）（str）车牌号（采用模糊搜索）
             "cartype": "",            （选填）（str）车辆类型
             "status": "",             （选填）（str）车辆状态
-            "name": "",               （选填）（str）企业名称（采用迷糊搜索）
+            "name": "",               （选填）（str）企业名称（采用模糊搜索）
             "isDelete": ""            （选填）（boolean）删除标识【true | false】
     	},
         "page": {
