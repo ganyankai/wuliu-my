@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zry.framework.mapper.CarPersonMapper">
+  <resultMap id="BaseResultMap" type="com.zry.framework.entity.CarPerson">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="person_type" jdbcType="VARCHAR" property="personType" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="driving_licence" jdbcType="VARCHAR" property="drivingLicence" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, logo, tel, sex, age, id_card, person_type, customer_id, driving_licence, 
+    status, is_delete, create_by, create_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from car_person
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from car_person
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zry.framework.entity.CarPerson">
+    insert into car_person (id, name, logo, 
+      tel, sex, age, id_card, 
+      person_type, customer_id, driving_licence, 
+      status, is_delete, create_by, 
+      create_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{idCard,jdbcType=VARCHAR}, 
+      #{personType,jdbcType=VARCHAR}, #{customerId,jdbcType=INTEGER}, #{drivingLicence,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, #{createBy,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zry.framework.entity.CarPerson">
+    insert into car_person
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="logo != null">
+        logo,
+      </if>
+      <if test="tel != null">
+        tel,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="personType != null">
+        person_type,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="drivingLicence != null">
+        driving_licence,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="personType != null">
+        #{personType,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="drivingLicence != null">
+        #{drivingLicence,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zry.framework.entity.CarPerson">
+    update car_person
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="idCard != null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="personType != null">
+        person_type = #{personType,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="drivingLicence != null">
+        driving_licence = #{drivingLicence,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zry.framework.entity.CarPerson">
+    update car_person
+    set name = #{name,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      person_type = #{personType,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=INTEGER},
+      driving_licence = #{drivingLicence,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
+  	select * from `car_person` 
+  	<where>
+	  	<if test="name != null and name != ''">
+	  		`create_by` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
+	  	</if>
+	  	<if test="name != null and name != ''">
+	  		and `name` like CONCAT('%', #{name}, '%')
+	  	</if>
+	  	<if test="tel != null and tel != ''">
+	  		and `tel` like CONCAT('%', #{tel}, '%')
+	  	</if>
+	  	<if test="createBy != null">
+	  		and `create_by` = #{createBy}
+	  	</if>
+	  	<if test="status != null and status != ''">
+	  		and `status` = #{status}
+	  	</if>
+	  	<if test="personType != null and personType != ''">
+	  		and `person_type` = #{personType}
+	  	</if>
+	  	<if test="id != null">
+	  		and `id` = #{id}
+	  	</if>
+	  	<if test="isDelete != null">
+	  		and `is_delete` = #{isDelete}
+	  	</if>
+  	</where>
+  	order by `create_date` desc
+  </select>
+  
+</mapper>

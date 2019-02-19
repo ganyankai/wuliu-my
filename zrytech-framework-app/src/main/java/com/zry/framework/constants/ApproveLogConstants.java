@@ -22,4 +22,10 @@ public class ApproveLogConstants {
 	 */
 	public static final String APPROVE_TYPE_CAR = "car";
 	
+	
+	/**
+	 * 审核类型 司机或押货人审核
+	 */
+	public static final String APPROVE_TYPE_CAR_PERSON = "car_person";
+	
 }

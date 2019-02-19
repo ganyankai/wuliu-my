@@ -19,20 +19,8 @@ public class CarPersonPageDto {
 	/**手机号*/
     private String tel;
 	
-	/**性别*/
-    private String sex;
-
-	/**身份证*/
-    private String idCard;
-
 	/**类型*/
     private String personType;
-
-	/**客户Id*/
-    private Integer customerId;
-	
-	/**驾驶证*/
-    private String drivingLicence;
 	
 	/**状态*/
     private String status;
@@ -42,5 +30,8 @@ public class CarPersonPageDto {
 	
 	/**车主Id*/
     private Integer createBy;
+    
+    /**车主企业名称*/
+    private String carOwnerName;
     
 }
