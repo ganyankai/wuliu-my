@@ -1,6 +1,7 @@
 package com.zry.framework.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -61,5 +63,10 @@ public class WaybillDetail {
    	@JSONField(format="yyyy-MM-dd HH:mm:ss")
    	@Column(name = "`create_date`")
     private Date createDate;
+   	
+   	/**运单装卸地*/
+   	@Transient
+   	private List<BillLocation> billLocations;
+   	
 
 }
