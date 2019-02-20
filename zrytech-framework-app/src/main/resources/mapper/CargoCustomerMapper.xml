@@ -3,24 +3,23 @@
 <mapper namespace="com.zry.framework.mapper.CargoCustomerMapper">
     <resultMap id="BaseResultMap" type="com.zry.framework.entity.CargoCustomer">
         <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="login_counter" property="loginCounter"/>
+        <result column="user_account" property="loginCounter"/>
         <result column="tel" property="tel"/>
-        <result column="name" property="name"/>
+        <result column="user_name" property="name"/>
         <result column="logo" property="logo"/>
-        <result column="referrer" property="referrer"/>
         <result column="customer_type" property="customerType"/>
         <result column="is_active" property="isActive"/>
         <result column="create_by" property="createBy"/>
         <result column="create_date" property="createDate"/>
-        <result column="pwd" property="pwd"/>
+        <result column="password" property="pwd"/>
     </resultMap>
 
     <sql id="baseColumn">
-       id,login_counter,tel,name,logo,referrer,customer_type,is_active,create_by,create_date
+       id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date
     </sql>
 
     <sql id="pwdColumn">
-        id,login_counter,tel,name,logo,referrer,customer_type,is_active,create_by,create_date,pwd
+        id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password
     </sql>
 
     <insert id="insertCustomer" parameterType="com.zry.framework.entity.CargoCustomer">
@@ -33,19 +32,16 @@
                 id,
             </if>
             <if test="loginCounter != null and loginCounter !=''">
-                login_counter,
+                user_account,
             </if>
             <if test="tel != null and tel !=''">
                 tel,
             </if>
             <if test="name != null and name !=''">
-                name,
+                user_name,
             </if>
             <if test="logo != null">
                 logo,
-            </if>
-            <if test="referrer != null">
-                referrer,
             </if>
             <if test="customerType != null and customerType !=''">
                 customer_type,
@@ -75,9 +71,6 @@
             </if>
             <if test="logo != null">
                 #{logo},
-            </if>
-            <if test="referrer != null">
-                #{referrer},
             </if>
             <if test="customerType != null and customerType !=''">
                 #{customerType},
@@ -123,7 +116,7 @@
                 and tel=#{tel}
             </if>
             <if test="loginCounter != null and loginCounter !=''">
-                and login_counter=#{loginCounter}
+                and user_account=#{loginCounter}
             </if>
         </trim>
     </select>
@@ -135,9 +128,43 @@
         <trim prefix="where " prefixOverrides="and ">
             1=1
             <if test="loginCounter != null and loginCounter !=''">
-                and login_counter= #{loginCounter}
+                and user_account= #{loginCounter}
             </if>
-                and is_active=FALSE
+            and is_active=FALSE
+        </trim>
+    </select>
+
+    <select id="selectCarList" resultType="int">
+        SELECT DISTINCT customer.id FROM address ads JOIN sys_customer customer
+        ON ads.customer_id=customer.id
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="cargoGoods.name != null and cargoGoods.name !=''">
+                and ads.cargo_name= #{cargoGoods.name}
+            </if>
+            <if test="cargoGoods.startProvince != null and cargoGoods.startProvince !=''">
+                and ads.begin_province= #{cargoGoods.startProvince}
+            </if>
+            <if test="cargoGoods.startCity != null and cargoGoods.startCity !=''">
+                and ads.begin_city= #{cargoGoods.startCity}
+            </if>
+            <if test="cargoGoods.startCountry != null and cargoGoods.startCountry !=''">
+                and ads.begin_country= #{cargoGoods.startCountry}
+            </if>
+            <if test="cargoGoods.endProvince != null and cargoGoods.endProvince !=''">
+                and ads.end_province= #{cargoGoods.endProvince}
+            </if>
+            <if test="cargoGoods.endCity != null and cargoGoods.endCity !=''">
+                and ads.end_city= #{cargoGoods.endCity}
+            </if>
+            <if test="cargoGoods.endCountry != null and cargoGoods.endCountry !=''">
+                and ads.end_county= #{cargoGoods.endCountry}
+            </if>
+            <if test="customerType != null and customerType !=''">
+                and customer.customer_type= #{customerType}
+            </if>
+            AND customer.create_by=0
+            AND customer.is_active=FALSE
         </trim>
     </select>
 
@@ -186,7 +213,7 @@
         update sys_customer
         <set>
             <if test="pwd != null and pwd !=''">
-                pwd = #{pwd}
+                password = #{pwd}
             </if>
         </set>
         where id = #{id}

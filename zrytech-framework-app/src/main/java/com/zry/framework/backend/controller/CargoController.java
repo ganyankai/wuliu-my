@@ -67,7 +67,8 @@ public class CargoController {
     @PostMapping("/auditSource")
     @ApiOperation(value = "货源审核")
     public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId()==null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoService.auditSource(requestParams.getParams());
@@ -90,5 +91,37 @@ public class CargoController {
         return cargoService.pushResource(requestParams.getParams());
     }
 
+    /**
+     * Desintion:修改货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
+    @PostMapping("/updateSource")
+    @ApiOperation(value = "修改货源")
+    public ServerResponse updateSource(@RequestBody RequestParams<CargoDto> requestParams) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId()==null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return cargoService.updateSource(requestParams.getParams());
+    }
 
+    /**
+     * Desintion:删除货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
+    @PostMapping("/deleteSource")
+    @ApiOperation(value = "删除货源")
+    public ServerResponse deleteSource(@RequestBody RequestParams<CargoDto> requestParams) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId()==null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return cargoService.deleteSource(requestParams.getParams());
+    }
 }

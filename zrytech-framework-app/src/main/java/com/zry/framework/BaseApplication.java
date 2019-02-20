@@ -16,7 +16,7 @@ import javax.servlet.MultipartConfigElement;
 
 @ServletComponentScan
 @SpringBootApplication
-@MapperScan({"com.zry.framework.*.mapper","com.zry.framework.mapper"})
+@MapperScan({"com.zrytech.framework.*.mapper","com.zry.framework.mapper"})
 @EnableAspectJAutoProxy
 @EnableScheduling
 public class BaseApplication extends BaseApp {

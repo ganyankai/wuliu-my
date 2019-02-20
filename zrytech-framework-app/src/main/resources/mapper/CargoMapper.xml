@@ -287,4 +287,124 @@
         where id = #{id}
     </update>
 
+    <insert id="batch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into cargo_send_record
+        (cargo_id,
+        car_ownner_id,
+        create_date
+        )
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (
+            #{id},
+            #{item},
+            #{date}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteSource">
+        delete from cargo
+        where id = #{id}
+    </delete>
+
+
+    <update id="updateSource">
+        update cargo
+        <set>
+            <if test="name != null and name !=''">
+                name = #{name},
+            </if>
+            <if test="logo != null and logo !=''">
+                logo = #{logo},
+            </if>
+            <if test="weightUnit != null and weightUnit !=''">
+                weight_unit = #{weightUnit},
+            </if>
+            <if test="tenderWay != null and tenderWay !=''">
+                tender_way = #{tenderWay},
+            </if>
+            <if test="payType != null and payType !=''">
+                pay_type = #{payType},
+            </if>
+            <if test="mulShipment != null">
+                mul_shipment = #{mulShipment},
+            </if>
+            <if test="mulUnload != null">
+                mul_unload = #{mulUnload},
+            </if>
+            <if test="packaged != null">
+                packaged = #{packaged},
+            </if>
+            <if test="matterPrice != null">
+                matter_price = #{matterPrice},
+            </if>
+            <if test="realPrice != null">
+                real_price = #{realPrice},
+            </if>
+            <if test="marketPrice != null">
+                market_price = #{marketPrice},
+            </if>
+            <if test="priceUnit != null and priceUnit !=''">
+                price_unit = #{priceUnit},
+            </if>
+            <if test="priceType != null and priceType !=''">
+                price_type = #{priceType},
+            </if>
+            <if test="startProvince != null and startProvince !=''">
+                start_province = #{startProvince},
+            </if>
+            <if test="startCity != null and startCity !=''">
+                start_city = #{startCity},
+            </if>
+            <if test="startCountry != null and startCountry !=''">
+                start_country = #{startCountry},
+            </if>
+            <if test="endProvince != null and endProvince !=''">
+                end_province = #{endProvince},
+            </if>
+            <if test="endCity != null and endCity !=''">
+                end_city = #{endCity},
+            </if>
+            <if test="endCountry != null and endCountry !=''">
+                end_country = #{endCountry},
+            </if>
+            <if test="line != null and line !=''">
+                line = #{line},
+            </if>
+            <if test="canShare != null">
+                can_share = #{canShare},
+            </if>
+            <if test="carType != null and carType !=''">
+                car_type = #{carType},
+            </if>
+            <if test="status != null and status !=''">
+                status = #{status},
+            </if>
+            <if test="arrivalDate != null">
+                arrival_date = #{arrivalDate},
+            </if>
+            <if test="pickupDate != null">
+                pickup_date = #{pickupDate},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate},
+            </if>
+            <if test="remark != null and remark !=''">
+                remark = #{remark},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="qty != null">
+                qty = #{qty}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
 </mapper>

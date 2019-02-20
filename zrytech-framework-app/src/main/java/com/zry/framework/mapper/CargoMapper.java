@@ -5,6 +5,9 @@ import com.zry.framework.entity.Cargo;
 import com.zrytech.framework.base.entity.Page;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
+import java.util.List;
+
 public interface CargoMapper {
     PageInfo<Cargo> cargoPage(@Param("cargo") Cargo cargo, @Param("orderField") String orderField, Page page);
 
@@ -14,4 +17,9 @@ public interface CargoMapper {
 
     int pushSave(Cargo cargo);
 
+    void batch(@Param("list") List<Integer> list, @Param("id") Integer id,@Param("date") Date date);
+
+    void updateSource(Cargo cargo);
+
+    int deleteSource(Integer id);
 }

@@ -2,15 +2,21 @@ package com.zry.framework.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.zry.framework.constants.CargoConstant;
+import com.zry.framework.dao.CargoCustomerDao;
 import com.zry.framework.dao.CargoDao;
 import com.zry.framework.dao.LoadingDao;
 import com.zry.framework.dto.CargoDto;
+import com.zry.framework.entity.Car;
 import com.zry.framework.entity.Cargo;
+import com.zry.framework.entity.CargoCustomer;
 import com.zry.framework.entity.Loading;
+import com.zry.framework.enums.LogisticsResult;
+import com.zry.framework.enums.LogisticsResultEnum;
 import com.zry.framework.service.CargoService;
 import com.zry.framework.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +35,9 @@ public class CargoServiceImpl implements CargoService {
 
     @Autowired
     private LoadingDao loadingDao;
+
+    @Autowired
+    private CargoCustomerDao cargoCustomerDao;
 
 
     @Override
@@ -58,10 +67,24 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public ServerResponse auditSource(CargoDto cargoDto) {
+        CheckFieldUtils.checkObjecField(cargoDto.getStatus());
         //TODO:拒绝后需填写拒绝理由;添加审核记录
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         //TODO:审核通过,系统通过发标方式推送给相应的车主(考虑是否是免审核用户)
+        Cargo cargoGoods = cargoDao.get(cargoDto.getId());
+        if (CargoConstant.SOURCE_DOWN.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:未上架
+            //TODO:短信通知
+            int num = cargoDao.updateAudit(cargo);
+            CheckFieldUtils.assertSuccess(num);
+            return ServerResponse.success();
+        }
+        if (cargoGoods != null && CargoConstant.TENDER_MARK.equalsIgnoreCase(cargoGoods.getTenderWay())) {
+            //TODO:招标方式
 
+        } else {//抢标方式
+            List<Integer> list = cargoCustomerDao.selectCarList(cargoGoods, CargoConstant.CUSTOMER_CAR_OWNER);
+            cargoDao.batch(list, cargoGoods.getId(), new Date());//批量添加推送记录
+        }
         int num = cargoDao.updateAudit(cargo);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
@@ -70,20 +93,40 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public ServerResponse pushResource(CargoDto cargoDto) {
         //TODO:判断当前用户是否为免审核用户;如果是免审核则系统直接通过招标方式通知相应的车主
-        Cargo cargo= BeanUtil.copy(cargoDto,Cargo.class);
+        Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargo.setCreateDate(new Date());
         int cargoId = cargoDao.pushSave(cargo);
         CheckFieldUtils.assertSuccess(cargoId);
         List<Loading> loadingList = cargoDto.getMulShipmentList();
         if (loadingList != null && loadingList.size() > 0) {
             //批量添加装货地址
-            loadingDao.batchSave(loadingList, CargoConstant.LOADING_TYPE,cargoId);
+            loadingDao.batchSave(loadingList, CargoConstant.LOADING_TYPE, cargoId);
         }
         List<Loading> unLoadingList = cargoDto.getMulUnloadList();
         if (loadingList != null && loadingList.size() > 0) {
             //批量添加卸货地址
-            loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE,cargoId);
+            loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE, cargoId);
         }
+        return ServerResponse.success();
+    }
+
+    @Override
+    public ServerResponse updateSource(CargoDto cargoDto) {
+        List<Loading> loadingList=cargoDto.getMulShipmentList();//TODO:多点装货地址
+        List<Loading> unloadingList=cargoDto.getMulUnloadList();//TODO:多点卸货地址
+        Cargo cargo=BeanUtil.copy(cargoDto, Cargo.class);
+        cargoDao.updateSource(cargo);
+        return ServerResponse.success();
+    }
+
+    @Override
+    public ServerResponse deleteSource(CargoDto cargoDto) {
+        Cargo cargo=cargoDao.get(cargoDto.getId());
+        if(CargoConstant.AUDIT_PASS.equalsIgnoreCase(cargo.getStatus())){
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.GOODS_SOURCE_UP));
+        }
+        int num=cargoDao.deleteSource(cargoDto.getId());
+        CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
 }

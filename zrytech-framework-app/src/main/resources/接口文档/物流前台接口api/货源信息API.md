@@ -147,6 +147,7 @@
    "mulShipment":true,//多点装货;true:表示是多点装货;false:否
    "mulShipmentList":[
          {
+           "id":1,//装货ID
            "longitude":,//经度
            "latitude":,//纬度
            "province":"",//省
@@ -164,6 +165,7 @@
    "mulUnload":true, //多点卸货;true:表示是多点卸货;false:否
    "mulUnloadList":[
        {
+                 "id":2,//卸货ID
                  "longitude":,//经度
                  "latitude":,//纬度
                  "province":"",//省
@@ -301,7 +303,7 @@
 
 
 **URL**
->/goodsSource/auditSource
+>/goodsSource/updateSource
 
 
 **请求参数**
@@ -321,6 +323,7 @@
              "mulShipment":true,//多点装货;true:表示是多点装货;false:否
              "mulShipmentList":[
                    {
+                     "id":1,//装货ID
                      "longitude":,//经度
                      "latitude":,//纬度
                      "province":"",//省
@@ -338,6 +341,7 @@
              "mulUnload":true, //多点卸货;true:表示是多点卸货;false:否
              "mulUnloadList":[
                  {
+                           "id":2,//卸货ID
                            "longitude":,//经度
                            "latitude":,//纬度
                            "province":"",//省

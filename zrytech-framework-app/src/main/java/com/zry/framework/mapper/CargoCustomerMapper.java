@@ -1,6 +1,7 @@
 package com.zry.framework.mapper;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.entity.Cargo;
 import com.zry.framework.entity.CargoCustomer;
 import com.zrytech.framework.base.entity.Page;
 import org.apache.ibatis.annotations.Param;
@@ -27,4 +28,6 @@ public interface CargoCustomerMapper {
     int updatePhone(CargoCustomer cargoCustomer);
 
     int setUpEnable(@Param("id") Integer id, @Param("isActive") Boolean isActive);
+
+    List<Integer> selectCarList(@Param("cargoGoods") Cargo cargoGoods,@Param("customerType") String customerType);
 }

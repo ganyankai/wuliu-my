@@ -102,5 +102,22 @@ public class CargoConstant {
      * unloading_type:卸货;
      */
     public static final String UNLOADING_TYPE = "unloading_type";
+
+
+    /**
+     * push_mark_way:发标方式;
+     */
+    public static final String PUSH_MARK_WAY = "push_mark_way";
+
+
+    /**
+     * tender_mark:招标;
+     */
+    public static final String TENDER_MARK = "tender_mark";
+
+    /**
+     * tender_mark:抢标;
+     */
+    public static final String BID_MARK = "bid_mark";
 }
 

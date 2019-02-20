@@ -12,4 +12,9 @@ public interface CargoService {
     ServerResponse auditSource(CargoDto cargoDto);
 
     ServerResponse pushResource(CargoDto cargoDto);
+
+    ServerResponse updateSource(CargoDto cargoDto);
+
+    ServerResponse deleteSource(CargoDto cargoDto);
+
 }

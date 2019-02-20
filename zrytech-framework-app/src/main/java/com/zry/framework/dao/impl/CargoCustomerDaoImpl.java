@@ -2,6 +2,7 @@ package com.zry.framework.dao.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.zry.framework.dao.CargoCustomerDao;
+import com.zry.framework.entity.Cargo;
 import com.zry.framework.entity.CargoCustomer;
 import com.zry.framework.mapper.CargoCustomerMapper;
 import com.zrytech.framework.base.entity.Page;
@@ -69,5 +70,10 @@ public class CargoCustomerDaoImpl implements CargoCustomerDao {
     @Override
     public int setUpEnable(Integer id, Boolean isActive) {
         return cargoCustomerMapper.setUpEnable(id,isActive);
+    }
+
+    @Override
+    public List<Integer> selectCarList(Cargo cargoGoods,String customerType) {
+        return cargoCustomerMapper.selectCarList(cargoGoods,customerType);
     }
 }
