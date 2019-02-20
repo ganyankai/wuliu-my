@@ -12,10 +12,11 @@ public class IdcardApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		Idcard idcard=new Idcard();
+	/*	Idcard idcard=new Idcard();
 		idcard.setIdcard("4222361254789955212");
-		idcard.setName("张三");
+		idcard.setName("张三");*/
 //		IdcardCheck.checkByThirdApi(idcard);
+
 	}
 
 }
