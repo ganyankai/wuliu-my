@@ -22,7 +22,7 @@
     <result column="close_rate" property="closeRate" jdbcType="DECIMAL" />
     <result column="favorable_level" property="favorableLevel" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="cusomer_id" property="cusomerId" jdbcType="INTEGER" />
+    <result column="cusomer_id" property="customerId" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -30,6 +30,47 @@
     tel, longitude, latitude, province, city, county, address_detail, intro, customer_type, 
     avoid_audit, close_rate, favorable_level, status, cusomer_id, create_date
   </sql>
+  
+  <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
+	  select * from `car_cargo_ownner`
+	  <where>
+	  	<if test="(userAccount != null and userAccount != '') or (tel != null and tel != '')">
+	  		`cusomer_id` IN 
+	  		(
+	  			select `id` from `sys_customer` 
+	  			<where>
+	  				<if test="userAccount != null and userAccount != ''">
+	  					`user_account` LIKE CONCAT('%', #{userAccount}, '%')
+	  				</if>
+	  				<if test="tel != null and tel != ''">
+	  					and `tel` LIKE CONCAT('%', #{tel}, '%')
+	  				</if>
+	  			</where>
+	  		)
+	  	</if>
+	  	<if test="name != null and name != ''">
+	  		AND `name` LIKE CONCAT('%', #{name}, '%')
+	  	</if>
+	  	<if test="legalerName != null and legalerName != ''">
+	  		AND `legaler_name` LIKE CONCAT('%', #{legalerName}, '%')
+	  	</if>
+	  	<if test="status != null and status != ''">
+	  		AND `status` = #{status}
+	  	</if>
+	  	<if test="customerType != null and customerType != ''">
+	  		AND `customer_type` = #{customerType}
+	  	</if>
+	  	<if test="id != null">
+	  		AND `id` = #{id}
+	  	</if>
+	  </where>
+	  order by `create_date` DESC
+  </select>
+  
+  
+  
+  
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

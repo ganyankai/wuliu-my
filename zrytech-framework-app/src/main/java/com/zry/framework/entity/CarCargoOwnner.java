@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -83,9 +84,13 @@ public class CarCargoOwnner {
 	@Column(name = "`intro`")
 	private String intro;
 
-    /**类型*/@Column
-    (name = "`customer_type`")
+    /**类型*/
+	@Column(name = "`customer_type`")
     private String customerType;
+	
+	/**类型*/
+    @Transient
+    private String customerTypeCN; // TODO
 
     /**免审核*/
     @Column(name = "`avoid_audit`")
@@ -103,10 +108,18 @@ public class CarCargoOwnner {
     @Column(name = "`status`")
     private String status;
 
+    /**状态*/
+    @Transient
+    private String statusCN; // TODO
+    
     /**客户Id*/
     @Column(name = "`cusomer_id`")
     private Integer customerId;
-
+    
+    /**客户*/
+    @Transient
+    private Customer customer;
+    
     /**创建日期*/
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")

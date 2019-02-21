@@ -1,5 +1,8 @@
 package com.zry.framework.mapper;
 
+import java.util.List;
+
+import com.zry.framework.dto.CarCargoOwnnerPageDto;
 import com.zry.framework.entity.CarCargoOwnner;
 
 public interface CarCargoOwnerMapper {
@@ -16,5 +19,6 @@ public interface CarCargoOwnerMapper {
 
     int updateByPrimaryKey(CarCargoOwnner record);
     
+    List<CarCargoOwnner> selectSelective(CarCargoOwnnerPageDto dto);
     
 }

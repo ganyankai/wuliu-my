@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -24,20 +26,21 @@ public class Customer {
     private Integer id;
 
 	/**账号*/
-	@Column(name = "`login_counter`")
-    private String loginCounter;
+	@Column(name = "`user_account`")
+    private String userAccount;
 
 	/**手机号*/
 	@Column(name = "`tel`")
 	private String tel;
 
 	/**密码*/
-	@Column(name = "`pwd`")
-	private String pwd;
+	@JsonIgnore
+	@Column(name = "`password`")
+	private String password;
 
 	/**名称*/
-	@Column(name = "`name`")
-	private String name;
+	@Column(name = "`user_name`")
+	private String userName;
 
 	/**logo*/
 	@Column(name = "`logo`")
@@ -54,27 +57,31 @@ public class Customer {
 	/**unionid*/
 	@Column(name = "`unionid`")
 	private String unionid;
-
-	/**推荐人*/
-	@Column(name = "`referrer`")
-	private Integer referrer;
-
+	
+	/***/
+	@Column(name = "`extend`")
+	private String extend;
+	
 	/**用户类型*/
 	@Column(name = "`customer_type`")
 	private String customerType;
 
-	/**状态*/
-	@Column(name = "`is_active`")
-	private Boolean isActive;
-
+	@Column(name = "`user_status`")
+	private String userStatus;
+	
 	/**创建人*/
 	@Column(name = "`create_by`")
 	private Integer createBy;
 
 	/**注册日期*/
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "`create_date`")
 	private Date createDate;
-
-    
+	
+	/**状态*/
+	@Column(name = "`is_active`")
+	private Boolean isActive;
+	
+	
 }
