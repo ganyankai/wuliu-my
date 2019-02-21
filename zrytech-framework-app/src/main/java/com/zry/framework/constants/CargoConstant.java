@@ -119,5 +119,53 @@ public class CargoConstant {
      * tender_mark:抢标;
      */
     public static final String BID_MARK = "bid_mark";
+
+    /**
+     * waybill_status:运单状态
+     *
+     * */
+    public static final String WAYBILL_STATUS="waybill_status";
+
+    /**
+     * await_generate:待生成运单
+     *
+     * */
+    public static final String AWAIT_GENERATE="await_generate";
+
+    /**
+     * await_determine:待确定运单
+     *
+     * */
+    public static final String AWAIT_DETERMINE="await_determine";
+
+    /**
+     * await_loading:待装货运单
+     *
+     * */
+    public static final String AWAIT_LOADING="await_loading";
+
+    /**
+     * await_accept:待收货运单
+     *
+     * */
+    public static final String AWAIT_ACCEPT="await_accept";
+    /**
+     * sign_paied:已签收待支付运单
+     *
+     * */
+    public static final String SIGN_PAIED="sign_paied";
+
+    /**
+     * is_evaluation:已支付待评价运单
+     *
+     * */
+    public static final String IS_EVALUATION="is_evaluation";
+
+    /**
+     * completed:已完成运单
+     *
+     * */
+    public static final String COMPLETED="completed";
+
 }
 

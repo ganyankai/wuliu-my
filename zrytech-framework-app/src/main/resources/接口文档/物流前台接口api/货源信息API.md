@@ -505,7 +505,7 @@
 
 
 **URL**
->/indent/createIndent
+>/indent/distribueIndent
 
 
 **请求参数**
@@ -524,7 +524,7 @@
                   "qty": 23,//数量
                   "weightUnit": ,//重量单位
                   "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
-                  "list":[     //订单详情
+                  "waybillDetails":[     //订单详情
                     {
                       "billNo": "S20181224123457",//订单编号
                       "carId":,//车辆Id
@@ -533,7 +533,7 @@
                       "qty":,//运输数量
                       "weightUnit":,//重量单位
                       "flowName":"",//进度阶段名称
-                      "list":[  //运单装卸地
+                      "billLocations":[  //运单装卸地
                           {
                             "waybillDetailId":,//运单详情ID
                             "waybillId":2,//运单Id
@@ -596,7 +596,7 @@
                   "qty": 23,//数量
                   "weightUnit": ,//重量单位
                   "status":"",//2:待确定运单(await_determine)
-                  "list":[     //订单详情
+                  "waybillDetails":[     //订单详情
                     {
                       "billNo": "S20181224123457",//订单编号
                       "carId":,//车辆Id
@@ -605,7 +605,7 @@
                       "qty":,//运输数量
                       "weightUnit":,//重量单位
                       "flowName":"",//进度阶段名称
-                      "list":[  //运单装卸地
+                      "billLocations":[  //运单装卸地
                           {
                             "waybillDetailId":,//运单详情ID
                             "waybillId":2,//运单Id

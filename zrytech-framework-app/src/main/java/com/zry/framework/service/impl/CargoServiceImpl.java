@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -112,20 +113,74 @@ public class CargoServiceImpl implements CargoService {
 
     @Override
     public ServerResponse updateSource(CargoDto cargoDto) {
-        List<Loading> loadingList=cargoDto.getMulShipmentList();//TODO:多点装货地址
-        List<Loading> unloadingList=cargoDto.getMulUnloadList();//TODO:多点卸货地址
-        Cargo cargo=BeanUtil.copy(cargoDto, Cargo.class);
+        List<Loading> loadingList = cargoDto.getMulShipmentList();//TODO:多点装货地址
+        List<Loading> unloadingList = cargoDto.getMulUnloadList();//TODO:多点卸货地址
+        updateOrSave(loadingList, unloadingList, cargoDto.getId());
+        Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargoDao.updateSource(cargo);
         return ServerResponse.success();
     }
 
+    /**
+     * @Desinition:多点卸货和多点装货修改
+     * @param:loadingList
+     * @param:unloadingList
+     * @param:cargoId
+     */
+    public void updateOrSave(List<Loading> loadingList, List<Loading> unloadingList, Integer cargoId) {
+        List<Loading> loadings = loadingDao.selectLoadingList(cargoId, CargoConstant.LOADING_TYPE);
+        List<Loading> unloadings = loadingDao.selectLoadingList(cargoId, CargoConstant.UNLOADING_TYPE);
+        //List<Integer> loadingIds = loadingDao.getListByIds(loadings);//装货id集合
+        //List<Integer> unloadingIds = loadingDao.getListByIds(unloadings);//卸货id集合
+        //批量操作
+        List<Integer> deleteIds = new ArrayList<>();
+        List<Loading> batchAdds = new ArrayList<>();
+        List<Integer> ids = new ArrayList<>();
+        getLoadList(loadingList, batchAdds, ids, CargoConstant.LOADING_TYPE);
+        getLoadList(unloadingList, batchAdds, ids, CargoConstant.UNLOADING_TYPE);
+        getDeleteList(loadings, ids, deleteIds);
+        getDeleteList(unloadings, ids, deleteIds);
+        if(deleteIds !=null&& deleteIds.size()>0){ //批量删除
+            loadingDao.batchDelete(deleteIds);
+        }
+        if(batchAdds !=null&& batchAdds.size()>0){ //批量添加
+            loadingDao.batchAdds(batchAdds,cargoId);
+        }
+    }
+
+    public void getLoadList(List<Loading> list, List<Loading> batchAdds, List<Integer> ids, String type) {
+        if (list != null && list.size() > 0) {
+            for (Loading loading : list) {
+                if (loading.getId() == null) {
+                    loading.setType(type);
+                    batchAdds.add(loading);
+                } else {
+                    ids.add(loading.getId());
+                }
+            }
+        }
+    }
+
+    public void getDeleteList(List<Loading> list, List<Integer> ids, List<Integer> deleteIds) {
+        if (list != null && list.size() > 0) {
+            for (Loading load : list) {
+                if (!ids.contains(load.getId())) {
+                    deleteIds.add(load.getId());
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+
+
     @Override
     public ServerResponse deleteSource(CargoDto cargoDto) {
-        Cargo cargo=cargoDao.get(cargoDto.getId());
-        if(CargoConstant.AUDIT_PASS.equalsIgnoreCase(cargo.getStatus())){
+        Cargo cargo = cargoDao.get(cargoDto.getId());
+        if (CargoConstant.AUDIT_PASS.equalsIgnoreCase(cargo.getStatus())) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.GOODS_SOURCE_UP));
         }
-        int num=cargoDao.deleteSource(cargoDto.getId());
+        int num = cargoDao.deleteSource(cargoDto.getId());
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }

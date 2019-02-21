@@ -10,4 +10,10 @@ public interface LoadingDao {
 
     void batchSave(List<Loading> loadingList, String loadingType, Integer cargoId);
 
+    List<Integer> getListByIds(List<Loading> list);
+
+    void batchDelete(List<Integer> deleteIds);
+
+    void batchAdds(List<Loading> batchAdds, Integer cargoId);
+
 }

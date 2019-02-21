@@ -66,7 +66,7 @@
        "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "createDate": "2018-01-10", //创建日期
        "proofImgs":"",//收货凭证
-       "list":[     //订单详情
+       "waybillDetails":[     //订单详情
          {
            "billNo": "S20181224123457",//订单编号
            "carId":,//车辆Id
@@ -76,7 +76,7 @@
            "weightUnit":,//重量单位
            "flowName":"",//进度阶段名称
            "createDate":"", //创建时间
-           "list":[  //运单装卸地
+           "billLocations":[  //运单装卸地
                {
                  "waybillDetailId":,//运单详情ID
                  "waybillId":,//运单Id
@@ -208,7 +208,7 @@
        "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "createDate": "2018-01-10", //创建日期
-       "list":[     //订单详情
+       "waybillDetails":[     //订单详情
          {
            "billNo": "S20181224123457",//订单编号
            "carId":,//车辆Id
@@ -218,7 +218,7 @@
            "weightUnit":,//重量单位
            "flowName":"",//进度阶段名称
            "createDate":"", //创建时间
-           "list":[  //运单装卸地
+           "billLocations":[  //运单装卸地
                {
                  "waybillDetailId":,//运单详情ID
                  "waybillId":,//运单Id

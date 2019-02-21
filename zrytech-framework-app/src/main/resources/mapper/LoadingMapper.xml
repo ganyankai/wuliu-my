@@ -30,7 +30,7 @@
         <trim prefix="where " prefixOverrides="and ">
             1=1
             <if test="id != null">
-                and id=#{id}
+                and cargo_id=#{id}
             </if>
             <if test="loadingType != null and loadingType !=''">
                 and type=#{loadingType}
@@ -81,6 +81,53 @@
             #{item.loadDate},
             #{item.endDate},
             #{loadingType}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from cargo_location
+        where id in
+        <foreach item="id" collection="list" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="batchAdds" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into cargo_location
+        (cargo_id,
+        longitude,
+        latitude,
+        province,
+        city,
+        county,
+        address_detail,
+        qty,
+        remark,
+        seq_no,
+        status,
+        load_date,
+        end_date,
+        type
+        )
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (
+            #{cargoId},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.province},
+            #{item.city},
+            #{item.county},
+            #{item.addressDetail},
+            #{item.qty},
+            #{item.remark},
+            #{item.seqNo},
+            #{item.status},
+            #{item.loadDate},
+            #{item.endDate},
+            #{item.type}
             )
         </foreach>
     </insert>
