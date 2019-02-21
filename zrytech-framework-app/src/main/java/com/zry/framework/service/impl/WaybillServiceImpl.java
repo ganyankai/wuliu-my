@@ -10,12 +10,14 @@ import com.github.pagehelper.PageHelper;
 import com.zry.framework.dto.WaybillPageDto;
 import com.zry.framework.entity.BillLocation;
 import com.zry.framework.entity.Cargo;
+import com.zry.framework.entity.Evaluate;
 import com.zry.framework.entity.Waybill;
 import com.zry.framework.entity.WaybillDetail;
 import com.zry.framework.mapper.WaybillMapper;
 import com.zry.framework.repository.BillLocationRepository;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
 import com.zry.framework.repository.CargoRepository;
+import com.zry.framework.repository.EvaluateRepository;
 import com.zry.framework.repository.WaybillDetailRepository;
 import com.zry.framework.repository.WaybillRepository;
 import com.zry.framework.service.WaybillService;
@@ -41,6 +43,8 @@ public class WaybillServiceImpl implements WaybillService {
 	@Autowired private CargoRepository cargoRepository;
 	
 	@Autowired private BillLocationRepository billLocationRepository;
+	
+	@Autowired private EvaluateRepository evaluateRepository;
 	
 	
 	/**
@@ -79,8 +83,10 @@ public class WaybillServiceImpl implements WaybillService {
 		waybill = bindingCarOwnerName(waybill);
 		waybill = bindingCargoOwnerName(waybill);
 		waybill = bindingWaybillDetail(waybill);
+		waybill = bindingEvaluate(waybill);
 		return ServerResponse.successWithData(waybill);
 	}
+	
 	
 	/**
 	 * 为运单绑定运单项数据
@@ -166,6 +172,24 @@ public class WaybillServiceImpl implements WaybillService {
 		}
 		return waybill;
 	}
+	
+	
+	/**
+	 * 为运单绑定评价信息
+	 * @author cat
+	 * 
+	 * @param waybill
+	 * @return
+	 */
+	public Waybill bindingEvaluate(Waybill waybill) {
+		String billNo = waybill.getBillNo();
+		if(StringUtils.isNoneEmpty(billNo)) {
+			List<Evaluate> evaluates = evaluateRepository.findByBillNo(billNo);
+			waybill.setEvaluates(evaluates);
+		}
+		return waybill;
+	}
+	
 	
 	
 	

@@ -8,4 +8,18 @@ import lombok.Setter;
 public class CarCargoOwnnerPageDto {
 
 	private Integer id;
+	
+	private String status;
+	
+	private String legalerName;
+	
+	private String customerType;
+	
+	private String name;
+	
+	
+	private String tel;
+	
+	private String userAccount;
+	
 }
