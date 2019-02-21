@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import com.zry.framework.entity.Car;
 import com.zry.framework.entity.CarCargoOwnner;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
-import com.zry.framework.service.CarCargoOwnnerService;
+import com.zry.framework.service.CarCargoOwnerService;
 
 @Service
-public class CarCargoOwnnerServiceImpl implements CarCargoOwnnerService {
+public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
 
 	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
