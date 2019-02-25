@@ -12,7 +12,7 @@ public class CarConstants {
 	public static final String CAR_STATUS = "car_status";
 	
 	/**
-	 * 下架
+	 * 上架
 	 */
 	public static final String CAR_STATUS_UP = "up";
 	
@@ -22,7 +22,7 @@ public class CarConstants {
 	public static final String CAR_STATUS_WAIT_CHECK = "wait_check";
 	
 	/**
-	 * 上架
+	 * 下架
 	 */
 	public static final String CAR_STATUS_DOWN = "down";
 	
