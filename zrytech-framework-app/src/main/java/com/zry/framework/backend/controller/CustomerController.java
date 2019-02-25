@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Api(description = "客户相关api")
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/autoCustomer")
 public class CustomerController {
 
 

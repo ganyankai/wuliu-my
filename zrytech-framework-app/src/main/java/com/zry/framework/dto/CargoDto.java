@@ -123,4 +123,7 @@ public class CargoDto implements Serializable {
 
     @ApiModelProperty(value = "描述:拒绝填写理由", required = false)
     private String describe;
+
+    @ApiModelProperty(value = "车主ID", required = false)
+    private Integer carOwnnerId;
 }

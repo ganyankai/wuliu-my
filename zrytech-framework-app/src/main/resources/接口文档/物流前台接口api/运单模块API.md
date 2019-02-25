@@ -9,7 +9,7 @@
 
 
 **URL**
->/indent/page
+>/font/waybill/page
 
 **请求参数**
 
@@ -124,7 +124,7 @@
 
 
 **URL**
->/indent/coundIndent
+>/font/waybill/coundIndent
 
 
 
@@ -168,7 +168,7 @@
 
 
 **URL**
->/indent/get
+>/font/waybill/get
 
 
 
@@ -249,7 +249,7 @@
 ## 5.订单有车主装货后,进入到待收货阶段,货主确认收货开始支付.(已签收待支付状态)
 
 **URL**
->/indent/signAccpet
+>/font/waybill/signAccpet
 
 **请求参数**
 
@@ -273,7 +273,7 @@
 ## 6.货主开始支付(运单变为:已支付待评价)
 
 **URL**
->/indent/payment
+>/font/waybill/payment
 
 **请求参数**
 
@@ -297,7 +297,7 @@
 *** 描述:主要提供确认后的运单修改功能，货主与车主在运输价格上经过线下沟通后，双方确认一个认可的价格，货主进行修改。
 
 **URL**
->/indent/changeUpdate
+>/font/waybill/changeUpdate
 
 
 

@@ -407,6 +407,31 @@
         where id = #{id}
     </update>
 
+    <insert id="invitationOffer" useGeneratedKeys="true" keyProperty="id">
+        insert into cargo_send_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cargoId != null">
+                cargo_id,
+            </if>
+            <if test="carOwnnerId != null">
+                car_ownner_id,
+            </if>
+            <if test="date != null">
+                create_date,
+            </if>
+        </trim>
 
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cargoId != null">
+                #{cargoId} ,
+            </if>
+            <if test="carOwnnerId != null">
+                #{carOwnnerId} ,
+            </if>
+            <if test="date != null">
+                #{date},
+            </if>
+        </trim>
+    </insert>
 
 </mapper>

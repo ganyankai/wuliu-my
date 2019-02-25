@@ -9,7 +9,7 @@
 
 
 **URL**
->/indent/page
+>/admin/waybill/page
 
 **请求参数**
 
@@ -125,7 +125,7 @@
 
 
 **URL**
->/indent/get
+>/admin/waybill/details
 
 
 

@@ -124,4 +124,21 @@ public class CargoController {
         }
         return cargoService.deleteSource(requestParams.getParams());
     }
+
+    /**
+     * Desintion:邀请报价(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
+    @PostMapping("/invitationOffer")
+    @ApiOperation(value = "邀请报价")
+    public ServerResponse invitationOffer(@RequestBody RequestParams<CargoDto> requestParams) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId()==null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return cargoService.invitationOffer(requestParams.getParams());
+    }
 }

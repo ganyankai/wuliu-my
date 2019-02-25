@@ -56,4 +56,9 @@ public class CargoDaoImpl implements CargoDao {
     public int deleteSource(Integer id) {
         return cargoMapper.deleteSource(id);
     }
+
+    @Override
+    public int invitationOffer(Integer id, Integer carOwnnerId, Date date) {
+        return cargoMapper.invitationOffer(id,carOwnnerId,date);
+    }
 }

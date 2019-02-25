@@ -184,4 +184,13 @@ public class CargoServiceImpl implements CargoService {
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
+
+    @Override
+    public ServerResponse invitationOffer(CargoDto cargoDto) {
+        CheckFieldUtils.checkObjecField(cargoDto.getId());
+        CheckFieldUtils.checkObjecField(cargoDto.getCarOwnnerId());
+        int num=cargoDao.invitationOffer(cargoDto.getId(),cargoDto.getCarOwnnerId(),new Date());
+        CheckFieldUtils.assertSuccess(num);
+        return ServerResponse.success();
+    }
 }

@@ -26,5 +26,6 @@ public interface WaybillMapper {
     int updateByPrimaryKey(Waybill record);
     
     List<Waybill> selectSelective(WaybillPageDto dto);
-    
+
+    int createIndent(Waybill waybill);
 }

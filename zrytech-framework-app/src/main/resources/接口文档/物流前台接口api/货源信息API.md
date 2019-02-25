@@ -464,7 +464,7 @@
 
 
 **URL**
->/indent/createIndent
+>/font/waybill/createIndent
 
 
 **请求参数**
@@ -505,7 +505,7 @@
 
 
 **URL**
->/indent/distribueIndent
+>/font/waybill/distribueIndent
 
 
 **请求参数**
@@ -577,7 +577,7 @@
 
 
 **URL**
->/indent/confirmIndent
+>/font/waybill/confirmIndent
 
 
 **请求参数**
