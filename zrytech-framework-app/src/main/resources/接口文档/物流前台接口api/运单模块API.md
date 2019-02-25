@@ -9,7 +9,7 @@
 
 
 **URL**
->/font/waybill/page
+>/font/waybill/indentPage
 
 **请求参数**
 
@@ -297,7 +297,7 @@
 *** 描述:主要提供确认后的运单修改功能，货主与车主在运输价格上经过线下沟通后，双方确认一个认可的价格，货主进行修改。
 
 **URL**
->/font/waybill/changeUpdate
+>/font/waybill/changeIndent
 
 
 

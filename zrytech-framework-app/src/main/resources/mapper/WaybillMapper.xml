@@ -1,87 +1,144 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zry.framework.mapper.WaybillMapper" >
-  <resultMap id="BaseResultMap" type="com.zry.framework.entity.Waybill" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
-    <result column="cargo_id" property="cargoId" jdbcType="INTEGER" />
-    <result column="cargo_ownner_id" property="cargoOwnnerId" jdbcType="INTEGER" />
-    <result column="car_ownner_id" property="carOwnnerId" jdbcType="INTEGER" />
-    <result column="advance_moeny" property="advanceMoeny" jdbcType="DECIMAL" />
-    <result column="final_money" property="finalMoney" jdbcType="DECIMAL" />
-    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
-    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
-    <result column="pay_way" property="payWay" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="qty" property="qty" jdbcType="INTEGER" />
-    <result column="weight_unit" property="weightUnit" jdbcType="VARCHAR" />
-    <result column="bill_type" property="billType" jdbcType="VARCHAR" />
-    <result column="proof_imgs" property="proofImgs" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.zry.framework.mapper.WaybillMapper">
+    <resultMap id="BaseResultMap" type="com.zry.framework.entity.Waybill">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="bill_no" property="billNo" jdbcType="VARCHAR"/>
+        <result column="cargo_id" property="cargoId" jdbcType="INTEGER"/>
+        <result column="cargo_ownner_id" property="cargoOwnnerId" jdbcType="INTEGER"/>
+        <result column="car_ownner_id" property="carOwnnerId" jdbcType="INTEGER"/>
+        <result column="advance_moeny" property="advanceMoeny" jdbcType="DECIMAL"/>
+        <result column="final_money" property="finalMoney" jdbcType="DECIMAL"/>
+        <result column="total_money" property="totalMoney" jdbcType="DECIMAL"/>
+        <result column="pay_type" property="payType" jdbcType="VARCHAR"/>
+        <result column="pay_way" property="payWay" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="INTEGER"/>
+        <result column="weight_unit" property="weightUnit" jdbcType="VARCHAR"/>
+        <result column="bill_type" property="billType" jdbcType="VARCHAR"/>
+        <result column="proof_imgs" property="proofImgs" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, bill_no, cargo_id, cargo_ownner_id, car_ownner_id, advance_moeny, final_money, 
     total_money, pay_type, pay_way, remark, qty, weight_unit, bill_type, proof_imgs, 
     status, create_date
   </sql>
-  
-  
-  <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
-  	select * from `waybill` 
-  	<where>
-	  	<if test="carOwnerName != null and carOwnerName != ''">
-	  		`car_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
-	  	</if>
-	  	<if test="carOwnerId != null">
-	  		and `car_ownner_id` = #{carOwnerId}
-	  	</if>
-	  	<if test="cargoOwnerName != null and cargoOwnerName != ''">
-	  		and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{cargoOwnerName}, '%'))
-	  	</if>
-	  	<if test="cargoOwnerId != null">
-	  		and `cargo_ownner_id` = #{cargoOwnerId}
-	  	</if>
-	  	<if test="cargoId != null">
-	  		and `cargo_id` = #{cargoId}
-	  	</if>
-	  	<if test="billNo != null and billNo != ''">
-	  		and `bill_no` LIKE CONCAT('%', #{billNo}, '%')
-	  	</if>
-	  	<if test="payType != null and payType != ''">
-	  		and `pay_type` = #{payType}
-	  	</if>
-	  	<if test="payWay != null and payWay != ''">
-	  		and `pay_way` = #{payWay}
-	  	</if>
-	  	<if test="billType != null and billType != ''">
-	  		and `bill_type` = #{billType}
-	  	</if>
-	  	<if test="status != null and status != ''">
-	  		and `status` = #{status}
-	  	</if>
-	  	<if test="id != null">
-	  		and `id` = #{id}
-	  	</if>
-  	</where>
-  	order by `create_date` desc
-  </select>
-  
-  
-  
-  
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from waybill
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+
+    <resultMap id="indentMap" type="com.zry.framework.entity.Waybill">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="bill_no" property="billNo" jdbcType="VARCHAR"/>
+        <result column="cargo_id" property="cargoId" jdbcType="INTEGER"/>
+        <result column="cargo_ownner_id" property="cargoOwnnerId" jdbcType="INTEGER"/>
+        <result column="car_ownner_id" property="carOwnnerId" jdbcType="INTEGER"/>
+        <result column="advance_moeny" property="advanceMoeny" jdbcType="DECIMAL"/>
+        <result column="final_money" property="finalMoney" jdbcType="DECIMAL"/>
+        <result column="total_money" property="totalMoney" jdbcType="DECIMAL"/>
+        <result column="pay_type" property="payType" jdbcType="VARCHAR"/>
+        <result column="pay_way" property="payWay" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="qty" property="qty" jdbcType="INTEGER"/>
+        <result column="weight_unit" property="weightUnit" jdbcType="VARCHAR"/>
+        <result column="bill_type" property="billType" jdbcType="VARCHAR"/>
+        <result column="proof_imgs" property="proofImgs" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <collection property="waybillDetails" column="bill_no" select="selectIndentDetails" ofType="com.zry.framework.entity.WaybillDetail"
+                    javaType="ArrayList">
+        </collection>
+    </resultMap>
+
+    <resultMap id="indentDetail" type="com.zry.framework.entity.WaybillDetail">
+        <id property="id" column="id"/>
+        <result property="billNo" column="bill_no"/>
+        <result property="carId" column="car_id"/>
+        <result property="driverId" column="driver_id"/>
+        <result property="supercargoId" column="supercargo_id"/>
+        <result property="qty" column="qty"/>
+        <result property="weightUnit" column="weight_unit"/>
+        <result property="flowName" column="flow_name"/>
+        <result property="createDate" column="create_date"/>
+        <collection property="billLocations" column="id" select="selectIndentLocations" ofType="com.zry.framework.entity.WaybillLoading"
+                    javaType="ArrayList">
+        </collection>
+    </resultMap>
+
+    <resultMap id="wayLoading" type="com.zry.framework.entity.WaybillLoading">
+        <id property="id" column="id"/>
+        <result property="waybillDetailId" column="waybill_detail_id"/>
+        <result property="waybillId" column="waybill_id"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="county" column="county"/>
+        <result property="addressDetail" column="address_detail"/>
+        <result property="qty" column="qty"/>
+        <result property="weightUnit" column="weight_unit"/>
+        <result property="type" column="type"/>
+        <result property="seqNo" column="seq_no"/>
+        <result property="remark" column="remark"/>
+        <result property="loadDate" column="load_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="status" column="status"/>
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+    <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
+        select * from `waybill`
+        <where>
+            <if test="carOwnerName != null and carOwnerName != ''">
+                `car_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName},
+                '%'))
+            </if>
+            <if test="carOwnerId != null">
+                and `car_ownner_id` = #{carOwnerId}
+            </if>
+            <if test="cargoOwnerName != null and cargoOwnerName != ''">
+                and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
+                #{cargoOwnerName}, '%'))
+            </if>
+            <if test="cargoOwnerId != null">
+                and `cargo_ownner_id` = #{cargoOwnerId}
+            </if>
+            <if test="cargoId != null">
+                and `cargo_id` = #{cargoId}
+            </if>
+            <if test="billNo != null and billNo != ''">
+                and `bill_no` LIKE CONCAT('%', #{billNo}, '%')
+            </if>
+            <if test="payType != null and payType != ''">
+                and `pay_type` = #{payType}
+            </if>
+            <if test="payWay != null and payWay != ''">
+                and `pay_way` = #{payWay}
+            </if>
+            <if test="billType != null and billType != ''">
+                and `bill_type` = #{billType}
+            </if>
+            <if test="status != null and status != ''">
+                and `status` = #{status}
+            </if>
+            <if test="id != null">
+                and `id` = #{id}
+            </if>
+        </where>
+        order by `create_date` desc
+    </select>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from waybill
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from waybill
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zry.framework.entity.Waybill" >
+    <insert id="insert" parameterType="com.zry.framework.entity.Waybill">
     insert into waybill (id, bill_no, cargo_id, 
       cargo_ownner_id, car_ownner_id, advance_moeny, 
       final_money, total_money, pay_type, 
@@ -95,170 +152,170 @@
       #{weightUnit,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{proofImgs,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zry.framework.entity.Waybill" >
-    insert into waybill
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="billNo != null" >
-        bill_no,
-      </if>
-      <if test="cargoId != null" >
-        cargo_id,
-      </if>
-      <if test="cargoOwnnerId != null" >
-        cargo_ownner_id,
-      </if>
-      <if test="carOwnnerId != null" >
-        car_ownner_id,
-      </if>
-      <if test="advanceMoeny != null" >
-        advance_moeny,
-      </if>
-      <if test="finalMoney != null" >
-        final_money,
-      </if>
-      <if test="totalMoney != null" >
-        total_money,
-      </if>
-      <if test="payType != null" >
-        pay_type,
-      </if>
-      <if test="payWay != null" >
-        pay_way,
-      </if>
-      <if test="remark != null" >
-        remark,
-      </if>
-      <if test="qty != null" >
-        qty,
-      </if>
-      <if test="weightUnit != null" >
-        weight_unit,
-      </if>
-      <if test="billType != null" >
-        bill_type,
-      </if>
-      <if test="proofImgs != null" >
-        proof_imgs,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="billNo != null" >
-        #{billNo,jdbcType=VARCHAR},
-      </if>
-      <if test="cargoId != null" >
-        #{cargoId,jdbcType=INTEGER},
-      </if>
-      <if test="cargoOwnnerId != null" >
-        #{cargoOwnnerId,jdbcType=INTEGER},
-      </if>
-      <if test="carOwnnerId != null" >
-        #{carOwnnerId,jdbcType=INTEGER},
-      </if>
-      <if test="advanceMoeny != null" >
-        #{advanceMoeny,jdbcType=DECIMAL},
-      </if>
-      <if test="finalMoney != null" >
-        #{finalMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="totalMoney != null" >
-        #{totalMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="payType != null" >
-        #{payType,jdbcType=VARCHAR},
-      </if>
-      <if test="payWay != null" >
-        #{payWay,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="qty != null" >
-        #{qty,jdbcType=INTEGER},
-      </if>
-      <if test="weightUnit != null" >
-        #{weightUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="billType != null" >
-        #{billType,jdbcType=VARCHAR},
-      </if>
-      <if test="proofImgs != null" >
-        #{proofImgs,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zry.framework.entity.Waybill" >
-    update waybill
-    <set >
-      <if test="billNo != null" >
-        bill_no = #{billNo,jdbcType=VARCHAR},
-      </if>
-      <if test="cargoId != null" >
-        cargo_id = #{cargoId,jdbcType=INTEGER},
-      </if>
-      <if test="cargoOwnnerId != null" >
-        cargo_ownner_id = #{cargoOwnnerId,jdbcType=INTEGER},
-      </if>
-      <if test="carOwnnerId != null" >
-        car_ownner_id = #{carOwnnerId,jdbcType=INTEGER},
-      </if>
-      <if test="advanceMoeny != null" >
-        advance_moeny = #{advanceMoeny,jdbcType=DECIMAL},
-      </if>
-      <if test="finalMoney != null" >
-        final_money = #{finalMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="totalMoney != null" >
-        total_money = #{totalMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="payType != null" >
-        pay_type = #{payType,jdbcType=VARCHAR},
-      </if>
-      <if test="payWay != null" >
-        pay_way = #{payWay,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="qty != null" >
-        qty = #{qty,jdbcType=INTEGER},
-      </if>
-      <if test="weightUnit != null" >
-        weight_unit = #{weightUnit,jdbcType=VARCHAR},
-      </if>
-      <if test="billType != null" >
-        bill_type = #{billType,jdbcType=VARCHAR},
-      </if>
-      <if test="proofImgs != null" >
-        proof_imgs = #{proofImgs,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null" >
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zry.framework.entity.Waybill" >
+    <insert id="insertSelective" parameterType="com.zry.framework.entity.Waybill">
+        insert into waybill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="billNo != null">
+                bill_no,
+            </if>
+            <if test="cargoId != null">
+                cargo_id,
+            </if>
+            <if test="cargoOwnnerId != null">
+                cargo_ownner_id,
+            </if>
+            <if test="carOwnnerId != null">
+                car_ownner_id,
+            </if>
+            <if test="advanceMoeny != null">
+                advance_moeny,
+            </if>
+            <if test="finalMoney != null">
+                final_money,
+            </if>
+            <if test="totalMoney != null">
+                total_money,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="payWay != null">
+                pay_way,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="qty != null">
+                qty,
+            </if>
+            <if test="weightUnit != null">
+                weight_unit,
+            </if>
+            <if test="billType != null">
+                bill_type,
+            </if>
+            <if test="proofImgs != null">
+                proof_imgs,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="billNo != null">
+                #{billNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cargoId != null">
+                #{cargoId,jdbcType=INTEGER},
+            </if>
+            <if test="cargoOwnnerId != null">
+                #{cargoOwnnerId,jdbcType=INTEGER},
+            </if>
+            <if test="carOwnnerId != null">
+                #{carOwnnerId,jdbcType=INTEGER},
+            </if>
+            <if test="advanceMoeny != null">
+                #{advanceMoeny,jdbcType=DECIMAL},
+            </if>
+            <if test="finalMoney != null">
+                #{finalMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="totalMoney != null">
+                #{totalMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="payWay != null">
+                #{payWay,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="qty != null">
+                #{qty,jdbcType=INTEGER},
+            </if>
+            <if test="weightUnit != null">
+                #{weightUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="billType != null">
+                #{billType,jdbcType=VARCHAR},
+            </if>
+            <if test="proofImgs != null">
+                #{proofImgs,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zry.framework.entity.Waybill">
+        update waybill
+        <set>
+            <if test="billNo != null">
+                bill_no = #{billNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cargoId != null">
+                cargo_id = #{cargoId,jdbcType=INTEGER},
+            </if>
+            <if test="cargoOwnnerId != null">
+                cargo_ownner_id = #{cargoOwnnerId,jdbcType=INTEGER},
+            </if>
+            <if test="carOwnnerId != null">
+                car_ownner_id = #{carOwnnerId,jdbcType=INTEGER},
+            </if>
+            <if test="advanceMoeny != null">
+                advance_moeny = #{advanceMoeny,jdbcType=DECIMAL},
+            </if>
+            <if test="finalMoney != null">
+                final_money = #{finalMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="totalMoney != null">
+                total_money = #{totalMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="payWay != null">
+                pay_way = #{payWay,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="qty != null">
+                qty = #{qty,jdbcType=INTEGER},
+            </if>
+            <if test="weightUnit != null">
+                weight_unit = #{weightUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="billType != null">
+                bill_type = #{billType,jdbcType=VARCHAR},
+            </if>
+            <if test="proofImgs != null">
+                proof_imgs = #{proofImgs,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zry.framework.entity.Waybill">
     update waybill
     set bill_no = #{billNo,jdbcType=VARCHAR},
       cargo_id = #{cargoId,jdbcType=INTEGER},
@@ -278,4 +335,93 @@
       create_date = #{createDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+    <update id="updateIndentStatus">
+        update waybill
+        <set>
+            <if test="status != null and status !=''">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="indentPage" resultMap="BaseResultMap">
+        select * from `waybill`
+        <where>
+            <if test="waybill.carOwnerName != null and waybill.carOwnerName != ''">
+                `car_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
+                #{waybill.carOwnerName},
+                '%'))
+            </if>
+            <if test="waybill.carOwnerId != null">
+                and `car_ownner_id` = #{carOwnerId}
+            </if>
+            <if test="waybill.cargoOwnerName != null and waybill.cargoOwnerName != ''">
+                and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
+                #{waybill.cargoOwnerName}, '%'))
+            </if>
+            <if test="waybill.cargoOwnerId != null">
+                and `cargo_ownner_id` = #{waybill.cargoOwnerId}
+            </if>
+            <if test="waybill.cargoId != null">
+                and `cargo_id` = #{waybill.cargoId}
+            </if>
+            <if test="waybill.billNo != null and waybill.billNo != ''">
+                and `bill_no` LIKE CONCAT('%', #{waybill.billNo}, '%')
+            </if>
+            <if test="waybill.payType != null and waybill.payType != ''">
+                and `pay_type` = #{waybill.payType}
+            </if>
+            <if test="waybill.payWay != null and waybill.payWay != ''">
+                and `pay_way` = #{waybill.payWay}
+            </if>
+            <if test="waybill.billType != null and waybill.billType != ''">
+                and `bill_type` = #{waybill.billType}
+            </if>
+            <if test="waybill.status != null and waybill.status != ''">
+                and `status` = #{waybill.status}
+            </if>
+            <if test="waybill.id != null">
+                and `id` = #{waybill.id}
+            </if>
+        </where>
+        order by `create_date` desc
+    </select>
+
+    <select id="coundIndent" resultType="String">
+      SELECT CONCAT(CONCAT(bill.`status`,'$',count(bill.`status`))) AS typeCount FROM waybill bill WHERE
+      bill.cargo_ownner_id=#{cargoOwnnerId}
+      GROUP BY bill.`status`
+    </select>
+
+    <select id="get" resultMap="indentMap">
+        select
+        <include refid="Base_Column_List"/>
+        from waybill
+        where id =#{id}
+    </select>
+
+    <select id="selectIndentDetails" resultMap="indentDetail">
+        select *
+        from waybill_detail
+        where bill_no =#{bill_no}
+    </select>
+
+    <select id="selectIndentLocations" resultMap="wayLoading">
+        select *
+        from bill_location
+        where waybill_detail_id =#{id}
+    </select>
+
+    <update id="changeIndent">
+        update waybill
+        <set>
+            <if test="totalMoney != null">
+                total_money = #{totalMoney}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

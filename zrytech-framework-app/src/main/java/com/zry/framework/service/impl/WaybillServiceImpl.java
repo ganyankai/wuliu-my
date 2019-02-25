@@ -1,12 +1,16 @@
 package com.zry.framework.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
 import com.zry.framework.constants.CargoConstant;
 import com.zry.framework.dao.WaybillDao;
 import com.zry.framework.dto.WaybillDto;
 import com.zry.framework.utils.CheckFieldUtils;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.TradeNoUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -103,18 +107,92 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.successWithData(waybill);
     }
 
-    @Autowired
-    private TradeNoUtil tradeNoUtil;
+   /* @Autowired
+    private TradeNoUtil tradeNoUtil;*/
 
     @Override
     public ServerResponse createIndent(WaybillDto waybillDto) {
         Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
-        waybill.setBillNo(tradeNoUtil.genTradeNo());
+        //TODO:waybill.setBillNo(tradeNoUtil.genTradeNo());
         waybill.setStatus(CargoConstant.AWAIT_GENERATE);
         waybill.setCreateDate(new Date());
         int num = waybillDao.createIndent(waybill);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
+    }
+
+    @Override
+    public ServerResponse confirmIndent(WaybillDto waybillDto) {
+        CheckFieldUtils.checkObjecField(waybillDto.getStatus());
+        Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
+        int num = waybillDao.updateIndentStatus(waybill);
+        CheckFieldUtils.assertSuccess(num);
+        return ServerResponse.success();
+    }
+
+    @Override
+    public ServerResponse indentPage(WaybillDto waybillDto, Page page) {
+        CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
+        Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
+        PageInfo<Waybill> pageInfo = waybillDao.indentPage(waybill, page);
+        return ServerResponse.successWithData(pageInfo);
+    }
+
+    @Override
+    public ServerResponse coundIndent(WaybillDto waybillDto) {
+        CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
+        List<String> typeCount = waybillDao.coundIndent(waybillDto.getCargoOwnnerId());
+        Map<String, Object> map = countList(typeCount);
+        return ServerResponse.successWithData(map);
+    }
+
+    @Override
+    public ServerResponse get(WaybillDto waybillDto) {
+        CheckFieldUtils.checkObjecField(waybillDto.getId());
+        Waybill waybill = waybillDao.get(waybillDto.getId());
+        return ServerResponse.successWithData(waybill);
+    }
+
+    @Override
+    public ServerResponse changeIndent(WaybillDto waybillDto) {
+        CheckFieldUtils.checkObjecField(waybillDto.getTotalMoney());
+        Waybill waybill=BeanUtil.copy(waybillDto,Waybill.class);
+        int num=waybillDao.changeIndent(waybill);
+        CheckFieldUtils.assertSuccess(num);
+        return ServerResponse.success();
+    }
+
+    public Map<String, Object> countList(List<String> typeCount) {
+        Map<String, Object> map = new HashMap<>();
+        if (typeCount != null || typeCount.size() > 0) {
+            for (String str : typeCount) {
+                String[] arr = str.split("\\$");
+                if (arr[0].equalsIgnoreCase(CargoConstant.AWAIT_GENERATE)) {
+                    map.put(CargoConstant.AWAIT_GENERATE, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.AWAIT_DETERMINE)) {
+                    map.put(CargoConstant.AWAIT_DETERMINE, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.AWAIT_LOADING)) {
+                    map.put(CargoConstant.AWAIT_LOADING, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.AWAIT_ACCEPT)) {
+                    map.put(CargoConstant.AWAIT_ACCEPT, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.SIGN_PAIED)) {
+                    map.put(CargoConstant.SIGN_PAIED, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.IS_EVALUATION)) {
+                    map.put(CargoConstant.IS_EVALUATION, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else {
+                    map.put(CargoConstant.COMPLETED, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                }
+            }
+        } else {
+            map.put(CargoConstant.AWAIT_GENERATE, 0);
+            map.put(CargoConstant.AWAIT_DETERMINE, 0);
+            map.put(CargoConstant.AWAIT_LOADING, 0);
+            map.put(CargoConstant.AWAIT_ACCEPT, 0);
+            map.put(CargoConstant.SIGN_PAIED, 0);
+            map.put(CargoConstant.IS_EVALUATION, 0);
+            map.put(CargoConstant.COMPLETED, 0);
+        }
+        return map;
     }
 
 
@@ -158,8 +236,8 @@ public class WaybillServiceImpl implements WaybillService {
     /**
      * 为运单设置货源
      *
-     * @param cargoMatter
      * @return
+     * @param:cargoMatter
      * @author cat
      */
     public Waybill bindingCargo(Waybill waybill) {

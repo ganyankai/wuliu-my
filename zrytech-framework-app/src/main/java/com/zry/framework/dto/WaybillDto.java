@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,8 +29,14 @@ public class WaybillDto implements Serializable {
     @ApiModelProperty(value = "货主Id", required = false)
     private Integer cargoOwnnerId;
 
+    @ApiModelProperty(value = "货主企业名称", required = false)
+    private String cargoOwnerName;
+
     @ApiModelProperty(value = "车主Id", required = false)
     private Integer carId;
+
+    @ApiModelProperty(value = "车主企业名称", required = false)
+    private String carOwnerName;
 
     @ApiModelProperty(value = "预付款", required = false)
     private Double advanceMoeny;

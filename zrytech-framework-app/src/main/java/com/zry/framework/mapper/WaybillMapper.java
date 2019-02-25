@@ -2,8 +2,11 @@ package com.zry.framework.mapper;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.zry.framework.dto.WaybillPageDto;
 import com.zry.framework.entity.Waybill;
+import com.zrytech.framework.base.entity.Page;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 运单
@@ -27,5 +30,13 @@ public interface WaybillMapper {
     
     List<Waybill> selectSelective(WaybillPageDto dto);
 
-    int createIndent(Waybill waybill);
+    int updateIndentStatus(Waybill waybill);
+
+    PageInfo<Waybill> indentPage(@Param("waybill") Waybill waybill, Page page);
+
+    List<String> coundIndent(@Param("cargoOwnnerId") Integer cargoOwnnerId);
+
+    Waybill get(@Param("id") Integer id);
+
+    int changeIndent(Waybill waybill);
 }
