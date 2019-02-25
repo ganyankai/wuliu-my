@@ -250,4 +250,20 @@
   	</where>
   	order by `create_date` desc
   </select>
+  
+  <!-- 车主查询车辆分页 -->
+  <select id="carOwnerCarPage" parameterType="Object" resultMap="BaseResultMap">
+  	select * from `car` where `car_owner_id` = #{carOwnerId} and `is_delete` = false
+  	<if test="record.carNo != null and record.carNo != ''">
+  		and `car_no` like CONCAT('%', #{record.carNo}, '%')
+  	</if>
+  	<if test="record.status != null and record.status != ''">
+  		and `status` = #{record.status}
+  	</if>
+  	<if test="record.carType != null and record.carType != ''">
+  		and `car_type` = #{record.carType}
+  	</if>
+  	order by `create_date` desc
+  </select>
+  
 </mapper>

@@ -140,7 +140,9 @@ public class Car {
 		return "车辆状态,待处理";	// TODO
 	}
 	
-	
+	/**车主Id*/
+	@Column(name = "`car_owner_id`")
+	private Integer carOwnerId;
 	
 	
 }

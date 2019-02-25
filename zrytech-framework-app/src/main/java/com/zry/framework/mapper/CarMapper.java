@@ -2,7 +2,10 @@ package com.zry.framework.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zry.framework.dto.CarPageDto;
+import com.zry.framework.dto.car.CarOwnerCarPageDto;
 import com.zry.framework.entity.Car;
 
 public interface CarMapper {
@@ -20,4 +23,11 @@ public interface CarMapper {
     int updateByPrimaryKey(Car record);
     
     List<Car> selectSelective(CarPageDto record); 
+    
+    /**
+     * 车主查询车辆分页
+     * @param record
+     * @return
+     */
+    List<Car> carOwnerCarPage(@Param("record") CarOwnerCarPageDto record, @Param("carOwnerId") Integer carOwnerId); 
 }
