@@ -20,4 +20,6 @@ public interface WaybillDao {
 
     int changeIndent(Waybill waybill);
 
+    int delete(Integer id);
+
 }

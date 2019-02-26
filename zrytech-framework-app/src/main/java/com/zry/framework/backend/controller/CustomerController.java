@@ -58,7 +58,7 @@ public class CustomerController {
      * @param:DefaultCustomer
      * @return:ServerResponse
      */
-    @PostMapping("/login")
+    @PostMapping("/font/login")
     @ApiOperation(value = "客户登录")
     public ServerResponse login(@RequestBody RequestParams<DefaultCustomer> requestParams) {
         DefaultCustomer defaultCustomer = requestParams.getParams();

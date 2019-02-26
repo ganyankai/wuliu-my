@@ -39,4 +39,6 @@ public interface WaybillMapper {
     Waybill get(@Param("id") Integer id);
 
     int changeIndent(Waybill waybill);
+
+    int delete(@Param("id") Integer id);
 }

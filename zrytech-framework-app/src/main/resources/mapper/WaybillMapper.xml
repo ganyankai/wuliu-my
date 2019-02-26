@@ -424,4 +424,9 @@
         </set>
         where id = #{id}
     </update>
+
+    <delete id="delete">
+        delete from waybill
+        where id = #{id}
+    </delete>
 </mapper>

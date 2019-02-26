@@ -14,4 +14,6 @@ public interface MessageService {
     ServerResponse delete(MessageDto messageDto);
 
     ServerResponse selectMsgList(MessageDto messageDto);
+
+    ServerResponse selectTypePage(MessageDto messageDto, Page page);
 }

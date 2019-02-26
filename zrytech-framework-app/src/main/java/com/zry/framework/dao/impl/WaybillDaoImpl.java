@@ -50,4 +50,9 @@ public class WaybillDaoImpl implements WaybillDao {
     public int changeIndent(Waybill waybill) {
         return waybillMapper.changeIndent(waybill);
     }
+
+    @Override
+    public int delete(Integer id) {
+        return waybillMapper.delete(id);
+    }
 }

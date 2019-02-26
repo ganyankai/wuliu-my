@@ -25,4 +25,6 @@ public interface WaybillService {
     ServerResponse get(WaybillDto waybillDto);
 
     ServerResponse changeIndent(WaybillDto waybillDto);
+
+    ServerResponse delete(WaybillDto waybillDto);
 }

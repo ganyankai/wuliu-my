@@ -59,4 +59,11 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messageList = messageDao.selectMsgList(message);
         return ServerResponse.successWithData(messageList);
     }
+
+    @Override
+    public ServerResponse selectTypePage(MessageDto messageDto, Page page) {
+        Message message = BeanUtil.copy(messageDto, Message.class);
+        PageInfo<Message> pageInfo = messageDao.messagePage(message, page);
+        return ServerResponse.successWithData(pageInfo);
+    }
 }

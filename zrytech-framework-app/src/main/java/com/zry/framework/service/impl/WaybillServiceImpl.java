@@ -7,10 +7,14 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.zry.framework.constants.CargoConstant;
+import com.zry.framework.dao.CargoDao;
 import com.zry.framework.dao.WaybillDao;
 import com.zry.framework.dto.WaybillDto;
+import com.zry.framework.enums.LogisticsResult;
+import com.zry.framework.enums.LogisticsResultEnum;
 import com.zry.framework.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
+import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.TradeNoUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +70,9 @@ public class WaybillServiceImpl implements WaybillService {
 
     @Autowired
     private WaybillDao waybillDao;
+
+    @Autowired
+    private CargoDao cargoDao;
 
     /**
      * 运单分页
@@ -150,16 +157,32 @@ public class WaybillServiceImpl implements WaybillService {
     public ServerResponse get(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getId());
         Waybill waybill = waybillDao.get(waybillDto.getId());
+        if(waybill !=null&& waybill.getCargoId() !=null){
+            Cargo cargo=cargoDao.get(waybill.getCargoId());
+            waybill.setCargo(cargo);
+        }
         return ServerResponse.successWithData(waybill);
     }
 
     @Override
     public ServerResponse changeIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getTotalMoney());
-        Waybill waybill=BeanUtil.copy(waybillDto,Waybill.class);
-        int num=waybillDao.changeIndent(waybill);
+        Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
+        int num = waybillDao.changeIndent(waybill);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
+    }
+
+    @Override
+    public ServerResponse delete(WaybillDto waybillDto) {
+        Waybill waybill = waybillDao.get(waybillDto.getId());
+        if(CargoConstant.AWAIT_GENERATE.equalsIgnoreCase(waybill.getStatus())){
+            int num = waybillDao.delete(waybillDto.getId());
+            CheckFieldUtils.assertSuccess(num);
+            return ServerResponse.success();
+        }else{
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.DELETE_WAYBILL_FAIL));
+        }
     }
 
     public Map<String, Object> countList(List<String> typeCount) {

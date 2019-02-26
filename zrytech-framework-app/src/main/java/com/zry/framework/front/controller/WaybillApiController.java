@@ -131,4 +131,19 @@ public class WaybillApiController {
         return waybillService.changeIndent(requestParams.getParams());
     }
 
+    /**
+     * @return
+     * @Desinition:删除运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
+    @PostMapping("/delete")
+    @ApiOperation(value = "删除运单")
+    public ServerResponse delete(@RequestBody RequestParams<WaybillDto> requestParams) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId() == null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return waybillService.delete(requestParams.getParams());
+    }
 }

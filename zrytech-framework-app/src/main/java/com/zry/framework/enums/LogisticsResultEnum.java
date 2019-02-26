@@ -11,6 +11,7 @@ public enum LogisticsResultEnum {
     LOGIN_COUNTER_EXISTED(149,"用户名已存在"),
     GOODS_SOURCE_UP(150,"货源上架中,不能删除"),
     NAME_IS_EXIST(591, "名称已存在"),
+    DELETE_WAYBILL_FAIL(110, "订单运输中,删除订单失败!"),
     NUMBER_GREATER_THAN_ZERO(592, "数量必须大于零"),
     CATEGORY_EXIST_NAME(593, "分类已绑定产品名称"),
     AT_LEAST_ONE(594, "贴水至少设置一个"),
