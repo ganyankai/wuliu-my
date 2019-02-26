@@ -2,6 +2,8 @@ package com.zry.framework.service.impl;
 
 import javax.persistence.metamodel.Attribute;
 
+import com.zry.framework.entity.CargoCustomer;
+import com.zrytech.framework.base.entity.ServerResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -50,9 +52,9 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		return customerRepository.findAll(example, pageable);
 	}
-	
-	
-	
-	
 
+    @Override
+    public ServerResponse childAccountPage(CargoCustomer cargoCustomer) {
+        return null;
+    }
 }
