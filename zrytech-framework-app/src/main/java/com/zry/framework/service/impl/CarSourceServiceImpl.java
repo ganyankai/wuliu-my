@@ -22,9 +22,13 @@ import com.zry.framework.dto.CarSourcePageDto;
 import com.zry.framework.dto.CheckDto;
 import com.zry.framework.dto.CommonDto;
 import com.zry.framework.dto.DetailsDto;
-import com.zry.framework.dto.carsource.CarRecordPlaceAddDto;
+import com.zry.framework.dto.carrecordplace.CarRecordPlaceAddDto;
+import com.zry.framework.dto.carrecordplace.CarRecordPlaceSaveDto;
+import com.zry.framework.dto.carrecordplace.CarRecordPlaceUpdateDto;
 import com.zry.framework.dto.carsource.CarSourceAddDto;
-import com.zry.framework.dto.carsource.CarSourceCarAddDto;
+import com.zry.framework.dto.carsourcecar.CarSourceCarAddDto;
+import com.zry.framework.dto.carsourcecar.CarSourceCarSaveDto;
+import com.zry.framework.dto.carsourcecar.CarSourceCarUpdateDto;
 import com.zry.framework.dto.carsource.CarSourceCheckUpdateDto;
 import com.zry.framework.entity.ApproveLog;
 import com.zry.framework.entity.CarRecordPlace;
@@ -348,6 +352,95 @@ public class CarSourceServiceImpl implements CarSourceService {
 		// 车辆列表
 		carSource = bindingCarSourceCar(carSource);
 		return ServerResponse.successWithData(carSource);
+	}
+	
+
+	/**
+	 * 更新路线或新增路线
+	 * <p>当 {@link CarRecordPlaceUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public ServerResponse saveLine(CarRecordPlaceSaveDto dto, Customer customer) {
+		Integer carSourceId = dto.getCarSourceId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		// TODO 鉴权
+		
+		List<CarRecordPlaceUpdateDto> list = dto.getCarRecordPlaces();
+		if(list.isEmpty()) {
+			throw new BusinessException(112, "修改路线失败：路线不存在");
+		}
+		
+		List<CarRecordPlace> save = new ArrayList<>(); // 待更新和新增的路线
+		for (CarRecordPlaceUpdateDto carRecordPlaceDto : list) {
+			Integer id = carRecordPlaceDto.getId();
+			if(id != null) { // 更新
+				CarRecordPlace carRecordPlace = carRecordPlaceRepository.findByIdAndCarSourceId(id, carSourceId);
+				if(carRecordPlace == null) {
+					throw new BusinessException(112, "修改路线失败：路线不存在");
+				}
+				BeanUtils.copyProperties(carRecordPlaceDto, carRecordPlace);
+				save.add(carRecordPlace);
+			}else { // 新增
+				CarRecordPlace carRecordPlace = new CarRecordPlace();
+				carRecordPlace.setCarSourceId(carSourceId);
+				BeanUtils.copyProperties(carRecordPlaceDto, carRecordPlace);
+				save.add(carRecordPlace);	
+			}
+		}
+		carRecordPlaceRepository.save(save);
+		// TODO 路线更新之后是否需要重新审核，待定。
+		return ServerResponse.successWithData("修改路线成功");
+	}
+	
+	
+	/**
+	 * 车源之新增车辆或更新车辆
+	 * <p>当 {@link CarSourceCarUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer) {
+		Integer carSourceId = dto.getCarSourceId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		// TODO 鉴权
+		
+		List<CarSourceCarUpdateDto> list = dto.getCarSourceCars();
+		if(list.isEmpty()) {
+			throw new BusinessException(112, "修改车辆失败：车辆不存在");
+		}
+		
+		List<CarSourceCar> save = new ArrayList<>();
+		for (CarSourceCarUpdateDto carSourceCarUpdateDto : list) {
+			Integer id = carSourceCarUpdateDto.getId();
+			if(id != null){ // 更新
+				CarSourceCar carSourceCar = carSourceCarRepository.findByIdAndCarSourceId(id, carSourceId);
+				if(carSourceCar == null) {
+					throw new BusinessException(112, "修改车辆失败：车辆不存在");
+				}
+				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
+				save.add(carSourceCar);
+			}else { // 新增
+				CarSourceCar carSourceCar = new CarSourceCar();
+				carSourceCar.setCarSourceId(carSourceId);
+				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
+				save.add(carSourceCar);
+			}
+		}
+		// TODO 是否验证车辆Id,司机Id,压货人Id 的有效性。
+		carSourceCarRepository.save(save);
+		
+		return ServerResponse.successWithData("修改车辆成功");
 	}
 	
 }

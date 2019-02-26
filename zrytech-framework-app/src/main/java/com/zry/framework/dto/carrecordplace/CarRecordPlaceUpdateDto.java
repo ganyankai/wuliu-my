@@ -1,4 +1,4 @@
-package com.zry.framework.dto.carsource;
+package com.zry.framework.dto.carrecordplace;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -6,14 +6,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 新增车源路线入参
+ * 更新路线或新增路线入参
+ * <p>id为空表示新增，id不为空表示更新</p>
  * @author cat
  *
  */
 @Setter
 @Getter
-public class CarRecordPlaceAddDto {
-
+public class CarRecordPlaceUpdateDto {
+	
+	/**路线Id*/
+	private Integer id;
+	
 	/**出发省*/
 	@NotEmpty(message = "出发省不能为空")
     private String startProvince;

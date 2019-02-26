@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.zry.framework.dto.carrecordplace.CarRecordPlaceAddDto;
+import com.zry.framework.dto.carsourcecar.CarSourceCarAddDto;
+
 import lombok.Getter;
 import lombok.Setter;
 

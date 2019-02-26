@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zry.framework.dto.CarSourcePageDto;
 import com.zry.framework.dto.CommonDto;
 import com.zry.framework.dto.DetailsDto;
+import com.zry.framework.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zry.framework.dto.carsource.CarSourceAddDto;
 import com.zry.framework.dto.carsource.CarSourceCheckUpdateDto;
+import com.zry.framework.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zry.framework.entity.Customer;
 import com.zry.framework.service.CarSourceService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
@@ -114,4 +116,35 @@ public class CarSourceAPIController {
 	}
 	
 	
+	
+	/**
+	 * 更新路线或新增路线
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param customer
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/saveLine")
+	public ServerResponse saveLine(@RequestBody @Valid RequestParams<CarRecordPlaceSaveDto> requestParams, BindingResult result,
+			@CurrentCustomer Customer customer) {
+		return carSourceService.saveLine(requestParams.getParams(), customer);
+	}
+	
+	
+	/**
+	 * 车源之新增车辆或更新车辆
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param customer
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/saveCarSourceCar")
+	public ServerResponse saveCarSourceCar(@RequestBody @Valid RequestParams<CarSourceCarSaveDto> requestParams, BindingResult result,
+			@CurrentCustomer Customer customer) {
+		return carSourceService.saveCarSourceCar(requestParams.getParams(), customer);
+	}
 }
