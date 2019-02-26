@@ -3,6 +3,7 @@ package com.zry.framework.mapper;
 import java.util.List;
 
 import com.zry.framework.dto.CarPersonPageDto;
+import com.zry.framework.dto.carperson.CarOwnerCarPersonPageDto;
 import com.zry.framework.entity.CarPerson;
 
 public interface CarPersonMapper {
@@ -20,4 +21,6 @@ public interface CarPersonMapper {
     int updateByPrimaryKey(CarPerson record);
     
     List<CarPerson> selectSelective(CarPersonPageDto dto);
+    
+    List<CarPerson> carOwnerCarPersonPage(CarOwnerCarPersonPageDto dto);
 }

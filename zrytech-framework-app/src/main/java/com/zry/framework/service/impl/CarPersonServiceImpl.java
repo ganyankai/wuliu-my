@@ -5,20 +5,31 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
 import com.zry.framework.repository.CarPersonRepository;
+import com.zry.framework.repository.CustomerRepository;
 import com.github.pagehelper.PageHelper;
 import com.zry.framework.constants.ApproveLogConstants;
 import com.zry.framework.constants.CarPersonConstants;
 import com.zry.framework.dto.CarPersonPageDto;
 import com.zry.framework.dto.CheckDto;
+import com.zry.framework.dto.CommonDto;
+import com.zry.framework.dto.DeleteDto;
+import com.zry.framework.dto.DetailsDto;
+import com.zry.framework.dto.carperson.CarOwnerCarPersonPageDto;
+import com.zry.framework.dto.carperson.CarPersonAddDto;
+import com.zry.framework.dto.carperson.CarPersonCheckUpdateDto;
+import com.zry.framework.dto.carperson.CarPersonEnabledDto;
+import com.zry.framework.dto.carperson.CarPersonNoCheckUpdateDto;
 import com.zry.framework.entity.ApproveLog;
 import com.zry.framework.entity.CarCargoOwnner;
 import com.zry.framework.entity.CarPerson;
+import com.zry.framework.entity.Customer;
 import com.zry.framework.mapper.CarPersonMapper;
 import com.zry.framework.service.CarPersonService;
 import com.zrytech.framework.base.entity.PageData;
@@ -42,6 +53,9 @@ public class CarPersonServiceImpl implements CarPersonService {
 	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
 	
 	@Autowired private ApproveLogRepository approveLogRepository;
+	
+	@Autowired private CustomerRepository customerRepository;
+	
 	
 	
 	
@@ -153,10 +167,221 @@ public class CarPersonServiceImpl implements CarPersonService {
 	public CarPerson assertCarPersonExist(Integer carPersonId) {
 		CarPerson carPerson = carPersonRepository.findOne(carPersonId);
 		if(carPerson == null){
-			throw new BusinessException(112, "司机或押货人不存在");
+			throw new BusinessException(112, "司机或压货人不存在");
 		}
 		return carPerson;
 	}
 	
+	
+	/**
+	 * 断言司机或押货人未被删除
+	 * @author cat
+	 * 
+	 * @param carPerson 司机或押货人
+	 * @return
+	 */
+	public void assertCarPersonNotDelete(CarPerson carPerson) {
+		if(carPerson.getIsDelete()){
+			throw new BusinessException(112, "司机或压货人不存在");
+		}
+	}
+	
+	
+	/*以下为车主及车主子账号接口*/
+	////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	/**
+	 * 司机与压货人分页（车主及车主子账号）
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse page(CarOwnerCarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer){
+		// TODO 搜索条件，展示结果待定
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
+		List<CarPerson> list = carPersonMapper.carOwnerCarPersonPage(dto);
+		for (CarPerson carPerson : list) {
+			carPerson.setCarOwnerName(carCargoOwnnerRepository.findNameById(carPerson.getCreateBy()));
+		}
+		PageData<CarPerson> pageData = new PageData<CarPerson>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
+	
+	
+	/**
+	 * 司机或者押货人详情（车主及车主子账号）
+	 * @author cat
+	 * 
+	 * @param id	司机或者押货人Id
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse details(DetailsDto dto, Customer customer) {
+		// TODO 判断当前用户是否有权限查看数据
+		// TODO 返回结果待定
+		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
+		carPerson = this.bindingCarOwner(carPerson);
+		return ServerResponse.successWithData(carPerson);
+	}
+	
+	
+	/**
+	 * 添加司机或压货人（车主及车主子账号）
+	 * <p>添加司机与压货人时需要同时创建登录账号（目前压货人没有账号）</p>
+	 * <p>添加数据时司机或压货人状态默认待审核，账号状态默认禁用</p>
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse add(CarPersonAddDto dto, Customer customer) {
+		// TODO 鉴权
+		
+		// TODO 判断车主是否已存在，重复逻辑待定
+		
+		// 仅创建司机登录账号
+		Integer customerId = null;
+		if(CarPersonConstants.PERSON_TYPE_DRIVER.equalsIgnoreCase(dto.getPersonType())) {
+			// TODO 判断账号是否已存在
+			Customer entity = new Customer();
+			entity.setUserAccount(dto.getUserAccount());
+			entity.setPassword(dto.getPassword());
+			entity.setTel(dto.getUserTel());
+			entity.setCustomerType("司机"); // TODO 类型待处理
+			entity.setIsActive(false);
+			customerRepository.save(entity);
+			customerId = entity.getId();
+		}
+		
+		// 添加车主或压货人信息
+		CarPerson carPerson = new CarPerson();
+		BeanUtils.copyProperties(dto, carPerson);
+		
+		carPerson.setId(null);
+		// carPerson.setCreateBy(customer.getId()); TODO
+		carPerson.setCustomerId(customerId);
+		carPerson.setCreateDate(new Date());
+		carPerson.setIsDelete(false);
+		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_WAIT_CHECK);
+		carPersonRepository.save(carPerson);
+		
+		return ServerResponse.successWithData("添加成功");
+	}
+	
+	
+	/**
+	 * 删除司机或压货人（车主及车主子账号）
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse delete(DeleteDto dto, Customer customer) {
+		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
+		this.assertCarPersonNotDelete(carPerson);
+		// TODO 鉴权
+		// TODO 判断当前司机或压货人是否可以删除（暂未确认哪些条件下可以删除）
+		// TODO 删除日志（暂未确认是否需要日志）
+		carPersonRepository.deleteCarById(dto.getId());
+		return ServerResponse.successWithData("删除成功");
+	}
+	
+	
+	/**
+	 * 司机与压货人的禁用与启用
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	@Override
+	public ServerResponse enabled(CarPersonEnabledDto dto, Customer customer) {
+		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
+		this.assertCarPersonNotDelete(carPerson);
+		// TODO 鉴权
+		customerRepository.updateIsActiveById(dto.getId(), dto.getEnabled());
+		return ServerResponse.successWithData("修改成功");
+	} 
+	
+	
+	/*
+	 * 车主修改司机或压货人信息
+	 * 分为审核与不需要审核两个部分
+	 * 
+	 * 司机与压货人修改自身信息
+	 * 分为审核与不需要审核两个部分（两个方法）
+	 */
+	
+	/**
+	 * 修改司机压货人不需要审核字段
+	 * @author cat
+	 * 
+	 * @param dto	待修改字段
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse updateNoCheck(CarPersonNoCheckUpdateDto dto, Customer customer) {
+		// TODO 鉴权
+		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
+		this.assertCarPersonNotDelete(carPerson);
+		BeanUtils.copyProperties(dto, carPerson);
+		carPersonRepository.save(carPerson);
+		return ServerResponse.successWithData("修改成功");
+	}
+	
+	
+	/**
+	 * 修改司机压货人需要审核字段，修改后将状态改为待审核
+	 * @author cat
+	 * 
+	 * @param dto	待修改字段
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse updateCheck(CarPersonCheckUpdateDto dto, Customer customer) {
+		// TODO 鉴权
+		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
+		this.assertCarPersonNotDelete(carPerson);
+		BeanUtils.copyProperties(dto, carPerson);
+		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_DOWN);
+		carPersonRepository.save(carPerson);
+		return ServerResponse.successWithData("修改成功");
+	}
+	
+	
+	/**
+	 * 提交审核
+	 * @author cat
+	 * 
+	 * @param dto	待提交审核的司机压货人Id
+	 * @param customer	当前登录人
+	 * @return
+	 */
+	@Override
+	public ServerResponse submitAudit(CommonDto dto, Customer customer) {
+		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
+		this.assertCarPersonNotDelete(carPerson);
+		// TODO 验证当前用户是否有权限修改数据
+		if(!CarPersonConstants.PERSON_STATUS_DOWN.equalsIgnoreCase(carPerson.getStatus())) {
+			throw new BusinessException(112, "提交审核失败：仅下架状态的司机或压货人可以提交审核");
+		}
+		carPersonRepository.updateStatusById(dto.getId(), CarPersonConstants.PERSON_STATUS_WAIT_CHECK);
+		return ServerResponse.successWithData("提交审核成功");
+	}
 	
 }

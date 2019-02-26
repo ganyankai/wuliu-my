@@ -1,6 +1,7 @@
 package com.zry.framework.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,28 @@ public interface CarPersonRepository extends JpaRepository<CarPerson, Integer>{
 	@Query(value = "select name from CarPerson where id = ?1")
 	public String findNameById(Integer id);
 	
+	
+	/**
+	 * 删除司机或压货人
+	 * @author cat
+	 * 
+	 * @param id	司机或压货人Id
+	 * @return
+	 */
+	@Modifying
+	@Query("update CarPerson set isDelete = true where id = ?1")
+	public int deleteCarById(Integer id);
+	
+	
+	/**
+	 * 修改司机或压货人状态
+	 * @author cat
+	 * 
+	 * @param id	司机或压货人Id
+	 * @param status	状态
+	 * @return
+	 */
+	@Modifying
+	@Query("update CarPerson set status = ?2 where id = ?1")
+	public int updateStatusById(Integer id, String status);
 }
