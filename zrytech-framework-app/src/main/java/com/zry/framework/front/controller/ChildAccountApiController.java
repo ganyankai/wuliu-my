@@ -1,7 +1,9 @@
 package com.zry.framework.front.controller;
 
 import com.zry.framework.entity.CargoCustomer;
+import com.zry.framework.entity.Customer;
 import com.zry.framework.service.CustomerService;
+import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -33,12 +35,12 @@ public class ChildAccountApiController {
      * */
     @PostMapping("/page")
     @ApiOperation(value = "子账号类列表展示")
-    public ServerResponse childAccountPage(@RequestBody RequestParams<CargoCustomer> requestParams) {
+    public ServerResponse childAccountPage(@RequestBody RequestParams<CargoCustomer> requestParams, @CurrentCustomer Customer customer) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         //TODO:设置货主登录ID
-        //  requestParams.getParams().setCargoOwnnerId();
+          requestParams.getParams().setId(customer.getId());
         return customerService.childAccountPage(requestParams.getParams());
     }
 }

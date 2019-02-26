@@ -193,4 +193,12 @@ public class CargoServiceImpl implements CargoService {
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
+
+    @Override
+    public ServerResponse mySourcePage(CargoDto cargoDto, Page page) {
+        Cargo cargoCustomer = BeanUtil.copy(cargoDto, Cargo.class);
+        String orderField = "create_date";
+        PageInfo<Cargo> pageInfo = cargoDao.cargoPage(cargoCustomer, orderField, page);
+        return ServerResponse.successWithData(pageInfo);
+    }
 }

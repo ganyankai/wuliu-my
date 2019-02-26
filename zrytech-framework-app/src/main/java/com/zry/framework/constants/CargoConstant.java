@@ -86,6 +86,15 @@ public class CargoConstant {
      */
     public static final String SOURCE_EXPIRED = "source_expired";
 
+    /**
+     * source_down:进行中;
+     */
+    public static final String SOURCE_ONGOING = "source_ongoing";
+
+    /**
+     * source_down:已完成;(已中标)
+     */
+    public static final String SOURCE_COMPLETE = "source_complete";
 
     /**
      * Loading_unloading_type:装卸类型;

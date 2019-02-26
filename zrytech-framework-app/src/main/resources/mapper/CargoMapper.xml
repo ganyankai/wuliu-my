@@ -69,6 +69,12 @@
             <if test="cargo.status != null and cargo.status !=''">
                 and status=#{cargo.status}
             </if>
+            <if test="cargo.createBy != null">
+                and create_by=#{cargo.createBy}
+            </if>
+            <if test="cargo.tenderWay != null and cargo.tenderWay !=''">
+                and tender_way=#{cargo.tenderWay}
+            </if>
         </trim>
         ORDER BY ${orderField} DESC
     </select>

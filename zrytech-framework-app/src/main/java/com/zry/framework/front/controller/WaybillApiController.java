@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 运单
- * @author jxx
  *
+ * @author jxx
  */
 @Api(description = "移动端运单相关api")
 @RestController
@@ -33,50 +33,50 @@ public class WaybillApiController {
 
 
     /**
+     * @return
      * @Desinition:运单分页列表展示
      * @param:requestParams
      * @param:WaybillDto运单dto
-     * @return
      */
     @PostMapping("/indentPage")
     @ApiOperation(value = "运单分页列表展示")
-    public ServerResponse indentPage(@RequestBody RequestParams<WaybillDto> requestParams) {
+    public ServerResponse indentPage(@RequestBody RequestParams<WaybillDto> requestParams, @CurrentCustomer Customer customer) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         //TODO:设置货主登录ID
-        //  requestParams.getParams().setCargoOwnnerId();
-        return waybillService.indentPage(requestParams.getParams(),requestParams.getPage());
+        requestParams.getParams().setCargoOwnnerId(customer.getId());
+        return waybillService.indentPage(requestParams.getParams(), requestParams.getPage());
     }
 
     /**
+     * @return
      * @Desinition:运单统计
      * @param:requestParams
      * @param:WaybillDto运单dto
-     * @return
      */
     @PostMapping("/coundIndent")
     @ApiOperation(value = "运单统计")
-    public ServerResponse coundIndent(@RequestBody RequestParams<WaybillDto> requestParams) {
+    public ServerResponse coundIndent(@RequestBody RequestParams<WaybillDto> requestParams, @CurrentCustomer Customer customer) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         //TODO:设置货主登录ID
-        //  requestParams.getParams().setCargoOwnnerId();
+        requestParams.getParams().setCargoOwnnerId(customer.getId());
         return waybillService.coundIndent(requestParams.getParams());
     }
 
     /**
+     * @return
      * @Desinition:运单详情
      * @param:requestParams
      * @param:WaybillDto运单dto
-     * @return
      */
     @PostMapping("/get")
     @ApiOperation(value = "运单详情")
     public ServerResponse get(@RequestBody RequestParams<WaybillDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return waybillService.get(requestParams.getParams());
@@ -84,10 +84,10 @@ public class WaybillApiController {
 
 
     /**
+     * @return
      * @Desinition:创建运单
      * @param:requestParams
      * @param:WaybillDto运单dto
-     * @return
      */
     @PostMapping("/createIndent")
     @ApiOperation(value = "创建运单")
@@ -100,32 +100,32 @@ public class WaybillApiController {
     }
 
     /**
+     * @return
      * @Desinition:待确认运单
      * @param:requestParams
      * @param:WaybillDto运单dto
-     * @return
      */
     @PostMapping("/confirmIndent")
     @ApiOperation(value = "待确认运单")
     public ServerResponse confirmIndent(@RequestBody RequestParams<WaybillDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return waybillService.confirmIndent(requestParams.getParams());
     }
 
     /**
+     * @return
      * @Desinition:更改运单
      * @param:requestParams
      * @param:WaybillDto运单dto
-     * @return
      */
     @PostMapping("/changeIndent")
     @ApiOperation(value = "更改运单")
     public ServerResponse changeIndent(@RequestBody RequestParams<WaybillDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return waybillService.changeIndent(requestParams.getParams());

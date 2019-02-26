@@ -8,7 +8,7 @@
 
 
 **URL**
->/goodsSource/page
+>/goodsSource/mySourcePage
 
 
 
@@ -21,9 +21,15 @@
   "params": 
 {
   	  "name":"",   //(选传)(string) 货物介质
-    "startPlace":"",      //(选传)(string) 货物出发地
-    "endPlace":"",      //(选传)(string) 货物出目的地
-    "qty":23      //(选传)(string) 货物数量
+      "startProvince":"",//(选传)(string)出发省
+      "startCity":"",//(选传)(string)出发市
+      "startCountry":"",//(选传)(string)出发县
+      "endProvince":"",//(选传)(string)到达省
+      "endCity":"",//(选传)(string)到达市
+      "endCountry":"",//(选传)(string)到达县
+      "qty":23,      //(选传)(string) 货物数量
+      "tenderWay":"",//(选传)(string)发标方式;字典key:tender_mark(招标);bid_mark(抢标)
+      "createBy":1   //(选传)创建人(int) 当前登录人ID
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
@@ -68,12 +74,12 @@
    "priceUnitCN":"", //价格单位CN
    "priceType":"", //价格类型
    "priceTypeCN":"", //价格类型CN
-   "start_province":"",//出发省
-   "start_city":"",//出发市
-   "start_country":"",//出发县
-   "end_province":"",//到达省
-   "end_city":"",//到达市
-   "end_country":"",//到达县
+   "startProvince":"",//出发省
+   "startCity":"",//出发市
+   "startCountry":"",//出发县
+   "endProvince":"",//到达省
+   "endCity":"",//到达市
+   "endCountry":"",//到达县
    "line":"",//路线
    "canShare":true,//是否拼单;true是;false否;
    "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)

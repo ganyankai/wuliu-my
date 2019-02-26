@@ -18,4 +18,6 @@ public interface CargoService {
     ServerResponse deleteSource(CargoDto cargoDto);
 
     ServerResponse invitationOffer(CargoDto cargoDto);
+
+    ServerResponse mySourcePage(CargoDto cargoDto, Page page);
 }
