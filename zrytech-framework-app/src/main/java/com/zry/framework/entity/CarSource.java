@@ -31,9 +31,13 @@ public class CarSource {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 	
-	/**车主Id*/
+	/**创建人Id*/
 	@Column(name = "`create_by`")
     private Integer createBy;
+	
+	/**车主Id*/
+	@Column(name = "`car_owner_id`")
+    private Integer carOwnerId;
 	
 	/**车主企业名称*/
 	@Transient
