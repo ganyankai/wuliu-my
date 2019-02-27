@@ -4,10 +4,12 @@ package com.zry.framework.backend.controller;
 import com.zry.framework.dto.CargoDto;
 import com.zry.framework.service.CargoService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
+import com.zrytech.framework.base.annotation.CurrentUser;
 import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
@@ -68,12 +70,12 @@ public class CargoController {
      */
     @PostMapping("/auditSource")
     @ApiOperation(value = "货源审核")
-    public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams) {
+    public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams, @CurrentUser User user) {
         if (requestParams.getParams() == null
                 || requestParams.getParams().getId()==null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.auditSource(requestParams.getParams());
+        return cargoService.auditSource(requestParams.getParams(),user);
     }
 
 

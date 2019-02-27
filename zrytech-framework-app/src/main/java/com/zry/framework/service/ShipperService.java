@@ -5,6 +5,7 @@ import com.zry.framework.dto.CertificationDto;
 import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.common.entity.User;
 
 public interface ShipperService {
 
@@ -80,7 +81,7 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse certificationAudit(CertificationDto certificationDto);
+    ServerResponse certificationAudit(CertificationDto certificationDto,User user);
 
     /**
      * Desintion:设置免审核(认证资料)

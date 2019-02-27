@@ -34,6 +34,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public ServerResponse get(MessageDto messageDto) {
         Message message = messageDao.get(messageDto.getId());
+        if(message !=null){//查看消息详情;将消息改为已读状态
+            int num=updateMsg(message.getId());
+            CheckFieldUtils.assertSuccess(num);
+        }
         return ServerResponse.successWithData(message);
     }
 
@@ -41,6 +45,7 @@ public class MessageServiceImpl implements MessageService {
     public ServerResponse addMessage(MessageDto messageDto) {
         Message message = BeanUtil.copy(messageDto, Message.class);
         message.setSenderDate(new Date());
+        message.setMarkRead(false);
         int num = messageDao.addMessage(message);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();

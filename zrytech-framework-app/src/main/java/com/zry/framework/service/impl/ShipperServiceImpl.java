@@ -1,23 +1,29 @@
 package com.zry.framework.service.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.constants.ApproveLogConstants;
 import com.zry.framework.constants.CargoConstant;
 import com.zry.framework.dao.CargoCustomerDao;
 import com.zry.framework.dao.ShipperDao;
 import com.zry.framework.dto.CargoCustomerDto;
 import com.zry.framework.dto.CertificationDto;
+import com.zry.framework.entity.ApproveLog;
 import com.zry.framework.entity.CargoCustomer;
 import com.zry.framework.entity.Certification;
+import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.service.ShipperService;
 import com.zry.framework.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -154,8 +160,10 @@ public class ShipperServiceImpl implements ShipperService {
         return ServerResponse.successWithData(cer);
     }
 
+    @Autowired private ApproveLogRepository approveLogRepository;
+
     @Override
-    public ServerResponse certificationAudit(CertificationDto certificationDto) {
+    public ServerResponse certificationAudit(CertificationDto certificationDto,User user) {
         Certification certification = shipperDao.get(certificationDto.getId());
         CargoCustomer cargoCustomer = null;
         if (certification != null) {
@@ -168,6 +176,15 @@ public class ShipperServiceImpl implements ShipperService {
         //TODO:审核通过:短信通知tel
         int num = shipperDao.updateAudit(cers);
         CheckFieldUtils.assertSuccess(num);
+        //添加审核记录
+        ApproveLog entity = new ApproveLog();
+        entity.setApproveBy(user.getId());
+        entity.setApproveContent(certificationDto.getDescribe());
+        entity.setApproveResult(certificationDto.getStatus());
+        entity.setApproveTime(new Date());
+        entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_CARGO_OWNER);
+        entity.setBusinessId(certification.getId());
+        approveLogRepository.save(entity);
         return ServerResponse.success();
     }
 

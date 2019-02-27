@@ -1,23 +1,23 @@
 package com.zry.framework.service.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.zry.framework.constants.ApproveLogConstants;
 import com.zry.framework.constants.CargoConstant;
 import com.zry.framework.dao.CargoCustomerDao;
 import com.zry.framework.dao.CargoDao;
 import com.zry.framework.dao.LoadingDao;
 import com.zry.framework.dto.CargoDto;
-import com.zry.framework.entity.Car;
-import com.zry.framework.entity.Cargo;
-import com.zry.framework.entity.CargoCustomer;
-import com.zry.framework.entity.Loading;
+import com.zry.framework.entity.*;
 import com.zry.framework.enums.LogisticsResult;
 import com.zry.framework.enums.LogisticsResultEnum;
+import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.service.CargoService;
 import com.zry.framework.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -66,13 +66,25 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.successWithData(cargo);
     }
 
+    @Autowired private ApproveLogRepository approveLogRepository;
+
     @Override
-    public ServerResponse auditSource(CargoDto cargoDto) {
+    public ServerResponse auditSource(CargoDto cargoDto,User user) {
         CheckFieldUtils.checkObjecField(cargoDto.getStatus());
         //TODO:拒绝后需填写拒绝理由;添加审核记录
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         //TODO:审核通过,系统通过发标方式推送给相应的车主(考虑是否是免审核用户)
         Cargo cargoGoods = cargoDao.get(cargoDto.getId());
+        //添加审核记录
+        ApproveLog entity = new ApproveLog();
+        entity.setApproveBy(user.getId());
+        entity.setApproveContent(cargoDto.getDescribe());
+        entity.setApproveResult(cargoDto.getStatus());
+        entity.setApproveTime(new Date());
+        entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_GOODS_SOURCE);
+        entity.setBusinessId(cargoDto.getId());
+        approveLogRepository.save(entity);
+
         if (CargoConstant.SOURCE_DOWN.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:未上架
             //TODO:短信通知
             int num = cargoDao.updateAudit(cargo);
