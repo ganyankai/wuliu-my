@@ -325,6 +325,36 @@
 }
 ```
 
+### 1.取消运单
 
+*** 描述:取消运单。
+
+**URL**
+>/font/waybill/cancelIndent
+
+
+
+**请求参数**
+
+``` json
+{
+  "openid": "string",
+  "params": 
+{
+  	       "id":1//订单id
+  },
+   "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
+}
+```
+
+
+**响应示例**
+
+``` json
+{
+"code":1,
+"msg":"success"
+}
+```
 
 
