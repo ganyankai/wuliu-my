@@ -1,4 +1,4 @@
-package com.zry.framework.dto.carsource;
+package com.zry.framework.dto.carsourcecar;
 
 import lombok.Getter;
 import lombok.Setter;

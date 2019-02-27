@@ -11,5 +11,7 @@ public interface CarRecordPlaceRepository extends JpaRepository<CarRecordPlace, 
 	
 	
 	List<CarRecordPlace> findByCarSourceId(Integer carSourceId);
-
+	
+	CarRecordPlace findByIdAndCarSourceId(Integer id, Integer carSourceId);
+	
 }

@@ -13,4 +13,5 @@ public interface CarSourceCarRepository extends JpaRepository<CarSourceCar, Inte
 	
 	List<CarSourceCar> findByCarSourceId(Integer carSourceId);
 
+	CarSourceCar findByIdAndCarSourceId(Integer id, Integer carSourceId);
 }

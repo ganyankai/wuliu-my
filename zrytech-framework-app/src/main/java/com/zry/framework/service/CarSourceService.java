@@ -6,8 +6,10 @@ import com.zry.framework.dto.CarSourcePageDto;
 import com.zry.framework.dto.CheckDto;
 import com.zry.framework.dto.CommonDto;
 import com.zry.framework.dto.DetailsDto;
+import com.zry.framework.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zry.framework.dto.carsource.CarSourceAddDto;
 import com.zry.framework.dto.carsource.CarSourceCheckUpdateDto;
+import com.zry.framework.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zry.framework.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
@@ -31,5 +33,10 @@ public interface CarSourceService {
 	public ServerResponse details(DetailsDto dto, Customer customer);
 	
 	public ServerResponse page(CarSourcePageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+	
+	public ServerResponse saveLine(CarRecordPlaceSaveDto dto, Customer customer);
+	
+	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer);
+	
 	
 }
