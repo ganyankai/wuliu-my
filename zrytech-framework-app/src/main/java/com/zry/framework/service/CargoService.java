@@ -21,4 +21,6 @@ public interface CargoService {
     ServerResponse invitationOffer(CargoDto cargoDto);
 
     ServerResponse mySourcePage(CargoDto cargoDto, Page page);
+
+    ServerResponse cancelResource(CargoDto cargoDto);
 }

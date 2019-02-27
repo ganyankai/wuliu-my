@@ -97,6 +97,22 @@ public class CargoController {
     }
 
     /**
+     * Desintion:取消发布货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
+    @PostMapping("/cancelResource")
+    @ApiOperation(value = "取消发布货源")
+    public ServerResponse cancelResource(@RequestBody RequestParams<CargoDto> requestParams) {
+        if (requestParams.getParams() == null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return cargoService.cancelResource(requestParams.getParams());
+    }
+
+    /**
      * Desintion:修改货源(前端)
      *
      * @author:jiangxiaoxiang

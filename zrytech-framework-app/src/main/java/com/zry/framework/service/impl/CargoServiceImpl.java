@@ -213,4 +213,9 @@ public class CargoServiceImpl implements CargoService {
         PageInfo<Cargo> pageInfo = cargoDao.cargoPage(cargoCustomer, orderField, page);
         return ServerResponse.successWithData(pageInfo);
     }
+
+    @Override
+    public ServerResponse cancelResource(CargoDto cargoDto) {
+        return null;
+    }
 }

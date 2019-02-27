@@ -301,6 +301,39 @@
 ```
 
 
+### 1.取消发布
+
+*** 描述:对于正在进行中(审核通过)货源可以取消,货源取消后,将货源推送给车主的消息作废.
+
+
+**URL**
+>/goodsSource/cancelResource
+
+
+
+**请求参数**
+
+``` json
+{
+  "openid": "string",
+  "params": 
+{
+  	  "id":23 //货源ID
+  },
+   "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
+}
+```
+
+**响应示例**
+
+``` json
+{
+    "code": 1,
+    "msg": "success"
+}
+```
+
+
 ### 1.货源修改
 
 *** 描述:针对后台发布的货源,没有上架的货源可以修改(1:拒绝(product_refuse);下架(product_down);4:过期(product_expired));
