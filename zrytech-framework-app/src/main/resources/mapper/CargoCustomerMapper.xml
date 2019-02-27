@@ -229,4 +229,45 @@
         where id = #{id}
     </update>
 
+    <select id="selectChildListIds" resultType="Integer">
+        select id from (
+        select t1.id,
+        if(find_in_set(create_by, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+        from (
+        select id,create_by from sys_customer t  order by create_by, id
+        ) t1,
+        (select @pids :=#{id}) t2
+        ) t3 where ischild != 0
+    </select>
+
+    <select id="selectChildCustomerList" resultMap="BaseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from sys_customer
+        where id in
+        <foreach item="id" collection="list" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="editChildCustomer">
+        update sys_customer
+        <set>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="logo != null and logo !=''">
+                logo = #{logo},
+            </if>
+            <if test="loginCounter != null and loginCounter !=''">
+                user_account = #{loginCounter}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from sys_customer
+        where id = #{id}
+    </delete>
 </mapper>

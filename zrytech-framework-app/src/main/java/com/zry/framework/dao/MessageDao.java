@@ -16,4 +16,7 @@ public interface MessageDao {
     int delete(Integer id);
 
     List<Message> selectMsgList(Message message);
+
+    int updateMsg(Integer messageId, boolean b);
+
 }

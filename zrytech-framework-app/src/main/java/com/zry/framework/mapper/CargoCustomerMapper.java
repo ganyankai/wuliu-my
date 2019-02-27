@@ -30,4 +30,12 @@ public interface CargoCustomerMapper {
     int setUpEnable(@Param("id") Integer id, @Param("isActive") Boolean isActive);
 
     List<Integer> selectCarList(@Param("cargoGoods") Cargo cargoGoods,@Param("customerType") String customerType);
+
+    List<Integer> selectChildListIds(@Param("id") Integer id);
+
+    PageInfo<CargoCustomer> selectChildCustomerListPage(@Param("list") List<Integer> childCustomerIds,Page page);
+
+    void editChildCustomer(CargoCustomer customer);
+
+    int deleteAccount(@Param("id") Integer id);
 }

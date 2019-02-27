@@ -45,4 +45,9 @@ public class MessageDaoImpl implements MessageDao {
     public List<Message> selectMsgList(Message message) {
         return messageMapper.selectMsgList(message);
     }
+
+    @Override
+    public int updateMsg(Integer messageId, boolean b) {
+        return messageMapper.updateMsg(messageId,b);
+    }
 }

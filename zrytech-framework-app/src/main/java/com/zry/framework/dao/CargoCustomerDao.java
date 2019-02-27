@@ -30,4 +30,12 @@ public interface CargoCustomerDao {
 
     List<Integer> selectCarList(Cargo cargoGoods,String customerType);
 
+    List<Integer> selectChildListIds(Integer id);
+
+    PageInfo<CargoCustomer> selectChildCustomerList(List<Integer> childCustomerIds,Page page);
+
+    void editChildCustomer(CargoCustomer customer);
+
+    int deleteAccount(Integer id);
+
 }

@@ -76,4 +76,27 @@ public class CargoCustomerDaoImpl implements CargoCustomerDao {
     public List<Integer> selectCarList(Cargo cargoGoods,String customerType) {
         return cargoCustomerMapper.selectCarList(cargoGoods,customerType);
     }
+
+    @Override
+    public List<Integer> selectChildListIds(Integer id) {
+        return cargoCustomerMapper.selectChildListIds(id);
+    }
+
+    @Override
+    public PageInfo<CargoCustomer> selectChildCustomerList(List<Integer> childCustomerIds,Page page) {
+        if(page==null){
+          page=new Page();
+        }
+        return cargoCustomerMapper.selectChildCustomerListPage(childCustomerIds,page);
+    }
+
+    @Override
+    public void editChildCustomer(CargoCustomer customer) {
+        cargoCustomerMapper.editChildCustomer(customer);
+    }
+
+    @Override
+    public int deleteAccount(Integer id) {
+        return cargoCustomerMapper.deleteAccount(id);
+    }
 }

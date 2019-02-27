@@ -186,6 +186,7 @@
                                       "loginCounter": "13163340532",//登录账号
                                       "name": "张三",//登录名称
                                       "logo": 123,//头像id
+                                      "isActive":true,//启用或禁用;false:启用;true:禁用
                                       "permissionIds":"",//权限Ids;中标和支付权限;
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5

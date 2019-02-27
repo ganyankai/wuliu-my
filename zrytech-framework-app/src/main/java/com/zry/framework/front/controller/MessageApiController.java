@@ -42,4 +42,10 @@ public class MessageApiController {
         messageDto.setReveicerId(customer.getId());
         return messageService.selectTypePage(requestParams.getParams(), requestParams.getPage());
     }
+    /**
+     *@Desinition:消息查看
+     *@Author:Jxx
+     *@param:MessageDto
+     *@return:
+     * */
 }

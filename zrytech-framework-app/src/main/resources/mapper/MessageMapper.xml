@@ -135,4 +135,14 @@
         ORDER BY create_date DESC
     </select>
 
+    <update id="updateMsg">
+        update sys_message
+        <set>
+            <if test="isRead != null">
+                mark_read = #{isRead}
+            </if>
+        </set>
+        where id = #{messageId}
+    </update>
+
 </mapper>

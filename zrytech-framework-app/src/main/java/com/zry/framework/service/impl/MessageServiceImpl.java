@@ -66,4 +66,8 @@ public class MessageServiceImpl implements MessageService {
         PageInfo<Message> pageInfo = messageDao.messagePage(message, page);
         return ServerResponse.successWithData(pageInfo);
     }
+
+    public int updateMsg(Integer messageId){
+        return  messageDao.updateMsg(messageId,true);
+    }
 }

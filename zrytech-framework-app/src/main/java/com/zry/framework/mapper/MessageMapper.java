@@ -17,4 +17,6 @@ public interface MessageMapper {
     int delete(@Param("id") Integer id);
 
     List<Message> selectMsgList(Message message);
+
+    int updateMsg(@Param("messageId") Integer messageId,@Param("isRead") boolean b);
 }
