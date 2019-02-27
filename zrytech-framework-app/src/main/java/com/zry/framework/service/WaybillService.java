@@ -1,10 +1,14 @@
 package com.zry.framework.service;
 
+import com.zry.framework.dto.DeleteDto;
+import com.zry.framework.dto.DetailsDto;
 import com.zry.framework.dto.WaybillDto;
 import com.zrytech.framework.base.entity.Page;
 import org.springframework.stereotype.Service;
 
 import com.zry.framework.dto.WaybillPageDto;
+import com.zry.framework.dto.waybilldetail.WaybillDetailAddDto;
+import com.zry.framework.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;
 
 @Service
@@ -27,4 +31,17 @@ public interface WaybillService {
     ServerResponse changeIndent(WaybillDto waybillDto);
 
     ServerResponse delete(WaybillDto waybillDto);
+    
+    
+    public ServerResponse details(DetailsDto dto, Customer customer);
+    
+    public ServerResponse page(WaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+    
+    public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer);
+    
+    public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer);
+    
+    public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer);
+    
+    
 }

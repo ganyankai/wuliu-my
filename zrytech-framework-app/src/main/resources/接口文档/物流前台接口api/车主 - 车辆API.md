@@ -32,7 +32,7 @@
     createBy            （int）创建人Id
     createDate          （str）创建日期
     carOwnerId          （int）车主Id 
-    is_delete           （boolean）是否删除
+    isDelete            （boolean）是否删除
 
 
     1.车载量单位枚举待定

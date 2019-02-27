@@ -23,4 +23,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	int updateIsActiveById(Integer id, Boolean enabled);
 	
 	
+	Customer findByUserAccount(String userAccount);
+	
 }

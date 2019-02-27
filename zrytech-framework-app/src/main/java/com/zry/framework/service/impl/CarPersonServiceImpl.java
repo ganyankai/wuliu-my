@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -249,18 +250,10 @@ public class CarPersonServiceImpl implements CarPersonService {
 		
 		// TODO 判断车主是否已存在，重复逻辑待定
 		
-		// 仅创建司机登录账号
+		// 仅司机创建登录账号
 		Integer customerId = null;
 		if(CarPersonConstants.PERSON_TYPE_DRIVER.equalsIgnoreCase(dto.getPersonType())) {
-			// TODO 判断账号是否已存在
-			Customer entity = new Customer();
-			entity.setUserAccount(dto.getUserAccount());
-			entity.setPassword(dto.getPassword());
-			entity.setTel(dto.getUserTel());
-			entity.setCustomerType("司机"); // TODO 类型待处理
-			entity.setIsActive(false);
-			customerRepository.save(entity);
-			customerId = entity.getId();
+			customerId = this.addDriverCustomer(dto);
 		}
 		
 		// 添加车主或压货人信息
@@ -268,14 +261,49 @@ public class CarPersonServiceImpl implements CarPersonService {
 		BeanUtils.copyProperties(dto, carPerson);
 		
 		carPerson.setId(null);
+		// carPerson.setCarOwnerId(carOwnerId); TODO
 		// carPerson.setCreateBy(customer.getId()); TODO
 		carPerson.setCustomerId(customerId);
 		carPerson.setCreateDate(new Date());
 		carPerson.setIsDelete(false);
-		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_WAIT_CHECK);
+		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_DOWN);
 		carPersonRepository.save(carPerson);
 		
 		return ServerResponse.successWithData("添加成功");
+	}
+	
+	/**   
+	 * 创建司机账号
+	 * @author cat
+	 * 
+	 * @param dto	司机账号信息
+	 * @return	司机账号Id
+	 */
+	public Integer addDriverCustomer(CarPersonAddDto dto) {
+		// 判断账号是否已存在，当前仅判断用户名唯一
+		Customer account = customerRepository.findByUserAccount(dto.getUserAccount());
+		if (account != null) {
+			throw new BusinessException(112, "账号已存在");
+		}
+		// 参数校验
+		if (StringUtils.isBlank(dto.getUserAccount())) {
+			throw new BusinessException(112, "账号不能为空");
+		}
+		if (StringUtils.isBlank(dto.getPassword())) {
+			throw new BusinessException(112, "密码不能为空");
+		}
+		if (StringUtils.isBlank(dto.getUserTel())) {
+			throw new BusinessException(112, "账号手机号不能为空");
+		}
+		// 新建账号
+		Customer entity = new Customer();
+		entity.setUserAccount(dto.getUserAccount());
+		entity.setPassword(dto.getPassword());
+		entity.setTel(dto.getUserTel());
+		entity.setCustomerType("driver"); // TODO 类型待处理
+		entity.setIsActive(false); // 默认禁用
+		customerRepository.save(entity);
+		return entity.getId();
 	}
 	
 	

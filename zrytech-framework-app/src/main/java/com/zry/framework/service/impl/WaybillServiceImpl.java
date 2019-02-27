@@ -1,14 +1,19 @@
 package com.zry.framework.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import com.github.pagehelper.PageInfo;
 import com.zry.framework.constants.CargoConstant;
 import com.zry.framework.dao.CargoDao;
 import com.zry.framework.dao.WaybillDao;
+import com.zry.framework.dto.DeleteDto;
+import com.zry.framework.dto.DetailsDto;
 import com.zry.framework.dto.WaybillDto;
 import com.zry.framework.enums.LogisticsResult;
 import com.zry.framework.enums.LogisticsResultEnum;
@@ -18,13 +23,17 @@ import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.TradeNoUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.zry.framework.dto.WaybillPageDto;
+import com.zry.framework.dto.billlocation.BillLocationAddDto;
+import com.zry.framework.dto.waybilldetail.WaybillDetailAddDto;
 import com.zry.framework.entity.BillLocation;
 import com.zry.framework.entity.Cargo;
+import com.zry.framework.entity.Customer;
 import com.zry.framework.entity.Evaluate;
 import com.zry.framework.entity.Waybill;
 import com.zry.framework.entity.WaybillDetail;
@@ -322,4 +331,169 @@ public class WaybillServiceImpl implements WaybillService {
     }
 
 
+    /**
+     * 断言运单存在
+     * @author cat
+     * 
+     * @param id	运单Id
+     * @return
+     */
+    public Waybill assertWaybillExist(Integer id) {
+    	Waybill waybill = waybillRepository.findOne(id);
+    	if(waybill == null) {
+    		throw new BusinessException(112, "运单不存在");
+    	}
+    	return waybill;
+    }
+    
+    
+    
+    /**
+     * 新增运单项
+     * @author cat
+     * 
+     * @param dto
+     * @param customer
+     * @return
+     */
+    @Override
+    public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer) {
+    	//  TODO 鉴权
+    	Waybill waybill = this.assertWaybillExist(dto.getWaybillId());
+    	Integer waybillId = waybill.getId();
+    	String weightUnit = waybill.getWeightUnit();
+    	// 新增运单项
+    	WaybillDetail waybillDetail = new WaybillDetail();
+    	BeanUtils.copyProperties(dto, waybillDetail);
+    	waybillDetail.setBillNo(waybill.getBillNo());
+    	waybillDetail.setCreateDate(new Date());
+    	waybillDetail.setWeightUnit(weightUnit);
+    	waybillDetail = waybillDetailRepository.save(waybillDetail);
+    	Integer waybillDetailId = waybillDetail.getId();
+    	
+    	// 新增装卸地
+    	List<BillLocation> list = new ArrayList<>();
+    	List<BillLocationAddDto> billLocations = dto.getBillLocations();
+    	for (BillLocationAddDto billLocationAddDto : billLocations) {
+    		BillLocation billLocation = new BillLocation();
+    		BeanUtils.copyProperties(billLocationAddDto, billLocation);
+    		billLocation.setCreateDate(new Date());
+    		// billLocation.setStatus(status); TODO
+    		billLocation.setWaybillDetailId(waybillDetailId);
+    		billLocation.setWaybillId(waybillId);
+    		billLocation.setWeightUnit(weightUnit);
+    		list.add(billLocation);
+		}
+    	billLocationRepository.save(list);
+    	
+    	return ServerResponse.successWithData("添加成功");
+    }
+    
+    
+    /**
+     * 删除运单装卸地
+     * @author cat
+     * 
+     * @param dto	运单装卸地Id
+     * @param customer	当前登录人
+     * @return
+     */
+    @Transactional
+    @Override
+    public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer) {
+    	BillLocation billLocation = billLocationRepository.findOne(dto.getId());
+    	if(billLocation == null) {
+    		throw new BusinessException(112, "删除失败：运单装卸地不存在");
+    	}
+    	
+    	Integer waybillId = billLocation.getWaybillId();
+    	Waybill waybill = this.assertWaybillExist(waybillId);
+    	if(waybill == null) {
+    		throw new BusinessException(112, "删除失败：运单装卸地不存在");
+    	}
+    	
+    	// TODO 鉴权
+    	
+    	billLocationRepository.delete(dto.getId());
+    	return ServerResponse.successWithData("删除成功");
+    }
+    
+    
+    /**
+     * 删除运单项及运单项下的装卸地 
+     * @author cat
+     * 
+     * @param dto	运单项Id
+     * @param customer	当前登录人
+     * @return
+     */
+    @Override
+    public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer) {
+    	Integer waybillDetailId = dto.getId();
+    	WaybillDetail waybillDetail = waybillDetailRepository.findOne(waybillDetailId);
+    	if(waybillDetail == null) {
+    		throw new BusinessException(112, "删除失败：运单项不存在");
+    	}
+    	
+    	String billNo = waybillDetail.getBillNo();
+    	
+    	Waybill waybill = waybillRepository.findByBillNo(billNo);
+    	if(waybill == null) {
+    		throw new BusinessException(112, "删除失败：运单项不存在");
+    	}
+    	// TODO 鉴权
+    	
+    	// 删除运单项
+    	waybillDetailRepository.delete(waybillDetailId);
+    	
+    	// 删除运单项对应的装卸地
+    	BillLocation billLocation = new BillLocation();
+    	billLocation.setWaybillDetailId(waybillDetailId);
+		billLocationRepository.delete(billLocation);
+    	
+    	return ServerResponse.successWithData("删除成功");
+    }
+    
+    
+    /**
+     * 运单分页
+     *
+     * @param dto      查询条件，详见{@link WaybillPageDto}
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @author cat
+     */
+    @Override
+    public ServerResponse page(WaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
+    	// TODO 搜索条件展示结果待定
+        com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
+        List<Waybill> list = waybillMapper.selectSelective(dto);
+        for (Waybill waybill : list) {
+            waybill = bindingCarOwnerName(waybill);
+            waybill = bindingCargoOwnerName(waybill);
+        }
+        PageData<Waybill> pageData = new PageData<Waybill>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
+        return ServerResponse.successWithData(pageData);
+    }
+
+
+    /**
+     * 运单详情
+     *
+     * @param id
+     * @return
+     * @author cat
+     */
+    @Override
+    public ServerResponse details(DetailsDto dto, Customer customer) {
+    	Waybill waybill = this.assertWaybillExist(dto.getId());
+        waybill = bindingCargo(waybill);
+        waybill = bindingCarOwnerName(waybill);
+        waybill = bindingCargoOwnerName(waybill);
+        waybill = bindingWaybillDetail(waybill);
+        waybill = bindingEvaluate(waybill);
+        return ServerResponse.successWithData(waybill);
+    }
+    
 }

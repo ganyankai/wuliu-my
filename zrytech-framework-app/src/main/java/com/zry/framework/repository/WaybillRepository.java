@@ -8,4 +8,6 @@ import com.zry.framework.entity.Waybill;
 @Repository
 public interface WaybillRepository extends JpaRepository<Waybill, Integer> {
 
+	Waybill findByBillNo(String billNo);
+	
 }

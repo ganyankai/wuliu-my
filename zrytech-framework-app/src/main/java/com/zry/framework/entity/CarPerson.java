@@ -98,7 +98,7 @@ public class CarPerson {
 	@Column(name = "`is_delete`")
     private Boolean isDelete;
 	
-	/**车主Id*/
+	/**创建人Id*/
 	@Column(name = "`create_by`")
     private Integer createBy;
 
@@ -115,5 +115,9 @@ public class CarPerson {
 	/**车主*/
 	@Transient
 	private CarCargoOwnner carOwner;
+	
+	/**车主Id*/
+	@Column(name = "`car_owner_id`")
+	private Integer carOwnerId;
 	
 }
