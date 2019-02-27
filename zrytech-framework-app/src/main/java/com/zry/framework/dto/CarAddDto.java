@@ -9,7 +9,7 @@ import lombok.Setter;
 
 
 /**
- * 车主添加车辆入参
+ * 添加车辆入参
  * @author cat
  *
  */
@@ -25,8 +25,8 @@ public class CarAddDto {
 	@NotNull(message = "核载量不能为空")
 	private Integer carLoad;
 	
-	/**重量单位*/
-	@NotEmpty(message = "重量单位不能为空")
+	/**核载量单位*/
+	@NotEmpty(message = "核载量单位不能为空")
 	private String carUnit;
 	
 	/**车辆类型*/
@@ -40,6 +40,5 @@ public class CarAddDto {
 	/**仓位数量*/
 	@NotNull(message = "仓位数量不能为空")
 	private Integer storeQty;
-	
 	
 }

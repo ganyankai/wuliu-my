@@ -25,8 +25,8 @@ public class CarCheckUpdateDto {
 	@NotNull(message = "核载量不能为空")
 	private Integer carLoad;
 	
-	/**重量单位*/
-	@NotEmpty(message = "重量单位不能为空")
+	/**核载量单位*/
+	@NotEmpty(message = "核载量单位不能为空")
 	private String carUnit;
 	
 	/**车辆类型*/
