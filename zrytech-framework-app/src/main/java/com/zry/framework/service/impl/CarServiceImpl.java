@@ -228,24 +228,7 @@ public class CarServiceImpl implements CarService {
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	/**
-	 * 车辆分页（车主或者车主子账号）
-	 */
-	public PageData<Car> page(CarOwnerCarPageDto dto, Integer pageNum, Integer pageSize, Integer carOwnerId) {
-		// TODO 搜索条件，返回结果有待完善
-		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-		
-		List<Car> list = carMapper.carOwnerCarPage(dto, carOwnerId);
-		for (Car temp : list) {
-			temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
-			temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
-		}
-		
-		PageData<Car> pageData = new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return pageData;
-	}
-	
-	
+	// TODO 搜索条件，返回结果有待完善
 	/**
 	 * 车辆分页（车主或者车主子账号）
 	 * @author cat
@@ -258,11 +241,24 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse page(CarOwnerCarPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
-		PageData<Car> page = this.page(dto, pageNum, pageSize, 1);// TODO carOwnerId取值
-		return ServerResponse.successWithData(page);
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
+		
+		List<Car> list = carMapper.carOwnerCarPage(dto, 1);	// TODO carOwnerId取值
+		for (Car temp : list) {
+			if(temp.getDriverId() != null) {
+				temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
+			}
+			if(temp.getSupercargoId() != null) {
+				temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
+			}
+		}
+		
+		PageData<Car> pageData = new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
 	}
 	
 	
+	// TODO 返回结果有待完善
 	/**
 	 * 车辆详情（车主或者车主子账号）
 	 * @author cat
@@ -273,7 +269,6 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse details(DetailsDto dto, Customer customer) {
-		// TODO 返回结果有待完善
 		Car car = this.assertCarExist(dto.getId());
 		this.assertCarNotDelete(car);
 		// TODO 判断当前用户是否可以查看该车辆信息
@@ -294,26 +289,20 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public ServerResponse add(CarAddDto dto, Customer customer) {
 		// TODO 判断当前用户是否有权限添加车辆
+		
 		Car car = new Car();
 		BeanUtils.copyProperties(dto, car);
-		
 		// car.setCreateBy(customer.getId()); TODO 登录信息待处理
-		car.setStatus(CarConstants.CAR_STATUS_DOWN);
+		// car.setCarOwnerId(carOwnerId); TODO 车主Id
+		car.setStatus(CarConstants.CAR_STATUS_DOWN); // 新添加的车辆默认下架状态
 		car.setId(null);
 		car.setCreateDate(new Date());
 		car.setIsDelete(false);
-		// car.setCarOwnerId(carOwnerId); TODO 车主Id
-		
 		carRepository.save(car);
+		
 		return ServerResponse.successWithData("添加成功");
 	}
 
- 
-	/*
-	 * 更新分为需要审核的内容和不需要审核的内容，分两个接口进行更新。
-	 * 更新需审核内容时，状态改为下架。
-	 */
-	
 	
 	/**
 	 * 修改车辆不需要审核的内容（车主或者车主子账号）
@@ -328,6 +317,10 @@ public class CarServiceImpl implements CarService {
 		Car car = this.assertCarExist(dto.getId());
 		this.assertCarNotDelete(car);
 		// TODO 验证当前用户是否有权限修改数据
+		
+		// Integer driverId = dto.getDriverId();
+		// Integer supercargoId = dto.getSupercargoId();
+		// TODO 司机压货人检验
 		
 		BeanUtils.copyProperties(dto, car);
 		carRepository.save(car);
@@ -349,6 +342,7 @@ public class CarServiceImpl implements CarService {
 		Car car = this.assertCarExist(dto.getId());
 		this.assertCarNotDelete(car);
 		// TODO 验证当前用户是否有权限修改数据
+		
 		BeanUtils.copyProperties(dto, car);
 		car.setStatus(CarConstants.CAR_STATUS_DOWN);
 		carRepository.save(car);
