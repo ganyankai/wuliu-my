@@ -13,10 +13,10 @@ import com.zry.framework.entity.Certification;
 import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.service.ShipperService;
 import com.zry.framework.utils.CheckFieldUtils;
-import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class ShipperServiceImpl implements ShipperService {
      * @return:ServerResponse
      */
     @Override
-    public ServerResponse perSonOrOrganizeCertification(CertificationDto certificationDto, Customer customer) {
+    public ServerResponse perSonOrOrganizeCertification(CertificationDto certificationDto, SysCustomer sysCustomer) {
         CheckFieldUtils.checkObjecField(certificationDto.getCustomerType());
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
         CheckFieldUtils.checkObjecField(certification.getLegalerIdCardFront());
@@ -58,7 +58,7 @@ public class ShipperServiceImpl implements ShipperService {
         }
         //TODO:客户认证资料认证
         //设置客户ID
-        certification.setCusomerId(customer.getId());
+        certification.setCusomerId(sysCustomer.getId());
         certification.setStatus(CargoConstant.AUDIT_PROCESS);
         shipperDao.updateCertification(certification);
         return ServerResponse.success();

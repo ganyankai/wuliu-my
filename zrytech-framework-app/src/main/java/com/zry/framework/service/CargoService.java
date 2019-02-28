@@ -3,7 +3,7 @@ package com.zry.framework.service;
 import com.zry.framework.dto.CargoDto;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.common.entity.User;
+import com.zrytech.framework.base.entity.User;
 
 public interface CargoService {
     ServerResponse cargoPage(CargoDto cargoDto, Page page);

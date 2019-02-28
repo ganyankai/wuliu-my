@@ -1,13 +1,14 @@
 package com.zry.framework.front.controller;
 
 import com.zry.framework.dto.WaybillDto;
+import com.zry.framework.entity.Customer;
 import com.zry.framework.service.WaybillService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
-import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
@@ -40,12 +41,13 @@ public class WaybillApiController {
      */
     @PostMapping("/indentPage")
     @ApiOperation(value = "运单分页列表展示")
-    public ServerResponse indentPage(@RequestBody RequestParams<WaybillDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse indentPage(@RequestBody RequestParams<WaybillDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         //TODO:设置货主登录ID
-        requestParams.getParams().setCargoOwnnerId(customer.getId());
+        requestParams.getParams().setCargoOwnnerId(sysCustomer.getId());
         return waybillService.indentPage(requestParams.getParams(), requestParams.getPage());
     }
 
@@ -57,12 +59,13 @@ public class WaybillApiController {
      */
     @PostMapping("/coundIndent")
     @ApiOperation(value = "运单统计")
-    public ServerResponse coundIndent(@RequestBody RequestParams<WaybillDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse coundIndent(@RequestBody RequestParams<WaybillDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         //TODO:设置货主登录ID
-        requestParams.getParams().setCargoOwnnerId(customer.getId());
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        requestParams.getParams().setCargoOwnnerId(sysCustomer.getId());
         return waybillService.coundIndent(requestParams.getParams());
     }
 
@@ -91,11 +94,12 @@ public class WaybillApiController {
      */
     @PostMapping("/createIndent")
     @ApiOperation(value = "创建运单")
-    public ServerResponse createIndent(@RequestBody RequestParams<WaybillDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse createIndent(@RequestBody RequestParams<WaybillDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        requestParams.getParams().setCargoOwnnerId(customer.getId());
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        requestParams.getParams().setCargoOwnnerId(sysCustomer.getId());
         return waybillService.createIndent(requestParams.getParams());
     }
 

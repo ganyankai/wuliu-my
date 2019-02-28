@@ -2,13 +2,13 @@ package com.zry.framework.front.controller;
 
 import com.zry.framework.dto.CargoCustomerDto;
 import com.zry.framework.entity.CargoCustomer;
-import com.zry.framework.entity.Customer;
 import com.zry.framework.service.CustomerService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
@@ -36,13 +36,14 @@ public class ChildAccountApiController {
      * */
     @PostMapping("/page")
     @ApiOperation(value = "子账号类列表展示")
-    public ServerResponse childAccountPage(@RequestBody RequestParams<CargoCustomerDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse childAccountPage(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
         CargoCustomerDto cargoCustomerDto=requestParams.getParams();
         if (cargoCustomerDto== null) {
             cargoCustomerDto=new CargoCustomerDto();
         }
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         //TODO:设置货主登录ID
-        cargoCustomerDto.setId(customer.getId());
+        cargoCustomerDto.setId(sysCustomer.getId());
         return customerService.childAccountPage(cargoCustomerDto,requestParams.getPage());
     }
 
@@ -54,13 +55,14 @@ public class ChildAccountApiController {
      * */
     @PostMapping("/addAccount")
     @ApiOperation(value = "子账号添加")
-    public ServerResponse addAccount(@RequestBody RequestParams<CargoCustomerDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse addAccount(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
         CargoCustomerDto cargoCustomerDto=requestParams.getParams();
         if (cargoCustomerDto== null) {
             cargoCustomerDto=new CargoCustomerDto();
         }
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         //TODO:设置货主登录ID
-        cargoCustomerDto.setCreateBy(customer.getId());
+        cargoCustomerDto.setCreateBy(sysCustomer.getId());
         return customerService.addAccount(cargoCustomerDto);
     }
 

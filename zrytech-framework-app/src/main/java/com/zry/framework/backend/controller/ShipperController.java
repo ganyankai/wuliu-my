@@ -6,10 +6,11 @@ import com.zry.framework.dto.CertificationDto;
 import com.zry.framework.service.ShipperService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.annotation.CurrentUser;
-import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
@@ -43,7 +44,7 @@ public class ShipperController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return shipperService.certificationPage(requestParams.getParams(),requestParams.getPage());
+        return shipperService.certificationPage(requestParams.getParams(), requestParams.getPage());
     }
 
     /**
@@ -55,11 +56,12 @@ public class ShipperController {
      */
     @PostMapping("/perSonOrOrganizeCertification")
     @ApiOperation(value = "客户注册")
-    public ServerResponse perSonOrOrganizeCertification(@RequestBody RequestParams<CertificationDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse perSonOrOrganizeCertification(@RequestBody RequestParams<CertificationDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return shipperService.perSonOrOrganizeCertification(requestParams.getParams(),customer);
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        return shipperService.perSonOrOrganizeCertification(requestParams.getParams(), sysCustomer);
     }
 
     /**
@@ -72,8 +74,8 @@ public class ShipperController {
     @PostMapping("/get")
     @ApiOperation(value = "认证资料详情")
     public ServerResponse get(@RequestBody RequestParams<CertificationDto> requestParams) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return shipperService.get(requestParams.getParams());
@@ -89,8 +91,8 @@ public class ShipperController {
     @PostMapping("/detail")
     @ApiOperation(value = "认证资料详情")
     public ServerResponse detail(@RequestBody RequestParams<CertificationDto> requestParams) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return shipperService.detail(requestParams.getParams());
@@ -107,11 +109,11 @@ public class ShipperController {
     @PostMapping("/certificationAudit")
     @ApiOperation(value = "认证资料审核")
     public ServerResponse certificationAudit(@RequestBody RequestParams<CertificationDto> requestParams, @CurrentUser User user) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return shipperService.certificationAudit(requestParams.getParams(),user);
+        return shipperService.certificationAudit(requestParams.getParams(), user);
     }
 
     /**
@@ -124,8 +126,8 @@ public class ShipperController {
     @PostMapping("/withOutAudit")
     @ApiOperation(value = "认证资料免审核")
     public ServerResponse withOutAudit(@RequestBody RequestParams<CertificationDto> requestParams) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return shipperService.withOutAudit(requestParams.getParams());
@@ -144,7 +146,7 @@ public class ShipperController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return shipperService.selectCargoPage(requestParams.getParams(),requestParams.getPage());
+        return shipperService.selectCargoPage(requestParams.getParams(), requestParams.getPage());
     }
 
     /**
@@ -157,8 +159,8 @@ public class ShipperController {
     @PostMapping("/id")
     @ApiOperation(value = "客户基本信息详情")
     public ServerResponse id(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return shipperService.id(requestParams.getParams());
@@ -174,8 +176,8 @@ public class ShipperController {
     @PostMapping("/update")
     @ApiOperation(value = "客户修改头像")
     public ServerResponse update(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return shipperService.update(requestParams.getParams());
@@ -191,8 +193,8 @@ public class ShipperController {
     @PostMapping("/enableOrUnable")
     @ApiOperation(value = "客户启用禁用")
     public ServerResponse enableOrUnable(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
-        if (requestParams.getParams() == null||
-                requestParams.getParams().getId()==null) {
+        if (requestParams.getParams() == null ||
+                requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return shipperService.enableOrUnable(requestParams.getParams());

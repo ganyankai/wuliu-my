@@ -2,13 +2,14 @@ package com.zry.framework.backend.controller;
 
 
 import com.zry.framework.dto.CargoDto;
+import com.zry.framework.entity.Customer;
 import com.zry.framework.service.CargoService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.annotation.CurrentUser;
-import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
@@ -42,7 +43,7 @@ public class CargoController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.cargoPage(requestParams.getParams(),requestParams.getPage());
+        return cargoService.cargoPage(requestParams.getParams(), requestParams.getPage());
     }
 
     /**
@@ -70,12 +71,12 @@ public class CargoController {
      */
     @PostMapping("/auditSource")
     @ApiOperation(value = "货源审核")
-    public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams, @CurrentUser User user) {
+    public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.auditSource(requestParams.getParams(),user);
+        return cargoService.auditSource(requestParams.getParams(),RequestUtil.getCurrentUser());
     }
 
 
@@ -88,11 +89,11 @@ public class CargoController {
      */
     @PostMapping("/pushResource")
     @ApiOperation(value = "发布货源")
-    public ServerResponse pushResource(@RequestBody RequestParams<CargoDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse pushResource(@RequestBody RequestParams<CargoDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        requestParams.getParams().setCreateBy(customer.getId());
+        requestParams.getParams().setCreateBy(RequestUtil.getCurrentUser().getId());
         return cargoService.pushResource(requestParams.getParams());
     }
 
@@ -123,7 +124,7 @@ public class CargoController {
     @ApiOperation(value = "修改货源")
     public ServerResponse updateSource(@RequestBody RequestParams<CargoDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoService.updateSource(requestParams.getParams());
@@ -140,7 +141,7 @@ public class CargoController {
     @ApiOperation(value = "删除货源")
     public ServerResponse deleteSource(@RequestBody RequestParams<CargoDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoService.deleteSource(requestParams.getParams());
@@ -157,7 +158,7 @@ public class CargoController {
     @ApiOperation(value = "邀请报价")
     public ServerResponse invitationOffer(@RequestBody RequestParams<CargoDto> requestParams) {
         if (requestParams.getParams() == null
-                || requestParams.getParams().getId()==null) {
+                || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoService.invitationOffer(requestParams.getParams());

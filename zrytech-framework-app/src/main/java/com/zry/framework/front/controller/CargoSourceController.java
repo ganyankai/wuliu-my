@@ -3,10 +3,11 @@ package com.zry.framework.front.controller;
 import com.zry.framework.dto.CargoDto;
 import com.zry.framework.service.CargoService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
-import com.zrytech.framework.base.entity.Customer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
@@ -34,12 +35,13 @@ public class CargoSourceController {
      */
     @PostMapping("/mySourcePage")
     @ApiOperation(value = "我的货源")
-    public ServerResponse mySourcePage(@RequestBody RequestParams<CargoDto> requestParams, @CurrentCustomer Customer customer) {
+    public ServerResponse mySourcePage(@RequestBody RequestParams<CargoDto> requestParams) {
         CargoDto cargoDto = requestParams.getParams();
         if (requestParams.getParams() == null) {
             cargoDto = new CargoDto();
         }
-        cargoDto.setCreateBy(customer.getId());
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        cargoDto.setCreateBy(sysCustomer.getId());
         return cargoService.mySourcePage(requestParams.getParams(), requestParams.getPage());
     }
 }
