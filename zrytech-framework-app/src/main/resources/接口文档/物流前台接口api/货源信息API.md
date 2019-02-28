@@ -275,12 +275,12 @@
         "marketPrice":23, //市场价
         "priceUnit":"", //价格单位
         "priceType":"", //价格类型
-        "start_province":"",//出发省
-        "start_city":"",//出发市
-        "start_country":"",//出发县
-        "end_province":"",//到达省
-        "end_city":"",//到达市
-        "end_country":"",//到达县
+        "startProvince":"",//出发省
+        "startCity":"",//出发市
+        "startCountry":"",//出发县
+        "endProvince":"",//到达省
+        "endCity":"",//到达市
+        "endCountry":"",//到达县
         "line":"",//路线
         "canShare":true,//是否拼单;true是;false否;
         "arrivalDate":"", //送达日期
@@ -401,12 +401,12 @@
              "marketPrice":23, //市场价
              "priceUnit":"", //价格单位
              "priceType":"", //价格类型
-             "start_province":"",//出发省
-             "start_city":"",//出发市
-             "start_country":"",//出发县
-             "end_province":"",//到达省
-             "end_city":"",//到达市
-             "end_country":"",//到达县
+             "startProvince":"",//出发省
+             "startCity":"",//出发市
+             "startCountry":"",//出发县
+             "endProvince":"",//到达省
+             "endCity":"",//到达市
+             "endCountry":"",//到达县
              "line":"",//路线
              "canShare":true,//是否拼单;true是;false否;
              "arrivalDate":"", //送达日期

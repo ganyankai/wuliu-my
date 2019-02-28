@@ -10,6 +10,7 @@ import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
@@ -93,7 +94,8 @@ public class CargoController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        requestParams.getParams().setCreateBy(RequestUtil.getCurrentUser().getId());
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        requestParams.getParams().setCreateBy(sysCustomer.getId());
         return cargoService.pushResource(requestParams.getParams());
     }
 
