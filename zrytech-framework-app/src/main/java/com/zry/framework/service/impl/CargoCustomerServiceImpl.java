@@ -69,6 +69,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         cargoCustomer.setCreateBy(0);
         cargoCustomer.setCreateDate(new Date());
         cargoCustomer.setIsActive(false);
+        cargoCustomer.setPwd(PasswordUtils.encryptStringPassword(cargoCustomer.getPwd(),cargoCustomer.getLoginCounter()));
         //TODO:短信验证码校验
         int cargoId = cargoCustomerDao.insertCustomer(cargoCustomer);
         //常用提货地址和接货地址
@@ -79,7 +80,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         }
         //添加认证资料
         Certification certification = cargoCustomerDto.getCertificationData();
-        if (cargoCustomerDto == null) {
+        if (certification == null) {
             certification = new Certification();
             certification.setStatus(CargoConstant.AUDIT_PROCESS);
             certification.setCusomerId(cargoId);

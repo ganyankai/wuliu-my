@@ -94,7 +94,7 @@ public class CustomerController {
      * @return
      * @Desinition:退出
      */
-    @RequestMapping("/logout")
+    @RequestMapping("/font/logout")
     public ServerResponse logout(@RequestBody RequestParams requestParams) {
         String token = requestParams.getToken();
         if (StringUtils.isNotEmpty(token)) {

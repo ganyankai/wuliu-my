@@ -34,6 +34,9 @@
             <if test="loginCounter != null and loginCounter !=''">
                 user_account,
             </if>
+            <if test="pwd != null and pwd !=''">
+                password,
+            </if>
             <if test="tel != null and tel !=''">
                 tel,
             </if>
@@ -62,6 +65,9 @@
             </if>
             <if test="loginCounter != null and loginCounter !=''">
                 #{loginCounter},
+            </if>
+            <if test="pwd != null and pwd !=''">
+                #{pwd},
             </if>
             <if test="tel != null and tel !=''">
                 #{tel},
