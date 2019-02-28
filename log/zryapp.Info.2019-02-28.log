@@ -1,0 +1,39 @@
+14:48:27.086 [http-nio-8391-exec-2] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/admin/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+14:48:27.361 [http-nio-8391-exec-2] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+14:48:47.542 [http-nio-8391-exec-3] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+14:48:47.568 [http-nio-8391-exec-3] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+14:49:27.115 [http-nio-8391-exec-4] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/admin/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+14:49:27.140 [http-nio-8391-exec-4] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+14:52:55.334 [http-nio-8391-exec-7] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/admin/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+14:52:55.407 [http-nio-8391-exec-7] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:06:20.906 [http-nio-8391-exec-1] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/admin/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:06:21.171 [http-nio-8391-exec-1] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:07:07.580 [http-nio-8391-exec-3] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:07:07.610 [http-nio-8391-exec-3] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:11:05.363 [http-nio-8391-exec-6] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:12:05.093 [http-nio-8391-exec-6] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:16:37.871 [http-nio-8391-exec-9] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:16:42.919 [http-nio-8391-exec-9] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:17:39.787 [http-nio-8391-exec-10] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:17:43.684 [http-nio-8391-exec-10] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:17:44.201 [http-nio-8391-exec-10] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+15:17:59.792 [http-nio-8391-exec-2] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:18:03.940 [http-nio-8391-exec-2] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:18:09.293 [http-nio-8391-exec-2] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+15:18:38.585 [http-nio-8391-exec-2] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json=
+15:28:54.313 [http-nio-8391-exec-1] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/api/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:29:05.988 [http-nio-8391-exec-3] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/customer/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:29:06.395 [http-nio-8391-exec-3] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:29:07.472 [http-nio-8391-exec-3] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+15:30:40.002 [http-nio-8391-exec-6] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/admin/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:30:40.387 [http-nio-8391-exec-6] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:30:40.443 [http-nio-8391-exec-6] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+15:32:07.419 [http-nio-8391-exec-9] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/customer/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:32:07.795 [http-nio-8391-exec-9] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:32:07.891 [http-nio-8391-exec-9] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+15:32:52.045 [http-nio-8391-exec-10] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/customer/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:32:52.394 [http-nio-8391-exec-10] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:32:52.450 [http-nio-8391-exec-10] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
+15:39:22.238 [http-nio-8391-exec-2] INFO  c.z.f.b.advice.PostDataDumperFilter - 地址/customer/login：json={        "params":{            "userAccount":"admin",            "password":"123456"        }}
+15:39:22.827 [http-nio-8391-exec-2] INFO  c.z.f.common.security.MyShiroRealm - ---------------- 执行 Shiro 凭证认证 ----------------------
+15:39:23.837 [http-nio-8391-exec-2] INFO  c.z.f.common.security.MyShiroRealm - ---------------- Shiro 凭证认证成功 ----------------------
