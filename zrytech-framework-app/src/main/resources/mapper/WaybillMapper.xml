@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zry.framework.mapper.WaybillMapper">
-    <resultMap id="BaseResultMap" type="com.zry.framework.entity.Waybill">
+<mapper namespace="com.zrytech.framework.mapper.WaybillMapper">
+    <resultMap id="BaseResultMap" type="com.zrytech.framework.entity.Waybill">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="bill_no" property="billNo" jdbcType="VARCHAR"/>
         <result column="cargo_id" property="cargoId" jdbcType="INTEGER"/>
@@ -26,7 +26,7 @@
     status, create_date
   </sql>
 
-    <resultMap id="indentMap" type="com.zry.framework.entity.Waybill">
+    <resultMap id="indentMap" type="com.zrytech.framework.entity.Waybill">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="bill_no" property="billNo" jdbcType="VARCHAR"/>
         <result column="cargo_id" property="cargoId" jdbcType="INTEGER"/>
@@ -44,12 +44,12 @@
         <result column="proof_imgs" property="proofImgs" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="VARCHAR"/>
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
-        <collection property="waybillDetails" column="bill_no" select="selectIndentDetails" ofType="com.zry.framework.entity.WaybillDetail"
+        <collection property="waybillDetails" column="bill_no" select="selectIndentDetails" ofType="com.zrytech.framework.entity.WaybillDetail"
                     javaType="ArrayList">
         </collection>
     </resultMap>
 
-    <resultMap id="indentDetail" type="com.zry.framework.entity.WaybillDetail">
+    <resultMap id="indentDetail" type="com.zrytech.framework.entity.WaybillDetail">
         <id property="id" column="id"/>
         <result property="billNo" column="bill_no"/>
         <result property="carId" column="car_id"/>
@@ -59,12 +59,12 @@
         <result property="weightUnit" column="weight_unit"/>
         <result property="flowName" column="flow_name"/>
         <result property="createDate" column="create_date"/>
-        <collection property="billLocations" column="id" select="selectIndentLocations" ofType="com.zry.framework.entity.WaybillLoading"
+        <collection property="billLocations" column="id" select="selectIndentLocations" ofType="com.zrytech.framework.entity.WaybillLoading"
                     javaType="ArrayList">
         </collection>
     </resultMap>
 
-    <resultMap id="wayLoading" type="com.zry.framework.entity.WaybillLoading">
+    <resultMap id="wayLoading" type="com.zrytech.framework.entity.WaybillLoading">
         <id property="id" column="id"/>
         <result property="waybillDetailId" column="waybill_detail_id"/>
         <result property="waybillId" column="waybill_id"/>
@@ -138,7 +138,7 @@
     delete from waybill
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.zry.framework.entity.Waybill">
+    <insert id="insert" parameterType="com.zrytech.framework.entity.Waybill">
     insert into waybill (id, bill_no, cargo_id, 
       cargo_ownner_id, car_ownner_id, advance_moeny, 
       final_money, total_money, pay_type, 
@@ -152,7 +152,7 @@
       #{weightUnit,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{proofImgs,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
   </insert>
-    <insert id="insertSelective" parameterType="com.zry.framework.entity.Waybill">
+    <insert id="insertSelective" parameterType="com.zrytech.framework.entity.Waybill">
         insert into waybill
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -261,7 +261,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.zry.framework.entity.Waybill">
+    <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.entity.Waybill">
         update waybill
         <set>
             <if test="billNo != null">
@@ -315,7 +315,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.zry.framework.entity.Waybill">
+    <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.entity.Waybill">
     update waybill
     set bill_no = #{billNo,jdbcType=VARCHAR},
       cargo_id = #{cargoId,jdbcType=INTEGER},

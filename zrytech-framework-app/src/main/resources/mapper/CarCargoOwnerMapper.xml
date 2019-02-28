@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zry.framework.mapper.CarCargoOwnerMapper" >
-  <resultMap id="BaseResultMap" type="com.zry.framework.entity.CarCargoOwnner" >
+<mapper namespace="com.zrytech.framework.mapper.CarCargoOwnerMapper" >
+  <resultMap id="BaseResultMap" type="com.zrytech.framework.entity.CarCargoOwnner" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
@@ -81,7 +81,7 @@
     delete from car_cargo_ownner
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zry.framework.entity.CarCargoOwnner" >
+  <insert id="insert" parameterType="com.zrytech.framework.entity.CarCargoOwnner" >
     insert into car_cargo_ownner (id, name, credit_code, 
       business_license, legaler_name, legaler_id_card_no, 
       legaler_id_card_front, tel, longitude, 
@@ -99,7 +99,7 @@
       #{favorableLevel,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{cusomerId,jdbcType=INTEGER}, 
       #{createDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zry.framework.entity.CarCargoOwnner" >
+  <insert id="insertSelective" parameterType="com.zrytech.framework.entity.CarCargoOwnner" >
     insert into car_cargo_ownner
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -238,7 +238,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zry.framework.entity.CarCargoOwnner" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.entity.CarCargoOwnner" >
     update car_cargo_ownner
     <set >
       <if test="name != null" >
@@ -307,7 +307,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zry.framework.entity.CarCargoOwnner" >
+  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.entity.CarCargoOwnner" >
     update car_cargo_ownner
     set name = #{name,jdbcType=VARCHAR},
       credit_code = #{creditCode,jdbcType=VARCHAR},
