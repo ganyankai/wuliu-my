@@ -19,7 +19,7 @@ import javax.servlet.MultipartConfigElement;
 
 @ServletComponentScan
 @SpringBootApplication
-@MapperScan({"com.zrytech.framework.*.mapper"})
+@MapperScan({"com.zrytech.framework.*.mapper","com.zrytech.framework.mapper"})
 //@ComponentScan({"com.zrytech.framework.*.*", "com.zrytech.framework.*.*"})
 //@EnableJpaRepositories({"com.zrytech.framework.*.repository"})
 //@EntityScan({"com.zrytech.framework.*.entity"})
