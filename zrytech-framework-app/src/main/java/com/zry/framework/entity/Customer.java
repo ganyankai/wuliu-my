@@ -51,15 +51,15 @@ public class Customer extends User {
 	private String logo;
 
 	/**appOpenid*/
-	@Column(name = "app_openId")
+	@Column(name = "app_open_id")
 	private String appOpenid;
 
 	/**openid*/
-	@Column(name = "openId")
+	@Column(name = "open_id")
 	private String openid;
 
 	/**unionid*/
-	@Column(name = "unionId")
+	@Column(name = "union_id")
 	private String unionid;
 	
 	/***/
