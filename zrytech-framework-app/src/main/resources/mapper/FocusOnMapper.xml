@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zry.framework.mapper.FocusOnMapper">
-    <resultMap id="focus" type="com.zry.framework.entity.Focus">
+<mapper namespace="com.zrytech.framework.mapper.FocusOnMapper">
+    <resultMap id="focus" type="com.zrytech.framework.entity.Focus">
         <id column="id" property="id"/>
         <result column="focuser_id" property="focuserId"/>
         <result column="be_focuser_id" property="beFocuserId"/>

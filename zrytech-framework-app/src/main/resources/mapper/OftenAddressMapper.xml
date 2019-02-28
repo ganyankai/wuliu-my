@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zry.framework.mapper.OftenAddressMapper">
-    <resultMap id="oftenAddress" type="com.zry.framework.entity.OftenAddress">
+<mapper namespace="com.zrytech.framework.mapper.OftenAddressMapper">
+    <resultMap id="oftenAddress" type="com.zrytech.framework.entity.OftenAddress">
         <id column="id" property="id"/>
         <result column="customer_id" property="customerId"/>
         <result column="cargo_name" property="cargoName"/>
