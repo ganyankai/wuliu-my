@@ -317,7 +317,7 @@
     2.修改成功会同时将车辆状态改为已下架
 
 **URL**
->/api/car/updateNoCheck
+>/api/car/updateCheck
 
 **请求参数**
 

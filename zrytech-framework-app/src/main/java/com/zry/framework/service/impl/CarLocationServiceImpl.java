@@ -25,7 +25,7 @@ public class CarLocationServiceImpl implements CarLocationService {
 
 	@Autowired private CarLocationRepository carLocationRepository;
 	
-	@Autowired private PageDataUtils<CarLocation> pageDataUtils;
+	//@Autowired private PageDataUtils<CarLocation> pageDataUtils;
 	
 	
 	
@@ -53,7 +53,11 @@ public class CarLocationServiceImpl implements CarLocationService {
 		
 		Page<CarLocation> page = carLocationRepository.findAll(example, pageable);
 		
-		PageData<CarLocation> pageData = pageDataUtils.bindingData(page);
+		PageData<CarLocation> pageData = new PageData<CarLocation>();
+		pageData.setList(page.getContent());
+		pageData.setPageNo(page.getNumber() + 1);
+		pageData.setPageSize(page.getSize());
+		pageData.setTotal(page.getTotalElements());
 		
 		return ServerResponse.successWithData(pageData);
 	}

@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 import com.zry.framework.dto.CustomerPageDto;
 import com.zry.framework.entity.CarSourceCar;
 import com.zry.framework.entity.Customer;
-import com.zry.framework.repository.CustomerRepository;
+import com.zry.framework.repository.LogisticsCustomerRepository;
 import com.zry.framework.service.CustomerService;
 
 import java.util.ArrayList;
@@ -42,10 +42,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class LogisticsCustomerServiceImpl implements CustomerService {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private LogisticsCustomerRepository customerRepository;
 
 
     /**

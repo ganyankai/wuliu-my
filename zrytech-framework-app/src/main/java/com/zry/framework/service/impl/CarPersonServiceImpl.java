@@ -13,10 +13,11 @@ import org.springframework.stereotype.Service;
 import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
 import com.zry.framework.repository.CarPersonRepository;
-import com.zry.framework.repository.CustomerRepository;
+import com.zry.framework.repository.LogisticsCustomerRepository;
 import com.github.pagehelper.PageHelper;
 import com.zry.framework.constants.ApproveLogConstants;
 import com.zry.framework.constants.CarPersonConstants;
+import com.zry.framework.constants.CustomerConstants;
 import com.zry.framework.dto.CarPersonPageDto;
 import com.zry.framework.dto.CheckDto;
 import com.zry.framework.dto.CommonDto;
@@ -55,7 +56,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	
 	@Autowired private ApproveLogRepository approveLogRepository;
 	
-	@Autowired private CustomerRepository customerRepository;
+	@Autowired private LogisticsCustomerRepository customerRepository;
 	
 	
 	
@@ -235,42 +236,43 @@ public class CarPersonServiceImpl implements CarPersonService {
 	
 	
 	/**
-	 * 添加司机或压货人（车主及车主子账号）
-	 * <p>添加司机与压货人时需要同时创建登录账号（目前压货人没有账号）</p>
-	 * <p>添加数据时司机或压货人状态默认待审核，账号状态默认禁用</p>
+	 * 车主及车主子账号 - 添加司机或压货人
+	 * <p>添加司机与压货人时需要同时创建登录账号（目前压货人不创建账号）</p>
 	 * @author cat
 	 * 
-	 * @param dto
+	 * @param dto	司机压货人的个人信息和账号信息
 	 * @param customer	当前登录人
 	 * @return
 	 */
 	@Override
 	public ServerResponse add(CarPersonAddDto dto, Customer customer) {
 		// TODO 鉴权
-		
-		// TODO 判断车主是否已存在，重复逻辑待定
-		
+		CarCargoOwnner carCargoOwner = customer.getCarOwner();
+		Integer carOwnerId = carCargoOwner.getId();
+		Boolean avoidAudit = carCargoOwner.getAvoidAudit(); // 是否免审核
 		// 仅司机创建登录账号
-		Integer customerId = null;
+		Integer newCustomerId = null;
 		if(CarPersonConstants.PERSON_TYPE_DRIVER.equalsIgnoreCase(dto.getPersonType())) {
-			customerId = this.addDriverCustomer(dto);
+			newCustomerId = this.addDriverCustomer(dto, avoidAudit);
 		}
-		
 		// 添加车主或压货人信息
 		CarPerson carPerson = new CarPerson();
 		BeanUtils.copyProperties(dto, carPerson);
-		
 		carPerson.setId(null);
-		// carPerson.setCarOwnerId(carOwnerId); TODO
-		// carPerson.setCreateBy(customer.getId()); TODO
-		carPerson.setCustomerId(customerId);
+		carPerson.setCarOwnerId(carOwnerId);
+		carPerson.setCreateBy(customer.getId());
+		carPerson.setCustomerId(newCustomerId);
 		carPerson.setCreateDate(new Date());
 		carPerson.setIsDelete(false);
-		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_DOWN);
+		if(avoidAudit) {
+			carPerson.setStatus(CarPersonConstants.PERSON_STATUS_UP);
+		}else {
+			carPerson.setStatus(CarPersonConstants.PERSON_STATUS_WAIT_CHECK); // 默认待审核
+		}
 		carPersonRepository.save(carPerson);
-		
 		return ServerResponse.successWithData("添加成功");
 	}
+	
 	
 	/**   
 	 * 创建司机账号
@@ -279,12 +281,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	 * @param dto	司机账号信息
 	 * @return	司机账号Id
 	 */
-	public Integer addDriverCustomer(CarPersonAddDto dto) {
-		// 判断账号是否已存在，当前仅判断用户名唯一
-		Customer account = customerRepository.findByUserAccount(dto.getUserAccount());
-		if (account != null) {
-			throw new BusinessException(112, "账号已存在");
-		}
+	private Integer addDriverCustomer(CarPersonAddDto dto, Boolean avoidAudit) {
 		// 参数校验
 		if (StringUtils.isBlank(dto.getUserAccount())) {
 			throw new BusinessException(112, "账号不能为空");
@@ -295,23 +292,32 @@ public class CarPersonServiceImpl implements CarPersonService {
 		if (StringUtils.isBlank(dto.getUserTel())) {
 			throw new BusinessException(112, "账号手机号不能为空");
 		}
+		// 判断账号是否已存在，当前仅判断用户名唯一
+		Customer account = customerRepository.findByUserAccount(dto.getUserAccount());
+		if (account != null) {
+			throw new BusinessException(112, "账号已存在");
+		}
 		// 新建账号
 		Customer entity = new Customer();
 		entity.setUserAccount(dto.getUserAccount());
 		entity.setPassword(dto.getPassword());
 		entity.setTel(dto.getUserTel());
-		entity.setCustomerType("driver"); // TODO 类型待处理
-		entity.setIsActive(false); // 默认禁用
+		entity.setCustomerType(CustomerConstants.TYPE_DRIVER);
+		if(avoidAudit) {
+			entity.setIsActive(true);
+		}else {
+			entity.setIsActive(false); // 默认禁用
+		}
 		customerRepository.save(entity);
 		return entity.getId();
 	}
 	
 	
 	/**
-	 * 删除司机或压货人（车主及车主子账号）
+	 * 车主及车主子账号 - 删除司机或压货人
 	 * @author cat
 	 * 
-	 * @param dto
+	 * @param dto	待删除的司机或压货人Id
 	 * @param customer	当前登录人
 	 * @return
 	 */
@@ -319,16 +325,23 @@ public class CarPersonServiceImpl implements CarPersonService {
 	public ServerResponse delete(DeleteDto dto, Customer customer) {
 		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
 		this.assertCarPersonNotDelete(carPerson);
+		
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		if(carOwner.getId() != carPerson.getCarOwnerId()) {
+			throw new BusinessException(112, "非法访问");
+		}
+		
 		// TODO 鉴权
 		// TODO 判断当前司机或压货人是否可以删除（暂未确认哪些条件下可以删除）
 		// TODO 删除日志（暂未确认是否需要日志）
+		// TODO 禁用司机账号
 		carPersonRepository.deleteCarById(dto.getId());
 		return ServerResponse.successWithData("删除成功");
 	}
 	
 	
 	/**
-	 * 司机与压货人的禁用与启用
+	 * 车主及车主子账号 - 司机与压货人的禁用与启用
 	 * @author cat
 	 * 
 	 * @param dto
@@ -339,19 +352,26 @@ public class CarPersonServiceImpl implements CarPersonService {
 	public ServerResponse enabled(CarPersonEnabledDto dto, Customer customer) {
 		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
 		this.assertCarPersonNotDelete(carPerson);
+		
+		if(!CarPersonConstants.PERSON_TYPE_DRIVER.equalsIgnoreCase(carPerson.getPersonType())) {
+			throw new BusinessException(112, "参数有误");
+		}
+		
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		if(carOwner.getId() != carPerson.getCarOwnerId()) {
+			throw new BusinessException(112, "非法访问");
+		}
+		
 		// TODO 鉴权
-		customerRepository.updateIsActiveById(dto.getId(), dto.getEnabled());
+		
+		customerRepository.updateIsActiveById(carPerson.getCustomerId(), dto.getEnabled());
+		if(!dto.getEnabled()) { // 禁用
+			// TODO 删除已登录的TOKEN
+		}
+		
 		return ServerResponse.successWithData("修改成功");
 	} 
 	
-	
-	/*
-	 * 车主修改司机或压货人信息
-	 * 分为审核与不需要审核两个部分
-	 * 
-	 * 司机与压货人修改自身信息
-	 * 分为审核与不需要审核两个部分（两个方法）
-	 */
 	
 	/**
 	 * 修改司机压货人不需要审核字段
@@ -366,6 +386,12 @@ public class CarPersonServiceImpl implements CarPersonService {
 		// TODO 鉴权
 		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
 		this.assertCarPersonNotDelete(carPerson);
+		
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		if(carOwner.getId() != carPerson.getCarOwnerId()) {
+			throw new BusinessException(112, "非法访问");
+		}
+		
 		BeanUtils.copyProperties(dto, carPerson);
 		carPersonRepository.save(carPerson);
 		return ServerResponse.successWithData("修改成功");
@@ -385,8 +411,14 @@ public class CarPersonServiceImpl implements CarPersonService {
 		// TODO 鉴权
 		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
 		this.assertCarPersonNotDelete(carPerson);
+		
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		if(carOwner.getId() != carPerson.getCarOwnerId()) {
+			throw new BusinessException(112, "非法访问");
+		}
+		
 		BeanUtils.copyProperties(dto, carPerson);
-		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_DOWN);
+		carPerson.setStatus(CarPersonConstants.PERSON_STATUS_WAIT_CHECK);
 		carPersonRepository.save(carPerson);
 		return ServerResponse.successWithData("修改成功");
 	}
@@ -404,6 +436,12 @@ public class CarPersonServiceImpl implements CarPersonService {
 	public ServerResponse submitAudit(CommonDto dto, Customer customer) {
 		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
 		this.assertCarPersonNotDelete(carPerson);
+		
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		if(carOwner.getId() != carPerson.getCarOwnerId()) {
+			throw new BusinessException(112, "非法访问");
+		}
+		
 		// TODO 验证当前用户是否有权限修改数据
 		if(!CarPersonConstants.PERSON_STATUS_DOWN.equalsIgnoreCase(carPerson.getStatus())) {
 			throw new BusinessException(112, "提交审核失败：仅下架状态的司机或压货人可以提交审核");
