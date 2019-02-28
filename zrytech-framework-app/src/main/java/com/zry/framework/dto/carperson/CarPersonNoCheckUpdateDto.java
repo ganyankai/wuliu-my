@@ -1,5 +1,9 @@
 package com.zry.framework.dto.carperson;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +16,11 @@ import lombok.Setter;
 @Getter
 public class CarPersonNoCheckUpdateDto {
 	
-	/**车主司机Id*/
+	/**司机或压货人Id*/
+	@NotNull(message = "Id不能为空")
 	private Integer id;
 	
+	@NotEmpty(message = "姓名不能为空")
 	private String name;
 
 }

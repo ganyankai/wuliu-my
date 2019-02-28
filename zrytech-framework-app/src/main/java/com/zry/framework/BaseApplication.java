@@ -20,9 +20,9 @@ import javax.servlet.MultipartConfigElement;
 @ServletComponentScan
 @SpringBootApplication
 @MapperScan({"com.zrytech.framework.*.mapper","com.zry.framework.mapper"})
-@ComponentScan({"com.zrytech.framework.*.*"})
-@EnableJpaRepositories("com.zrytech.framework.*.repository")
-@EntityScan("com.zrytech.framework.*.entity")
+@ComponentScan({"com.zrytech.framework.*.*","com.zry.framework.*.*"})
+@EnableJpaRepositories({"com.zrytech.framework.*.repository","com.zry.framework.repository"})
+@EntityScan({"com.zrytech.framework.*.entity","com.zry.framework"})
 @EnableAspectJAutoProxy
 @EnableScheduling
 public class BaseApplication extends BaseApp {

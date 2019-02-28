@@ -8,17 +8,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zrytech.framework.base.entity.User;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Entity
-@Table(name = "`sys_customer`")
-public class Customer {
+@Table(name = "sys_customer")
+public class Customer extends User {
 	
 	/**主键，自增*/
 	@Id
@@ -26,62 +30,68 @@ public class Customer {
     private Integer id;
 
 	/**账号*/
-	@Column(name = "`user_account`")
+	@Column(name = "user_account")
     private String userAccount;
 
 	/**手机号*/
-	@Column(name = "`tel`")
+	@Column(name = "tel")
 	private String tel;
 
 	/**密码*/
 	@JsonIgnore
-	@Column(name = "`password`")
+	@Column(name = "password")
 	private String password;
 
 	/**名称*/
-	@Column(name = "`user_name`")
+	@Column(name = "user_name")
 	private String userName;
 
 	/**logo*/
-	@Column(name = "`logo`")
+	@Column(name = "logo")
 	private String logo;
 
 	/**appOpenid*/
-	@Column(name = "`app_openid`")
+	@Column(name = "app_openId")
 	private String appOpenid;
 
 	/**openid*/
-	@Column(name = "`openid`")
+	@Column(name = "openId")
 	private String openid;
 
 	/**unionid*/
-	@Column(name = "`unionid`")
+	@Column(name = "unionId")
 	private String unionid;
 	
 	/***/
-	@Column(name = "`extend`")
+	@Column(name = "extend")
 	private String extend;
 	
 	/**用户类型*/
-	@Column(name = "`customer_type`")
+	@Column(name = "customer_type")
 	private String customerType;
 
-	@Column(name = "`user_status`")
-	private String userStatus;
+	@Column(name = "user_status")
+	private Integer userStatus;
 	
 	/**创建人*/
-	@Column(name = "`create_by`")
+	@Column(name = "create_by")
 	private Integer createBy;
 
 	/**注册日期*/
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@Column(name = "`create_date`")
+	@Column(name = "create_date")
 	private Date createDate;
 	
 	/**状态*/
-	@Column(name = "`is_active`")
+	@Column(name = "is_active")
 	private Boolean isActive;
 	
+	/**货主*/
+	@Transient
+	private CarCargoOwnner carOwner;
 	
+	/**货主*/
+	@Transient
+	private CarCargoOwnner cargoOwner;
 }

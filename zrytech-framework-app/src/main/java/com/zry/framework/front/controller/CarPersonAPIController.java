@@ -16,11 +16,13 @@ import com.zry.framework.dto.carperson.CarPersonAddDto;
 import com.zry.framework.dto.carperson.CarPersonCheckUpdateDto;
 import com.zry.framework.dto.carperson.CarPersonEnabledDto;
 import com.zry.framework.dto.carperson.CarPersonNoCheckUpdateDto;
+import com.zry.framework.entity.CarCargoOwnner;
 import com.zry.framework.entity.Customer;
 import com.zry.framework.service.CarPersonService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 
 
 /**
@@ -127,8 +129,13 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/add")
-	public ServerResponse add(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse add(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams, BindingResult result) {
+		// Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Customer customer = new Customer();
+		customer.setId(1);
+		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
+		carCargoOwner.setId(1);
+		customer.setCarOwner(carCargoOwner);
 		return carPersonService.add(requestParams.getParams(), customer);
 	}
 	

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.zry.framework.entity.Customer;
 
 
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface LogisticsCustomerRepository extends JpaRepository<Customer, Integer> {
 
 	
 	/**

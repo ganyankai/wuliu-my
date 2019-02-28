@@ -16,7 +16,7 @@ import com.zry.framework.entity.Customer;
 import com.zry.framework.mapper.CarCargoOwnerMapper;
 import com.zry.framework.repository.ApproveLogRepository;
 import com.zry.framework.repository.CarCargoOwnnerRepository;
-import com.zry.framework.repository.CustomerRepository;
+import com.zry.framework.repository.LogisticsCustomerRepository;
 import com.zry.framework.service.CarCargoOwnerService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -30,7 +30,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	
 	@Autowired private CarCargoOwnerMapper carCargoOwnerMapper;
 	
-	@Autowired private CustomerRepository customerRepository;
+	@Autowired private LogisticsCustomerRepository customerRepository;
 	
 	@Autowired private ApproveLogRepository approveLogRepository;
 	
