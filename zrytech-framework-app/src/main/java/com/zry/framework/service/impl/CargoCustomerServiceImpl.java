@@ -71,23 +71,24 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         cargoCustomer.setIsActive(false);
         cargoCustomer.setPwd(PasswordUtils.encryptStringPassword(cargoCustomer.getPwd(),cargoCustomer.getLoginCounter()));
         //TODO:短信验证码校验
-        int cargoId = cargoCustomerDao.insertCustomer(cargoCustomer);
+        int num = cargoCustomerDao.insertCustomer(cargoCustomer);
+        CheckFieldUtils.assertSuccess(num);
         //常用提货地址和接货地址
         List<OftenAddress> list = cargoCustomerDto.getExtractList();
         if (list != null && list.size() > 0) {
             //批量添加常用地址
-            oftenAddressDao.batchSave(cargoId, list, new Date());
+            oftenAddressDao.batchSave(cargoCustomer.getId(), list, new Date());
         }
         //添加认证资料
         Certification certification = cargoCustomerDto.getCertificationData();
         if (certification == null) {
             certification = new Certification();
             certification.setStatus(CargoConstant.AUDIT_PROCESS);
-            certification.setCusomerId(cargoId);
+            certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         } else {
             certification.setStatus(CargoConstant.AUDIT_PROCESS);
-            certification.setCusomerId(cargoId);
+            certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         }
         shipperDao.save(certification);

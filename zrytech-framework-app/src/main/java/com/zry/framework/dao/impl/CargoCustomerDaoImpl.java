@@ -21,20 +21,20 @@ public class CargoCustomerDaoImpl implements CargoCustomerDao {
 
     @Override
     public int insertCustomer(CargoCustomer cargoCustomer) {
-        return cargoCustomerMapper.insertCustomer(cargoCustomer);
+       return cargoCustomerMapper.insertCustomer(cargoCustomer);
     }
 
     @Override
     public PageInfo<CargoCustomer> selectCustomerPage(CargoCustomer cargoCustomer, Page page) {
-        if(page==null){
-            page=new Page();
+        if (page == null) {
+            page = new Page();
         }
-        return cargoCustomerMapper.selectCargoCustomerPage(cargoCustomer,page);
+        return cargoCustomerMapper.selectCargoCustomerPage(cargoCustomer, page);
     }
 
     @Override
-    public List<CargoCustomer> checkTelOrCount(String tel,String loginCounter) {
-        return cargoCustomerMapper.checkTelOrCount(tel,loginCounter);
+    public List<CargoCustomer> checkTelOrCount(String tel, String loginCounter) {
+        return cargoCustomerMapper.checkTelOrCount(tel, loginCounter);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class CargoCustomerDaoImpl implements CargoCustomerDao {
 
     @Override
     public int setUpEnable(Integer id, Boolean isActive) {
-        return cargoCustomerMapper.setUpEnable(id,isActive);
+        return cargoCustomerMapper.setUpEnable(id, isActive);
     }
 
     @Override
-    public List<Integer> selectCarList(Cargo cargoGoods,String customerType) {
-        return cargoCustomerMapper.selectCarList(cargoGoods,customerType);
+    public List<Integer> selectCarList(Cargo cargoGoods, String customerType) {
+        return cargoCustomerMapper.selectCarList(cargoGoods, customerType);
     }
 
     @Override
@@ -83,11 +83,11 @@ public class CargoCustomerDaoImpl implements CargoCustomerDao {
     }
 
     @Override
-    public PageInfo<CargoCustomer> selectChildCustomerList(List<Integer> childCustomerIds,Page page) {
-        if(page==null){
-          page=new Page();
+    public PageInfo<CargoCustomer> selectChildCustomerList(List<Integer> childCustomerIds, Page page) {
+        if (page == null) {
+            page = new Page();
         }
-        return cargoCustomerMapper.selectChildCustomerListPage(childCustomerIds,page);
+        return cargoCustomerMapper.selectChildCustomerListPage(childCustomerIds, page);
     }
 
     @Override
