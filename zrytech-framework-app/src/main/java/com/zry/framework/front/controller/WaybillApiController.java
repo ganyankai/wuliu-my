@@ -46,7 +46,6 @@ public class WaybillApiController {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
-        //TODO:设置货主登录ID
         requestParams.getParams().setCargoOwnnerId(sysCustomer.getId());
         return waybillService.indentPage(requestParams.getParams(), requestParams.getPage());
     }
@@ -63,7 +62,6 @@ public class WaybillApiController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        //TODO:设置货主登录ID
         SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         requestParams.getParams().setCargoOwnnerId(sysCustomer.getId());
         return waybillService.coundIndent(requestParams.getParams());

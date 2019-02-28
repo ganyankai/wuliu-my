@@ -123,13 +123,13 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.successWithData(waybill);
     }
 
-   /* @Autowired
-    private TradeNoUtil tradeNoUtil;*/
+    @Autowired
+    private TradeNoUtil tradeNoUtil;
 
     @Override
     public ServerResponse createIndent(WaybillDto waybillDto) {
         Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
-        //TODO:waybill.setBillNo(tradeNoUtil.genTradeNo());
+        waybill.setBillNo(tradeNoUtil.genTradeNo());
         waybill.setStatus(CargoConstant.AWAIT_GENERATE);
         waybill.setCreateDate(new Date());
         int num = waybillDao.createIndent(waybill);
