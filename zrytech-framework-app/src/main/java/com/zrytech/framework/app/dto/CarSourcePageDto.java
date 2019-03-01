@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 车源分页搜索
+ * 车源分页搜索入参
  * 
  * @author cat
  *
@@ -18,9 +18,7 @@ public class CarSourcePageDto {
 	 */
 	private Integer id;
 	
-	/**
-	 * 车主Id
-	 */
+	/**创建人Id*/
 	private Integer createBy;
 	
 	/**
@@ -37,5 +35,8 @@ public class CarSourcePageDto {
 	 * 车源的车辆类型
 	 */
 	private String carType;
+	
+	/**车主Id*/
+	private Integer carOwnerId;
 	
 }

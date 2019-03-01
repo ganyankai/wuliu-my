@@ -25,4 +25,7 @@ public interface LogisticsCustomerRepository extends JpaRepository<Customer, Int
 	
 	Customer findByUserAccount(String userAccount);
 	
+	@Query(value = "select userName from Customer where id = ?1")
+	String findUserNameById(Integer id);
+	
 }

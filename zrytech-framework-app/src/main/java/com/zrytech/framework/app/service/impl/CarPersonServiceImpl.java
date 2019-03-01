@@ -450,4 +450,11 @@ public class CarPersonServiceImpl implements CarPersonService {
 		return ServerResponse.successWithData("提交审核成功");
 	}
 	
+	
+	@Override
+	public CarPerson assertCarPersonAvailable(Integer carPersonId) {
+		CarPerson carPerson = this.assertCarPersonExist(carPersonId);
+		this.assertCarPersonNotDelete(carPerson);
+		return carPerson;
+	}
 }

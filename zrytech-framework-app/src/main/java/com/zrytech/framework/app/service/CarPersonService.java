@@ -12,6 +12,7 @@ import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonEnabledDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonNoCheckUpdateDto;
+import com.zrytech.framework.app.entity.CarPerson;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
@@ -19,6 +20,16 @@ import com.zrytech.framework.common.entity.User;
 
 @Service
 public interface CarPersonService {
+	
+	/**
+	 * 断言司机压货人可用
+	 * <p>数据库存在数据且未删除</p>
+	 * @author cat
+	 * 
+	 * @param carPersonId	司机压货人Id
+	 * @return
+	 */
+	public CarPerson assertCarPersonAvailable(Integer carPersonId);
 	
 	public ServerResponse page(CarPersonPageDto dto, Integer pageNumber, Integer pageSize);
 	
