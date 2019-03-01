@@ -59,8 +59,8 @@
    "logo": 123,//logo头像
    "logoUrl": "",//logo头像url
    "qty": ,//数量
-   "weightUnit": "",//重量单位
-   "weightUnitCN": "",//重量单位CN
+   "weightUnit": "",//重量单位;ton(吨);rise(升)
+   "weightUnitCN": "",//重量单位CN;ton(吨);rise(升)
    "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "tenderWayCN":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
@@ -70,10 +70,10 @@
    "matterPrice":12, //发标价
    "realPrice":34, //中标价
    "marketPrice":23, //市场价
-   "priceUnit":"", //价格单位
-   "priceUnitCN":"", //价格单位CN
-   "priceType":"", //价格类型
-   "priceTypeCN":"", //价格类型CN
+   "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+   "priceUnitCN":"", //价格单位CN;price_yuan(人民币);price_dollar(美元)
+   "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "priceTypeCN":"", //价格类型CN;fixed_price(包车固定价);perton_price(每吨运费单价);
    "startProvince":"",//出发省
    "startCity":"",//出发市
    "startCountry":"",//出发县
@@ -82,7 +82,8 @@
    "endCountry":"",//到达县
    "line":"",//路线
    "canShare":true,//是否拼单;true是;false否;
-   "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+   "status":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "statusCN":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
    "arrivalDate":"", //送达日期
    "endDate":"",//截止日期
    "remark":"",//备注
@@ -144,8 +145,8 @@
    "logo": 123,//logo头像
    "logoUrl": "",//logo头像url
    "qty": ,//数量
-   "weightUnit": "",//重量单位
-   "weightUnitCN": "",//重量单位CN
+   "weightUnit": "",//重量单位;ton(吨);rise(升)
+   "weightUnitCN": "",//重量单位CN;ton(吨);rise(升)
    "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "tenderWayCN":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
@@ -161,9 +162,9 @@
            "county":"",//县
            "addressDetail":"",//详细地址
            "qty":,//装卸数量
-           "type":"",//类型;
+           "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
            "remark":"",//说明
-           "status":"",//状态
+           "status":"",//状态;noting_loading(未装货);haved_loading(已装货)
            "loadDate":"",//装卸日期
            "endDate":""//截止日期
          }
@@ -179,9 +180,9 @@
                  "county":"",//县
                  "addressDetail":"",//详细地址
                  "qty":,//装卸数量
-                 "type":"",//类型;
+                 "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
                  "remark":"",//说明
-                 "status":"",//状态
+                 "status":"",//状态;noting_unloading(未卸货);haved_unloading(已卸货)
                  "loadDate":"",//装卸日期
                  "endDate":""//截止日期
                }
@@ -190,10 +191,10 @@
    "matterPrice":12, //发标价
    "realPrice":34, //中标价
    "marketPrice":23, //市场价
-   "priceUnit":"", //价格单位
-   "priceUnitCN":"", //价格单位CN
-   "priceType":"", //价格类型
-   "priceTypeCN":"", //价格类型CN
+   "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+   "priceUnitCN":"", //价格单位CN;price_yuan(人民币);price_dollar(美元)
+   "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "priceTypeCN":"", //价格类型CN;fixed_price(包车固定价);perton_price(每吨运费单价);
    "start_province":"",//出发省
    "start_city":"",//出发市
    "start_country":"",//出发县
@@ -202,7 +203,8 @@
    "end_country":"",//到达县
    "line":"",//路线
    "canShare":true,//是否拼单;true是;false否;
-   "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+   "status":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "statusCN":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
    "arrivalDate":"", //送达日期
    "endDate":"",//截止日期
    "remark":"",//备注
@@ -232,7 +234,7 @@
   	   "name": "",//货物介质
         "logo": 123,//logo头像
         "qty": ,//数量
-        "weightUnit": "",//重量单位
+        "weightUnit": "",//重量单位;ton(吨);rise(升)
         "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
         "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
         "mulShipment":true,//多点装货;true:表示是多点装货;false:否
@@ -245,9 +247,9 @@
                 "county":"",//县
                 "addressDetail":"",//详细地址
                 "qty":,//装卸数量
-                "type":"",//类型;
+                "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
                 "remark":"",//说明
-                "status":"",//状态
+                "status":"",//状态;noting_loading(未装货);haved_loading(已装货)
                 "loadDate":"",//装卸日期
                 "endDate":""//截止日期
               }
@@ -262,9 +264,9 @@
                       "county":"",//县
                       "addressDetail":"",//详细地址
                       "qty":,//装卸数量
-                      "type":"",//类型;
+                      "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
                       "remark":"",//说明
-                      "status":"",//状态
+                      "status":"",//状态;noting_unloading(未卸货);haved_unloading(已卸货)
                       "loadDate":"",//装卸日期
                       "endDate":""//截止日期
                     }
@@ -273,8 +275,8 @@
         "matterPrice":12, //发标价
         "realPrice":34, //中标价
         "marketPrice":23, //市场价
-        "priceUnit":"", //价格单位
-        "priceType":"", //价格类型
+        "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+        "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
         "startProvince":"",//出发省
         "startCity":"",//出发市
         "startCountry":"",//出发县
@@ -356,7 +358,7 @@
   	         "name": "",//货物介质
              "logo": 123,//logo头像
              "qty": ,//数量
-             "weightUnit": "",//重量单位
+             "weightUnit": "",//重量单位;ton(吨);rise(升)
              "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
              "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
              "mulShipment":true,//多点装货;true:表示是多点装货;false:否
@@ -370,9 +372,9 @@
                      "county":"",//县
                      "addressDetail":"",//详细地址
                      "qty":,//装卸数量
-                     "type":"",//类型;
+                     "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
                      "remark":"",//说明
-                     "status":"",//状态
+                     "status":"",//状态;noting_loading(未装货);haved_loading(已装货)
                      "loadDate":"",//装卸日期
                      "endDate":""//截止日期
                    }
@@ -388,9 +390,9 @@
                            "county":"",//县
                            "addressDetail":"",//详细地址
                            "qty":,//装卸数量
-                           "type":"",//类型;
+                           "type":"",//类型;;loading_type(装货类型);unloading_type(卸货类型)
                            "remark":"",//说明
-                           "status":"",//状态
+                           "status":"",//状态;noting_unloading(未卸货);haved_unloading(已卸货)
                            "loadDate":"",//装卸日期
                            "endDate":""//截止日期
                          }
@@ -399,8 +401,8 @@
              "matterPrice":12, //发标价
              "realPrice":34, //中标价
              "marketPrice":23, //市场价
-             "priceUnit":"", //价格单位
-             "priceType":"", //价格类型
+             "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+             "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
              "startProvince":"",//出发省
              "startCity":"",//出发市
              "startCountry":"",//出发县
@@ -522,7 +524,7 @@
                   "remark": "",//备注
                   "qty": 23,//数量
                   "payWay":"",//付款类型;货到付款(arrival_pay);尾款(tail_pay);首付(first_pay)
-                  "weightUnit": ,//重量单位
+                  "weightUnit": ,//重量单位;ton(吨);rise(升)
                   "status":""//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
@@ -586,7 +588,7 @@
                             "addressDetail":"",//地址详情
                             "qty":678,//装卸数量
                             "weightUnit":"",//重量单位
-                            "type":"",//类型
+                            "type":"",//类型;noting_loading(未装货);haved_loading(已装货
                             "seqNo":2,//序号
                             "remark":"",//说明
                             "loadDate":"",//装卸日期
@@ -635,7 +637,7 @@
                   "totalMoney": 2345,//总金额
                   "remark": "",//备注
                   "qty": 23,//数量
-                  "weightUnit": ,//重量单位
+                  "weightUnit": ,//重量单位;ton(吨);rise(升)
                   "status":"",//2:待确定运单(await_determine)
                   "waybillDetails":[     //订单详情
                     {
@@ -644,7 +646,7 @@
                       "driverId":,//司机Id
                       "supercargoId":,//压货人Id
                       "qty":,//运输数量
-                      "weightUnit":,//重量单位
+                      "weightUnit":,//重量单位;ton(吨);rise(升)
                       "flowName":"",//进度阶段名称
                       "billLocations":[  //运单装卸地
                           {
@@ -657,8 +659,8 @@
                             "county":"",//县
                             "addressDetail":"",//地址详情
                             "qty":678,//装卸数量
-                            "weightUnit":"",//重量单位
-                            "type":"",//类型
+                            "weightUnit":"",//重量单位;ton(吨);rise(升)
+                            "type":"",//类型;noting_loading(未装货);haved_loading(已装货
                             "seqNo":2,//序号
                             "remark":"",//说明
                             "loadDate":"",//装卸日期

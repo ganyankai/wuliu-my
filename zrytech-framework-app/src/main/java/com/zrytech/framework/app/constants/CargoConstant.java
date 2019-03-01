@@ -205,5 +205,63 @@ public class CargoConstant {
     public static final String OFFER_PROMISSED = "offer_promissed";
     /**offer_draft - 淘汰(草稿)*/
     public static final String OFFER_DRAFT = "offer_draft";
+
+    /**
+     *loading_status:装货/卸货状态
+     */
+    public static final String LOADING_STATUS="loading_status";
+    /**noting_loading - 未装货*/
+    public static final String NOTING_LOADING = "noting_loading";
+    /**haved_loading -已装货*/
+    public static final String HAVED_LOADING = "haved_loading";
+    /**noting_unloading - 未卸货*/
+    public static final String NOTING_UNLOADING = "noting_unloading";
+    /**haved_unloading -已卸货*/
+    public static final String HAVED_UNLOADING = "haved_unloading";
+
+
+
+    /**
+     *pay_way:付款方式
+     */
+    public static final String PAY_WAY="pay_way";
+    /**offline_pay - 线下支付*/
+    public static final String OFFLINE_PAY = "offline_pay";
+    /**wechat -微信支付*/
+    public static final String WECHAT = "wechat";
+    /**alipay - 支付宝支付*/
+    public static final String ALIPAY = "alipay";
+    /**bankpay -银行卡支付*/
+    public static final String BANKPAY = "bankpay";
+
+
+    /**
+     *weight_unit:重量单位
+     */
+    public static final String WEIGHT_UNIT="weight_unit";
+    /**ton - 吨*/
+    public static final String TON = "ton";
+    /**rise -升*/
+    public static final String RISE = "rise";
+
+
+    /**
+     *price_unit:价格单位
+     */
+    public static final String PRICE_UNIT="price_unit";
+    /**price_yuan -人民币*/
+    public static final String PRICE_YUAN = "price_yuan";
+    /**price_dollar -美元*/
+    public static final String PRICE_DOLLAR = "price_dollar";
+
+
+    /**
+     *price_type:价格类型
+     */
+    public static final String PRICE_TYPE="price_type";
+    /**fixed_price -固定价*/
+    public static final String FIXED_PRICE = "fixed_price";
+    /**perton_price -每吨运费单价*/
+    public static final String PERTON_PRICE = "perton_price";
 }
 

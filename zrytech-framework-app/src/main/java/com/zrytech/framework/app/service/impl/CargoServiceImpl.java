@@ -153,25 +153,25 @@ public class CargoServiceImpl implements CargoService {
         CheckFieldUtils.checkObjecField(cargoDto.getEndCity());
         //TODO:判断当前用户是否为免审核用户;如果是免审核则系统直接通过招标方式通知相应的车主
         Certification certification = shipperDao.getCustomerId(cargoDto.getCreateBy());
-        if (certification != null && certification.getStatus() != null && CargoConstant.AUDIT_PASS.equalsIgnoreCase(certification.getStatus())) {
+        if (certification == null || certification.getStatus() == null || !certification.getStatus().equalsIgnoreCase(CargoConstant.AUDIT_PASS)) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PERMISSED_NOT_FAIL));
         }
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargo.setCreateDate(new Date());
-        int cargoId = cargoDao.pushSave(cargo);
-        CheckFieldUtils.assertSuccess(cargoId);
+        int num = cargoDao.pushSave(cargo);
+        CheckFieldUtils.assertSuccess(num);
         List<Loading> loadingList = cargoDto.getMulShipmentList();
         if (loadingList != null && loadingList.size() > 0) {
             //批量添加装货地址
-            loadingDao.batchSave(loadingList, CargoConstant.LOADING_TYPE, cargoId);
+            loadingDao.batchSave(loadingList, CargoConstant.LOADING_TYPE, cargo.getId());
         }
         List<Loading> unLoadingList = cargoDto.getMulUnloadList();
         if (loadingList != null && loadingList.size() > 0) {
             //批量添加卸货地址
-            loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE, cargoId);
+            loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE, cargo.getId());
         }
-        if (certification.getAvoidAudit()) {//ture表示是免审核用户;则货源无需经过后台审核直接推送
-            cargo.setId(cargoId);
+        if (certification !=null &&certification.getAvoidAudit() !=null && certification.getAvoidAudit()) {//ture表示是免审核用户;则货源无需经过后台审核直接推送
+            cargo.setId(cargo.getId());
             pushGoodSource(cargo);
         }
         return ServerResponse.success();

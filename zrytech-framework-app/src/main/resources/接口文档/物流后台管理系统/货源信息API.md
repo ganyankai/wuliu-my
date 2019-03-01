@@ -21,10 +21,14 @@
   "params": 
 {
   	  "name":"",   //(选传)(string) 货物介质
-    "startPlace":"",      //(选传)(string) 货物出发地
-    "endPlace":"",      //(选传)(string) 货物出目的地
-    "qty":23,      //(选传)(string) 货物数量
-    "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+      "startProvince":"",//(选传)(string)出发省
+      "startCity":"",//(选传)(string)出发市
+      "startCountry":"",//(选传)(string)出发县
+      "endProvince":"",//(选传)(string)到达省
+      "endCity":"",//(选传)(string)到达市
+      "endCountry":"",//(选传)(string)到达县
+      "qty":23,      //(选传)(string) 货物数量
+      "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
@@ -54,8 +58,8 @@
    "logo": 123,//logo头像
    "logoUrl": "",//logo头像url
    "qty": ,//数量
-   "weightUnit": "",//重量单位
-   "weightUnitCN": "",//重量单位CN
+   "weightUnit": "",//重量单位;ton(吨);rise(升)
+   "weightUnitCN": "",//重量单位CN;ton(吨);rise(升)
    "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "tenderWayCN":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
@@ -65,10 +69,10 @@
    "matterPrice":12, //发标价
    "realPrice":34, //中标价
    "marketPrice":23, //市场价
-   "priceUnit":"", //价格单位
-   "priceUnitCN":"", //价格单位CN
-   "priceType":"", //价格类型
-   "priceTypeCN":"", //价格类型CN
+   "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+   "priceUnitCN":"", //价格单位CN;price_yuan(人民币);price_dollar(美元)
+   "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "priceTypeCN":"", //价格类型CN;fixed_price(包车固定价);perton_price(每吨运费单价);
    "startProvince":"",//出发省
    "startCity":"",//出发市
    "startCountry":"",//出发县
@@ -77,7 +81,8 @@
    "endCountry":"",//到达县
    "line":"",//路线
    "canShare":true,//是否拼单;true是;false否;
-   "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+   "status":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "statusCN":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
    "arrivalDate":"", //送达日期
    "endDate":"",//截止日期
    "remark":"",//备注
@@ -139,8 +144,8 @@
    "logo": 123,//logo头像
    "logoUrl": "",//logo头像url
    "qty": ,//数量
-   "weightUnit": "",//重量单位
-   "weightUnitCN": "",//重量单位CN
+   "weightUnit": "",//重量单位;ton(吨);rise(升)
+   "weightUnitCN": "",//重量单位CN;ton(吨);rise(升)
    "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "tenderWayCN":"",//发标方式;招标(tender_mark);抢标(bid_mark)
    "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
@@ -156,9 +161,9 @@
            "county":"",//县
            "addressDetail":"",//详细地址
            "qty":,//装卸数量
-           "type":"",//类型;
+           "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
            "remark":"",//说明
-           "status":"",//状态;
+           "status":"",//状态;noting_loading(未装货);haved_loading(已装货)
            "loadDate":"",//装卸日期
            "endDate":""//截止日期
          }
@@ -174,9 +179,9 @@
                  "county":"",//县
                  "addressDetail":"",//详细地址
                  "qty":,//装卸数量
-                 "type":"",//类型;
+                 "type":"",//类型;loading_type(装货类型);unloading_type(卸货类型)
                  "remark":"",//说明
-                 "status":"",//状态
+                 "status":"",//状态;noting_unloading(未卸货);haved_unloading(已卸货)
                  "loadDate":"",//装卸日期
                  "endDate":""//截止日期
                }
@@ -185,19 +190,20 @@
    "matterPrice":12, //发标价
    "realPrice":34, //中标价
    "marketPrice":23, //市场价
-   "priceUnit":"", //价格单位
-   "priceUnitCN":"", //价格单位CN
-   "priceType":"", //价格类型
-   "priceTypeCN":"", //价格类型CN
-   "start_province":"",//出发省
-   "start_city":"",//出发市
-   "start_country":"",//出发县
-   "end_province":"",//到达省
-   "end_city":"",//到达市
-   "end_country":"",//到达县
+   "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+   "priceUnitCN":"", //价格单位CN;price_yuan(人民币);price_dollar(美元)
+   "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "priceTypeCN":"", //价格类型CN;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "startProvince":"",//出发省
+   "startCity":"",//出发市
+   "startCountry":"",//出发县
+   "endProvince":"",//到达省
+   "endCity":"",//到达市
+   "endCountry":"",//到达县
    "line":"",//路线
    "canShare":true,//是否拼单;true是;false否;
-   "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+   "status":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "statusCN":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
    "arrivalDate":"", //送达日期
    "endDate":"",//截止日期
    "remark":"",//备注
@@ -227,7 +233,7 @@
   "params": 
 {
   	 "id":123,  //货源Id
-  	 "status":"", //状态;1:拒绝就未上架(source_down);2:已上架(source_up);
+  	 "status":"", //状态;1:拒绝(source_refuse);2:审核通过-报价中(source_ongoing);
   	 "describe":"" //(选填)(string)如果是拒绝需填拒绝理由
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
