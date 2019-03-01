@@ -392,8 +392,20 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	
-	
-	
+	/**
+	 * 断言车辆可用
+	 * <p>数据库存在数据且未删除</p>
+	 * @author cat
+	 * 
+	 * @param carId	车辆Id
+	 * @return
+	 */
+	@Override
+	public Car assertCarAvailable(Integer carId) {
+		Car car = this.assertCarExist(carId);
+		this.assertCarNotDelete(car);
+		return car;
+	}
 	
 	
 	

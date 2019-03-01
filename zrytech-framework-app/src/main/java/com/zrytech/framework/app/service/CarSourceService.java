@@ -7,6 +7,7 @@ import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
+import com.zrytech.framework.app.dto.carsource.CarOwnerCarSourcePageDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
@@ -32,7 +33,7 @@ public interface CarSourceService {
 	
 	public ServerResponse details(DetailsDto dto, Customer customer);
 	
-	public ServerResponse page(CarSourcePageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+	public ServerResponse page(CarOwnerCarSourcePageDto dto, Integer pageNum, Integer pageSize, Customer customer);
 	
 	public ServerResponse saveLine(CarRecordPlaceSaveDto dto, Customer customer);
 	

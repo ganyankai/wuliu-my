@@ -17,9 +17,10 @@ import lombok.Setter;
 public class CarRecordPlaceSaveDto {
 	
 	/**车源Id*/
-	@NotNull(message= "车源Id不能为空")
+	@NotNull(message = "车源Id不能为空")
 	private Integer carSourceId;
 	
 	/**路线*/
+	@NotNull(message = "车源起止地不能为空")
 	private List<CarRecordPlaceUpdateDto> carRecordPlaces;
 }

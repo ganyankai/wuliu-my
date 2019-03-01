@@ -35,6 +35,10 @@ public class CarSource {
 	@Column(name = "`create_by`")
     private Integer createBy;
 	
+	/**创建人名称*/
+	@Transient
+	private String userName;
+	
 	/**车主Id*/
 	@Column(name = "`car_owner_id`")
     private Integer carOwnerId;
@@ -56,9 +60,13 @@ public class CarSource {
 		return "车辆类型，待处理"; // TODO
 	}
 	
-	/**核载量*/
+	/**运输量*/
 	@Column(name = "`qty`")
     private Integer qty;
+	
+	/**运输量单位*/
+	@Column(name = "`unit`")
+	private String unit;
 
 	/**状态*/
 	@Column(name = "`status`")

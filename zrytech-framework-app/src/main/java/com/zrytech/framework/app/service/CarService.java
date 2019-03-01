@@ -11,12 +11,23 @@ import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.car.CarOwnerCarPageDto;
+import com.zrytech.framework.app.entity.Car;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
 
 @Service
 public interface CarService {
+	
+	/**
+	 * 断言车辆可用
+	 * <p>数据库存在数据且未删除</p>
+	 * @author cat
+	 * 
+	 * @param carId	车辆Id
+	 * @return
+	 */
+	public Car assertCarAvailable(Integer carId);
 
 	public ServerResponse page(CarPageDto carPageDto, Integer pageNum, Integer pageSize);
 	

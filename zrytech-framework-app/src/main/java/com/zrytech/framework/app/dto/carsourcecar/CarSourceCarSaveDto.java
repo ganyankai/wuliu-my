@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 车源之新增车辆或更新车辆入参
+ * 车源之新增或更新车辆入参
  * @author cat
  *
  */
@@ -21,5 +21,6 @@ public class CarSourceCarSaveDto {
 	private Integer carSourceId;
 	
 	/**车辆*/
+	@NotNull(message= "车辆不能为空")
     private List<CarSourceCarUpdateDto> carSourceCars;
 }

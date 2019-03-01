@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zrytech.framework.app.dto.CarSourcePageDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
+import com.zrytech.framework.app.dto.carsource.CarOwnerCarSourcePageDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarSourceService;
-import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 
 /**
  * 前台 - 车源
@@ -45,8 +45,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarSourcePageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
 				requestParams.getPage().getPageSize(), customer);
 	}
@@ -62,8 +62,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.details(requestParams.getParams(), customer);
 	}
 
@@ -78,8 +78,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/submitAudit")
-	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.submitAudit(requestParams.getParams(), customer);
 	}
 	
@@ -94,8 +94,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/add")
-	public ServerResponse add(@RequestBody @Valid RequestParams<CarSourceAddDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse add(@RequestBody @Valid RequestParams<CarSourceAddDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.add(requestParams.getParams(), customer);
 	}
 	
@@ -110,8 +110,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/updateCheck")
-	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarSourceCheckUpdateDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarSourceCheckUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.updateCheck(requestParams.getParams(), customer);
 	}
 	
@@ -127,8 +127,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/saveLine")
-	public ServerResponse saveLine(@RequestBody @Valid RequestParams<CarRecordPlaceSaveDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse saveLine(@RequestBody @Valid RequestParams<CarRecordPlaceSaveDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.saveLine(requestParams.getParams(), customer);
 	}
 	
@@ -143,8 +143,8 @@ public class CarSourceAPIController {
 	 */
 	@Valid
 	@RequestMapping("/saveCarSourceCar")
-	public ServerResponse saveCarSourceCar(@RequestBody @Valid RequestParams<CarSourceCarSaveDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse saveCarSourceCar(@RequestBody @Valid RequestParams<CarSourceCarSaveDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.saveCarSourceCar(requestParams.getParams(), customer);
 	}
 }
