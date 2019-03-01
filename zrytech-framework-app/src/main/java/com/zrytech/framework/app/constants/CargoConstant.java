@@ -77,9 +77,9 @@ public class CargoConstant {
     public static final String SOURCE_UP = "source_up";
 
     /**
-     * source_down:拒绝;
+     * source_refuse:拒绝;
      */
-    public static final String SOURCE_DOWN = "source_down";
+    public static final String SOURCE_REFUSE = "source_refuse";
 
     /**
      * source_expired:已过期;
@@ -87,9 +87,14 @@ public class CargoConstant {
     public static final String SOURCE_EXPIRED = "source_expired";
 
     /**
-     * source_down:报价中;
+     * source_down:报价中;(审核通过)
      */
     public static final String SOURCE_ONGOING = "source_ongoing";
+
+    /**
+     * source_down:下架;(下架)
+     */
+    public static final String SOURCE_DOWN = "source_down";
 
     /**
      * source_down:已中标;(已中标)

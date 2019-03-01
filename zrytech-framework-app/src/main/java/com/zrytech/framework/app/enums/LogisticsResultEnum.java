@@ -13,6 +13,7 @@ public enum LogisticsResultEnum {
     NAME_IS_EXIST(591, "名称已存在"),
     DELETE_WAYBILL_FAIL(110, "订单运输中,删除订单失败!"),
     PERMISSED_NOT_FAIL(111, "权限不足!"),
+    CANCEL_NOT_FAIL(113, "订单取消失败!"),
     USER_DELETE_FAIL(112, "权限受限,删除失败!"),
     NUMBER_GREATER_THAN_ZERO(592, "数量必须大于零"),
     CATEGORY_EXIST_NAME(593, "分类已绑定产品名称"),

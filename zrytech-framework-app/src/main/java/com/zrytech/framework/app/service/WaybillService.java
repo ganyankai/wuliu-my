@@ -83,6 +83,12 @@ public interface WaybillService {
     public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer);
     
     public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer);
-    
-    
+
+    /**
+     * @return
+     * @Desinition:取消运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
+    ServerResponse cancelIndent(WaybillDto waybillDto);
 }

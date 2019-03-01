@@ -11,6 +11,8 @@ import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -81,9 +83,10 @@ public class FocusOnServiceImpl implements FocusOnService {
      */
     @Override
     public ServerResponse add(FocusDto focusDto) {
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         Focus focus = BeanUtil.copy(focusDto, Focus.class);
         focus.setCreateDate(new Date());
-        //TODO:focus.setFocuserId();设置关注人
+        focus.setFocuserId(sysCustomer.getId());
         //TODO: focus.setFocusType();设置关注类型
         int num = focusOnDao.add(focus);
         CheckFieldUtils.assertSuccess(num);
@@ -98,7 +101,9 @@ public class FocusOnServiceImpl implements FocusOnService {
      */
     @Override
     public ServerResponse selectMyFocus(FocusDto focusDto) {
-        CheckFieldUtils.checkObjecField(focusDto.getFocuserId());//TODO:获取当前登录用户ID
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        //CheckFieldUtils.checkObjecField(focusDto.getFocuserId());
+        focusDto.setFocuserId(sysCustomer.getId());
         List<FocusLine> focusLineList=focusLineDao.selectCreateBy(focusDto.getFocuserId());
         List<Focus> focusList=focusOnDao.selectCreateBy(focusDto.getFocuserId());
         Map map=new HashMap();

@@ -9,6 +9,8 @@ import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,8 +76,9 @@ public class FocusLineServiceImpl implements FocusLineService {
     @Override
     public ServerResponse add(FocusLineDto focusLineDto) {
         FocusLine focusLine=BeanUtil.copy(focusLineDto,FocusLine.class);
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         focusLine.setCreateDate(new Date());
-        //TODO:focusLine.setCreateBy();
+        focusLine.setCreateBy(sysCustomer.getId());
         int num=focusLineDao.addFocusLine(focusLine);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
