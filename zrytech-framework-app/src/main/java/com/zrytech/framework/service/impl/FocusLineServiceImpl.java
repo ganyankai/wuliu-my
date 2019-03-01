@@ -23,6 +23,13 @@ public class FocusLineServiceImpl implements FocusLineService {
     @Autowired
     private FocusLineDao focusLineDao;
 
+    /**
+     * Desintion:路线分页列表信息
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusLineDto路线dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse linePage(FocusLineDto focusLineDto, Page page) {
         FocusLine focusLine= BeanUtil.copy(focusLineDto,FocusLine.class);
@@ -30,12 +37,26 @@ public class FocusLineServiceImpl implements FocusLineService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * Desintion:路线详情
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusLineDto路线dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse get(FocusLineDto focusLineDto) {
         FocusLine focusLine=focusLineDao.get(focusLineDto.getId());
         return ServerResponse.successWithData(focusLine);
     }
 
+    /**
+     * Desintion:删除路线
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusLineDto路线dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse delete(FocusLineDto focusLineDto) {
         int num=focusLineDao.delete(focusLineDto.getId());
@@ -43,6 +64,13 @@ public class FocusLineServiceImpl implements FocusLineService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:添加路线
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusLineDto路线dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse add(FocusLineDto focusLineDto) {
         FocusLine focusLine=BeanUtil.copy(focusLineDto,FocusLine.class);

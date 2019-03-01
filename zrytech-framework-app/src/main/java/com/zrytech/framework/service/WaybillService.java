@@ -18,20 +18,61 @@ public interface WaybillService {
 	
 	public ServerResponse details(Integer id);
 
+    /**
+     * @return
+     * @Desinition:创建运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse createIndent(WaybillDto waybillDto);
 
+    /**
+     * @return
+     * @Desinition:待确认运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse confirmIndent(WaybillDto waybillDto);
 
+    /**
+     * @return
+     * @Desinition:运单分页列表展示
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse indentPage(WaybillDto waybillDto, Page page);
 
+    /**
+     * @return
+     * @Desinition:运单统计
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse coundIndent(WaybillDto waybillDto);
 
+    /**
+     * @return
+     * @Desinition:运单详情
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse get(WaybillDto waybillDto);
 
+    /**
+     * @return
+     * @Desinition:更改运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse changeIndent(WaybillDto waybillDto);
 
+    /**
+     * @return
+     * @Desinition:删除运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     ServerResponse delete(WaybillDto waybillDto);
-    
     
     public ServerResponse details(DetailsDto dto, Customer customer);
     

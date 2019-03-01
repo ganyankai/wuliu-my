@@ -69,6 +69,12 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
     @Autowired
     private ShipperDao shipperDao;
 
+    /**
+     * @Desinition:子账号类列表展示
+     * @Author:Jxx
+     * @param:CargoCustomerDto客户dto
+     * @return:ServerResponse
+     * */
     @Override
     public ServerResponse childAccountPage(CargoCustomerDto cargoCustomerDto, com.zrytech.framework.base.entity.Page page) {
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getId());
@@ -81,6 +87,12 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * @Desinition:子账号添加
+     * @Author:Jxx
+     * @param:CargoCustomerDto客户dto
+     * @return:ServerResponse
+     * */
     @Override
     public ServerResponse addAccount(CargoCustomerDto cargoCustomerDto) {
         Certification certification = shipperDao.getCustomerId(cargoCustomerDto.getCreateBy());//企业认证同时是认证通过的用户才有权限添加子账号
@@ -96,13 +108,24 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PERMISSED_NOT_FAIL));
         }
     }
-
+    /**
+     * @Desinition:子账号详情
+     * @Author:Jxx
+     * @param:CargoCustomerDto客户dto
+     * @return:ServerResponse
+     * */
     @Override
     public ServerResponse detail(CargoCustomerDto cargoCustomerDto) {
         CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
         return ServerResponse.successWithData(cargoCustomer);
     }
 
+    /**
+     * @Desinition:子账号修改
+     * @Author:Jxx
+     * @param:CargoCustomerDto客户dto
+     * @return:ServerResponse
+     * */
     @Override
     public ServerResponse updateAccount(CargoCustomerDto cargoCustomerDto) {
         CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
@@ -115,6 +138,12 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
         return ServerResponse.success();
     }
 
+    /**
+     * @Desinition:子账号删除
+     * @Author:Jxx
+     * @param:CargoCustomerDto客户dto
+     * @return:ServerResponse
+     * */
     @Override
     public ServerResponse deleteAccount(CargoCustomerDto cargoCustomerDto) {
         int num=cargoCustomerDao.deleteAccount(cargoCustomerDto.getId());

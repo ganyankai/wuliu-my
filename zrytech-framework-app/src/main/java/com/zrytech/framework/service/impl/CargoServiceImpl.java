@@ -45,6 +45,13 @@ public class CargoServiceImpl implements CargoService {
     private ShipperDao shipperDao;
 
 
+    /**
+     * Desintion:货源分页列表信息
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse cargoPage(CargoDto cargoDto, Page page) {
         Cargo cargoCustomer = BeanUtil.copy(cargoDto, Cargo.class);
@@ -53,6 +60,13 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * Desintion:货源详情
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse get(CargoDto cargoDto) {
         CheckFieldUtils.checkObjecField(cargoDto.getId());
@@ -73,6 +87,13 @@ public class CargoServiceImpl implements CargoService {
     @Autowired
     private ApproveLogRepository approveLogRepository;
 
+    /**
+     * Desintion:货源审核
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse auditSource(CargoDto cargoDto, User user) {
         CheckFieldUtils.checkObjecField(cargoDto.getStatus());
@@ -112,6 +133,13 @@ public class CargoServiceImpl implements CargoService {
         }
     }
 
+    /**
+     * Desintion:发布货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse pushResource(CargoDto cargoDto) {
         //验证
@@ -147,6 +175,13 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:修改货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse updateSource(CargoDto cargoDto) {
         List<Loading> loadingList = cargoDto.getMulShipmentList();//TODO:多点装货地址
@@ -209,7 +244,13 @@ public class CargoServiceImpl implements CargoService {
         }
     }
 
-
+    /**
+     * Desintion:删除货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse deleteSource(CargoDto cargoDto) {
         Cargo cargo = cargoDao.get(cargoDto.getId());
@@ -221,6 +262,13 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:邀请报价(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse invitationOffer(CargoDto cargoDto) {
         CheckFieldUtils.checkObjecField(cargoDto.getId());
@@ -230,6 +278,13 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:我的货源分页列表信息
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse mySourcePage(CargoDto cargoDto, Page page) {
         Cargo cargoCustomer = BeanUtil.copy(cargoDto, Cargo.class);
@@ -238,6 +293,13 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * Desintion:取消发布货源(前端)
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse cancelResource(CargoDto cargoDto) {
         return null;

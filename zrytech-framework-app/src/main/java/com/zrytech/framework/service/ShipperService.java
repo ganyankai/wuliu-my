@@ -72,6 +72,13 @@ public interface ShipperService {
      */
     ServerResponse certificationPage(CertificationDto certificationDto, Page page);
 
+    /**
+     * Desintion:认证资料详情
+     *
+     * @author:jiangxiaoxiang
+     * @param:CertificationDto认证资料对象
+     * @return:ServerResponse
+     */
     ServerResponse detail(CertificationDto certificationDto);
 
     /**

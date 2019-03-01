@@ -126,6 +126,12 @@ public class WaybillServiceImpl implements WaybillService {
     @Autowired
     private TradeNoUtil tradeNoUtil;
 
+    /**
+     * @return
+     * @Desinition:创建运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse createIndent(WaybillDto waybillDto) {
         Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
@@ -137,6 +143,12 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.success();
     }
 
+    /**
+     * @return
+     * @Desinition:待确认运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse confirmIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getStatus());
@@ -146,6 +158,12 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.success();
     }
 
+    /**
+     * @return
+     * @Desinition:运单分页列表展示
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse indentPage(WaybillDto waybillDto, Page page) {
         CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
@@ -154,6 +172,12 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * @return
+     * @Desinition:运单统计
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse coundIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
@@ -162,6 +186,12 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.successWithData(map);
     }
 
+    /**
+     * @return
+     * @Desinition:运单详情
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse get(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getId());
@@ -173,6 +203,12 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.successWithData(waybill);
     }
 
+    /**
+     * @return
+     * @Desinition:更改运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse changeIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getTotalMoney());
@@ -182,6 +218,12 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.success();
     }
 
+    /**
+     * @return
+     * @Desinition:删除运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
     @Override
     public ServerResponse delete(WaybillDto waybillDto) {
         Waybill waybill = waybillDao.get(waybillDto.getId());

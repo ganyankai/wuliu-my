@@ -153,6 +153,13 @@ public class ShipperServiceImpl implements ShipperService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * Desintion:认证资料详情
+     *
+     * @author:jiangxiaoxiang
+     * @param:CertificationDto认证资料对象
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse detail(CertificationDto certificationDto) {
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
@@ -162,6 +169,13 @@ public class ShipperServiceImpl implements ShipperService {
 
     @Autowired private ApproveLogRepository approveLogRepository;
 
+    /**
+     * Desintion:认证资料审核
+     *
+     * @author:jiangxiaoxiang
+     * @param:CertificationDto认证资料对象
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse certificationAudit(CertificationDto certificationDto,User user) {
         Certification certification = shipperDao.get(certificationDto.getId());

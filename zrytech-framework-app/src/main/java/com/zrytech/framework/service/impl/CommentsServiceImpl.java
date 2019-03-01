@@ -21,6 +21,13 @@ public class CommentsServiceImpl implements CommentsService {
     @Autowired
     private CommentsDao commentsDao;
 
+    /**
+     * Desintion:评论分页列表信息
+     *
+     * @author:jiangxiaoxiang
+     * @param:EvaluationDto评论dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse evaluationPage(EvaluationDto evaluationDto, Page page) {
         Evaluation evaluation= BeanUtil.copy(evaluationDto,Evaluation.class);
@@ -28,12 +35,26 @@ public class CommentsServiceImpl implements CommentsService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * Desintion:评论详情
+     *
+     * @author:jiangxiaoxiang
+     * @param:EvaluationDto评论dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse get(EvaluationDto evaluationDto) {
         Evaluation evaluation=commentsDao.get(evaluationDto.getId());
         return ServerResponse.successWithData(evaluation);
     }
 
+    /**
+     * Desintion:评论删除
+     *
+     * @author:jiangxiaoxiang
+     * @param:EvaluationDto评论dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse delete(EvaluationDto evaluationDto) {
         int num=commentsDao.delete(evaluationDto.getId());
@@ -41,6 +62,13 @@ public class CommentsServiceImpl implements CommentsService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:添加评论
+     *
+     * @author:jiangxiaoxiang
+     * @param:Evaluation评论entity
+     * @return:int
+     */
     @Override
     public int addComments(Evaluation evaluation) {
         return commentsDao.addComments(evaluation);

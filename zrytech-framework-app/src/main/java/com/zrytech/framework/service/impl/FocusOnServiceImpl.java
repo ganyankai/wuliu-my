@@ -31,6 +31,13 @@ public class FocusOnServiceImpl implements FocusOnService {
     @Autowired
     private FocusLineDao focusLineDao;
 
+    /**
+     * Desintion:关注分页列表信息
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusDto关注dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse focusPage(FocusDto focusDto, Page page) {
         Focus focus = BeanUtil.copy(focusDto, Focus.class);
@@ -38,12 +45,26 @@ public class FocusOnServiceImpl implements FocusOnService {
         return ServerResponse.successWithData(pageInfo);
     }
 
+    /**
+     * Desintion:关注详情
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusDto关注dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse get(FocusDto focusDto) {
         Focus focus = focusOnDao.get(focusDto.getId());
         return ServerResponse.successWithData(focus);
     }
 
+    /**
+     * Desintion:删除关注
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusDto关注dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse delete(FocusDto focusDto) {
         int num = focusOnDao.delete(focusDto.getId());
@@ -51,6 +72,13 @@ public class FocusOnServiceImpl implements FocusOnService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:添加关注
+     *
+     * @author:jiangxiaoxiang
+     * @param:FocusDto关注dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse add(FocusDto focusDto) {
         Focus focus = BeanUtil.copy(focusDto, Focus.class);
@@ -62,6 +90,12 @@ public class FocusOnServiceImpl implements FocusOnService {
         return ServerResponse.success();
     }
 
+    /**
+     * Desintion:我的关注
+     * @author:jiangxiaoxiang
+     * @param:FocusDto关注dto
+     * @return:ServerResponse
+     */
     @Override
     public ServerResponse selectMyFocus(FocusDto focusDto) {
         CheckFieldUtils.checkObjecField(focusDto.getFocuserId());//TODO:获取当前登录用户ID
