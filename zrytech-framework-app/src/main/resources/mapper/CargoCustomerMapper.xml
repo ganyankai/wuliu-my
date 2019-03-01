@@ -105,9 +105,9 @@
             <if test="cargoCustomer.tel != null and cargoCustomer.tel !=''">
                 and tel like concat('%',#{cargoCustomer.tel},'%')
             </if>
-            <if test="cargoCustomer.status != null and cargoCustomer.status !=''">
+           <!-- <if test="cargoCustomer.status != null and cargoCustomer.status !=''">
                 and status=#{cargoCustomer.status}
-            </if>
+            </if>-->
         </trim>
         ORDER BY create_date DESC
     </select>
