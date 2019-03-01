@@ -321,4 +321,21 @@ public class CargoServiceImpl implements CargoService {
         }
         return ServerResponse.success();
     }
+    
+    
+    /**
+     * 断言货源可用
+     * @author cat
+     * 
+     * @param cargoId	货源Id
+     * @return
+     */
+    @Override
+    public Cargo assertCargoAvailable(Integer cargoId) {
+    	Cargo cargo = cargoRepository.findOne(cargoId);
+		if(cargo == null) {
+			throw new BusinessException(112, "货源不存在");
+		}
+		return cargo;
+    }
 }

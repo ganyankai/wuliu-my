@@ -11,15 +11,19 @@ import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CargoMatterRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
 import com.github.pagehelper.PageHelper;
+import com.zrytech.framework.app.constants.CargoMatterConstants;
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.cargomatter.CarOwnerCargoMatterPageDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
+import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.app.entity.CargoMatter;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.mapper.CargoMatterMapper;
 import com.zrytech.framework.app.service.CargoMatterService;
+import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -41,6 +45,8 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
 	
 	@Autowired private CargoRepository cargoRepository;
+	
+	@Autowired private CargoService cargoService;
 	
 	
 	
@@ -99,6 +105,22 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	
 	
 	/**
+	 * 设置货主企业名称
+	 * @author cat
+	 * 
+	 * @param cargoMatter
+	 * @return
+	 */
+	public CargoMatter bindingCargoOwnerName(CargoMatter cargoMatter) {
+		// Integer cargoId = cargoMatter.getCargoId();
+		// TODO
+		cargoMatter.setCargoOwnerName("货主企业名称");
+		return cargoMatter;
+	}
+	
+	
+	
+	/**
 	 * 报价单详情
 	 * @author cat
 	 * 
@@ -118,7 +140,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	
 	
 	/**
-	 * 报价单分页
+	 * 车主及车主子账号 - 报价单分页
 	 * @author cat
 	 * 
 	 * @param dto
@@ -127,12 +149,13 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 * @return
 	 */
 	@Override
-	public ServerResponse page(CargoMatterPageDto dto, Integer pageNum, Integer pageSize, Customer customer){
+	public ServerResponse page(CarOwnerCargoMatterPageDto dto, Integer pageNum, Integer pageSize, Customer customer){
+		CarCargoOwnner carOwner = customer.getCarOwner();
 		// TODO 鉴权，搜索条件，展示结果待定
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-		List<CargoMatter> list = cargoMatterMapper.selectSelective(dto);
+		List<CargoMatter> list = cargoMatterMapper.carOwnerSelectSelective(dto, carOwner.getId());
 		for (CargoMatter cargoMatter : list) {
-			cargoMatter = bindingCarOwnerName(cargoMatter);
+			cargoMatter = bindingCargoOwnerName(cargoMatter);
 		}
 		PageData<CargoMatter> pageData = new PageData<CargoMatter>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
@@ -140,7 +163,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	
 	
 	/**
-	 * 报价单详情
+	 * 车主及车主子账号 - 报价单详情
 	 * @author cat
 	 * 
 	 * @param id
@@ -148,16 +171,18 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 */
 	@Override
 	public ServerResponse details(DetailsDto dto, Customer customer) {
-		// TODO 鉴权，展示结果待定
+		CarCargoOwnner carOwner = customer.getCarOwner();
 		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
-		cargoMatter = bindingCarOwnerName(cargoMatter);
+		this.assertCargoMatterBelongToCurrentUser(cargoMatter, carOwner.getId());
+		// TODO 鉴权，展示结果待定
+		cargoMatter = bindingCargoOwnerName(cargoMatter);
 		cargoMatter = bindingCargo(cargoMatter);
 		return ServerResponse.successWithData(cargoMatter);
 	}
 	
 	
 	/**
-	 * 报价（新增报价单）
+	 * 车主及车主子账号 - 报价（新增报价单）
 	 * @author cat
 	 * 
 	 * @param dto	货源与报价
@@ -166,29 +191,40 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 */
 	@Override
 	public ServerResponse add(CargoMatterAddDto dto, Customer customer){
-		Integer carOwnerId = 1; // TODO
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer carOwnerId = carOwner.getId();
 		// TODO 鉴权
-		Cargo cargo = cargoRepository.findOne(dto.getCargoId());
-		if(cargo == null) {
-			throw new BusinessException(112, "报价失败：货源不存在");
-		}
+		cargoService.assertCargoAvailable(dto.getCargoId());
 		
 		// 一个车主针对一个货源只能有一个报价单
-		List<CargoMatter> list = cargoMatterRepository.findByCargoIdAndCarOwnnerId(dto.getCargoId(), carOwnerId);
-		if(list == null || !list.isEmpty()) {
-			throw new BusinessException(112, "报价失败：请勿重复报价");
-		}
+		this.assertNotOffer(dto.getCargoId(), carOwnerId);
 		
+		// 新建报价单
 		CargoMatter cargoMatter = new CargoMatter();
 		BeanUtils.copyProperties(dto, cargoMatter);
 		cargoMatter.setCarOwnnerId(carOwnerId);
-		// cargoMatter.setStatus(status); TODO
-		// TODO 创建人，缺字段
+		cargoMatter.setStatus(CargoMatterConstants.STATUS_PENDING);
+		cargoMatter.setCreateBy(customer.getId());
 		cargoMatter.setCreateDate(new Date());
 		cargoMatter.setId(null);
-		
 		cargoMatterRepository.save(cargoMatter);
+		
 		return ServerResponse.successWithData("报价成功");
+	}
+	
+	
+	/**
+	 * 断言还未报价（一个车主针对一个货源只能有一个报价单）
+	 * @author cat
+	 * 
+	 * @param cargoId	货源Id
+	 * @param carOwnerId	车主Id
+	 */
+	private void assertNotOffer(Integer cargoId, Integer carOwnerId) {
+		List<CargoMatter> list = cargoMatterRepository.findByCargoIdAndCarOwnnerId(cargoId, carOwnerId);
+		if(list != null && list.size() > 0) {
+			throw new BusinessException(112, "报价失败：请勿重复报价");
+		}
 	}
 	
 	
@@ -196,10 +232,10 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 * 断言报价单存在
 	 * @author cat
 	 * 
-	 * @param id	报价单Id,这个参数不能为null
+	 * @param id	报价单Id
 	 * @return
 	 */
-	public CargoMatter assertCargoMatterExist(Integer id) {
+	private CargoMatter assertCargoMatterExist(Integer id) {
 		CargoMatter cargoMatter = cargoMatterRepository.findOne(id);
 		if(cargoMatter == null) {
 			throw new BusinessException(112, "报价单不存在");
@@ -209,7 +245,21 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	
 	
 	/**
-	 * 修改报价单
+	 * 断言报价单属于当前登录车主
+	 * 
+	 * @param cargoMatter	报价单
+	 * @param carOwnerId	车主Id
+	 */
+	private void assertCargoMatterBelongToCurrentUser(CargoMatter cargoMatter, Integer carOwnerId) {
+		if(!cargoMatter.getCarOwnnerId().equals(carOwnerId)) {
+			throw new BusinessException(112, "参数有误");
+		}
+	}
+	
+	
+	
+	/**
+	 * 车主及车主子账号 - 修改报价单
 	 * 
 	 * @param dto
 	 * @param customer	当前登录人
@@ -217,10 +267,14 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 */
 	@Override
 	public ServerResponse update(CargoMatterUpdateDto dto, Customer customer){
+		CarCargoOwnner carOwner = customer.getCarOwner();
 		// TODO 鉴权
 		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
+		this.assertCargoMatterBelongToCurrentUser(cargoMatter, carOwner.getId());
 		BeanUtils.copyProperties(dto, cargoMatter);
 		cargoMatterRepository.save(cargoMatter);
-		return ServerResponse.successWithData("报价修改成功");
+		return ServerResponse.successWithData("报价单修改成功");
 	}
+	
+	
 }

@@ -17,9 +17,9 @@ import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.car.CarOwnerCarPageDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarService;
-import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 
 
 /**
@@ -46,8 +46,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/delete")
-	public ServerResponse delete(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse delete(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.delete(requestParams.getParams(), customer);
 	}
 	
@@ -62,8 +62,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/submitAudit")
-	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.submitAudit(requestParams.getParams(), customer);
 	}
 
@@ -78,8 +78,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/updateNoCheck")
-	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarNoCheckUpdateDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarNoCheckUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.updateNoCheck(requestParams.getParams(), customer);
 	}
 	
@@ -94,8 +94,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/updateCheck")
-	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarCheckUpdateDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarCheckUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.updateCheck(requestParams.getParams(), customer);
 	}
 	
@@ -110,8 +110,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/add")
-	public ServerResponse add(@RequestBody @Valid RequestParams<CarAddDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse add(@RequestBody @Valid RequestParams<CarAddDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.add(requestParams.getParams(), customer);
 	}
 	
@@ -126,8 +126,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.details(requestParams.getParams(), customer);
 	}
 	
@@ -142,8 +142,8 @@ public class CarAPIController {
 	 */
 	@Valid
 	@RequestMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarPageDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarPageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
 				requestParams.getPage().getPageSize(), customer);
 	}

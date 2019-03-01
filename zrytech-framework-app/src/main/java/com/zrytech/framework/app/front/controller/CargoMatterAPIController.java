@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.cargomatter.CarOwnerCargoMatterPageDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CargoMatterService;
-import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 
 /**
  * 前台 - 报价单
@@ -41,8 +41,8 @@ public class CargoMatterAPIController {
 	 */
 	@Valid
 	@RequestMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CargoMatterPageDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCargoMatterPageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return cargoMatterService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
 				requestParams.getPage().getPageSize(), customer);
 	}
@@ -58,8 +58,8 @@ public class CargoMatterAPIController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return cargoMatterService.details(requestParams.getParams(), customer);
 	}
 	
@@ -74,8 +74,8 @@ public class CargoMatterAPIController {
 	 */
 	@Valid
 	@RequestMapping("/add")
-	public ServerResponse add(@RequestBody @Valid RequestParams<CargoMatterAddDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse add(@RequestBody @Valid RequestParams<CargoMatterAddDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return cargoMatterService.add(requestParams.getParams(), customer);
 	}
 	
@@ -90,8 +90,8 @@ public class CargoMatterAPIController {
 	 */
 	@Valid
 	@RequestMapping("/update")
-	public ServerResponse update(@RequestBody @Valid RequestParams<CargoMatterUpdateDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse update(@RequestBody @Valid RequestParams<CargoMatterUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return cargoMatterService.update(requestParams.getParams(), customer);
 	}
 }
