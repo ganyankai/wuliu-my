@@ -408,5 +408,18 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	
-	
+	/**
+	 * 断言车辆属于当前登录车主
+	 * @author cat
+	 * 
+	 * @param carId	车辆Id
+	 * @param carOwnerId	车主Id
+	 */
+	@Override
+	public void assertCarBelongToCurrentUser(Integer carId, Integer carOwnerId) {
+		Car car = this.assertCarAvailable(carId);
+		if(!carOwnerId.equals(car.getCarOwnerId())) {
+			throw new BusinessException(112, "参数有误");
+		}
+	}
 }
