@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.mapper.CargoMapper">
-    <resultMap id="cargo" type="com.zrytech.framework.entity.Cargo">
+<mapper namespace="com.zrytech.framework.app.mapper.CargoMapper">
+    <resultMap id="cargo" type="com.zrytech.framework.app.entity.Cargo">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="logo" property="logo"/>
@@ -79,7 +79,7 @@
         ORDER BY ${orderField} DESC
     </select>
 
-    <insert id="pushSave" parameterType="com.zrytech.framework.entity.Cargo">
+    <insert id="pushSave" parameterType="com.zrytech.framework.app.entity.Cargo">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>

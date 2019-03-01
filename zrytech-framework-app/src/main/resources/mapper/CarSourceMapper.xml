@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.mapper.CarSourceMapper" >
-  <resultMap id="BaseResultMap" type="com.zrytech.framework.entity.CarSource" >
+<mapper namespace="com.zrytech.framework.app.mapper.CarSourceMapper" >
+  <resultMap id="BaseResultMap" type="com.zrytech.framework.app.entity.CarSource" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
     <result column="car_type" property="carType" jdbcType="VARCHAR" />
@@ -49,7 +49,7 @@
     delete from car_source
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zrytech.framework.entity.CarSource" >
+  <insert id="insert" parameterType="com.zrytech.framework.app.entity.CarSource" >
     insert into car_source (id, create_by, car_type, 
       qty, status, create_date
       )
@@ -57,7 +57,7 @@
       #{qty,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zrytech.framework.entity.CarSource" >
+  <insert id="insertSelective" parameterType="com.zrytech.framework.app.entity.CarSource" >
     insert into car_source
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -100,7 +100,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.entity.CarSource" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.app.entity.CarSource" >
     update car_source
     <set >
       <if test="createBy != null" >
@@ -121,7 +121,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.entity.CarSource" >
+  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.app.entity.CarSource" >
     update car_source
     set create_by = #{createBy,jdbcType=INTEGER},
       car_type = #{carType,jdbcType=VARCHAR},

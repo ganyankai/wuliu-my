@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.mapper.CargoCustomerMapper">
-    <resultMap id="BaseResultMap" type="com.zrytech.framework.entity.CargoCustomer">
+<mapper namespace="com.zrytech.framework.app.mapper.CargoCustomerMapper">
+    <resultMap id="BaseResultMap" type="com.zrytech.framework.app.entity.CargoCustomer">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="user_account" property="loginCounter"/>
         <result column="tel" property="tel"/>
@@ -22,7 +22,7 @@
         id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password
     </sql>
 
-    <insert id="insertCustomer" parameterType="com.zrytech.framework.entity.CargoCustomer">
+    <insert id="insertCustomer" parameterType="com.zrytech.framework.app.entity.CargoCustomer">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>
