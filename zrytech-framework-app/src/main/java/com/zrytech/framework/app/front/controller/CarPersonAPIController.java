@@ -16,10 +16,8 @@ import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonEnabledDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonNoCheckUpdateDto;
-import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarPersonService;
-import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.RequestUtil;
@@ -49,8 +47,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/enabled")
-	public ServerResponse enabled(@RequestBody @Valid RequestParams<CarPersonEnabledDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse enabled(@RequestBody @Valid RequestParams<CarPersonEnabledDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.enabled(requestParams.getParams(), customer);
 	}
 	
@@ -65,8 +63,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/delete")
-	public ServerResponse delete(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse delete(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.delete(requestParams.getParams(), customer);
 	}
 	
@@ -81,8 +79,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/submitAudit")
-	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.submitAudit(requestParams.getParams(), customer);
 	}
 
@@ -97,8 +95,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/updateNoCheck")
-	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarPersonNoCheckUpdateDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarPersonNoCheckUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.updateNoCheck(requestParams.getParams(), customer);
 	}
 	
@@ -113,8 +111,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/updateCheck")
-	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarPersonCheckUpdateDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarPersonCheckUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.updateCheck(requestParams.getParams(), customer);
 	}
 	
@@ -131,9 +129,6 @@ public class CarPersonAPIController {
 	@RequestMapping("/add")
 	public ServerResponse add(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
-		carCargoOwner.setId(1);
-		customer.setCarOwner(carCargoOwner);
 		return carPersonService.add(requestParams.getParams(), customer);
 	}
 	
@@ -148,8 +143,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.details(requestParams.getParams(), customer);
 	}
 	
@@ -164,8 +159,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@RequestMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result,
-			@CurrentCustomer Customer customer) {
+	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
 				requestParams.getPage().getPageSize(), customer);
 	}

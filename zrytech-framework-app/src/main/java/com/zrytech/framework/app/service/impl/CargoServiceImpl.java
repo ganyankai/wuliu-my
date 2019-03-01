@@ -12,6 +12,7 @@ import com.zrytech.framework.app.entity.*;
 import com.zrytech.framework.app.enums.LogisticsResult;
 import com.zrytech.framework.app.enums.LogisticsResultEnum;
 import com.zrytech.framework.app.repository.ApproveLogRepository;
+import com.zrytech.framework.app.repository.CargoRepository;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
@@ -46,7 +47,11 @@ public class CargoServiceImpl implements CargoService {
     @Autowired
     private ShipperDao shipperDao;
 
-
+    @Autowired private CargoRepository cargoRepository;
+    
+    
+    
+    
     /**
      * Desintion:货源分页列表信息
      *
@@ -315,5 +320,22 @@ public class CargoServiceImpl implements CargoService {
             //TODO:是否删除推送记录和报价信息
         }
         return ServerResponse.success();
+    }
+    
+    
+    /**
+     * 断言货源可用
+     * @author cat
+     * 
+     * @param cargoId	货源Id
+     * @return
+     */
+    @Override
+    public Cargo assertCargoAvailable(Integer cargoId) {
+    	Cargo cargo = cargoRepository.findOne(cargoId);
+		if(cargo == null) {
+			throw new BusinessException(112, "货源不存在");
+		}
+		return cargo;
     }
 }

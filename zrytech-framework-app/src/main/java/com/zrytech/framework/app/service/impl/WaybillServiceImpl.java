@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import com.github.pagehelper.PageInfo;
+import com.zrytech.framework.app.constants.CarPersonConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.constants.IndentConstants;
 import com.zrytech.framework.app.dao.CargoDao;
@@ -31,8 +32,10 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.dto.WaybillPageDto;
 import com.zrytech.framework.app.dto.billlocation.BillLocationAddDto;
+import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarAddDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.entity.BillLocation;
+import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.entity.Evaluate;
@@ -45,6 +48,8 @@ import com.zrytech.framework.app.repository.CargoRepository;
 import com.zrytech.framework.app.repository.EvaluateRepository;
 import com.zrytech.framework.app.repository.WaybillDetailRepository;
 import com.zrytech.framework.app.repository.WaybillRepository;
+import com.zrytech.framework.app.service.CarPersonService;
+import com.zrytech.framework.app.service.CarService;
 import com.zrytech.framework.app.service.WaybillService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -83,6 +88,12 @@ public class WaybillServiceImpl implements WaybillService {
 
     @Autowired
     private CargoDao cargoDao;
+    
+    @Autowired private CarService carService;
+	
+	@Autowired private CarPersonService carPersonService;
+	
+	
 
     /**
      * 运单分页
@@ -389,19 +400,39 @@ public class WaybillServiceImpl implements WaybillService {
         return waybill;
     }
 
+    
+    /**
+     * 断言运单属于当前登录车主
+     * @author cat
+     * 
+     * @param watbill	运单
+     * @param carOwnerId	车主Id
+     */
+    private void assertWaybillBelongToCurrentUser(Waybill waybill, Integer carOwnerId) {
+    	if(!waybill.getCarOwnnerId().equals(carOwnerId)) {
+    		throw new BusinessException(112, "参数有误");
+    	}
+    }
+    
 
     /**
      * 新增运单项
+     * @author cat
      *
      * @param dto
      * @param customer
      * @return
-     * @author cat
      */
     @Override
     public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer) {
-        //  TODO 鉴权
-        Waybill waybill = this.assertWaybillExist(dto.getWaybillId());
+    	CarCargoOwnner carOwner = customer.getCarOwner();
+    	Integer carOwnerId = carOwner.getId();
+    	Waybill waybill = this.assertWaybillExist(dto.getWaybillId());
+    	this.assertWaybillBelongToCurrentUser(waybill, carOwnerId);
+    	this.waybillDetailCheck(dto, carOwnerId);
+    	
+    	// TODO 判断运单项的数量与装卸单数量是否一致
+        // TODO 鉴权
         Integer waybillId = waybill.getId();
         String weightUnit = waybill.getWeightUnit();
         // 新增运单项
@@ -431,6 +462,31 @@ public class WaybillServiceImpl implements WaybillService {
         return ServerResponse.successWithData("添加成功");
     }
 
+    
+    /**
+	 * 判断入参 车辆、司机、压货人 是否属于当前登录车主
+	 * @author cat
+	 * 
+	 * @param dto	车辆、司机、压货人Id
+	 * @param carOwnerId	车主Id
+	 */
+	private void waybillDetailCheck(WaybillDetailAddDto dto, Integer carOwnerId) {
+		Integer driverId = dto.getDriverId();
+		Integer supercargoId = dto.getSupercargoId();
+		Integer carId = dto.getCarId();
+		if(driverId != null) {
+			carPersonService.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
+		}
+		if(supercargoId != null) {
+			carPersonService.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+		}
+		if(carId != null) {
+			carService.assertCarBelongToCurrentUser(carId, carOwnerId);
+		}
+	}
+    
+    
+    
     /**
      * @return
      * @Desinition:取消运单

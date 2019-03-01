@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.cargomatter.CarOwnerCargoMatterPageDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
 import com.zrytech.framework.app.entity.Customer;
@@ -23,7 +24,7 @@ public interface CargoMatterService {
 	
 	public ServerResponse details(DetailsDto dto, Customer customer);
 	
-	public ServerResponse page(CargoMatterPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+	public ServerResponse page(CarOwnerCargoMatterPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
 	
 
 }

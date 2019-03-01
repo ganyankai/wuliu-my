@@ -20,6 +20,15 @@ import com.zrytech.framework.common.entity.User;
 public interface CarService {
 	
 	/**
+	 * 断言车辆属于当前登录车主
+	 * @author cat
+	 * 
+	 * @param carId	车辆Id
+	 * @param carOwnerId	车主Id
+	 */
+	public void assertCarBelongToCurrentUser(Integer carId, Integer carOwnerId);
+	
+	/**
 	 * 断言车辆可用
 	 * <p>数据库存在数据且未删除</p>
 	 * @author cat

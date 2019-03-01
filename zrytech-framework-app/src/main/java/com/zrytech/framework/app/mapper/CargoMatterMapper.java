@@ -2,7 +2,10 @@ package com.zrytech.framework.app.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
+import com.zrytech.framework.app.dto.cargomatter.CarOwnerCargoMatterPageDto;
 import com.zrytech.framework.app.entity.CargoMatter;
 
 /**
@@ -26,5 +29,12 @@ public interface CargoMatterMapper {
     int updateByPrimaryKey(CargoMatter record);
     
     List<CargoMatter> selectSelective(CargoMatterPageDto dto);
+    
+    /**
+     * 车主搜索报价单
+     * @param dto
+     * @return
+     */
+    List<CargoMatter> carOwnerSelectSelective(@Param("dto") CarOwnerCargoMatterPageDto dto, @Param("carOwnerId") Integer carOwnerId);
     
 }

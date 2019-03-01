@@ -457,4 +457,21 @@ public class CarPersonServiceImpl implements CarPersonService {
 		this.assertCarPersonNotDelete(carPerson);
 		return carPerson;
 	}
+	
+	
+	/**
+	 * 断言司机压货人属于当前登录人车主
+	 * @author cat
+	 * 
+	 * @param carPersonId	司机压货人Id
+	 * @param carOwnerId	车主Id
+	 * @param personType	类型
+	 */
+	@Override
+	public void assertCarPersonBelongToCurrentUser(Integer carPersonId, Integer carOwnerId, String personType) {
+		CarPerson carPerson = this.assertCarPersonAvailable(carPersonId);
+		if(!carOwnerId.equals(carPerson.getCarOwnerId()) || !personType.equalsIgnoreCase(carPerson.getPersonType())) {
+			throw new BusinessException(112, "参数有误");
+		}
+	}
 }

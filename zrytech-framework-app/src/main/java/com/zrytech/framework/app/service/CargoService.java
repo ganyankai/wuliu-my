@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.service;
 
 import com.zrytech.framework.app.dto.CargoDto;
+import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.entity.User;
@@ -86,4 +87,13 @@ public interface CargoService {
      * @return:ServerResponse
      */
     ServerResponse cancelResource(CargoDto cargoDto);
+    
+    /**
+     * 断言货源可用
+     * @author cat
+     * 
+     * @param cargoId	货源Id
+     * @return
+     */
+    public Cargo assertCargoAvailable(Integer cargoId);
 }

@@ -38,7 +38,11 @@ public class CargoMatter {
 	/**货源*/
 	@Transient
 	private Cargo cargo;
-
+	
+	/**创建人Id*/
+	@Column(name = "`create_by`")
+	private Integer createBy;
+	
 	/**车主Id*/
 	@Column(name = "`car_ownner_id`")
     private Integer carOwnnerId;
@@ -75,5 +79,11 @@ public class CargoMatter {
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`create_date`")
     private Date createDate;
+	
+	
+	/**货主企业名称*/
+	@Transient
+	private String cargoOwnerName;
+	
    
 }

@@ -539,13 +539,13 @@ public class CarSourceServiceImpl implements CarSourceService {
 			Integer supercargoId = carSourceCarUpdateDto.getSupercargoId();
 			Integer carId = carSourceCarUpdateDto.getCarId();
 			if(driverId != null) {
-				this.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
+				carPersonService.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
 			}
 			if(supercargoId != null) {
-				this.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+				carPersonService.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
 			}
 			if(carId != null) {
-				this.assertCarBelongToCurrentUser(carId, carOwnerId);
+				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
 			}
 		}
 	}
@@ -559,52 +559,22 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carOwnerId	车主Id
 	 */
 	private void carSourceCarsCheck2(List<CarSourceCarAddDto> carSourceCars, Integer carOwnerId) {
-		for (CarSourceCarAddDto carSourceCarUpdateDto : carSourceCars) {
-			Integer driverId = carSourceCarUpdateDto.getDriverId();
-			Integer supercargoId = carSourceCarUpdateDto.getSupercargoId();
-			Integer carId = carSourceCarUpdateDto.getCarId();
+		for (CarSourceCarAddDto carSourceCarAddDto : carSourceCars) {
+			Integer driverId = carSourceCarAddDto.getDriverId();
+			Integer supercargoId = carSourceCarAddDto.getSupercargoId();
+			Integer carId = carSourceCarAddDto.getCarId();
 			if(driverId != null) {
-				this.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
+				carPersonService.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
 			}
 			if(supercargoId != null) {
-				this.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+				carPersonService.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
 			}
 			if(carId != null) {
-				this.assertCarBelongToCurrentUser(carId, carOwnerId);
+				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
 			}
 		}
 	}
 	
-	
-	/**
-	 * 断言车辆属于当前登录人车主
-	 * @author cat
-	 * 
-	 * @param carId	车辆Id
-	 * @param carOwnerId	车主Id
-	 */
-	private void assertCarBelongToCurrentUser(Integer carId, Integer carOwnerId) {
-		Car car = carService.assertCarAvailable(carId);
-		if(!carOwnerId.equals(car.getCarOwnerId())) {
-			throw new BusinessException(112, "参数有误");
-		}
-	}
-	
-	
-	/**
-	 * 断言司机压货人属于当前登录人车主
-	 * @author cat
-	 * 
-	 * @param carPersonId	司机压货人Id
-	 * @param carOwnerId	车主Id
-	 * @param personType	类型
-	 */
-	private void assertCarPersonBelongToCurrentUser(Integer carPersonId, Integer carOwnerId, String personType) {
-		CarPerson carPerson = carPersonService.assertCarPersonAvailable(carPersonId);
-		if(!carOwnerId.equals(carPerson.getCarOwnerId()) || !personType.equalsIgnoreCase(carPerson.getPersonType())) {
-			throw new BusinessException(112, "参数有误");
-		}
-	}
 	
 	
 }
