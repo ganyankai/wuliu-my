@@ -23,5 +23,5 @@ public interface CargoMapper {
 
     int deleteSource(Integer id);
 
-    int invitationOffer(@Param("cargoId") Integer id, @Param("carOwnnerId") Integer carOwnnerId,@Param("date") Date date);
+    int invitationOffer(@Param("cargoId") Integer id,@Param("list") List<Integer> carIds,@Param("status") String status);
 }

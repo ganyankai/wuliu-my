@@ -188,5 +188,17 @@ public class CargoConstant {
     public static final String BIDDING_MESSAGE = "bidding_message";
     /**消息类型 - 运单消息*/
     public static final String WAYBILL_MESSAGE = "waybill_message";
+
+    /**
+     *offer_status:报价状态
+     */
+    public static final String OFFER_STATUS="offer_status";
+
+    /**offer_process - 应标中*/
+    public static final String OFFER_PROCESS = "offer_process";
+    /**offer_promissed - 中标*/
+    public static final String OFFER_PROMISSED = "offer_promissed";
+    /**offer_draft - 淘汰(草稿)*/
+    public static final String OFFER_DRAFT = "offer_draft";
 }
 

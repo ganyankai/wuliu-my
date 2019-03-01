@@ -22,6 +22,6 @@ public interface CargoDao {
 
     int deleteSource(Integer id);
 
-    int invitationOffer(Integer id, Integer carOwnnerId, Date date);
+    int invitationOffer(Integer id, List<Integer> carIds,String status);
 
 }

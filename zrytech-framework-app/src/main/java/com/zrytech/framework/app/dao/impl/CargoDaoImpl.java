@@ -58,7 +58,7 @@ public class CargoDaoImpl implements CargoDao {
     }
 
     @Override
-    public int invitationOffer(Integer id, Integer carOwnnerId, Date date) {
-        return cargoMapper.invitationOffer(id,carOwnnerId,date);
+    public int invitationOffer(Integer id, List<Integer> carIds,String status) {
+        return cargoMapper.invitationOffer(id,carIds,status);
     }
 }

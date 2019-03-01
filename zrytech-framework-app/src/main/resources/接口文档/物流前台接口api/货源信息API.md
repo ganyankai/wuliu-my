@@ -479,7 +479,9 @@
   "params": 
 {
   	         "id":123,  //货源Id
-  	         "carOwnnerId":234 //车主Id
+  	       	 "carIds":[
+              		  123,456
+              		] //车主Ids;邀请多个车主报价
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }

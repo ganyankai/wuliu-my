@@ -126,4 +126,7 @@ public class CargoDto implements Serializable {
 
     @ApiModelProperty(value = "车主ID", required = false)
     private Integer carOwnnerId;
+
+    @ApiModelProperty(value = "邀请车主ids", required = false)
+    private List<Integer> carIds;
 }

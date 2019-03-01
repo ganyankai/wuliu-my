@@ -413,7 +413,7 @@
         where id = #{id}
     </update>
 
-    <insert id="invitationOffer" useGeneratedKeys="true" keyProperty="id">
+  <!--  <insert id="invitationOffer" useGeneratedKeys="true" keyProperty="id">
         insert into cargo_send_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="cargoId != null">
@@ -438,6 +438,22 @@
                 #{date},
             </if>
         </trim>
+    </insert>-->
+    <insert id="invitationOffer" parameterType="java.util.List" useGeneratedKeys="true">
+        insert into cargo_matter
+        (cargo_id,
+        car_ownner_id,
+        status
+        )
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (
+            #{cargoId},
+            #{item},
+            #{status}
+            )
+        </foreach>
     </insert>
 
 </mapper>

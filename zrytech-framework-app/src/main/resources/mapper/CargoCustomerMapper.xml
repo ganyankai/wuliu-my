@@ -12,6 +12,30 @@
         <result column="create_by" property="createBy"/>
         <result column="create_date" property="createDate"/>
         <result column="password" property="pwd"/>
+        <association property="certification" javaType="com.zrytech.framework.app.entity.Certification">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="credit_code" property="creditCode"/>
+            <result column="business_license" property="businessLicense"/>
+            <result column="legaler_name" property="legalerName"/>
+            <result column="legaler_id_card_no" property="legalerIdCardNo"/>
+            <result column="legaler_id_card_front" property="legalerIdCardFront"/>
+            <result column="tel" property="tel"/>
+            <result column="longitude" property="longitude"/>
+            <result column="latitude" property="latitude"/>
+            <result column="province" property="province"/>
+            <result column="city" property="city"/>
+            <result column="county" property="county"/>
+            <result column="address_detail" property="addressDetail"/>
+            <result column="intro" property="intro"/>
+            <result column="customer_type" property="customerType"/>
+            <result column="avoid_audit" property="avoidAudit"/>
+            <result column="close_rate" property="closeRate"/>
+            <result column="favorable_level" property="favorableLevel"/>
+            <result column="status" property="status"/>
+            <result column="cusomer_id" property="cusomerId"/>
+            <result column="create_date" property="createDate"/>
+        </association>
     </resultMap>
 
     <sql id="baseColumn">
@@ -20,6 +44,11 @@
 
     <sql id="pwdColumn">
         id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password
+    </sql>
+
+    <sql id="cerColumn">
+        id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,
+        province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date
     </sql>
 
     <insert id="insertCustomer" parameterType="com.zrytech.framework.app.entity.CargoCustomer">
@@ -95,21 +124,24 @@
 
     <select id="selectCargoCustomerPage" resultMap="BaseResultMap">
         select
-        <include refid="baseColumn"/>
-        from sys_customer
+        cus.id, cus.user_account, cus.tel, cus.user_name, cus.logo, cus.customer_type, cus.is_active, cus.create_by, cus.create_date,
+        ownner.id,ownner.name,ownner.credit_code,ownner.business_license,ownner.legaler_name,ownner.legaler_id_card_no,ownner.legaler_id_card_front,ownner.tel,ownner.longitude,ownner.latitude,
+        ownner.province,ownner.city,ownner.county,ownner.address_detail,ownner.intro,ownner.customer_type,ownner.avoid_audit,ownner.close_rate,ownner.favorable_level,ownner.status,ownner.cusomer_id,ownner.create_date
+        from sys_customer cus JOIN car_cargo_ownner ownner ON
+        cus.id=ownner.cusomer_id
         <trim prefix="where " prefixOverrides="and ">
             1=1
             <if test="cargoCustomer.loginCounter != null and cargoCustomer.loginCounter != ''">
-                and real_name like concat('%',#{cargoCustomer.loginCounter},'%')
+                and cus.real_name like concat('%',#{cargoCustomer.loginCounter},'%')
             </if>
             <if test="cargoCustomer.tel != null and cargoCustomer.tel !=''">
-                and tel like concat('%',#{cargoCustomer.tel},'%')
+                and cus.tel like concat('%',#{cargoCustomer.tel},'%')
             </if>
            <!-- <if test="cargoCustomer.status != null and cargoCustomer.status !=''">
                 and status=#{cargoCustomer.status}
             </if>-->
         </trim>
-        ORDER BY create_date DESC
+        ORDER BY cus.create_date DESC
     </select>
 
     <select id="checkTelOrCount" resultMap="BaseResultMap">

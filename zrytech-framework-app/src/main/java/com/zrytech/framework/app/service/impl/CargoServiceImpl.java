@@ -19,6 +19,8 @@ import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.entity.User;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -257,6 +259,10 @@ public class CargoServiceImpl implements CargoService {
         if (CargoConstant.AUDIT_PASS.equalsIgnoreCase(cargo.getStatus())) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.GOODS_SOURCE_UP));
         }
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        if(cargo.getCreateBy() !=sysCustomer.getId()){
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.USER_DELETE_FAIL));
+        }
         int num = cargoDao.deleteSource(cargoDto.getId());
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
@@ -272,8 +278,8 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public ServerResponse invitationOffer(CargoDto cargoDto) {
         CheckFieldUtils.checkObjecField(cargoDto.getId());
-        CheckFieldUtils.checkObjecField(cargoDto.getCarOwnnerId());
-        int num = cargoDao.invitationOffer(cargoDto.getId(), cargoDto.getCarOwnnerId(), new Date());
+        CheckFieldUtils.checkObjecField(cargoDto.getCarIds());
+        int num = cargoDao.invitationOffer(cargoDto.getId(), cargoDto.getCarIds(),CargoConstant.OFFER_PROCESS);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
@@ -295,7 +301,6 @@ public class CargoServiceImpl implements CargoService {
 
     /**
      * Desintion:取消发布货源(前端)
-     *
      * @author:jiangxiaoxiang
      * @param:CargoDto货源dto
      * @return:ServerResponse

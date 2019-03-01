@@ -7,6 +7,8 @@ import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 public class CheckFieldUtils {
 
     public static void checkObjecField(Object field) {
@@ -15,6 +17,12 @@ public class CheckFieldUtils {
         }
         if (field != null && StringUtils.isBlank(field.toString())) {
             throw new BusinessException(new CommonResult(ResultEnum.PARAMETER_ERROR));
+        }
+        if (field instanceof List) {
+            List f = (List) field;
+            if (f == null || f.size() == 0) {
+                throw new BusinessException(new CommonResult(ResultEnum.PARAMETER_ERROR));
+            }
         }
     }
 
