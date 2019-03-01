@@ -99,8 +99,8 @@
                 and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
                 #{cargoOwnerName}, '%'))
             </if>
-            <if test="cargoOwnerId != null">
-                and `cargo_ownner_id` = #{cargoOwnerId}
+            <if test="carOwnnerId != null">
+                and `cargo_ownner_id` = #{carOwnnerId}
             </if>
             <if test="cargoId != null">
                 and `cargo_id` = #{cargoId}
@@ -355,15 +355,15 @@
                 #{waybill.carOwnerName},
                 '%'))
             </if>
-            <if test="waybill.carOwnerId != null">
-                and `car_ownner_id` = #{carOwnerId}
+            <if test="waybill.carOwnnerId != null">
+                and `car_ownner_id` = #{waybill.carOwnnerId}
             </if>
             <if test="waybill.cargoOwnerName != null and waybill.cargoOwnerName != ''">
                 and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
                 #{waybill.cargoOwnerName}, '%'))
             </if>
-            <if test="waybill.cargoOwnerId != null">
-                and `cargo_ownner_id` = #{waybill.cargoOwnerId}
+            <if test="waybill.cargoOwnnerId != null">
+                and `cargo_ownner_id` = #{waybill.cargoOwnnerId}
             </if>
             <if test="waybill.cargoId != null">
                 and `cargo_id` = #{waybill.cargoId}
@@ -404,13 +404,14 @@
     </select>
 
     <select id="selectIndentDetails" resultMap="indentDetail">
-        select *
+        select id,bill_no,car_id,driver_id,supercargo_id,qty,weight_unit,flow_name,create_date
         from waybill_detail
         where bill_no =#{bill_no}
     </select>
 
     <select id="selectIndentLocations" resultMap="wayLoading">
-        select *
+        select id,waybill_detail_id,waybill_id,longitude,latitude,province,city,county,address_detail,qty,weight_unit,type,seq_no,remark,load_date,
+        end_date,status,create_date
         from bill_location
         where waybill_detail_id =#{id}
     </select>

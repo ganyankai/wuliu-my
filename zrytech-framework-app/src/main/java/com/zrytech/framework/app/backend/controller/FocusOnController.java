@@ -101,7 +101,6 @@ public class FocusOnController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        //TODO:获取当前登录的用户ID
         return focusOnService.selectMyFocus(requestParams.getParams());
     }
 }

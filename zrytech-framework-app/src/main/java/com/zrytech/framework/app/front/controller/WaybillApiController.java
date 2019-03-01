@@ -30,7 +30,6 @@ public class WaybillApiController {
     @Autowired
     private WaybillService waybillService;
 
-
     /**
      * @return
      * @Desinition:运单分页列表展示
@@ -145,5 +144,21 @@ public class WaybillApiController {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return waybillService.delete(requestParams.getParams());
+    }
+
+    /**
+     * @return
+     * @Desinition:取消运单
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
+    @PostMapping("/cancelIndent")
+    @ApiOperation(value = "取消运单")
+    public ServerResponse cancelIndent(@RequestBody RequestParams<WaybillDto> requestParams) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId() == null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return waybillService.cancelIndent(requestParams.getParams());
     }
 }

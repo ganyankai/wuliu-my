@@ -113,7 +113,7 @@ public class CargoServiceImpl implements CargoService {
         entity.setBusinessId(cargoDto.getId());
         approveLogRepository.save(entity);
         pushGoodSource(cargoGoods);
-        if (CargoConstant.SOURCE_DOWN.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:未上架
+        if (CargoConstant.SOURCE_REFUSE.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:下架
             //TODO:短信通知
             int num = cargoDao.updateAudit(cargo);
             CheckFieldUtils.assertSuccess(num);
@@ -152,8 +152,8 @@ public class CargoServiceImpl implements CargoService {
         CheckFieldUtils.checkObjecField(cargoDto.getStartCity());
         CheckFieldUtils.checkObjecField(cargoDto.getEndCity());
         //TODO:判断当前用户是否为免审核用户;如果是免审核则系统直接通过招标方式通知相应的车主
-        Certification certification=shipperDao.getCustomerId(cargoDto.getCreateBy());
-        if(certification !=null&& certification.getStatus() !=null&& CargoConstant.AUDIT_PASS.equalsIgnoreCase(certification.getStatus())){
+        Certification certification = shipperDao.getCustomerId(cargoDto.getCreateBy());
+        if (certification != null && certification.getStatus() != null && CargoConstant.AUDIT_PASS.equalsIgnoreCase(certification.getStatus())) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PERMISSED_NOT_FAIL));
         }
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
@@ -170,7 +170,7 @@ public class CargoServiceImpl implements CargoService {
             //批量添加卸货地址
             loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE, cargoId);
         }
-        if(certification.getAvoidAudit()){//ture表示是免审核用户;则货源无需经过后台审核直接推送
+        if (certification.getAvoidAudit()) {//ture表示是免审核用户;则货源无需经过后台审核直接推送
             cargo.setId(cargoId);
             pushGoodSource(cargo);
         }
@@ -260,7 +260,7 @@ public class CargoServiceImpl implements CargoService {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.GOODS_SOURCE_UP));
         }
         SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
-        if(cargo.getCreateBy() !=sysCustomer.getId()){
+        if (cargo.getCreateBy() != sysCustomer.getId()) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.USER_DELETE_FAIL));
         }
         int num = cargoDao.deleteSource(cargoDto.getId());
@@ -279,7 +279,7 @@ public class CargoServiceImpl implements CargoService {
     public ServerResponse invitationOffer(CargoDto cargoDto) {
         CheckFieldUtils.checkObjecField(cargoDto.getId());
         CheckFieldUtils.checkObjecField(cargoDto.getCarIds());
-        int num = cargoDao.invitationOffer(cargoDto.getId(), cargoDto.getCarIds(),CargoConstant.OFFER_PROCESS);
+        int num = cargoDao.invitationOffer(cargoDto.getId(), cargoDto.getCarIds(), CargoConstant.OFFER_PROCESS);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
@@ -301,12 +301,19 @@ public class CargoServiceImpl implements CargoService {
 
     /**
      * Desintion:取消发布货源(前端)
+     *
      * @author:jiangxiaoxiang
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
     @Override
     public ServerResponse cancelResource(CargoDto cargoDto) {
-        return null;
+        Cargo cargo = cargoDao.get(cargoDto.getId());
+        if(CargoConstant.SOURCE_ONGOING.equalsIgnoreCase(cargo.getStatus())){//针对报价中的货源,取消发布
+            cargo.setStatus(CargoConstant.SOURCE_DOWN);//状态改为:下架
+            cargoDao.updateAudit(cargo);
+            //TODO:是否删除推送记录和报价信息
+        }
+        return ServerResponse.success();
     }
 }

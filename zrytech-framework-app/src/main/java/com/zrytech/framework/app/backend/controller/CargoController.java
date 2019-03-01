@@ -37,10 +37,11 @@ public class CargoController {
     @PostMapping("/page")
     @ApiOperation(value = "货源分页列表信息")
     public ServerResponse cargoPage(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        CargoDto cargoDto = requestParams.getParams();
+        if (cargoDto == null) {
+            cargoDto = new CargoDto();
         }
-        return cargoService.cargoPage(requestParams.getParams(), requestParams.getPage());
+        return cargoService.cargoPage(cargoDto, requestParams.getPage());
     }
 
     /**
@@ -73,7 +74,7 @@ public class CargoController {
                 || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.auditSource(requestParams.getParams(),RequestUtil.getCurrentUser());
+        return cargoService.auditSource(requestParams.getParams(), RequestUtil.getCurrentUser());
     }
 
 
