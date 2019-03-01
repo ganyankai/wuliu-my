@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.zrytech.framework.dto.carrecordplace.CarRecordPlaceAddDto;
@@ -14,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 添加车源入参
+ * 新增车源入参
  * @author cat
  *
  */
@@ -23,7 +24,7 @@ import lombok.Setter;
 public class CarSourceAddDto {
 	
 	/**车辆类型*/
-	@NotEmpty(message = "车辆类型不能为空")
+	@NotBlank(message = "车辆类型不能为空")
     private String carType;
 	
 	/**核载量*/

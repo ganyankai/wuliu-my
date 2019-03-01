@@ -22,6 +22,7 @@ import com.zrytech.framework.service.CarPersonService;
 import com.zrytech.framework.base.annotation.CurrentCustomer;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 
 
 /**
@@ -129,9 +130,7 @@ public class CarPersonAPIController {
 	@Valid
 	@RequestMapping("/add")
 	public ServerResponse add(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams, BindingResult result) {
-		// Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		Customer customer = new Customer();
-		customer.setId(1);
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
 		carCargoOwner.setId(1);
 		customer.setCarOwner(carCargoOwner);
