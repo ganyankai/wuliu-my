@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zrytech.framework.mapper.CarMapper" >
-  <resultMap id="BaseResultMap" type="com.zrytech.framework.entity.Car" >
+<mapper namespace="com.zrytech.framework.app.mapper.CarMapper" >
+  <resultMap id="BaseResultMap" type="com.zrytech.framework.app.entity.Car" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="car_no" property="carNo" jdbcType="VARCHAR" />
     <result column="car_load" property="carLoad" jdbcType="INTEGER" />
@@ -34,7 +34,7 @@
     delete from car
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zrytech.framework.entity.Car" >
+  <insert id="insert" parameterType="com.zrytech.framework.app.entity.Car" >
     insert into car (id, car_no, car_load, 
       car_unit, car_type, driver_id, 
       supercargo_id, current_longitude, current_latitude, 
@@ -48,7 +48,7 @@
       #{status,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, #{createBy,jdbcType=INTEGER}, 
       #{createDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zrytech.framework.entity.Car" >
+  <insert id="insertSelective" parameterType="com.zrytech.framework.app.entity.Car" >
     insert into car
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -151,7 +151,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.entity.Car" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.app.entity.Car" >
     update car
     <set >
       <if test="carNo != null" >
@@ -202,7 +202,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.entity.Car" >
+  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.app.entity.Car" >
     update car
     set car_no = #{carNo,jdbcType=VARCHAR},
       car_load = #{carLoad,jdbcType=INTEGER},
