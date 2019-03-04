@@ -8,6 +8,7 @@ import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.SysCustomer;
+import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
@@ -74,7 +75,8 @@ public class CargoController {
                 || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.auditSource(requestParams.getParams(), RequestUtil.getCurrentUser());
+        User user = RequestUtil.getCurrentUser(User.class);
+        return cargoService.auditSource(requestParams.getParams(), user);
     }
 
 

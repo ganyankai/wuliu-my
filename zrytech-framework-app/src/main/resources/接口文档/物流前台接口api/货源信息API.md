@@ -107,6 +107,109 @@
 ```
 
 
+### 1.货源信息列表
+
+*** 描述:货源大厅分页列表信息;(默认按装货时间倒序进行排序、吨数、发布时间倒序)
+
+**URL**
+>/goodsSource/page
+
+
+
+**请求参数**
+
+``` json
+{
+  "openid": "string",
+  "page":{"pageNum":1, "pageSize":10},
+  "params": 
+{
+  	  "name":"",   //(选传)(string) 货物介质
+      "startProvince":"",//(选传)(string)出发省
+      "startCity":"",//(选传)(string)出发市
+      "startCountry":"",//(选传)(string)出发县
+      "endProvince":"",//(选传)(string)到达省
+      "endCity":"",//(选传)(string)到达市
+      "endCountry":"",//(选传)(string)到达县
+      "qty":23,      //(选传)(string) 货物数量
+      "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+  },
+   "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
+}
+```
+
+
+**响应示例**
+
+``` json
+{
+"code":1,
+"msg":"success",
+"data":
+{
+"pageNum":1,
+"pageSize":10,
+"size":2,
+"startRow":1,
+"endRow":2,
+"total":2,
+"pages":1,
+"list":
+[
+{
+   "id": 7,//货源id
+   "name": "",//货物介质
+   "logo": 123,//logo头像
+   "logoUrl": "",//logo头像url
+   "qty": ,//数量
+   "weightUnit": "",//重量单位;ton(吨);rise(升)
+   "weightUnitCN": "",//重量单位CN;ton(吨);rise(升)
+   "tenderWay":"",//发标方式;招标(tender_mark);抢标(bid_mark)
+   "tenderWayCN":"",//发标方式;招标(tender_mark);抢标(bid_mark)
+   "payType":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
+   "payTypeCN":"",//付款方式;1:线下支付(offline_pay);2:微信支付(wechat);3:支付宝支付(alipay);4:银行卡支付(bankpay)
+   "mulShipment":true,//多点装货;true:表示是多点装货;false:否
+   "mulUnload":true, //多点卸货;true:表示是多点卸货;false:否
+   "matterPrice":12, //发标价
+   "realPrice":34, //中标价
+   "marketPrice":23, //市场价
+   "priceUnit":"", //价格单位;price_yuan(人民币);price_dollar(美元)
+   "priceUnitCN":"", //价格单位CN;price_yuan(人民币);price_dollar(美元)
+   "priceType":"", //价格类型;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "priceTypeCN":"", //价格类型CN;fixed_price(包车固定价);perton_price(每吨运费单价);
+   "startProvince":"",//出发省
+   "startCity":"",//出发市
+   "startCountry":"",//出发县
+   "endProvince":"",//到达省
+   "endCity":"",//到达市
+   "endCountry":"",//到达县
+   "line":"",//路线
+   "canShare":true,//是否拼单;true是;false否;
+   "status":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "statusCN":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "arrivalDate":"", //送达日期
+   "endDate":"",//截止日期
+   "remark":"",//备注
+   "createDate":"" //创建日期
+}
+],
+"prePage":0,
+"nextPage":0,
+"isFirstPage":true,
+"isLastPage":true,
+"hasPreviousPage":false,
+"hasNextPage":false,
+"navigatePages":8,
+"navigatepageNums":[1],
+"navigateFirstPage":1,
+"navigateLastPage":1,
+"firstPage":1,
+"lastPage":1
+}
+}
+```
+
+
 
 ### 1.货源详情
 

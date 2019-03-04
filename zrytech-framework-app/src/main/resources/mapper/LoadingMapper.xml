@@ -132,4 +132,28 @@
         </foreach>
     </insert>
 
+    <update id="batchUpdate" parameterType="java.util.List">
+        <!-- 接收list参数，循环着组装sql语句，注意for循环的写法
+             separator=";" 代表着每次循环完，在sql后面放一个分号
+             item="cus" 循环List的每条的结果集
+             collection="list" list 即为 传过来的参数Mark -->
+        <foreach collection="list" separator=";" item="loading">
+            update cargo_location set
+            longitude=#{loading.longitude},
+            latitude=#{loading.latitude},
+            province=#{loading.province},
+            city=#{loading.city},
+            county=#{loading.county},
+            address_detail=#{loading.addressDetail},
+            qty=#{loading.qty},
+            remark=#{loading.remark},
+            seq_no=#{loading.seqNo},
+            load_date=#{loading.loadDate},
+            load_date=#{loading.loadDate},
+            end_date = #{loading.endDate},
+            status=#{loading.status}
+            where id = #{loading.id}
+        </foreach>
+    </update>
+
 </mapper>

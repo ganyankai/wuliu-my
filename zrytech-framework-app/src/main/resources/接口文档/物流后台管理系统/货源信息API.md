@@ -232,9 +232,9 @@
   "openid": "string",
   "params": 
 {
-  	 "id":123,  //货源Id
-  	 "status":"", //状态;1:拒绝(source_refuse);2:审核通过-报价中(source_ongoing);
-  	 "describe":"" //(选填)(string)如果是拒绝需填拒绝理由
+  	 "id":123,  //(必填)(Integer)货源Id
+  	 "status":"", //(必填)(string)状态;1:拒绝(source_refuse);2:审核通过-报价中(source_ongoing);
+  	 "describe":"" //(必填)(string)如果是拒绝需填拒绝理由
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }

@@ -263,5 +263,16 @@ public class CargoConstant {
     public static final String FIXED_PRICE = "fixed_price";
     /**perton_price -每吨运费单价*/
     public static final String PERTON_PRICE = "perton_price";
+
+    /**
+     *pay_type:付款类型
+     */
+    public static final String PAY_TYPE="pay_type";
+    /**arrival_pay -货到付款*/
+    public static final String ARRIVAL_PAY = "arrival_pay";
+    /**tail_pay -尾款*/
+    public static final String TAIL_PAY = "tail_pay";
+    /**first_pay -首付*/
+    public static final String FIRST_PAY = "first_pay";
 }
 

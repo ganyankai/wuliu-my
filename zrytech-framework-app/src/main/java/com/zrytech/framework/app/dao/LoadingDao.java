@@ -16,4 +16,6 @@ public interface LoadingDao {
 
     void batchAdds(List<Loading> batchAdds, Integer cargoId);
 
+    void batchUpdate(List<Loading> updateList);
+
 }

@@ -187,7 +187,7 @@
                 and ads.begin_city= #{cargoGoods.startCity}
             </if>
             <if test="cargoGoods.startCountry != null and cargoGoods.startCountry !=''">
-                and ads.begin_country= #{cargoGoods.startCountry}
+                and ads.begin_county= #{cargoGoods.startCountry}
             </if>
             <if test="cargoGoods.endProvince != null and cargoGoods.endProvince !=''">
                 and ads.end_province= #{cargoGoods.endProvince}

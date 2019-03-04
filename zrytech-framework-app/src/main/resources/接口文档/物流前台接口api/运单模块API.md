@@ -60,8 +60,8 @@
        "remark": "",//备注
        "qty": 23,//数量
        "payWay":"",//付款类型;货到付款(arrival_pay);尾款(tail_pay);首付(first_pay)
-       "weightUnit": ,//重量单位
-       "weightUnitCN": ,//重量单位
+       "weightUnit": ,//重量单位;ton(吨);rise(升)
+       "weightUnitCN": ,//重量单位;ton(吨);rise(升)
        "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "createDate": "2018-01-10", //创建日期
@@ -73,8 +73,8 @@
            "driverId":,//司机Id
            "supercargoId":,//压货人Id
            "qty":,//运输数量
-           "weightUnit":,//重量单位
-           "flowName":"",//进度阶段名称
+           "weightUnit":,//重量单位;ton(吨);rise(升)
+           "flowName":"",//进度阶段名称;
            "createDate":"", //创建时间
            "billLocations":[  //运单装卸地
                {
@@ -87,7 +87,7 @@
                  "county":"",//县
                  "addressDetail":"",//地址详情
                  "qty":,//装卸数量
-                 "weightUnit":"",//重量单位
+                 "weightUnit":"",//重量单位;ton(吨);rise(升)
                  "type":"",//类型
                  "seqNo":,//序号
                  "remark":"",//说明
@@ -203,8 +203,8 @@
        "qty": 23,//数量
        "proofImgs":"",//收货凭证
        "payWay":"",//付款类型;货到付款(arrival_pay);尾款(tail_pay);首付(first_pay)
-       "weightUnit": ,//重量单位
-       "weightUnitCN": ,//重量单位
+       "weightUnit": ,//重量单位;ton(吨);rise(升)
+       "weightUnitCN": ,//重量单位;ton(吨);rise(升)
        "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
        "createDate": "2018-01-10", //创建日期
@@ -215,7 +215,7 @@
            "driverId":,//司机Id
            "supercargoId":,//压货人Id
            "qty":,//运输数量
-           "weightUnit":,//重量单位
+           "weightUnit":,//重量单位;ton(吨);rise(升)
            "flowName":"",//进度阶段名称
            "createDate":"", //创建时间
            "billLocations":[  //运单装卸地
@@ -229,7 +229,7 @@
                  "county":"",//县
                  "addressDetail":"",//地址详情
                  "qty":,//装卸数量
-                 "weightUnit":"",//重量单位
+                 "weightUnit":"",//重量单位;ton(吨);rise(升)
                  "type":"",//类型
                  "seqNo":,//序号
                  "remark":"",//说明

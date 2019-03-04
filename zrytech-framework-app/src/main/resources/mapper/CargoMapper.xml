@@ -293,9 +293,10 @@
         where id = #{id}
     </update>
 
-    <insert id="batch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+    <insert id="batch" parameterType="java.util.List" useGeneratedKeys="true">
         insert into cargo_send_record
-        (cargo_id,
+        (
+        cargo_id,
         car_ownner_id,
         create_date
         )

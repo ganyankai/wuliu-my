@@ -104,6 +104,7 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public ServerResponse auditSource(CargoDto cargoDto, User user) {
         CheckFieldUtils.checkObjecField(cargoDto.getStatus());
+        CheckFieldUtils.checkObjecField(cargoDto.getDescribe());
         //TODO:拒绝后需填写拒绝理由;添加审核记录
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         //TODO:审核通过,系统通过发标方式推送给相应的车主(考虑是否是免审核用户)
@@ -117,13 +118,13 @@ public class CargoServiceImpl implements CargoService {
         entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_GOODS_SOURCE);
         entity.setBusinessId(cargoDto.getId());
         approveLogRepository.save(entity);
-        pushGoodSource(cargoGoods);
         if (CargoConstant.SOURCE_REFUSE.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:下架
             //TODO:短信通知
             int num = cargoDao.updateAudit(cargo);
             CheckFieldUtils.assertSuccess(num);
             return ServerResponse.success();
         }
+        pushGoodSource(cargoGoods);
         int num = cargoDao.updateAudit(cargo);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
@@ -163,6 +164,7 @@ public class CargoServiceImpl implements CargoService {
         }
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargo.setCreateDate(new Date());
+        cargo.setStatus(CargoConstant.WAIT_AUDIT);
         int num = cargoDao.pushSave(cargo);
         CheckFieldUtils.assertSuccess(num);
         List<Loading> loadingList = cargoDto.getMulShipmentList();
@@ -191,8 +193,8 @@ public class CargoServiceImpl implements CargoService {
      */
     @Override
     public ServerResponse updateSource(CargoDto cargoDto) {
-        List<Loading> loadingList = cargoDto.getMulShipmentList();//TODO:多点装货地址
-        List<Loading> unloadingList = cargoDto.getMulUnloadList();//TODO:多点卸货地址
+        List<Loading> loadingList = cargoDto.getMulShipmentList();//多点装货地址
+        List<Loading> unloadingList = cargoDto.getMulUnloadList();//多点卸货地址
         updateOrSave(loadingList, unloadingList, cargoDto.getId());
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargoDao.updateSource(cargo);
@@ -208,14 +210,13 @@ public class CargoServiceImpl implements CargoService {
     public void updateOrSave(List<Loading> loadingList, List<Loading> unloadingList, Integer cargoId) {
         List<Loading> loadings = loadingDao.selectLoadingList(cargoId, CargoConstant.LOADING_TYPE);
         List<Loading> unloadings = loadingDao.selectLoadingList(cargoId, CargoConstant.UNLOADING_TYPE);
-        //List<Integer> loadingIds = loadingDao.getListByIds(loadings);//装货id集合
-        //List<Integer> unloadingIds = loadingDao.getListByIds(unloadings);//卸货id集合
         //批量操作
+        List<Loading> updateList=new ArrayList<>();
         List<Integer> deleteIds = new ArrayList<>();
         List<Loading> batchAdds = new ArrayList<>();
         List<Integer> ids = new ArrayList<>();
-        getLoadList(loadingList, batchAdds, ids, CargoConstant.LOADING_TYPE);
-        getLoadList(unloadingList, batchAdds, ids, CargoConstant.UNLOADING_TYPE);
+        getLoadList(loadingList, batchAdds, ids,updateList,CargoConstant.LOADING_TYPE);
+        getLoadList(unloadingList, batchAdds, ids,updateList, CargoConstant.UNLOADING_TYPE);
         getDeleteList(loadings, ids, deleteIds);
         getDeleteList(unloadings, ids, deleteIds);
         if (deleteIds != null && deleteIds.size() > 0) { //批量删除
@@ -224,15 +225,19 @@ public class CargoServiceImpl implements CargoService {
         if (batchAdds != null && batchAdds.size() > 0) { //批量添加
             loadingDao.batchAdds(batchAdds, cargoId);
         }
+        if(updateList !=null&& updateList.size()>0){//批量修改
+            loadingDao.batchUpdate(updateList);
+        }
     }
 
-    public void getLoadList(List<Loading> list, List<Loading> batchAdds, List<Integer> ids, String type) {
+    public void getLoadList(List<Loading> list, List<Loading> batchAdds, List<Integer> ids, List<Loading> updateList,String type) {
         if (list != null && list.size() > 0) {
             for (Loading loading : list) {
                 if (loading.getId() == null) {
                     loading.setType(type);
                     batchAdds.add(loading);
                 } else {
+                    updateList.add(loading);
                     ids.add(loading.getId());
                 }
             }

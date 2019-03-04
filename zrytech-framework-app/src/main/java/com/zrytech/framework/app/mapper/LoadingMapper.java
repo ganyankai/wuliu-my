@@ -14,4 +14,6 @@ public interface LoadingMapper {
     int batchDelete(@Param("list") List<Integer> list);
 
     void batchAdds(@Param("list") List<Loading> batchAdds,@Param("cargoId") Integer cargoId);
+
+    void batchUpdate(@Param("list") List<Loading> updateList);
 }

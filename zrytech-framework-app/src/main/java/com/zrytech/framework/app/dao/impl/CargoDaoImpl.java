@@ -44,7 +44,9 @@ public class CargoDaoImpl implements CargoDao {
 
     @Override
     public void batch(List<Integer> list, Integer id, Date date) {
-        cargoMapper.batch(list,id,date);
+        if(list !=null&& list.size()>0) {
+            cargoMapper.batch(list, id, date);
+        }
     }
 
     @Override

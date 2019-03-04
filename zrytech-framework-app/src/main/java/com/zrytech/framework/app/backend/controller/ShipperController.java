@@ -54,7 +54,7 @@ public class ShipperController {
      * @return:ServerResponse
      */
     @PostMapping("/perSonOrOrganizeCertification")
-    @ApiOperation(value = "客户注册")
+    @ApiOperation(value = "填写认证材料")
     public ServerResponse perSonOrOrganizeCertification(@RequestBody RequestParams<CertificationDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));

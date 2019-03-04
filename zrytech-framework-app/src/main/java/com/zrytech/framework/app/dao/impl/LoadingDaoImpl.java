@@ -49,4 +49,9 @@ public class LoadingDaoImpl implements LoadingDao {
     public void batchAdds(List<Loading> batchAdds, Integer cargoId) {
         loadingMapper.batchAdds(batchAdds,cargoId);
     }
+
+    @Override
+    public void batchUpdate(List<Loading> updateList) {
+        loadingMapper.batchUpdate(updateList);
+    }
 }
