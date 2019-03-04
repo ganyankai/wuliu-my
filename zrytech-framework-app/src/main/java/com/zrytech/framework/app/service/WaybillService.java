@@ -7,6 +7,7 @@ import com.zrytech.framework.base.entity.Page;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -76,7 +77,7 @@ public interface WaybillService {
     
     public ServerResponse details(DetailsDto dto, Customer customer);
     
-    public ServerResponse page(WaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+    public ServerResponse page(CarOwnerWaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
     
     public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer);
     

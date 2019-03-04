@@ -55,6 +55,10 @@ public class Waybill {
 	@Column(name = "`car_ownner_id`")
     private Integer carOwnnerId;
 
+	/**创建人Id*/
+	@Column(name = "`create_by`")
+	private Integer createBy;
+	
 	/**车主企业名称*/
 	@Transient
 	private String carOwnerName;

@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.dto.WaybillPageDto;
 import com.zrytech.framework.app.dto.billlocation.BillLocationAddDto;
+import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.entity.BillLocation;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
@@ -614,18 +615,21 @@ public class WaybillServiceImpl implements WaybillService {
 
     /**
      * 运单分页
+     * @author cat
      *
-     * @param dto      查询条件，详见{@link WaybillPageDto}
+     * @param dto      查询条件，详见{@link CarOwnerWaybillPageDto}
      * @param pageNum
      * @param pageSize
      * @return
-     * @author cat
      */
     @Override
-    public ServerResponse page(WaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
-        // TODO 搜索条件展示结果待定
+    public ServerResponse page(CarOwnerWaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
+    	CarCargoOwnner carOwner = customer.getCarOwner();
+    	if(customer.getCreateBy() != 0) { // 子账号
+    		dto.setCreateBy(customer.getCreateBy());
+    	}
         com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-        List<Waybill> list = waybillMapper.selectSelective(dto);
+        List<Waybill> list = waybillMapper.carOwnerSelectSelective(dto, carOwner.getId());
         for (Waybill waybill : list) {
             waybill = bindingCarOwnerName(waybill);
             waybill = bindingCargoOwnerName(waybill);
@@ -637,14 +641,21 @@ public class WaybillServiceImpl implements WaybillService {
 
     /**
      * 运单详情
-     *
-     * @param id
-     * @return
      * @author cat
+     *
+     * @param id	运单Id
+     * @return
      */
     @Override
     public ServerResponse details(DetailsDto dto, Customer customer) {
+    	CarCargoOwnner carOwner = customer.getCarOwner();
         Waybill waybill = this.assertWaybillExist(dto.getId());
+        this.assertWaybillBelongToCurrentUser(waybill, carOwner.getId());
+        if(customer.getCreateBy() != 0) { // 子账号
+        	if(customer.getCreateBy() - waybill.getCreateBy() != 0) {
+        		throw new BusinessException(112, "参数有误");
+        	}
+    	}
         waybill = bindingCargo(waybill);
         waybill = bindingCarOwnerName(waybill);
         waybill = bindingCargoOwnerName(waybill);

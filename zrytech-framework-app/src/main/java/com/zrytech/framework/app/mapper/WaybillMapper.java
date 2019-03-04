@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.base.entity.Page;
 import org.apache.ibatis.annotations.Param;
@@ -29,6 +30,8 @@ public interface WaybillMapper {
     int updateByPrimaryKey(Waybill record);
     
     List<Waybill> selectSelective(WaybillPageDto dto);
+    
+    List<Waybill> carOwnerSelectSelective(@Param("dto") CarOwnerWaybillPageDto dto, @Param("carOwnerId") Integer carOwnerId);
 
     int updateIndentStatus(Waybill waybill);
 
