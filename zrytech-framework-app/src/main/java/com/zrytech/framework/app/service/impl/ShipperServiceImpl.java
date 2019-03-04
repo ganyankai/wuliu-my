@@ -60,6 +60,7 @@ public class ShipperServiceImpl implements ShipperService {
         //设置客户ID
         certification.setCusomerId(sysCustomer.getId());
         certification.setStatus(CargoConstant.AUDIT_PROCESS);
+        certification.setAvoidAudit(false);
         shipperDao.updateCertification(certification);
         return ServerResponse.success();
     }

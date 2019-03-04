@@ -36,7 +36,7 @@ public class Certification implements Serializable{
     private String legalerName;
 
     @ApiModelProperty(value = "法人身份证号码", required = false)
-    private Integer legalerIdCardNo;
+    private String legalerIdCardNo;
 
     @ApiModelProperty(value = "法人身份证正面照", required = false)
     private String legalerIdCardFront;
