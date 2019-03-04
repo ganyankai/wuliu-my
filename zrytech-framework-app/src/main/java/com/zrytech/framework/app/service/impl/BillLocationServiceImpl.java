@@ -16,6 +16,7 @@ import com.zrytech.framework.app.repository.BillLocationRepository;
 import com.zrytech.framework.app.dto.BillLocationPageDto;
 import com.zrytech.framework.app.entity.BillLocation;
 import com.zrytech.framework.app.service.BillLocationService;
+import com.zrytech.framework.base.exception.BusinessException;
 
 @Service
 public class BillLocationServiceImpl implements BillLocationService {
@@ -60,5 +61,33 @@ public class BillLocationServiceImpl implements BillLocationService {
 	
 	
 	
+	/**
+	 * 断言运单装卸地存在
+	 * @author cat
+	 * 
+	 * @param billLocationId	运单装卸地Id
+	 * @return	运单装卸地
+	 */
+	@Override
+	public BillLocation assertBillLocationExist(Integer billLocationId) {
+		BillLocation billLocation = billLocationRepository.findOne(billLocationId);
+        if (billLocation == null) {
+            throw new BusinessException(112, "运单装卸地不存在");
+        }
+        return billLocation;
+	}
 	
+	
+	/**
+	 * 删除运单项对应的运单装卸地（物理删除）
+	 * @author cat
+	 * 
+	 * @param waybillDetailId	运单项Id
+	 */
+	@Override
+	public void deleteByWaybillDetailId(Integer waybillDetailId) {
+		 BillLocation billLocation = new BillLocation();
+	     billLocation.setWaybillDetailId(waybillDetailId);
+	     billLocationRepository.delete(billLocation);
+	}
 }

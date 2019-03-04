@@ -51,7 +51,7 @@ public class BillLocationAddDto {
     private Integer qty;
 
 	/**类型*/
-    @NotBlank(message = "不能为空")
+    @NotBlank(message = "类型不能为空")
     private String type;
 
 	/**序号*/
