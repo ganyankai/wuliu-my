@@ -28,7 +28,7 @@
       "endCity":"",//(选传)(string)到达市
       "endCountry":"",//(选传)(string)到达县
       "qty":23,      //(选传)(string) 货物数量
-      "status":"", //状态;1:待审核(wait_audit);2:已上架(source_up);3:未上架(source_down);4:已过期(source_expired)
+      "status":"", //状态;1:草稿(source_draft)2:审核中(wait_audit);3:竞标中(source_up);4:审核拒绝(source_refuse);5:中标(source_winning);6:已过期(source_expired);
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
@@ -202,8 +202,8 @@
    "endCountry":"",//到达县
    "line":"",//路线
    "canShare":true,//是否拼单;true是;false否;
-   "status":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
-   "statusCN":"", //状态;1:待审核(wait_audit);2:报价中(source_ongoing);3:下架中(source_down);4:审核拒绝(source_refuse);5:已过期(source_expired);6:已中标(source_complete)
+   "status":"", //状态;1:草稿(source_draft)2:审核中(wait_audit);3:竞标中(source_up);4:审核拒绝(source_refuse);5:中标(source_winning);6:已过期(source_expired);
+   "statusCN":"", //状态;1:草稿(source_draft)2:审核中(wait_audit);3:竞标中(source_up);4:审核拒绝(source_refuse);5:中标(source_winning);6:已过期(source_expired);
    "arrivalDate":"", //送达日期
    "endDate":"",//截止日期
    "remark":"",//备注
@@ -233,7 +233,7 @@
   "params": 
 {
   	 "id":123,  //(必填)(Integer)货源Id
-  	 "status":"", //(必填)(string)状态;1:拒绝(source_refuse);2:审核通过-报价中(source_ongoing);
+  	 "status":"", //(必填)(string)状态;1:拒绝(source_refuse);2:竞标中(source_up);
   	 "describe":"" //(必填)(string)如果是拒绝需填拒绝理由
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5

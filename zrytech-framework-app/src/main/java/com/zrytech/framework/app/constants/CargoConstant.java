@@ -66,40 +66,23 @@ public class CargoConstant {
      */
     public static final String CARGO_GOODS_STATUS = "cargo_goods_status";
 
-    /**
-     * wait_audit:待审核;
-     */
+    /**source_draft:草稿;*/
+    public static final String SOURCE_DRAFT = "source_draft";
+
+    /**wait_audit:审核中;*/
     public static final String WAIT_AUDIT = "wait_audit";
 
-    /**
-     * source_up:已上架;
-     */
-    public static final String SOURCE_UP = "source_up";
-
-    /**
-     * source_refuse:拒绝;
-     */
+    /**source_refuse:审核拒绝 */
     public static final String SOURCE_REFUSE = "source_refuse";
 
-    /**
-     * source_expired:已过期;
-     */
+    /**source_up:竞标中(上架);*/
+    public static final String SOURCE_UP = "source_up";
+
+    /**source_expired:已过期;*/
     public static final String SOURCE_EXPIRED = "source_expired";
 
-    /**
-     * source_down:报价中;(审核通过)
-     */
-    public static final String SOURCE_ONGOING = "source_ongoing";
-
-    /**
-     * source_down:下架;(下架)
-     */
-    public static final String SOURCE_DOWN = "source_down";
-
-    /**
-     * source_down:已中标;(已中标)
-     */
-    public static final String SOURCE_COMPLETE = "source_complete";
+    /**source_winning:中标;(中标)*/
+    public static final String SOURCE_WINNING = "source_winning";
 
     /**
      * Loading_unloading_type:装卸类型;

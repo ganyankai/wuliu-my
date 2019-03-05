@@ -119,6 +119,7 @@ public class CargoServiceImpl implements CargoService {
         approveLogRepository.save(entity);
         if (CargoConstant.SOURCE_REFUSE.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:下架
             //TODO:短信通知
+            cargo.setStatus(CargoConstant.SOURCE_DRAFT);//变为草稿状态
             int num = cargoDao.updateAudit(cargo);
             CheckFieldUtils.assertSuccess(num);
             return ServerResponse.success();
@@ -338,8 +339,8 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public ServerResponse cancelResource(CargoDto cargoDto) {
         Cargo cargo = cargoDao.get(cargoDto.getId());
-        if (CargoConstant.SOURCE_ONGOING.equalsIgnoreCase(cargo.getStatus())) {//针对报价中的货源,取消发布
-            cargo.setStatus(CargoConstant.SOURCE_DOWN);//状态改为:下架
+        if (CargoConstant.SOURCE_UP.equalsIgnoreCase(cargo.getStatus())) {//针对报价中的货源,取消发布
+            cargo.setStatus(CargoConstant.SOURCE_DRAFT);//状态改为:草稿
             cargoDao.updateAudit(cargo);
             //TODO:是否删除推送记录和报价信息
         }
