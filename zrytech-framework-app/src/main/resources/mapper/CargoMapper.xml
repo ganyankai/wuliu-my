@@ -440,19 +440,21 @@
             </if>
         </trim>
     </insert>-->
-    <insert id="invitationOffer" parameterType="java.util.List" useGeneratedKeys="true">
+    <insert id="invitationOffer" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert into cargo_matter
         (cargo_id,
         car_ownner_id,
-        status
+        status,
+        create_by
         )
         values
         <foreach collection="list" item="item" index="index"
                  separator=",">
             (
-            #{cargoId},
-            #{item},
-            #{status}
+            #{item.cargoId},
+            #{item.carOwnnerId},
+            #{status},
+            #{item.createBy}
             )
         </foreach>
     </insert>

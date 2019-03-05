@@ -2,6 +2,7 @@ package com.zrytech.framework.app.mapper;
 
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.entity.Cargo;
+import com.zrytech.framework.app.entity.Offer;
 import com.zrytech.framework.base.entity.Page;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,5 +24,5 @@ public interface CargoMapper {
 
     int deleteSource(Integer id);
 
-    int invitationOffer(@Param("cargoId") Integer id,@Param("list") List<Integer> carIds,@Param("status") String status);
+    int invitationOffer(@Param("list") List<Offer> offerList, @Param("status") String status);
 }

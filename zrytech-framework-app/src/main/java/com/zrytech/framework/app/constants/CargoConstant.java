@@ -199,12 +199,16 @@ public class CargoConstant {
      */
     public static final String OFFER_STATUS="offer_status";
 
-    /**offer_process - 应标中*/
+    /**offer_process - 应标中(报价中)*/
     public static final String OFFER_PROCESS = "offer_process";
     /**offer_promissed - 中标*/
     public static final String OFFER_PROMISSED = "offer_promissed";
     /**offer_draft - 淘汰(草稿)*/
     public static final String OFFER_DRAFT = "offer_draft";
+    /**offer_refuse - 拒绝(拒绝)*/
+    public static final String OFFER_REFUSE = "offer_refuse";
+    /**offer_canceled - 已取消(取消)*/
+    public static final String OFFER_CANCELED = "offer_canceled";
 
     /**
      *loading_status:装货/卸货状态

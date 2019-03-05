@@ -158,8 +158,7 @@ public class CargoController {
     @PostMapping("/invitationOffer")
     @ApiOperation(value = "邀请报价")
     public ServerResponse invitationOffer(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null
-                || requestParams.getParams().getId() == null) {
+        if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoService.invitationOffer(requestParams.getParams());

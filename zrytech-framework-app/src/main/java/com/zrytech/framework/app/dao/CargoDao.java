@@ -2,6 +2,7 @@ package com.zrytech.framework.app.dao;
 
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.entity.Cargo;
+import com.zrytech.framework.app.entity.Offer;
 import com.zrytech.framework.base.entity.Page;
 
 import java.util.Date;
@@ -22,6 +23,6 @@ public interface CargoDao {
 
     int deleteSource(Integer id);
 
-    int invitationOffer(Integer id, List<Integer> carIds,String status);
+    int invitationOffer(List<Offer> offerList, String status);
 
 }

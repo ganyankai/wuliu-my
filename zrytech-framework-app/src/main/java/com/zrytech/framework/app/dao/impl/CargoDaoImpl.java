@@ -3,6 +3,7 @@ package com.zrytech.framework.app.dao.impl;
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.dao.CargoDao;
 import com.zrytech.framework.app.entity.Cargo;
+import com.zrytech.framework.app.entity.Offer;
 import com.zrytech.framework.app.mapper.CargoMapper;
 import com.zrytech.framework.base.entity.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class CargoDaoImpl implements CargoDao {
     }
 
     @Override
-    public int invitationOffer(Integer id, List<Integer> carIds,String status) {
-        return cargoMapper.invitationOffer(id,carIds,status);
+    public int invitationOffer(List<Offer> offerList, String status) {
+        return cargoMapper.invitationOffer(offerList,status);
     }
 }

@@ -47,11 +47,10 @@ public class CargoServiceImpl implements CargoService {
     @Autowired
     private ShipperDao shipperDao;
 
-    @Autowired private CargoRepository cargoRepository;
-    
-    
-    
-    
+    @Autowired
+    private CargoRepository cargoRepository;
+
+
     /**
      * Desintion:货源分页列表信息
      *
@@ -177,7 +176,7 @@ public class CargoServiceImpl implements CargoService {
             //批量添加卸货地址
             loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE, cargo.getId());
         }
-        if (certification !=null &&certification.getAvoidAudit() !=null && certification.getAvoidAudit()) {//ture表示是免审核用户;则货源无需经过后台审核直接推送
+        if (certification != null && certification.getAvoidAudit() != null && certification.getAvoidAudit()) {//ture表示是免审核用户;则货源无需经过后台审核直接推送
             cargo.setId(cargo.getId());
             pushGoodSource(cargo);
         }
@@ -211,12 +210,12 @@ public class CargoServiceImpl implements CargoService {
         List<Loading> loadings = loadingDao.selectLoadingList(cargoId, CargoConstant.LOADING_TYPE);
         List<Loading> unloadings = loadingDao.selectLoadingList(cargoId, CargoConstant.UNLOADING_TYPE);
         //批量操作
-        List<Loading> updateList=new ArrayList<>();
+        List<Loading> updateList = new ArrayList<>();
         List<Integer> deleteIds = new ArrayList<>();
         List<Loading> batchAdds = new ArrayList<>();
         List<Integer> ids = new ArrayList<>();
-        getLoadList(loadingList, batchAdds, ids,updateList,CargoConstant.LOADING_TYPE);
-        getLoadList(unloadingList, batchAdds, ids,updateList, CargoConstant.UNLOADING_TYPE);
+        getLoadList(loadingList, batchAdds, ids, updateList, CargoConstant.LOADING_TYPE);
+        getLoadList(unloadingList, batchAdds, ids, updateList, CargoConstant.UNLOADING_TYPE);
         getDeleteList(loadings, ids, deleteIds);
         getDeleteList(unloadings, ids, deleteIds);
         if (deleteIds != null && deleteIds.size() > 0) { //批量删除
@@ -225,12 +224,12 @@ public class CargoServiceImpl implements CargoService {
         if (batchAdds != null && batchAdds.size() > 0) { //批量添加
             loadingDao.batchAdds(batchAdds, cargoId);
         }
-        if(updateList !=null&& updateList.size()>0){//批量修改
+        if (updateList != null && updateList.size() > 0) {//批量修改
             loadingDao.batchUpdate(updateList);
         }
     }
 
-    public void getLoadList(List<Loading> list, List<Loading> batchAdds, List<Integer> ids, List<Loading> updateList,String type) {
+    public void getLoadList(List<Loading> list, List<Loading> batchAdds, List<Integer> ids, List<Loading> updateList, String type) {
         if (list != null && list.size() > 0) {
             for (Loading loading : list) {
                 if (loading.getId() == null) {
@@ -287,11 +286,31 @@ public class CargoServiceImpl implements CargoService {
      */
     @Override
     public ServerResponse invitationOffer(CargoDto cargoDto) {
-        CheckFieldUtils.checkObjecField(cargoDto.getId());
+        CheckFieldUtils.checkObjecField(cargoDto.getCargoIds());
         CheckFieldUtils.checkObjecField(cargoDto.getCarIds());
-        int num = cargoDao.invitationOffer(cargoDto.getId(), cargoDto.getCarIds(), CargoConstant.OFFER_PROCESS);
-        CheckFieldUtils.assertSuccess(num);
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        List<Offer> offerList = getOfferList(cargoDto.getCargoIds(), cargoDto.getCarIds(), sysCustomer.getId());
+        if(offerList !=null&& offerList.size()>0) {
+            int num = cargoDao.invitationOffer(offerList, CargoConstant.OFFER_PROCESS);
+            CheckFieldUtils.assertSuccess(num);
+        }
         return ServerResponse.success();
+    }
+
+    public List<Offer> getOfferList(List<Integer> cargoIds, List<Integer> carIds, Integer createBy) {
+        List<Offer> offerList = new ArrayList<>();
+        for (Integer cargoId : cargoIds) {
+            for (Integer carId : carIds) {
+                Offer offer = new Offer();
+                offer.setCreateBy(createBy);
+                offer.setCargoId(cargoId);
+                offer.setCarOwnnerId(carId);
+                if(!offerList.contains(offer)){
+                    offerList.add(offer);
+                }
+            }
+        }
+        return offerList;
     }
 
     /**
@@ -319,28 +338,28 @@ public class CargoServiceImpl implements CargoService {
     @Override
     public ServerResponse cancelResource(CargoDto cargoDto) {
         Cargo cargo = cargoDao.get(cargoDto.getId());
-        if(CargoConstant.SOURCE_ONGOING.equalsIgnoreCase(cargo.getStatus())){//针对报价中的货源,取消发布
+        if (CargoConstant.SOURCE_ONGOING.equalsIgnoreCase(cargo.getStatus())) {//针对报价中的货源,取消发布
             cargo.setStatus(CargoConstant.SOURCE_DOWN);//状态改为:下架
             cargoDao.updateAudit(cargo);
             //TODO:是否删除推送记录和报价信息
         }
         return ServerResponse.success();
     }
-    
-    
+
+
     /**
      * 断言货源可用
-     * @author cat
-     * 
-     * @param cargoId	货源Id
+     *
+     * @param cargoId 货源Id
      * @return
+     * @author cat
      */
     @Override
     public Cargo assertCargoAvailable(Integer cargoId) {
-    	Cargo cargo = cargoRepository.findOne(cargoId);
-		if(cargo == null) {
-			throw new BusinessException(112, "货源不存在");
-		}
-		return cargo;
+        Cargo cargo = cargoRepository.findOne(cargoId);
+        if (cargo == null) {
+            throw new BusinessException(112, "货源不存在");
+        }
+        return cargo;
     }
 }
