@@ -24,7 +24,7 @@
     "startDate":"",      //(选传)(string) 运单开始时间
     "endDate":"",      //(选传)(string) 运单结束时间
     "name":23,      //(选传)(string) 司机姓名
-    "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
+    "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
     "organizeName":""      //(选传)(string) 车主公司
     "startPlace":"",  //(选传)(string)提货地
     "endPlace":""     //(选传)(string)到货地
@@ -62,8 +62,8 @@
        "payWay":"",//付款类型;货到付款(arrival_pay);尾款(tail_pay);首付(first_pay)
        "weightUnit": ,//重量单位;ton(吨);rise(升)
        "weightUnitCN": ,//重量单位;ton(吨);rise(升)
-       "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
-       "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
+       "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
+       "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
        "createDate": "2018-01-10", //创建日期
        "proofImgs":"",//收货凭证
        "waybillDetails":[     //订单详情
@@ -205,8 +205,8 @@
        "payWay":"",//付款类型;货到付款(arrival_pay);尾款(tail_pay);首付(first_pay)
        "weightUnit": ,//重量单位;ton(吨);rise(升)
        "weightUnitCN": ,//重量单位;ton(吨);rise(升)
-       "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
-       "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_paied);6:已支付待评价(is_evaluation);7:已完成(completed)
+       "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
+       "statusCN":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
        "createDate": "2018-01-10", //创建日期
        "waybillDetails":[     //订单详情
          {

@@ -268,10 +268,10 @@ public class WaybillServiceImpl implements WaybillService {
                     map.put(CargoConstant.AWAIT_LOADING, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
                 } else if (arr[0].equalsIgnoreCase(CargoConstant.AWAIT_ACCEPT)) {
                     map.put(CargoConstant.AWAIT_ACCEPT, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
-                } else if (arr[0].equalsIgnoreCase(CargoConstant.SIGN_PAIED)) {
-                    map.put(CargoConstant.SIGN_PAIED, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
-                } else if (arr[0].equalsIgnoreCase(CargoConstant.IS_EVALUATION)) {
-                    map.put(CargoConstant.IS_EVALUATION, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.SIGN_PAY)) {
+                    map.put(CargoConstant.SIGN_PAY, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
+                } else if (arr[0].equalsIgnoreCase(CargoConstant.PAIED_EVALUATION)) {
+                    map.put(CargoConstant.PAIED_EVALUATION, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
                 } else {
                     map.put(CargoConstant.COMPLETED, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
                 }
@@ -281,8 +281,8 @@ public class WaybillServiceImpl implements WaybillService {
             map.put(CargoConstant.AWAIT_DETERMINE, 0);
             map.put(CargoConstant.AWAIT_LOADING, 0);
             map.put(CargoConstant.AWAIT_ACCEPT, 0);
-            map.put(CargoConstant.SIGN_PAIED, 0);
-            map.put(CargoConstant.IS_EVALUATION, 0);
+            map.put(CargoConstant.SIGN_PAY, 0);
+            map.put(CargoConstant.PAIED_EVALUATION, 0);
             map.put(CargoConstant.COMPLETED, 0);
         }
         return map;

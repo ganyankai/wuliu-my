@@ -9,165 +9,107 @@ public class CargoConstant {
 
     /**
      * cargo_status:资料认证状态;
-     */
+     * */
     public static final String CARGO_STATUS = "cargo_status";
 
-    /**
-     * audit_process:认证中
-     */
+    /**audit_process:认证中*/
     public static final String AUDIT_PROCESS = "audit_process";
-
-    /**
-     * audit_refuse:认证被拒绝
-     */
+    /**audit_refuse:认证被拒绝*/
     public static final String AUDIT_REFUSE = "audit_refuse";
-
-    /**
-     * audit_pass:认证通过
-     */
+    /**audit_pass:认证通过*/
     public static final String AUDIT_PASS = "audit_pass";
 
 
     /**
      * cargo_certification_type:客户认证资料类型;
-     */
+     * */
     public static final String CARGO_CUSTOMER_TYPE = "cargo_certification_type";
 
-
-    /**
-     * certification_organize:企业认证
-     */
+    /**certification_organize:企业认证*/
     public static final String CERTIFICATION_ORGANIZE = "certification_organize";
-
-    /**
-     * certification_person:个人认证
-     */
+    /**certification_person:个人认证*/
     public static final String CERTIFICATION_PERSON = "certification_person";
 
 
     /**
      * customer_type:客户类型;
-     */
+     * */
     public static final String CUSTOMER_TYPE = "customer_type";
 
-
-    /**
-     * customer_cargo:货主
-     */
+    /**customer_cargo:货主*/
     public static final String CUSTOMER_CARGO = "customer_cargo";
-
-    /**
-     * customer_car_owner:车主
-     */
+    /**customer_car_owner:车主;*/
     public static final String CUSTOMER_CAR_OWNER = "customer_car_owner";
+
 
     /**
      * cargo_goods_status:货源状态;
-     */
+     * */
     public static final String CARGO_GOODS_STATUS = "cargo_goods_status";
 
     /**source_draft:草稿;*/
     public static final String SOURCE_DRAFT = "source_draft";
-
     /**wait_audit:审核中;*/
     public static final String WAIT_AUDIT = "wait_audit";
-
     /**source_refuse:审核拒绝 */
     public static final String SOURCE_REFUSE = "source_refuse";
-
     /**source_up:竞标中(上架);*/
     public static final String SOURCE_UP = "source_up";
-
     /**source_expired:已过期;*/
     public static final String SOURCE_EXPIRED = "source_expired";
-
     /**source_winning:中标;(中标)*/
     public static final String SOURCE_WINNING = "source_winning";
+    /**source_winning:已完成;*/
+    public static final String SOURCE_COMPLETE = "source_complete";
+
 
     /**
      * Loading_unloading_type:装卸类型;
-     */
+     * */
     public static final String loading_unloading_type = "Loading_unloading_type";
 
-
-    /**
-     * loading_type:装货;
-     */
+    /**loading_type:装货;*/
     public static final String LOADING_TYPE = "loading_type";
-
-    /**
-     * unloading_type:卸货;
-     */
+    /**unloading_type:卸货;*/
     public static final String UNLOADING_TYPE = "unloading_type";
 
 
     /**
      * push_mark_way:发标方式;
-     */
+     * */
     public static final String PUSH_MARK_WAY = "push_mark_way";
 
-
-    /**
-     * tender_mark:招标;
-     */
+    /**tender_mark:招标;*/
     public static final String TENDER_MARK = "tender_mark";
-
-    /**
-     * tender_mark:抢标;
-     */
+    /**tender_mark:抢标;*/
     public static final String BID_MARK = "bid_mark";
+
 
     /**
      * waybill_status:运单状态
-     *
      * */
     public static final String WAYBILL_STATUS="waybill_status";
 
-    /**
-     * await_generate:待生成运单
-     *
-     * */
+    /**await_generate:待生成运单*/
     public static final String AWAIT_GENERATE="await_generate";
-
-    /**
-     * await_determine:待确定运单
-     *
-     * */
+    /**await_determine:待确定运单*/
     public static final String AWAIT_DETERMINE="await_determine";
-
-    /**
-     * await_loading:待装货运单
-     *
-     * */
+    /**await_loading:待装货运单*/
     public static final String AWAIT_LOADING="await_loading";
-
-    /**
-     * await_accept:待收货运单
-     *
-     * */
+    /**await_accept:待收货运单*/
     public static final String AWAIT_ACCEPT="await_accept";
-    /**
-     * sign_paied:已签收待支付运单
-     *
-     * */
-    public static final String SIGN_PAIED="sign_paied";
-
-    /**
-     * is_evaluation:已支付待评价运单
-     *
-     * */
-    public static final String IS_EVALUATION="is_evaluation";
-
-    /**
-     * completed:已完成运单
-     *
-     * */
+    /**sign_paied:已签收待支付运单*/
+    public static final String SIGN_PAY="sign_pay";
+    /**is_evaluation:已支付待评价运单*/
+    public static final String PAIED_EVALUATION="paied_evaluation";
+    /**completed:已完成运单*/
     public static final String COMPLETED="completed";
-
+    /**cancelled:已取消运单*/
+    public static final String CANCELLED="cancelled";
 
     /**
      * message_type：消息类型
-     */
+     * */
     public static final String MESSAGE_TYPE="message_type";
 
     /**消息类型 - 系统消息*/
@@ -261,5 +203,18 @@ public class CargoConstant {
     public static final String TAIL_PAY = "tail_pay";
     /**first_pay -首付*/
     public static final String FIRST_PAY = "first_pay";
+
+    /**
+     *flow_status:运单项状态(运单详情:flow_name)
+     */
+    public static final String FLOW_STATUS="flow_status";
+    /**flow_await -待装货*/
+    public static final String FLOW_AWAIT = "flow_await";
+    /**flow_loaded -装货完成*/
+    public static final String FLOW_LOADED = "flow_loaded";
+    /**flow_ongoing -运输中*/
+    public static final String FLOW_ONGOING = "flow_ongoing";
+    /**flow_completed -已完成*/
+    public static final String FLOW_COMPLETED = "flow_completed";
 }
 
