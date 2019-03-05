@@ -2,8 +2,8 @@ package com.zrytech.framework.app.mapper;
 
 import java.util.List;
 
-import com.zrytech.framework.app.dto.CarPersonPageDto;
 import com.zrytech.framework.app.dto.carperson.CarOwnerCarPersonPageDto;
+import com.zrytech.framework.app.dto.carperson.CarPersonPageDto;
 import com.zrytech.framework.app.entity.CarPerson;
 
 public interface CarPersonMapper {

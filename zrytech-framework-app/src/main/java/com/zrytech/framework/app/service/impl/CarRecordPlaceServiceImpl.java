@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.repository.CarRecordPlaceRepository;
 import com.zrytech.framework.app.dto.CarRecordPlaceAddDto;
-import com.zrytech.framework.app.dto.CarRecordPlacePageDto;
+import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlacePageDto;
 import com.zrytech.framework.app.entity.CarRecordPlace;
 import com.zrytech.framework.app.service.CarRecordPlaceService;
 

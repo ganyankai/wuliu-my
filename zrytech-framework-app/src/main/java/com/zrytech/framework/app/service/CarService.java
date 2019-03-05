@@ -2,15 +2,15 @@ package com.zrytech.framework.app.service;
 
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.dto.CarAddDto;
-import com.zrytech.framework.app.dto.CarCheckUpdateDto;
-import com.zrytech.framework.app.dto.CarNoCheckUpdateDto;
-import com.zrytech.framework.app.dto.CarPageDto;
 import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.car.CarAddDto;
+import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
+import com.zrytech.framework.app.dto.car.CarNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.car.CarOwnerCarPageDto;
+import com.zrytech.framework.app.dto.car.CarPageDto;
 import com.zrytech.framework.app.entity.Car;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;

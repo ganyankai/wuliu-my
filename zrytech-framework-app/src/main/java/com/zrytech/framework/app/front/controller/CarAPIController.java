@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zrytech.framework.app.dto.CarAddDto;
-import com.zrytech.framework.app.dto.CarCheckUpdateDto;
-import com.zrytech.framework.app.dto.CarNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.car.CarAddDto;
+import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
+import com.zrytech.framework.app.dto.car.CarNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.car.CarOwnerCarPageDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarService;

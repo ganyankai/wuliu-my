@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.repository.BillLocationRepository;
-import com.zrytech.framework.app.dto.BillLocationPageDto;
+import com.zrytech.framework.app.dto.billlocation.BillLocationPageDto;
 import com.zrytech.framework.app.entity.BillLocation;
 import com.zrytech.framework.app.service.BillLocationService;
 import com.zrytech.framework.base.exception.BusinessException;

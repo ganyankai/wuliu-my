@@ -1,4 +1,4 @@
-package com.zrytech.framework.app.dto;
+package com.zrytech.framework.app.dto.car;
 
 import javax.validation.constraints.NotNull;
 

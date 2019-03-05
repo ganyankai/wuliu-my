@@ -1,4 +1,4 @@
-package com.zrytech.framework.app.dto;
+package com.zrytech.framework.app.dto.carrecordplace;
 
 import lombok.Getter;
 import lombok.Setter;
