@@ -18,6 +18,7 @@
     <result column="is_delete" property="isDelete" jdbcType="BIT" />
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="car_owner_id" property="carOwnerId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, car_no, car_load, car_unit, car_type, driver_id, supercargo_id, current_longitude, 
@@ -252,7 +253,7 @@
   </select>
   
   <!-- 车主查询车辆分页 -->
-  <select id="carOwnerCarPage" parameterType="Object" resultMap="BaseResultMap">
+  <select id="carOwnerSelectSelective" parameterType="Object" resultMap="BaseResultMap">
   	select * from `car` where `car_owner_id` = #{carOwnerId} and `is_delete` = false
   	<if test="record.carNo != null and record.carNo != ''">
   		and `car_no` like CONCAT('%', #{record.carNo}, '%')

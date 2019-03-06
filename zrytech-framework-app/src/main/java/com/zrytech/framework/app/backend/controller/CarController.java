@@ -12,9 +12,9 @@ import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.car.CarPageDto;
 import com.zrytech.framework.app.service.CarService;
-import com.zrytech.framework.base.annotation.CurrentUser;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
 
 /**
@@ -40,8 +40,8 @@ public class CarController {
 	 */
 	@Valid
 	@RequestMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result,
-			@CurrentUser User user) {
+	public ServerResponse page(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
 		return carService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
 				requestParams.getPage().getPageSize());
 	}
@@ -57,8 +57,8 @@ public class CarController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
-			@CurrentUser User user) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
 		return carService.details(requestParams.getParams().getId());
 	}
 
@@ -73,8 +73,8 @@ public class CarController {
 	 */
 	@Valid
 	@RequestMapping("/check")
-	public ServerResponse check(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result,
-			@CurrentUser User user) {
+	public ServerResponse check(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
 		return carService.check(requestParams.getParams(), user);
 	}
 	
