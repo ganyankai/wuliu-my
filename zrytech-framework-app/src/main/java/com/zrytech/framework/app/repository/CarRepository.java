@@ -1,5 +1,7 @@
 package com.zrytech.framework.app.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +39,10 @@ public interface CarRepository extends JpaRepository<Car, Integer>{
 	@Modifying
 	@Query("update Car set isDelete = true where id = ?1")
 	int deleteCarById(Integer id);
+	
+	Car findByIdAndIsDeleteAndCarOwnerId(Integer id, Boolean isDelete, Integer carOwnerId);
+	
+	List<Car> findByCarNo(String carNo);
 	
 	
 }

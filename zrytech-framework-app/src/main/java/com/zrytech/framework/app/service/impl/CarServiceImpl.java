@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.repository.ApproveLogRepository;
@@ -17,7 +16,6 @@ import com.zrytech.framework.app.repository.CarRepository;
 import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarConstants;
-import com.zrytech.framework.app.constants.CarPersonConstants;
 import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
@@ -202,7 +200,7 @@ public class CarServiceImpl implements CarService {
 	 * @param id 车辆Id
 	 * @return
 	 */
-	public Car assertCarExist(Integer id) {
+	private Car assertCarExist(Integer id) {
 		Car car = carRepository.findOne(id);
 		if(car == null) {
 			throw new BusinessException(112, "车辆不存在");
@@ -218,18 +216,42 @@ public class CarServiceImpl implements CarService {
 	 * @param car 车辆
 	 * @return
 	 */
-	public void assertCarNotDelete(Car car) {
+	private void assertCarNotDelete(Car car) {
 		if(car.getIsDelete()){
 			throw new BusinessException(112, "车辆不存在");
 		}
 	}
 	
 	
+	/**
+	 * 断言车辆可用（数据库存在数据且未删除）
+	 * @author cat
+	 * 
+	 * @param carId	车辆Id
+	 * @return	车辆
+	 */
+	@Override
+	public Car assertCarAvailable(Integer carId) {
+		Car car = this.assertCarExist(carId);
+		this.assertCarNotDelete(car);
+		return car;
+	}
+	
+	
+	
+	@Override
+	public Car assertCarBelongToCurrentUser(Integer carId, Integer carOwnerId) {
+		Car car = carRepository.findByIdAndIsDeleteAndCarOwnerId(carId, false, carOwnerId);
+		if(car == null) {
+			throw new BusinessException(112, "车辆不存在");
+		}
+		return car;
+	}
+	
 	/*以下为车主及车主子账号接口*/
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	// TODO 搜索条件，返回结果有待完善
 	/**
 	 * 车辆分页（车主或者车主子账号）
 	 * @author cat
@@ -257,9 +279,8 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	
-	// TODO 返回结果有待完善
 	/**
-	 * 车辆详情（车主或者车主子账号）
+	 * 车主或者车主子账号 - 车辆详情
 	 * @author cat
 	 * 
 	 * @param dto	车辆Id
@@ -268,9 +289,7 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse details(DetailsDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		Car car = this.assertCarAvailable(dto.getId());
-		this.assertCarBelongToCurrentUser(dto.getId(), carOwner.getId());
+		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		car = bindingCarOwner(car); // 车主
 		car = bindingDriver(car); // 司机
 		car = bindingSupercargo(car); // 压货人
@@ -279,22 +298,23 @@ public class CarServiceImpl implements CarService {
 	
 	
 	/**
-	 * 根据车牌号查询车辆
+	 * 断言车牌号未被使用
 	 * @author cat
 	 * 
 	 * @param carNo	车牌号，参数不能为空
-	 * @return
 	 */
-	private List<Car> findByCarNo(String carNo) {
-		Car car = new Car();
-		car.setCarNo(carNo);
-		Example<Car> example = Example.of(car);
-		return carRepository.findAll(example);
+	private void assertCarNoNotExist(String carNo) {
+		List<Car> list = carRepository.findByCarNo(carNo);
+		if(list != null) {
+			if(list.size() > 0) {
+				throw new BusinessException(112, "车牌号为[" + carNo + "]的车辆已存在");
+			}
+		}
 	}
 	
 	
 	/**
-	 * 添加车辆（车主或者车主子账号）
+	 * 车主或者车主子账号 - 添加车辆
 	 * @author cat
 	 * 
 	 * @param dto	要添加的车辆信息
@@ -302,12 +322,8 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse add(CarAddDto dto, Customer customer) {
-		// TODO 判断当前用户是否有权限添加车辆
 		// 车牌号全局唯一
-		List<Car> findByCarNo = this.findByCarNo(dto.getCarNo());
-		if(findByCarNo != null && findByCarNo.size() > 0) {
-			throw new BusinessException(112, "车牌号为[" + dto.getCarNo() + "]的车辆已存在");
-		}
+		this.assertCarNoNotExist(dto.getCarNo());
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		Car car = new Car();
 		BeanUtils.copyProperties(dto, car);
@@ -326,7 +342,7 @@ public class CarServiceImpl implements CarService {
 
 	
 	/**
-	 * 修改车辆不需要审核的内容（车主或者车主子账号）
+	 * 车主或者车主子账号 - 修改车辆不需要审核的内容
 	 * @author cat
 	 * 
 	 * @param dto	车辆不需要审核的内容
@@ -335,14 +351,9 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse updateNoCheck(CarNoCheckUpdateDto dto, Customer customer) {
-		// TODO 验证当前用户是否有权限修改数据
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		Integer carOwnerId = carOwner.getId();
-		
-		Integer carId = dto.getId();
-		Car car = this.assertCarAvailable(carId);
-		this.assertCarBelongToCurrentUser(carId, customer.getCarOwner().getId());
-		
+		Car car = this.assertCarBelongToCurrentUser(dto.getId(), carOwnerId);
 		// 司机压货人检验
 		if(dto.getDriverId() != null) {
 			carPersonService.assertDriverBelongToCurrentUser(dto.getDriverId(), carOwnerId);
@@ -350,7 +361,6 @@ public class CarServiceImpl implements CarService {
 		if(dto.getSupercargoId() != null) {
 			carPersonService.assertSupercargoBelongToCurrentUser(dto.getSupercargoId(), carOwnerId);
 		}
-		
 		BeanUtils.copyProperties(dto, car);
 		carRepository.save(car);
 		return ServerResponse.successWithData("修改成功");
@@ -358,8 +368,7 @@ public class CarServiceImpl implements CarService {
 	
 	
 	/**
-	 * 修改车辆需要审核的内容（车主或者车主子账号）
-	 * <p>更新需审核内容时，状态改为下架</p>
+	 * 车主或者车主子账号 - 修改车辆需要审核的内容
 	 * @author cat
 	 * 
 	 * @param dto	车辆需要审核的内容
@@ -368,20 +377,20 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse updateCheck(CarCheckUpdateDto dto, Customer customer) {
-		Car car = this.assertCarExist(dto.getId());
-		this.assertCarNotDelete(car);
-		this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
-		// TODO 验证当前用户是否有权限修改数据
-		
+		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		BeanUtils.copyProperties(dto, car);
-		car.setStatus(CarConstants.CAR_STATUS_DOWN);
+		if(customer.getCarOwner().getAvoidAudit()) { // 免审核
+			// car.setStatus(CarConstants.CAR_STATUS_DOWN); 保留原状态
+		}else {
+			car.setStatus(CarConstants.CAR_STATUS_WAIT_CHECK);
+		}
 		carRepository.save(car);
 		return ServerResponse.successWithData("修改成功");
 	}
 	
 	
 	/**
-	 * 删除车辆（车主或者车主子账号）
+	 * 车主或者车主子账号 - 删除车辆
 	 * @author cat
 	 * 
 	 * @param dto	待删除的车辆Id
@@ -390,8 +399,6 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse delete(DeleteDto dto, Customer customer) {
-		// TODO 验证当前用户是否有权限删除车辆
-		this.assertCarAvailable(dto.getId());
 		this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		// TODO 判断当前车辆是否可以删除（暂未确认哪些条件下车辆可以删除）
 		// TODO 车辆删除日志（暂未确认是否需要日志）
@@ -401,7 +408,7 @@ public class CarServiceImpl implements CarService {
 	
 	
 	/**
-	 * 提交审核（车主或者车主子账号）
+	 * 车主或者车主子账号 - 提交审核
 	 * <p>下架状态的车辆可以提交审核，将状态修改为待审核</p>
 	 * @author cat
 	 * 
@@ -411,46 +418,19 @@ public class CarServiceImpl implements CarService {
 	 */
 	@Override
 	public ServerResponse submitAudit(CommonDto dto, Customer customer) {
-		// TODO 验证当前用户是否有权限修改数据
 		Integer carId = dto.getId();
-		Car car = this.assertCarAvailable(carId);
-		this.assertCarBelongToCurrentUser(carId, customer.getCarOwner().getId());
+		Car car = this.assertCarBelongToCurrentUser(carId, customer.getCarOwner().getId());
 		if(!CarConstants.CAR_STATUS_DOWN.equalsIgnoreCase(car.getStatus())) {
 			throw new BusinessException(112, "提交审核失败：仅下架状态的车辆可以提交审核");
 		}
-		carRepository.updateStatusById(carId, CarConstants.CAR_STATUS_WAIT_CHECK);
+		if(customer.getCarOwner().getAvoidAudit()) { // 免审核
+			carRepository.updateStatusById(carId, CarConstants.CAR_STATUS_UP);
+		}else {
+			carRepository.updateStatusById(carId, CarConstants.CAR_STATUS_WAIT_CHECK);
+		}
 		return ServerResponse.successWithData("提交审核成功");
 	}
 	
 	
-	/**
-	 * 断言车辆可用
-	 * <p>数据库存在数据且未删除</p>
-	 * @author cat
-	 * 
-	 * @param carId	车辆Id
-	 * @return
-	 */
-	@Override
-	public Car assertCarAvailable(Integer carId) {
-		Car car = this.assertCarExist(carId);
-		this.assertCarNotDelete(car);
-		return car;
-	}
 	
-	
-	/**
-	 * 断言车辆属于当前登录车主
-	 * @author cat
-	 * 
-	 * @param carId	车辆Id
-	 * @param carOwnerId	车主Id
-	 */
-	@Override
-	public void assertCarBelongToCurrentUser(Integer carId, Integer carOwnerId) {
-		Car car = this.assertCarAvailable(carId);
-		if(!carOwnerId.equals(car.getCarOwnerId())) {
-			throw new BusinessException(112, "参数有误");
-		}
-	}
 }
