@@ -47,7 +47,7 @@ public class CarCargoOwnner {
 
     /**法人身份证号码*/
 	@Column(name = "`legaler_id_card_no`")
-	private Integer legalerIdCardNo;
+	private String legalerIdCardNo;
 
     /**法人身份证照片*/
 	@Column(name = "`legaler_id_card_front`")

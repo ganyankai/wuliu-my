@@ -25,7 +25,7 @@ public class WaybillDetailServiceImpl implements WaybillDetailService {
 	public WaybillDetail assertWaybillDetailExist(Integer waybillDetailId) {
         WaybillDetail waybillDetail = waybillDetailRepository.findOne(waybillDetailId);
         if (waybillDetail == null) {
-            throw new BusinessException(112, "删除失败：运单项不存在");
+            throw new BusinessException(112, "运单项不存在");
         }
         return waybillDetail;
 	}

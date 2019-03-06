@@ -29,5 +29,5 @@ public interface CarMapper {
      * @param record
      * @return
      */
-    List<Car> carOwnerCarPage(@Param("record") CarOwnerCarPageDto record, @Param("carOwnerId") Integer carOwnerId); 
+    List<Car> carOwnerSelectSelective(@Param("record") CarOwnerCarPageDto record, @Param("carOwnerId") Integer carOwnerId); 
 }
