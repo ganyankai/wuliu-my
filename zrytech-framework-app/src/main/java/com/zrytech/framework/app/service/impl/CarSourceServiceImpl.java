@@ -539,10 +539,10 @@ public class CarSourceServiceImpl implements CarSourceService {
 			Integer supercargoId = carSourceCarUpdateDto.getSupercargoId();
 			Integer carId = carSourceCarUpdateDto.getCarId();
 			if(driverId != null) {
-				carPersonService.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
+				carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
 			}
 			if(supercargoId != null) {
-				carPersonService.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+				carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
 			}
 			if(carId != null) {
 				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
@@ -564,10 +564,10 @@ public class CarSourceServiceImpl implements CarSourceService {
 			Integer supercargoId = carSourceCarAddDto.getSupercargoId();
 			Integer carId = carSourceCarAddDto.getCarId();
 			if(driverId != null) {
-				carPersonService.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
+				carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
 			}
 			if(supercargoId != null) {
-				carPersonService.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+				carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
 			}
 			if(carId != null) {
 				carService.assertCarBelongToCurrentUser(carId, carOwnerId);

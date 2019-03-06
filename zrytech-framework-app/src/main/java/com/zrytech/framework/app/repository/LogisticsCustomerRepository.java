@@ -28,4 +28,7 @@ public interface LogisticsCustomerRepository extends JpaRepository<Customer, Int
 	@Query(value = "select userName from Customer where id = ?1")
 	String findUserNameById(Integer id);
 	
+	@Query(value = "select isActive from Customer where id = ?1")
+	Boolean findIsActiveById(Integer id);
+	
 }

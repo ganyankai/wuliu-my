@@ -345,12 +345,10 @@ public class CarServiceImpl implements CarService {
 		
 		// 司机压货人检验
 		if(dto.getDriverId() != null) {
-			carPersonService.assertCarPersonBelongToCurrentUser(dto.getDriverId(), carOwnerId,
-					CarPersonConstants.PERSON_TYPE_DRIVER);
+			carPersonService.assertDriverBelongToCurrentUser(dto.getDriverId(), carOwnerId);
 		}
 		if(dto.getSupercargoId() != null) {
-			carPersonService.assertCarPersonBelongToCurrentUser(dto.getSupercargoId(), carOwnerId,
-					CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+			carPersonService.assertSupercargoBelongToCurrentUser(dto.getSupercargoId(), carOwnerId);
 		}
 		
 		BeanUtils.copyProperties(dto, car);

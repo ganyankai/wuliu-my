@@ -1,37 +1,23 @@
 package com.zrytech.framework.app.dto.carperson;
 
+import javax.validation.constraints.Pattern;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 司机压货人分页的搜索条件（前端车主搜索条件）
+ * 司机压货人分页的搜索条件（前端车主搜索）
  */
 @Setter
 @Getter
 public class CarOwnerCarPersonPageDto {
 	
-	/**主键*/
-    private Integer id;
-	
-	/**姓名*/
-    private String name;
-
-	/**手机号*/
-    private String tel;
-	
 	/**类型*/
+	@Pattern(regexp = "^(driver)|(supercargo)$", message = "类型错误")
     private String personType;
 	
 	/**状态*/
+	@Pattern(regexp = "^(up)|(wait_check)|(down)$", message = "状态错误")
     private String status;
-	
-	/**删除标识*/
-    private Boolean isDelete;
-	
-	/**车主Id*/
-    private Integer createBy;
-    
-    /**车主企业名称*/
-    private String carOwnerName;
     
 }

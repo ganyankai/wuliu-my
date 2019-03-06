@@ -7,14 +7,14 @@ import lombok.Setter;
 
 
 /**
- * 司机与压货人启用禁用入参
+ * 司机启用禁用入参
  * @author cat
  */
 @Setter
 @Getter
 public class CarPersonEnabledDto {
 
-	/**司机或压货人Id*/
+	/**司机Id*/
 	@NotNull(message = "Id不能为空")
 	private Integer id;
 	

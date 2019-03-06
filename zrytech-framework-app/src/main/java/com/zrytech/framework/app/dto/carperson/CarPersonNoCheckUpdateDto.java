@@ -2,7 +2,7 @@ package com.zrytech.framework.app.dto.carperson;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class CarPersonNoCheckUpdateDto {
 	@NotNull(message = "Id不能为空")
 	private Integer id;
 	
-	@NotEmpty(message = "姓名不能为空")
+	@NotBlank(message = "姓名不能为空")
 	private String name;
 
 }
