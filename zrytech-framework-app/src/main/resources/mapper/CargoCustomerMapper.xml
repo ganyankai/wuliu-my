@@ -12,6 +12,7 @@
         <result column="create_by" property="createBy"/>
         <result column="create_date" property="createDate"/>
         <result column="password" property="pwd"/>
+        <result column="referees_tel" property="refereesTel"/>
         <association property="certification" javaType="com.zrytech.framework.app.entity.Certification">
             <id column="id" property="id"/>
             <result column="name" property="name"/>
@@ -39,11 +40,11 @@
     </resultMap>
 
     <sql id="baseColumn">
-       id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date
+       id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,referees_tel
     </sql>
 
     <sql id="pwdColumn">
-        id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password
+        id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password,referees_tel
     </sql>
 
     <sql id="cerColumn">
@@ -68,6 +69,9 @@
             </if>
             <if test="tel != null and tel !=''">
                 tel,
+            </if>
+            <if test="refereesTel != null and refereesTel !=''">
+                referees_tel,
             </if>
             <if test="name != null and name !=''">
                 user_name,
@@ -100,6 +104,9 @@
             </if>
             <if test="tel != null and tel !=''">
                 #{tel},
+            </if>
+            <if test="refereesTel != null and refereesTel !=''">
+                #{refereesTel},
             </if>
             <if test="name != null and name !=''">
                 #{name},

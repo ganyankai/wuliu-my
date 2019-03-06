@@ -28,15 +28,14 @@ public class CargoCustomer implements Serializable{
     @ApiModelProperty(value = "客户电话", required = false)
     private String tel;
 
+    @ApiModelProperty(value = "客户推荐人手机号", required = false)
+    private String refereesTel;
+
     @ApiModelProperty(value = "客户名称(冗余字段)", required = false)
     private String name;
 
     @ApiModelProperty(value = "客户logo", required = false)
-
     private String logo;
-
-    @ApiModelProperty(value = "客户推荐人Id", required = false)
-    private Integer referrer;
 
     @ApiModelProperty(value = "客户类型", required = false)
     private String customerType;

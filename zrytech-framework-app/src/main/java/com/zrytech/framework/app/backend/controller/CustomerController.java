@@ -108,11 +108,10 @@ public class CustomerController {
      * @Author:jxx
      * @return
      */
-    @PostMapping("/customer/savepassword")
+    @PostMapping("/font/savepassword")
     @ApiOperation(value = "修改密码")
     public ServerResponse savePassword(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
-        if(requestParams.getParams()==null||
-                requestParams.getParams().getId()==null){
+        if(requestParams.getParams()==null){
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoCustomerService.savePassword(requestParams.getParams());
@@ -124,11 +123,10 @@ public class CustomerController {
      * @Author:jxx
      * @return
      */
-    @PostMapping("/customer/updatePhone")
+    @PostMapping("/font/updatePhone")
     @ApiOperation(value = "修改手机号")
     public ServerResponse updatePhone(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
-        if(requestParams.getParams()==null||
-                requestParams.getParams().getId()==null){
+        if(requestParams.getParams()==null){
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoCustomerService.updatePhone(requestParams.getParams());

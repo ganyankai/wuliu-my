@@ -90,5 +90,5 @@ im:
     aliSecret: fa21535ec834fbc56e35a53c4e4a5f8d
 file:
   tmp:
-    dir: /home/zrytech/tmp
+    dir: /home/admin/tmp
 #    dir: D:\tmp

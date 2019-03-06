@@ -13,12 +13,12 @@ import java.util.Date;
 @Setter
 @Getter
 @ApiModel(value = "认证资料对象")
-public class Certification implements Serializable{
+public class Certification implements Serializable {
 
     private static final long serialVersionUID = -1555792098489335740L;
 
     @ApiModelProperty(value = "认证资料Id", required = false)
-    private Integer  id;
+    private Integer id;
 
     @ApiModelProperty(value = "企业名称", required = false)
     private String name;
@@ -95,4 +95,25 @@ public class Certification implements Serializable{
     @ApiModelProperty(value = "创建日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
+
+    @ApiModelProperty(value = "客户头像", required = false)
+    private Integer headImg;
+
+    @ApiModelProperty(value = "客户头像", required = false)
+    private String headImgUrl;
+
+    @ApiModelProperty(value = "客户性别", required = false)
+    private Integer gender;
+
+    @ApiModelProperty(value = "客户性别", required = false)
+    private String genderCN;
+
+    public String getGenderCN() {
+        if (gender != null && gender == 0) {
+            return "女";
+        } else if (gender != null && gender == 1) {
+            return "男";
+        }
+        return genderCN;
+    }
 }

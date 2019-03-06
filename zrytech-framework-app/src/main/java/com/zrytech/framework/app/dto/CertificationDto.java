@@ -85,4 +85,10 @@ public class CertificationDto implements Serializable {
 
     @ApiModelProperty(value = "描述", required = false)
     private String describe;
+
+    @ApiModelProperty(value = "客户头像", required = false)
+    private Integer headImg;
+
+    @ApiModelProperty(value = "客户性别", required = false)
+    private Integer gender;
 }

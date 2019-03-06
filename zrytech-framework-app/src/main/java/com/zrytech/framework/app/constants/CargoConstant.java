@@ -19,7 +19,6 @@ public class CargoConstant {
     /**audit_pass:认证通过*/
     public static final String AUDIT_PASS = "audit_pass";
 
-
     /**
      * cargo_certification_type:客户认证资料类型;
      * */

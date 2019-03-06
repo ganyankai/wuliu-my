@@ -24,11 +24,13 @@
         <result column="status" property="status"/>
         <result column="cusomer_id" property="cusomerId"/>
         <result column="create_date" property="createDate"/>
+        <result column="gender" property="gender"/>
+        <result column="head_img" property="headImg"/>
     </resultMap>
 
     <sql id="columns">
        id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,
-       province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date
+       province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date,gender,head_img
     </sql>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
@@ -97,6 +99,12 @@
             <if test="createDate != null">
                 create_date,
             </if>
+            <if test="headImg != null">
+                head_img,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
         </trim>
 
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -162,6 +170,12 @@
             </if>
             <if test="createDate != null">
                 #{createDate},
+            </if>
+            <if test="headImg != null">
+                #{headImg},
+            </if>
+            <if test="gender != null">
+                #{gender},
             </if>
         </trim>
     </insert>

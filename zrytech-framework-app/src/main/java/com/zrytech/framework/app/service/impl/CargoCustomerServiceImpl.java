@@ -16,6 +16,8 @@ import com.zrytech.framework.app.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
+import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.common.entity.SysCustomer;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +51,18 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
      */
     @Override
     public ServerResponse register(CargoCustomerDto cargoCustomerDto) {
-        //字段非空校验
-        CheckFieldUtils.checkObjecField(cargoCustomerDto.getLoginCounter());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getLoginCounter());  //字段非空校验
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getTel());
-        CheckFieldUtils.checkObjecField(cargoCustomerDto.getPhoneCode());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getCode());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getPwd());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getConfirmPwd());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getCustomerType());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getRefereesTel());
         CargoCustomer cargoCustomer = BeanUtil.copy(cargoCustomerDto, CargoCustomer.class);
         //TODO:密码校验
+        if (!cargoCustomerDto.getPwd().equalsIgnoreCase(cargoCustomerDto.getConfirmPwd())) {
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PWD_NOT_SAME));
+        }
         //TODO:手机号去重校验和账号校验
         List<CargoCustomer> checkTelList = cargoCustomerDao.checkTelOrCount(cargoCustomer.getTel(), null);
         if (checkTelList != null && checkTelList.size() > 0) {
@@ -68,7 +75,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         cargoCustomer.setCreateBy(0);
         cargoCustomer.setCreateDate(new Date());
         cargoCustomer.setIsActive(false);
-        cargoCustomer.setPwd(PasswordUtils.encryptStringPassword(cargoCustomer.getPwd(),cargoCustomer.getLoginCounter()));
+        cargoCustomer.setPwd(PasswordUtils.encryptStringPassword(cargoCustomer.getPwd(), cargoCustomer.getLoginCounter()));
         //TODO:短信验证码校验
         int num = cargoCustomerDao.insertCustomer(cargoCustomer);
         CheckFieldUtils.assertSuccess(num);
@@ -86,12 +93,36 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
             certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         } else {
+            checkCertification(certification);
             certification.setStatus(CargoConstant.AUDIT_PROCESS);
             certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         }
         shipperDao.save(certification);
         return ServerResponse.success();
+    }
+
+    /**
+     * 个人认证或企业认证校验
+     */
+    public void checkCertification(Certification certification) {
+        if (certification.getCustomerType() != null && certification.getCustomerType().equalsIgnoreCase(CargoConstant.CERTIFICATION_PERSON)) {
+            CheckFieldUtils.checkObjecField(certification.getLegalerIdCardFront());  //字段非空校验
+            CheckFieldUtils.checkObjecField(certification.getHeadImg());
+            CheckFieldUtils.checkObjecField(certification.getLegalerName());
+            CheckFieldUtils.checkObjecField(certification.getGender());
+            CheckFieldUtils.checkObjecField(certification.getLegalerIdCardNo());
+        } else if (certification.getCustomerType() != null && certification.getCustomerType().equalsIgnoreCase(CargoConstant.CERTIFICATION_ORGANIZE)) {
+            CheckFieldUtils.checkObjecField(certification.getName());  //字段非空校验
+            CheckFieldUtils.checkObjecField(certification.getCreditCode());
+            CheckFieldUtils.checkObjecField(certification.getBusinessLicense());
+            CheckFieldUtils.checkObjecField(certification.getTel());
+            CheckFieldUtils.checkObjecField(certification.getLegalerName());
+            CheckFieldUtils.checkObjecField(certification.getLegalerIdCardNo());
+            CheckFieldUtils.checkObjecField(certification.getLatitude());
+            CheckFieldUtils.checkObjecField(certification.getLongitude());
+            CheckFieldUtils.checkObjecField(certification.getIntro());
+        }
     }
 
     /**
@@ -125,7 +156,8 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
      */
     @Override
     public ServerResponse forget(CargoCustomerDto cargoCustomerDto) {
-        CheckFieldUtils.checkObjecField(cargoCustomerDto.getPhoneCode());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getTel());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getCode());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getPwd());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getConfirmPwd());
         //TODO 短信验证码验证(手机号验证)
@@ -138,7 +170,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         if (cargo == null) {
             throw new BusinessException(new CommonResult(ResultEnum.CUSTOMER_NOT_EXIST));
         }
-        cargo.setPwd(PasswordUtils.encryptStringPassword(cargo.getPwd(), cargo.getLoginCounter()));
+        cargo.setPwd(PasswordUtils.encryptStringPassword(cargoCustomerDto.getPwd(), cargo.getLoginCounter()));
         int num = cargoCustomerDao.forget(cargo);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
@@ -153,11 +185,15 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
     @Override
     public ServerResponse savePassword(CargoCustomerDto cargoCustomerDto) {
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getPwd());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getTel());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getCode());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getConfirmPwd());
         if (!cargoCustomerDto.getPwd().equals(cargoCustomerDto.getConfirmPwd())) {
             throw new BusinessException(new CommonResult(ResultEnum.Not_AGREE));
         }
-        CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
+        //TODO:验证码验证
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        CargoCustomer cargoCustomer = cargoCustomerDao.id(sysCustomer.getId());
         if (cargoCustomer != null) {
             cargoCustomer.setPwd(PasswordUtils.encryptStringPassword(cargoCustomerDto.getPwd(), cargoCustomer.getLoginCounter()));
         }
@@ -174,14 +210,19 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
      */
     @Override
     public ServerResponse updatePhone(CargoCustomerDto cargoCustomerDto) {
-        CheckFieldUtils.checkObjecField(cargoCustomerDto.getPhoneCode());
+        CheckFieldUtils.checkObjecField(cargoCustomerDto.getCode());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getTel());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getPwd());
+        List<CargoCustomer> cargoCustomerList = cargoCustomerDao.checkTelOrCount(cargoCustomerDto.getTel(), null);
+        if(cargoCustomerList !=null&& cargoCustomerList.size()>0){
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PHONE_EXISTED));
+        }
         //TODO:短信验证码验证
-        CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
+        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
+        CargoCustomer cargoCustomer = cargoCustomerDao.id(sysCustomer.getId());
         String getPwd = PasswordUtils.encryptStringPassword(cargoCustomerDto.getPwd(), cargoCustomer.getLoginCounter());
         if (!getPwd.equals(cargoCustomer.getPwd())) {
-            throw new BusinessException(new CommonResult(ResultEnum.Not_AGREE));
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PWD_INPUT_ERROR));
         }
         cargoCustomer.setTel(cargoCustomerDto.getTel());
         int num = cargoCustomerDao.updatePhone(cargoCustomer);
