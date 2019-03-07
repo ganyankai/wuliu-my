@@ -97,13 +97,16 @@ public class Certification implements Serializable {
     private Date createDate;
 
     @ApiModelProperty(value = "客户头像", required = false)
-    private Integer headImg;
+    private String headImg;
 
     @ApiModelProperty(value = "客户头像", required = false)
     private String headImgUrl;
 
     @ApiModelProperty(value = "客户性别", required = false)
     private Integer gender;
+
+    @ApiModelProperty(value = "推荐人ID", required = false)
+    private Integer refereesId;
 
     @ApiModelProperty(value = "客户性别", required = false)
     private String genderCN;

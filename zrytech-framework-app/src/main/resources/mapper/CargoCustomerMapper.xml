@@ -12,7 +12,6 @@
         <result column="create_by" property="createBy"/>
         <result column="create_date" property="createDate"/>
         <result column="password" property="pwd"/>
-        <result column="referees_tel" property="refereesTel"/>
         <association property="certification" javaType="com.zrytech.framework.app.entity.Certification">
             <id column="id" property="id"/>
             <result column="name" property="name"/>
@@ -36,20 +35,23 @@
             <result column="status" property="status"/>
             <result column="cusomer_id" property="cusomerId"/>
             <result column="create_date" property="createDate"/>
+            <result column="head_img" property="headImg"/>
+            <result column="gender" property="gender"/>
+            <result column="referees_id" property="refereesId"/>
         </association>
     </resultMap>
 
     <sql id="baseColumn">
-       id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,referees_tel
+       id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date
     </sql>
 
     <sql id="pwdColumn">
-        id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password,referees_tel
+        id,user_account,tel,user_name,logo,customer_type,is_active,create_by,create_date,password
     </sql>
 
     <sql id="cerColumn">
-        id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,
-        province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date
+        id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,head_img,gender,
+        province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date,referees_id
     </sql>
 
     <insert id="insertCustomer" parameterType="com.zrytech.framework.app.entity.CargoCustomer">
@@ -69,9 +71,6 @@
             </if>
             <if test="tel != null and tel !=''">
                 tel,
-            </if>
-            <if test="refereesTel != null and refereesTel !=''">
-                referees_tel,
             </if>
             <if test="name != null and name !=''">
                 user_name,
@@ -104,9 +103,6 @@
             </if>
             <if test="tel != null and tel !=''">
                 #{tel},
-            </if>
-            <if test="refereesTel != null and refereesTel !=''">
-                #{refereesTel},
             </if>
             <if test="name != null and name !=''">
                 #{name},

@@ -19,7 +19,7 @@
   "params": 
 {
        "name":"",//(选传)(string) 企业名称
-       "legalerName": "张三" //(选传)(string) 法人姓名
+       "legalerName": "张三",//(选传)(string) 法人姓名
        "tel":"",//(选传)(string) 联系电话
        "status":""//(选传)(string) 状态
   },

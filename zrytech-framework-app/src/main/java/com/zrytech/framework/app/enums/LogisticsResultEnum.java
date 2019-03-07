@@ -8,6 +8,7 @@ public enum LogisticsResultEnum {
     CUSTOMER_UPDATEPERSON(131,"提交成功，请耐心等待平台审核!"),
     PRODUCT_ERROR(502, "产品名称不能相同!"),
     PHONE_EXISTED(148,"手机号码已存在"),
+    ReFerees_PERSON(116,"推荐人不存在"),
     PWD_NOT_SAME(114,"两次输入密码不一致"),
     PWD_INPUT_ERROR(115,"密码输入错误"),
     LOGIN_COUNTER_EXISTED(149,"用户名已存在"),

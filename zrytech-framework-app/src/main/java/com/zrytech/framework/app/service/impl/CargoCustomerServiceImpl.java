@@ -63,6 +63,10 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         if (!cargoCustomerDto.getPwd().equalsIgnoreCase(cargoCustomerDto.getConfirmPwd())) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PWD_NOT_SAME));
         }
+        List<CargoCustomer> refereesList = cargoCustomerDao.checkTelOrCount(cargoCustomerDto.getRefereesTel(), null);
+        if (refereesList != null || refereesList.size() == 0) {
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.ReFerees_PERSON));
+        }
         //TODO:手机号去重校验和账号校验
         List<CargoCustomer> checkTelList = cargoCustomerDao.checkTelOrCount(cargoCustomer.getTel(), null);
         if (checkTelList != null && checkTelList.size() > 0) {
@@ -89,11 +93,13 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         Certification certification = cargoCustomerDto.getCertificationData();
         if (certification == null) {
             certification = new Certification();
+            certification.setRefereesId(refereesList.get(0).getId());
             certification.setStatus(CargoConstant.AUDIT_PROCESS);
             certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         } else {
             checkCertification(certification);
+            certification.setRefereesId(refereesList.get(0).getId());
             certification.setStatus(CargoConstant.AUDIT_PROCESS);
             certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
@@ -214,7 +220,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getTel());
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getPwd());
         List<CargoCustomer> cargoCustomerList = cargoCustomerDao.checkTelOrCount(cargoCustomerDto.getTel(), null);
-        if(cargoCustomerList !=null&& cargoCustomerList.size()>0){
+        if (cargoCustomerList != null && cargoCustomerList.size() > 0) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PHONE_EXISTED));
         }
         //TODO:短信验证码验证

@@ -4,8 +4,8 @@ import com.zrytech.framework.app.dto.CargoCustomerDto;
 import com.zrytech.framework.app.dto.CertificationDto;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.entity.User;
 import com.zrytech.framework.common.entity.SysCustomer;
-import com.zrytech.framework.common.entity.User;
 
 public interface ShipperService {
 

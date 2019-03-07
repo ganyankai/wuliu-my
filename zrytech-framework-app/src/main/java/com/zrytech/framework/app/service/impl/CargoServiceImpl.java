@@ -154,7 +154,6 @@ public class CargoServiceImpl implements CargoService {
         CheckFieldUtils.checkObjecField(cargoDto.getName());
         CheckFieldUtils.checkObjecField(cargoDto.getQty());
         CheckFieldUtils.checkObjecField(cargoDto.getMatterPrice());
-        CheckFieldUtils.checkObjecField(cargoDto.getLine());
         CheckFieldUtils.checkObjecField(cargoDto.getStartCity());
         CheckFieldUtils.checkObjecField(cargoDto.getEndCity());
         //TODO:判断当前用户是否为免审核用户;如果是免审核则系统直接通过招标方式通知相应的车主
@@ -164,7 +163,7 @@ public class CargoServiceImpl implements CargoService {
         }
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargo.setCreateDate(new Date());
-        cargo.setStatus(CargoConstant.WAIT_AUDIT);
+        cargo.setStatus(CargoConstant.SOURCE_DRAFT);
         int num = cargoDao.pushSave(cargo);
         CheckFieldUtils.assertSuccess(num);
         List<Loading> loadingList = cargoDto.getMulShipmentList();

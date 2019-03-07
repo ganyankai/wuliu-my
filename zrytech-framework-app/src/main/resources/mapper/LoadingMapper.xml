@@ -36,7 +36,7 @@
                 and type=#{loadingType}
             </if>
         </trim>
-        ORDER BY end_date DESC
+        ORDER BY load_date DESC
     </select>
 
     <select id="get" resultMap="loading">

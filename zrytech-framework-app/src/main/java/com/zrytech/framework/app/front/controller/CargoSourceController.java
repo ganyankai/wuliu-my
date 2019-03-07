@@ -40,4 +40,21 @@ public class CargoSourceController {
         cargoDto.setCreateBy(sysCustomer.getId());
         return cargoService.mySourcePage(requestParams.getParams(), requestParams.getPage());
     }
+
+    /**
+     * Desintion:货源大厅分页列表信息
+     *
+     * @author:jiangxiaoxiang
+     * @param:CargoDto货源dto
+     * @return:ServerResponse
+     */
+    @PostMapping("/hallPage")
+    @ApiOperation(value = "货源大厅分页列表信息")
+    public ServerResponse hallPage(@RequestBody RequestParams<CargoDto> requestParams) {
+        CargoDto cargoDto = requestParams.getParams();
+        if (requestParams.getParams() == null) {
+            cargoDto = new CargoDto();
+        }
+        return cargoService.mySourcePage(requestParams.getParams(), requestParams.getPage());
+    }
 }

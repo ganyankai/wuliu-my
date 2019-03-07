@@ -7,10 +7,10 @@ import com.zrytech.framework.app.service.ShipperService;
 import com.zrytech.framework.base.annotation.CurrentUser;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.SysCustomer;
-import com.zrytech.framework.common.entity.User;
 import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
@@ -107,11 +107,12 @@ public class ShipperController {
      */
     @PostMapping("/certificationAudit")
     @ApiOperation(value = "认证资料审核")
-    public ServerResponse certificationAudit(@RequestBody RequestParams<CertificationDto> requestParams, @CurrentUser User user) {
+    public ServerResponse certificationAudit(@RequestBody RequestParams<CertificationDto> requestParams) {
         if (requestParams.getParams() == null ||
                 requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
+        User user=RequestUtil.getCurrentUser(User.class);
         return shipperService.certificationAudit(requestParams.getParams(), user);
     }
 

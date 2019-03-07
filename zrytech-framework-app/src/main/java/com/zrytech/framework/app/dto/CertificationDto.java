@@ -91,4 +91,7 @@ public class CertificationDto implements Serializable {
 
     @ApiModelProperty(value = "客户性别", required = false)
     private Integer gender;
+
+    @ApiModelProperty(value = "推荐人ID", required = false)
+    private Integer refereesId;
 }

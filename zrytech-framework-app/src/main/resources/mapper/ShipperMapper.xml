@@ -26,10 +26,11 @@
         <result column="create_date" property="createDate"/>
         <result column="gender" property="gender"/>
         <result column="head_img" property="headImg"/>
+        <result column="referees_id" property="refereesId"/>
     </resultMap>
 
     <sql id="columns">
-       id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,
+       id,name,credit_code,business_license,legaler_name,legaler_id_card_no,legaler_id_card_front,tel,longitude,latitude,referees_id,
        province,city,county,address_detail,intro,customer_type,avoid_audit,close_rate,favorable_level,status,cusomer_id,create_date,gender,head_img
     </sql>
 
@@ -105,6 +106,9 @@
             <if test="gender != null">
                 gender,
             </if>
+            <if test="refereesId != null">
+                referees_id,
+            </if>
         </trim>
 
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -176,6 +180,9 @@
             </if>
             <if test="gender != null">
                 #{gender},
+            </if>
+            <if test="refereesId != null">
+                #{refereesId},
             </if>
         </trim>
     </insert>
