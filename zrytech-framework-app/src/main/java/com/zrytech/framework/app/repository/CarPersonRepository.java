@@ -34,7 +34,7 @@ public interface CarPersonRepository extends JpaRepository<CarPerson, Integer>{
 	 */
 	@Modifying
 	@Query("update CarPerson set isDelete = true where id = ?1")
-	public int deleteCarById(Integer id);
+	public int deleteCarPersonById(Integer id);
 	
 	
 	/**
@@ -48,4 +48,8 @@ public interface CarPersonRepository extends JpaRepository<CarPerson, Integer>{
 	@Modifying
 	@Query("update CarPerson set status = ?2 where id = ?1")
 	public int updateStatusById(Integer id, String status);
+	
+	
+	CarPerson findByIdAndIsDeleteAndCarOwnerId(Integer id, Boolean isDelete, Integer carOwnerId);
+	
 }

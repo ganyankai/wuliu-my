@@ -21,15 +21,6 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public interface CarPersonService {
 	
-	/**
-	 * 断言司机压货人属于当前登录人车主
-	 * @author cat
-	 * 
-	 * @param carPersonId	司机压货人Id
-	 * @param carOwnerId	车主Id
-	 * @param personType	类型
-	 */
-	public void assertCarPersonBelongToCurrentUser(Integer carPersonId, Integer carOwnerId, String personType);
 	
 	/**
 	 * 断言司机压货人可用
@@ -62,5 +53,9 @@ public interface CarPersonService {
 	public ServerResponse updateCheck(CarPersonCheckUpdateDto dto, Customer customer);
 	
 	public ServerResponse submitAudit(CommonDto dto, Customer customer);
+	
+	public CarPerson assertDriverBelongToCurrentUser(Integer driverId, Integer carOwnerId);
+	
+	public CarPerson assertSupercargoBelongToCurrentUser(Integer supercargoId, Integer carOwnerId);
 	
 }

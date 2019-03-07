@@ -120,4 +120,8 @@ public class CarPerson {
 	@Column(name = "`car_owner_id`")
 	private Integer carOwnerId;
 	
+	/**司机账号状态*/
+	@Transient
+	private Boolean isActive;
+	
 }

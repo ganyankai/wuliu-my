@@ -2,6 +2,8 @@ package com.zrytech.framework.app.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zrytech.framework.app.dto.carperson.CarOwnerCarPersonPageDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonPageDto;
 import com.zrytech.framework.app.entity.CarPerson;
@@ -22,5 +24,5 @@ public interface CarPersonMapper {
     
     List<CarPerson> selectSelective(CarPersonPageDto dto);
     
-    List<CarPerson> carOwnerCarPersonPage(CarOwnerCarPersonPageDto dto);
+    List<CarPerson> carOwnerSelectSelective(@Param("dto") CarOwnerCarPersonPageDto dto, @Param("carOwnerId") Integer carOwnerId);
 }

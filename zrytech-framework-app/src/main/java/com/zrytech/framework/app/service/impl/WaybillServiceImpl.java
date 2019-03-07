@@ -524,10 +524,10 @@ public class WaybillServiceImpl implements WaybillService {
 		Integer supercargoId = dto.getSupercargoId();
 		Integer carId = dto.getCarId();
 		if(driverId != null) {
-			carPersonService.assertCarPersonBelongToCurrentUser(driverId, carOwnerId, CarPersonConstants.PERSON_TYPE_DRIVER);
+			carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
 		}
 		if(supercargoId != null) {
-			carPersonService.assertCarPersonBelongToCurrentUser(supercargoId, carOwnerId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+			carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
 		}
 		if(carId != null) {
 			carService.assertCarBelongToCurrentUser(carId, carOwnerId);
