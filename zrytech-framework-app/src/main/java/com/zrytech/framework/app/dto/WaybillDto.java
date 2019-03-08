@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Setter
@@ -32,19 +33,19 @@ public class WaybillDto implements Serializable {
     private String cargoOwnerName;
 
     @ApiModelProperty(value = "车主Id", required = false)
-    private Integer carId;
+    private Integer carOwnnerId;
 
     @ApiModelProperty(value = "车主企业名称", required = false)
     private String carOwnerName;
 
     @ApiModelProperty(value = "预付款", required = false)
-    private Double advanceMoeny;
+    private BigDecimal advanceMoeny;
 
     @ApiModelProperty(value = "尾款", required = false)
-    private Double finalMoney;
+    private BigDecimal finalMoney;
 
     @ApiModelProperty(value = "总金额", required = false)
-    private Double totalMoney;
+    private BigDecimal totalMoney;
 
     @ApiModelProperty(value = "支付类型：1，微信 2，支付宝", required = false)
     private String payType;

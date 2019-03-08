@@ -150,9 +150,9 @@ public class CargoConstant {
 
 
     /**
-     *pay_way:付款方式
+     *pay_type:付款方式
      */
-    public static final String PAY_WAY="pay_way";
+    public static final String PAY_TYPE="pay_type";
     /**offline_pay - 线下支付*/
     public static final String OFFLINE_PAY = "offline_pay";
     /**wechat -微信支付*/
@@ -193,9 +193,9 @@ public class CargoConstant {
     public static final String PERTON_PRICE = "perton_price";
 
     /**
-     *pay_type:付款类型
+     *pay_way:付款类型
      */
-    public static final String PAY_TYPE="pay_type";
+    public static final String PAY_WAY="pay_way";
     /**arrival_pay -货到付款*/
     public static final String ARRIVAL_PAY = "arrival_pay";
     /**tail_pay -尾款*/

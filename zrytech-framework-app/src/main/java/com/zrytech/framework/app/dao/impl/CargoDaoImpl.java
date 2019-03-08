@@ -64,4 +64,14 @@ public class CargoDaoImpl implements CargoDao {
     public int invitationOffer(List<Offer> offerList, String status) {
         return cargoMapper.invitationOffer(offerList,status);
     }
+
+    @Override
+    public Offer getOfferWill(Integer cargoId, Integer carOwnnerId) {
+        return cargoMapper.getOfferWill(cargoId,carOwnnerId);
+    }
+
+    @Override
+    public int updateMatter(Integer cargoId, String offerPromissed, Integer carId) {
+        return cargoMapper.updateMatter(cargoId,offerPromissed,carId);
+    }
 }

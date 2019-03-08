@@ -25,4 +25,8 @@ public interface CargoMapper {
     int deleteSource(Integer id);
 
     int invitationOffer(@Param("list") List<Offer> offerList, @Param("status") String status);
+
+    Offer getOfferWill(@Param("cargoId") Integer cargoId,@Param("carOwnnerId") Integer carOwnnerId);
+
+    int updateMatter(@Param("cargoId") Integer cargoId,@Param("offerPromissed") String offerPromissed,@Param("cargd") Integer cargd);
 }

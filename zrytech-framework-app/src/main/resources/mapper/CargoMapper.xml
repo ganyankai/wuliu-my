@@ -32,11 +32,12 @@
         <result column="remark" property="remark"/>
         <result column="create_by" property="createBy"/>
         <result column="create_date" property="createDate"/>
+        <result column="pay_type" property="payType"/>
     </resultMap>
 
     <sql id="columns">
        id,name,logo,qty,weight_unit,tender_way,pay_type,mul_shipment,mul_unload,packaged,matter_price,real_price,market_price,price_unit,price_type,start_province,
-       start_city,start_country,end_province,end_city,end_country,line,can_share,car_type,status,arrival_date,pickup_date,end_date,remark,create_by,create_date
+       start_city,pay_type,start_country,end_province,end_city,end_country,line,can_share,car_type,status,arrival_date,pickup_date,end_date,remark,create_by,create_date
     </sql>
 
     <select id="cargoPage" resultMap="cargo">
@@ -286,6 +287,9 @@
     <update id="updateAudit">
         update cargo
         <set>
+            <if test="realPrice != null">
+                real_price = #{realPrice},
+            </if>
             <if test="status != null and status !=''">
                 status = #{status}
             </if>
@@ -414,32 +418,32 @@
         where id = #{id}
     </update>
 
-  <!--  <insert id="invitationOffer" useGeneratedKeys="true" keyProperty="id">
-        insert into cargo_send_record
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="cargoId != null">
-                cargo_id,
-            </if>
-            <if test="carOwnnerId != null">
-                car_ownner_id,
-            </if>
-            <if test="date != null">
-                create_date,
-            </if>
-        </trim>
+    <!--  <insert id="invitationOffer" useGeneratedKeys="true" keyProperty="id">
+          insert into cargo_send_record
+          <trim prefix="(" suffix=")" suffixOverrides=",">
+              <if test="cargoId != null">
+                  cargo_id,
+              </if>
+              <if test="carOwnnerId != null">
+                  car_ownner_id,
+              </if>
+              <if test="date != null">
+                  create_date,
+              </if>
+          </trim>
 
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="cargoId != null">
-                #{cargoId} ,
-            </if>
-            <if test="carOwnnerId != null">
-                #{carOwnnerId} ,
-            </if>
-            <if test="date != null">
-                #{date},
-            </if>
-        </trim>
-    </insert>-->
+          <trim prefix="values (" suffix=")" suffixOverrides=",">
+              <if test="cargoId != null">
+                  #{cargoId} ,
+              </if>
+              <if test="carOwnnerId != null">
+                  #{carOwnnerId} ,
+              </if>
+              <if test="date != null">
+                  #{date},
+              </if>
+          </trim>
+      </insert>-->
     <insert id="invitationOffer" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         insert into cargo_matter
         (cargo_id,
@@ -458,5 +462,32 @@
             )
         </foreach>
     </insert>
+
+    <select id="getOfferWill" resultType="com.zrytech.framework.app.entity.Offer">
+        select
+        id,cargo_id,car_ownner_id,matter_price,status,load_date,create_date,create_by
+        from cargo_matter
+        where cargo_id=#{cargoId} AND car_ownner_id=#{carOwnnerId}
+    </select>
+
+    <update id="updateMatter">
+        update cargo_matter
+        <set>
+            <if test="offerPromissed != null and offerPromissed !=''">
+                status = #{offerPromissed}
+            </if>
+        </set>
+        <trim>
+            <where>
+                <if test="cargoId != null">
+                    AND cargo_id = #{cargoId}
+                </if>
+                <if test="cargd != null">
+                    AND car_ownner_id = #{cargd}
+                </if>
+            </where>
+        </trim>
+    </update>
+
 
 </mapper>

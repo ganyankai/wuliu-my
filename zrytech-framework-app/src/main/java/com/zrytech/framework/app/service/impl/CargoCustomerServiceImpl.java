@@ -64,7 +64,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PWD_NOT_SAME));
         }
         List<CargoCustomer> refereesList = cargoCustomerDao.checkTelOrCount(cargoCustomerDto.getRefereesTel(), null);
-        if (refereesList != null || refereesList.size() == 0) {
+        if (refereesList == null || refereesList.size() == 0) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.ReFerees_PERSON));
         }
         //TODO:手机号去重校验和账号校验

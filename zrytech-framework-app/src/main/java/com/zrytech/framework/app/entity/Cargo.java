@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -192,4 +193,7 @@ public class Cargo implements Serializable{
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column
     private Date createDate;
+
+    @ApiModelProperty(value = "参考总价", required = false)
+    private BigDecimal totalPrice;
 }

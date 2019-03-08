@@ -156,13 +156,13 @@
       final_money, total_money, pay_type, 
       pay_way, remark, qty, 
       weight_unit, bill_type, proof_imgs, 
-      status, create_date)
+      status, create_date,create_by)
     values (#{id,jdbcType=INTEGER}, #{billNo,jdbcType=VARCHAR}, #{cargoId,jdbcType=INTEGER}, 
       #{cargoOwnnerId,jdbcType=INTEGER}, #{carOwnnerId,jdbcType=INTEGER}, #{advanceMoeny,jdbcType=DECIMAL}, 
       #{finalMoney,jdbcType=DECIMAL}, #{totalMoney,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR}, 
       #{payWay,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{qty,jdbcType=INTEGER}, 
       #{weightUnit,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{proofImgs,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+      #{status,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.zrytech.framework.app.entity.Waybill">
         insert into waybill

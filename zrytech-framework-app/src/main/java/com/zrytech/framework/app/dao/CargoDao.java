@@ -25,4 +25,8 @@ public interface CargoDao {
 
     int invitationOffer(List<Offer> offerList, String status);
 
+    Offer getOfferWill(Integer cargoId, Integer carOwnnerId);
+
+    int updateMatter(Integer cargoId, String offerPromissed, Integer carId);
+
 }
