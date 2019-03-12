@@ -1,10 +1,13 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -56,4 +59,25 @@ public class Message implements Serializable {
     @ApiModelProperty(value = "查看日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date readDate;
+
+    public String getMsgTypeCN() {
+        if (!StringUtils.isEmpty(msgType)) {
+            return DictionaryUtil.getValue(CargoConstant.MESSAGE_TYPE, msgType);
+        }
+        return msgTypeCN;
+    }
+
+    public String getSenderTypeCN() {
+        if (!StringUtils.isEmpty(senderType)) {
+            return DictionaryUtil.getValue(CargoConstant.CUSTOMER_TYPE, senderType);
+        }
+        return senderTypeCN;
+    }
+
+    public String getReveicerTypeCN() {
+        if (!StringUtils.isEmpty(reveicerType)) {
+            return DictionaryUtil.getValue(CargoConstant.CUSTOMER_TYPE, reveicerType);
+        }
+        return reveicerTypeCN;
+    }
 }

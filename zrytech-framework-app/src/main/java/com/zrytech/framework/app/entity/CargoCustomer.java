@@ -37,6 +37,9 @@ public class CargoCustomer implements Serializable{
     @ApiModelProperty(value = "客户类型", required = false)
     private String customerType;
 
+    @ApiModelProperty(value = "客户类型", required = false)
+    private String customerTypeCN;
+
     @ApiModelProperty(value = "客户状态", required = false)
     private Boolean isActive;
 
@@ -49,4 +52,8 @@ public class CargoCustomer implements Serializable{
 
     @ApiModelProperty(value = "客户认证资料", required = false)
     private Certification certification;
+
+    public String getCustomerTypeCN() {
+        return customerTypeCN;
+    }
 }

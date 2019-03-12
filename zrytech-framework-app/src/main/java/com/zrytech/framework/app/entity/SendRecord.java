@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Setter
 @Getter
-@ApiModel(value = "常用地址entry")
+@ApiModel(value = "推送记录entry")
 public class SendRecord implements Serializable {
 
     private static final long serialVersionUID = -1555792098489335740L;

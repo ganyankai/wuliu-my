@@ -92,4 +92,12 @@ public interface WaybillService {
      * @param:WaybillDto运单dto
      */
     ServerResponse cancelIndent(WaybillDto waybillDto);
+
+    /**
+     * @return
+     * @Desinition:签收订单(已收货待支付状态)
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
+    ServerResponse signAccpet(WaybillDto waybillDto);
 }

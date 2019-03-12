@@ -2,10 +2,13 @@ package com.zrytech.framework.app.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -118,5 +121,18 @@ public class Certification implements Serializable {
             return "男";
         }
         return genderCN;
+    }
+    public String getCustomerTypeCN() {
+        if (!StringUtils.isEmpty(customerType)) {
+            return DictionaryUtil.getValue(CargoConstant.CARGO_CUSTOMER_TYPE, customerType);
+        }
+        return customerTypeCN;
+    }
+
+    public String getStatusCN() {
+        if (!StringUtils.isEmpty(status)) {
+            return DictionaryUtil.getValue(CargoConstant.CARGO_STATUS, status);
+        }
+        return statusCN;
     }
 }

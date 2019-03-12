@@ -1,10 +1,13 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -68,4 +71,11 @@ public class Loading implements Serializable {
     @ApiModelProperty(value = "截止日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endDate;
+
+    public String getTypeCN() {
+        if (!StringUtils.isEmpty(type)) {
+            return DictionaryUtil.getValue(CargoConstant.loading_unloading_type, type);
+        }
+        return typeCN;
+    }
 }

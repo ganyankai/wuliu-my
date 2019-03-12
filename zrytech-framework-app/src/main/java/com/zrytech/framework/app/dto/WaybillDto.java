@@ -26,6 +26,9 @@ public class WaybillDto implements Serializable {
     @ApiModelProperty(value = "货源Id", required = false)
     private Integer cargoId;
 
+    @ApiModelProperty(value = "货源介质", required = false)
+    private String cargoName;
+
     @ApiModelProperty(value = "货主Id", required = false)
     private Integer cargoOwnnerId;
 

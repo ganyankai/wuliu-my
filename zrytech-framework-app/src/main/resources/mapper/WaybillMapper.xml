@@ -159,7 +159,7 @@
       status, create_date,create_by)
     values (#{id,jdbcType=INTEGER}, #{billNo,jdbcType=VARCHAR}, #{cargoId,jdbcType=INTEGER}, 
       #{cargoOwnnerId,jdbcType=INTEGER}, #{carOwnnerId,jdbcType=INTEGER}, #{advanceMoeny,jdbcType=DECIMAL}, 
-      #{finalMoney,jdbcType=DECIMAL}, #{totalMoney,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR}, 
+      #{finalMoney,jdbcType=DECIMAL}, #{totalMoney,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR},
       #{payWay,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{qty,jdbcType=INTEGER}, 
       #{weightUnit,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{proofImgs,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},#{createBy,jdbcType=INTEGER})
@@ -365,6 +365,11 @@
             <if test="waybill.carOwnerName != null and waybill.carOwnerName != ''">
                 `car_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
                 #{waybill.carOwnerName},
+                '%'))
+            </if>
+            <if test="waybill.cargoName != null and waybill.cargoName != ''">
+                `cargo_id` in (select `id` from `cargo` where `name` like CONCAT('%',
+                #{waybill.cargoName},
                 '%'))
             </if>
             <if test="waybill.carOwnnerId != null">

@@ -1,9 +1,12 @@
 package com.zrytech.framework.app.entity;
 
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -30,6 +33,9 @@ public class Offer implements Serializable {
     @ApiModelProperty(value = "状态", required = false)
     private String status;
 
+    @ApiModelProperty(value = "状态", required = false)
+    private String statusCN;
+
     @ApiModelProperty(value = "中标日期", required = false)
     private Date loadDate;
 
@@ -38,4 +44,11 @@ public class Offer implements Serializable {
 
     @ApiModelProperty(value = "创建人", required = false)
     private Integer createBy;
+
+    public String getStatusCN() {
+        if (!StringUtils.isEmpty(status)) {
+            return DictionaryUtil.getValue(CargoConstant.OFFER_STATUS, status);
+        }
+        return statusCN;
+    }
 }

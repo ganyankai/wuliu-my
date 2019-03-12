@@ -1,10 +1,13 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -82,4 +85,19 @@ public class WaybillLoading implements Serializable {
     @ApiModelProperty(value = "创建日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createDate;
+
+    public String getWeightUnitCN() {
+        if (!StringUtils.isEmpty(weightUnit)) {
+            return DictionaryUtil.getValue(CargoConstant.WEIGHT_UNIT, weightUnit);
+        }
+        return weightUnitCN;
+    }
+
+    public String getTypeCN() {
+        return typeCN;
+    }
+
+    public String getStatusCN() {
+        return statusCN;
+    }
 }

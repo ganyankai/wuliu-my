@@ -1,10 +1,13 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -37,4 +40,11 @@ public class Focus implements Serializable {
 
     @ApiModelProperty(value = "企业全称", required = false)
     private String name;
+
+    public String getFocusTypeCN() {
+        if (!StringUtils.isEmpty(focusType)) {
+            return DictionaryUtil.getValue(CargoConstant.FOCUS_TYPE, focusType);
+        }
+        return focusTypeCN;
+    }
 }

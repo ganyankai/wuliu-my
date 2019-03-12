@@ -168,18 +168,18 @@ public class WaybillServiceImpl implements WaybillService {
         int num = waybillDao.createIndent(waybill);
         CheckFieldUtils.assertSuccess(num);
         //TODO:修改货源状态以及报价单状态
-        updateCargoAndMatter(cargo,waybillDto.getCarOwnnerId());
+        updateCargoAndMatter(cargo, waybillDto.getCarOwnnerId());
         return ServerResponse.success();
     }
 
-    public void updateCargoAndMatter(Cargo cargo,Integer carId){
+    public void updateCargoAndMatter(Cargo cargo, Integer carId) {
         Offer offer = cargoDao.getOfferWill(cargo.getId(), carId);//报价单价格:应标价格
         cargo.setStatus(CargoConstant.SOURCE_WINNING);
         cargo.setRealPrice(offer.getMatterPrice());
         cargoDao.updateAudit(cargo);//修改货源状态以及中标时的价格;
-        int num=cargoDao.updateMatter(cargo.getId(),CargoConstant.OFFER_DRAFT,null);//修改报价单状态;将其余没有中标变为草稿状态;
-        if(num>0){
-            cargoDao.updateMatter(cargo.getId(),CargoConstant.OFFER_PROMISSED,carId);//将车主报价单变为中标状态;
+        int num = cargoDao.updateMatter(cargo.getId(), CargoConstant.OFFER_DRAFT, null);//修改报价单状态;将其余没有中标变为草稿状态;
+        if (num > 0) {
+            cargoDao.updateMatter(cargo.getId(), CargoConstant.OFFER_PROMISSED, carId);//将车主报价单变为中标状态;
         }
     }
 
@@ -198,8 +198,12 @@ public class WaybillServiceImpl implements WaybillService {
      */
     @Override
     public ServerResponse confirmIndent(WaybillDto waybillDto) {
-        CheckFieldUtils.checkObjecField(waybillDto.getStatus());
+        Waybill bill = waybillDao.get(waybillDto.getId());
+        if (bill == null || bill.getStatus() == null || !bill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_DETERMINE)) {
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.INDENT_STATUS_ERROR));
+        }
         Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
+        waybill.setStatus(CargoConstant.AWAIT_LOADING);
         int num = waybillDao.updateIndentStatus(waybill);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
@@ -259,9 +263,14 @@ public class WaybillServiceImpl implements WaybillService {
     @Override
     public ServerResponse changeIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getTotalMoney());
-        Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
-        int num = waybillDao.changeIndent(waybill);
-        CheckFieldUtils.assertSuccess(num);
+        Waybill bill=waybillDao.get(waybillDto.getId());
+        if(bill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_LOADING)|| bill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_ACCEPT)|| bill.getStatus().equalsIgnoreCase(CargoConstant.SIGN_PAY)){
+            Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
+            int num = waybillDao.changeIndent(waybill);
+            CheckFieldUtils.assertSuccess(num);
+        }else{
+            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.INDENT_CHANGE_ERROR));
+        }
         return ServerResponse.success();
     }
 
@@ -304,6 +313,7 @@ public class WaybillServiceImpl implements WaybillService {
                     map.put(CargoConstant.COMPLETED, arr[1] == null ? 0 : Integer.parseInt(arr[1]));
                 }
             }
+            checkMap(map);
         } else {
             map.put(CargoConstant.AWAIT_GENERATE, 0);
             map.put(CargoConstant.AWAIT_DETERMINE, 0);
@@ -315,7 +325,6 @@ public class WaybillServiceImpl implements WaybillService {
         }
         return map;
     }
-
 
     /**
      * 为运单绑定运单项数据
@@ -336,6 +345,34 @@ public class WaybillServiceImpl implements WaybillService {
         return waybill;
     }
 
+    /**
+     * @Desintion:Map数据校验
+     * @param:map
+     * @Author:Jxx
+     */
+    public void checkMap(Map<String, Object> map) {
+        if (map.get(CargoConstant.AWAIT_GENERATE) == null) {
+            map.put(CargoConstant.AWAIT_GENERATE, 0);
+        }
+        if (map.get(CargoConstant.AWAIT_DETERMINE) == null) {
+            map.put(CargoConstant.AWAIT_DETERMINE, 0);
+        }
+        if (map.get(CargoConstant.AWAIT_LOADING) == null) {
+            map.put(CargoConstant.AWAIT_LOADING, 0);
+        }
+        if (map.get(CargoConstant.AWAIT_ACCEPT) == null) {
+            map.put(CargoConstant.AWAIT_ACCEPT, 0);
+        }
+        if (map.get(CargoConstant.SIGN_PAY) == null) {
+            map.put(CargoConstant.SIGN_PAY, 0);
+        }
+        if (map.get(CargoConstant.PAIED_EVALUATION) == null) {
+            map.put(CargoConstant.PAIED_EVALUATION, 0);
+        }
+        if (map.get(CargoConstant.COMPLETED) == null) {
+            map.put(CargoConstant.COMPLETED, 0);
+        }
+    }
 
     /**
      * 为运单项绑定装卸地数据
@@ -579,6 +616,23 @@ public class WaybillServiceImpl implements WaybillService {
         waybill.setStatus(IndentConstants.CANCEL_STATUS_CANCELLED);
         waybillDao.updateIndentStatus(waybill);
         //TODO:取消订单是否需要后台管理员同意;订单取消成功后,货源状态改为什么
+        return ServerResponse.success();
+    }
+
+    /**
+     * @return
+     * @Desinition:签收订单(已收货待支付状态)
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
+    @Override
+    public ServerResponse signAccpet(WaybillDto waybillDto) {
+         Waybill waybill=waybillDao.get(waybillDto.getId());
+         if(waybill==null|| waybill.getStatus()==null|| !waybill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_ACCEPT)){
+             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.INDENT_SIGN_ERROR));
+         }
+        waybill.setStatus(CargoConstant.SIGN_PAY);
+        waybillDao.updateIndentStatus(waybill);
         return ServerResponse.success();
     }
 

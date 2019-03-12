@@ -1,10 +1,13 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,13 +27,15 @@ import javax.persistence.Transient;
 @ApiModel(value = "货源entry")
 @Entity
 @Table(name = "cargo")
-public class Cargo implements Serializable{
+public class Cargo implements Serializable {
 
     private static final long serialVersionUID = -1555792098489335740L;
-    
-    /**主键，自增*/
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    /**
+     * 主键，自增
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "货源Id", required = false)
     private Integer id;
 
@@ -159,7 +164,7 @@ public class Cargo implements Serializable{
     private String carTypeCN;
 
     @ApiModelProperty(value = "状态", required = false)
-    @Column(name= "`status`")
+    @Column(name = "`status`")
     private String status;
 
     @ApiModelProperty(value = "状态", required = false)
@@ -196,4 +201,46 @@ public class Cargo implements Serializable{
 
     @ApiModelProperty(value = "参考总价", required = false)
     private BigDecimal totalPrice;
+
+    public String getWeightUnitCN() {
+        if (!StringUtils.isEmpty(weightUnit)) {
+            return DictionaryUtil.getValue(CargoConstant.WEIGHT_UNIT, weightUnit);
+        }
+        return weightUnitCN;
+    }
+
+    public String getTenderWayCN() {
+        if (!StringUtils.isEmpty(tenderWay)) {
+            return DictionaryUtil.getValue(CargoConstant.PUSH_MARK_WAY, tenderWay);
+        }
+        return tenderWayCN;
+    }
+
+    public String getPayTypeCN() {
+        if (!StringUtils.isEmpty(payType)) {
+            return DictionaryUtil.getValue(CargoConstant.PAY_TYPE, payType);
+        }
+        return payTypeCN;
+    }
+
+    public String getPriceTypeCN() {
+        if (!StringUtils.isEmpty(priceType)) {
+            return DictionaryUtil.getValue(CargoConstant.PRICE_TYPE, priceType);
+        }
+        return priceTypeCN;
+    }
+
+    public String getCarTypeCN() {
+        if (!StringUtils.isEmpty(carType)) {
+            return DictionaryUtil.getValue(CargoConstant.CAR_TYPE, carType);
+        }
+        return carTypeCN;
+    }
+
+    public String getStatusCN() {
+        if (!StringUtils.isEmpty(status)) {
+            return DictionaryUtil.getValue(CargoConstant.CARGO_GOODS_STATUS, status);
+        }
+        return statusCN;
+    }
 }

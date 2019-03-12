@@ -170,7 +170,24 @@ public class WaybillApiController {
         }
         return waybillService.cancelIndent(requestParams.getParams());
     }
-    
+
+
+    /**
+     * @return
+     * @Desinition:签收订单(已收货待支付状态)
+     * @param:requestParams
+     * @param:WaybillDto运单dto
+     */
+    @PostMapping("/signAccpet")
+    @ApiOperation(value = "签收订单")
+    public ServerResponse signAccpet(@RequestBody RequestParams<WaybillDto> requestParams) {
+        if (requestParams.getParams() == null
+                || requestParams.getParams().getId() == null) {
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return waybillService.signAccpet(requestParams.getParams());
+    }
+
     
     /**
      * 新增运单项

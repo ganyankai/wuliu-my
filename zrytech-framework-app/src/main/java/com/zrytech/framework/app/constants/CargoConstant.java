@@ -97,6 +97,7 @@ public class CargoConstant {
     public static final String AWAIT_LOADING="await_loading";
     /**await_accept:待收货运单*/
     public static final String AWAIT_ACCEPT="await_accept";
+
     /**sign_paied:已签收待支付运单*/
     public static final String SIGN_PAY="sign_pay";
     /**is_evaluation:已支付待评价运单*/
@@ -215,5 +216,40 @@ public class CargoConstant {
     public static final String FLOW_ONGOING = "flow_ongoing";
     /**flow_completed -已完成*/
     public static final String FLOW_COMPLETED = "flow_completed";
+
+
+    /**
+     *car_type:车辆类型
+     */
+    public static final String CAR_TYPE="car_type";
+
+
+    /**
+     *focus_type:关注类型
+     */
+    public static final String FOCUS_TYPE="focus_type";
+    /**focus_customer_cargo -关注货主*/
+    public static final String FOCUS_CUSTOMER_CARGO = "focus_customer_cargo";
+    /**focus_car_owner -关注车主*/
+    public static final String FOCUS_CAR_OWNER = "focus_car_owner";
+
+
+    /**
+     *evaluation_type:评价类型
+     */
+    public static final String EVALUATION_TYPE="evaluation_type";
+    /**cargo_comments_car -货主评价车主*/
+    public static final String CARGO_COMMENTS_CAR = "cargo_comments_car";
+    /**car_comments_cargo -车主评价货主*/
+    public static final String CAR_COMMENTS_CARGO = "car_comments_cargo";
+    /**cargo_comments_driver -货主评价司机*/
+    public static final String CARGO_COMMENTS_DRIVER = "cargo_comments_driver";
+    /**driver_comments_cargo -司机评价货主*/
+    public static final String DRIVER_COMMENTS_CARGO = "driver_comments_cargo";
+
+    /**
+     *bill_type:运单类型
+     */
+    public static final String BILL_TYPE="bill_type";
 }
 

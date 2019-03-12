@@ -810,9 +810,10 @@
 
 
 
-### 1.待确定运单
+### 1.待确定运单(待确定--->待装货)
 
-*** 描述:货主进入订单详情页面，可查看运单中的中标车主报价信息、车辆信息、司机信息等，并且等待车主分配运单;运单需要货主确认,运单状态改为待装货运单.
+*** 描述:货主进入订单详情页面，可查看运单中的中标车主报价信息、车辆信息、司机信息等，并且等待车主分配运单;
+运单需要货主确认,运单状态改为待装货运单.
 
 
 **URL**
@@ -826,47 +827,7 @@
   "openid": "string",
   "params": 
 {
-                  "id":1,//运单Id
-                  "billNo": "S20181224123457",//订单编号
-                  "advanceMoeny": 1121,//预付金额
-                  "finalMoney": 1224,//尾款
-                  "totalMoney": 2345,//总金额
-                  "remark": "",//备注
-                  "payType":"",//支付类型;线下支付(offline_pay);微信支付(wechat);支付宝支付(alipay);银行卡支付(bankpay)
-                  "qty": 23,//数量
-                  "weightUnit": ,//重量单位;ton(吨);rise(升)
-                  "status":"",//2:待确定运单(await_determine)
-                  "waybillDetails":[     //订单详情
-                    {
-                      "billNo": "S20181224123457",//订单编号
-                      "carId":,//车辆Id
-                      "driverId":,//司机Id
-                      "supercargoId":,//压货人Id
-                      "qty":,//运输数量
-                      "weightUnit":,//重量单位;ton(吨);rise(升)
-                      "flowName":"",//进度阶段名称
-                      "billLocations":[  //运单装卸地
-                          {
-                            "waybillDetailId":,//运单详情ID
-                            "waybillId":2,//运单Id
-                            "longitude":104.123,//经度
-                            "latitude":134.789,//纬度
-                            "province":"",//省
-                            "city":"",//市
-                            "county":"",//县
-                            "addressDetail":"",//地址详情
-                            "qty":678,//装卸数量
-                            "weightUnit":"",//重量单位;ton(吨);rise(升)
-                            "type":"",//类型;noting_loading(未装货);haved_loading(已装货
-                            "seqNo":2,//序号
-                            "remark":"",//说明
-                            "loadDate":"",//装卸日期
-                            "endDate":"",//截止日期
-                            "status":""//状态;
-                           }
-                        ]
-                      }
-                  ]
+                  "id":11//运单Id            
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }

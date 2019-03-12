@@ -19,15 +19,11 @@
   "page":{"pageNum":1, "pageSize":10},
   "params": 
 {
-  	  "billNo":"",   //(选传)(string) 订单编号
-    "carNo":"",      //(选传)(string) 车牌号
-    "startDate":"",      //(选传)(string) 运单开始时间
-    "endDate":"",      //(选传)(string) 运单结束时间
-    "name":23,      //(选传)(string) 司机姓名
-    "status":"",//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
-    "organizeName":""      //(选传)(string) 车主公司
-    "startPlace":"",  //(选传)(string)提货地
-    "endPlace":""     //(选传)(string)到货地
+  	"billNo":"",   //(选传)(string) 订单编号
+  	"cargoName":"",//(选传)(string) 货物介质
+    "cargoOwnerName":"",      //(选传)(string) 货主企业名称
+    "carOwnerName":"",      //(选传)(string) 车主企业名称
+    "status":""//运单状态;1:待生成运单(await_generate);2:待确定运单(await_determine);3:待装货(await_loading);4:待收货(await_accept);5:已签收待支付(sign_pay);6:已支付待评价(paied_evaluation);7:已完成(completed)
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
@@ -246,7 +242,7 @@
 ```
 
 
-## 5.订单有车主装货后,进入到待收货阶段,货主确认收货开始支付.(已签收待支付状态)
+## 5.订单有车主装货后(待收货),进入到待收货阶段,货主确认收货开始支付.(待收货--->已收货待支付)
 
 **URL**
 >/font/waybill/signAccpet
@@ -341,7 +337,7 @@
   "openid": "string",
   "params": 
 {
-  	       "id":1//订单id
+  	       "id":11//订单id
   },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
