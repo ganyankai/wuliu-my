@@ -1,47 +1,46 @@
 package com.zrytech.framework.app.dto.car;
 
+import javax.validation.constraints.Pattern;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 车辆分页的搜索条件
+ * 管理员 - 车辆分入参
  */
 @Setter
 @Getter
 public class CarPageDto {
-	
+
 	/**
-	 * 主键
-	 */
-	private Integer id;
-	
-	/**
-	 * 车牌号
+	 * 车牌号（模糊搜索）
 	 */
 	private String carNo;
-	
+
 	/**
 	 * 车主Id
 	 */
-	private Integer createBy;
-	
+	private Integer carOwnerId;
+
+	/**
+	 * 车主企业名称（模糊搜索）
+	 */
+	private String name;
+
 	/**
 	 * 车辆类型
 	 */
 	private String carType;
 
 	/**
-	 * 车主企业名称
-	 */
-	private String name;
-	
-	/**
 	 * 删除标识
 	 */
 	private Boolean isDelete;
-	
+
 	/**
 	 * 车辆状态
 	 */
+	@Pattern(regexp = "^(up)|(wait_check)|(down)$", message = "类型错误")
 	private String status;
+
 }

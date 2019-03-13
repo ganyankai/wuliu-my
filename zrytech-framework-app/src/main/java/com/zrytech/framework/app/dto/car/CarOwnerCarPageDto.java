@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 车主车辆分页入参
+ * 车主 - 车辆分页入参
  * @author cat
  *
  */

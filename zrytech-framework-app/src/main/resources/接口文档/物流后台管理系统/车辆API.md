@@ -28,7 +28,8 @@
     status              （str）车辆状态
     statusCN            （str）车辆状态
 
-    createBy            （int）车主Id
+	carOwnerId			（int）车主Id
+    createBy            （int）创建人Id
     createDate          （str）创建日期
     isDelete            （boolean）是否删除
 
@@ -60,12 +61,11 @@
 
     {
     	"params": {
-            "id":"",                  （选填）（int）车辆Id
-            "createBy":"",            （选填）（int）车主Id
+            "carOwnerId":"",          （选填）（int）车主Id
+            "name": "",               （选填）（str）车主企业名称（采用模糊搜索）
             "carNo": "",              （选填）（str）车牌号（采用模糊搜索）
-            "cartype": "",            （选填）（str）车辆类型
+            "carType": "",            （选填）（str）车辆类型
             "status": "",             （选填）（str）车辆状态
-            "name": "",               （选填）（str）企业名称（采用模糊搜索）
             "isDelete": ""            （选填）（boolean）删除标识【true | false】
     	},
         "page": {
@@ -77,44 +77,45 @@
 
 **响应示例**
 
-    {
-        "code": 1,
-        "msg": "success",
-        "data": {
-            "total": 3,
-            "list": [
-                {
-                    "id": 3,
-                    "carNo": "京A10000",
-                    "carLoad": 30,
-                    "carUnit": "ton",
-                    "carUnitCN": "车载量单位,待处理",
-                    "carType": "trailer",
-                    "carTypeCN": "车辆类型,待处理",
-                    "driverId": 1,
-                    "supercargoId": 2,
-                    "currentLongitude": 3.123,
-                    "currentLatitude": 5.111,
-                    "currentAddress": "长沙",
-                    "mulStore": false,
-                    "storeQty": 1,
-                    "status": "wait-check",
-                    "statusCN": "车辆状态,待处理",
-                    "isDelete": false,
-                    "createBy": 1,
-                    "createDate": "2019-02-18 15:09:21",
-                    "carOwnerName": "车主张三",
-                    "carOwner": null,                           // 请忽略该字段
-                    "driverName": "司机李四",
-                    "driver": null,                             // 请忽略该字段
-                    "supercargoName": "压货人王五",
-                    "supercargo": null                          // 请忽略该字段
-                }
-            ],
-            "pageNo": 1,
-            "pageSize": 1
-        }
-    }
+	{
+	    "code": 1,
+	    "msg": "success",
+	    "data": {
+	        "total": 2,
+	        "list": [
+	            {
+	                "id": 8,
+	                "carNo": "鄂A20000",
+	                "carLoad": 200,
+	                "carUnit": "ton",
+	                "carUnitCN": "车载量单位,待处理",
+	                "carType": "car_type3",
+	                "carTypeCN": "车辆类型,待处理",
+	                "driverId": 1,
+	                "supercargoId": 2,
+	                "currentLongitude": null,
+	                "currentLatitude": null,
+	                "currentAddress": null,
+	                "mulStore": false,
+	                "storeQty": 1,
+	                "status": "down",
+	                "statusCN": "车辆状态,待处理",
+	                "isDelete": false,
+	                "createBy": 1,
+	                "createDate": "2019-02-27 14:42:58",
+	                "carOwnerName": "山东中石化科技有限公司",
+	                "carOwner": null,
+	                "driverName": "张",					// 司机姓名，可能为null
+	                "driver": null,
+	                "supercargoName": "张",				// 压货人姓名，可能为null
+	                "supercargo": null,
+	                "carOwnerId": 1
+	            },
+	        ],
+	        "pageNo": 1,
+	        "pageSize": 10
+	    }
+	}
 
 <br>
 <br>
@@ -145,90 +146,106 @@
 
 **响应示例**
 
-    {
-        "code": 1,
-        "msg": "success",
-        "data": {
-            "id": 1,
-            "carNo": "鄂A66666",
-            "carLoad": 10,
-            "carUnit": "ton",
-            "carUnitCN": "车载量单位,待处理",
-            "carType": "trailer",
-            "carTypeCN": "车辆类型,待处理",
-            "driverId": 1,
-            "supercargoId": 2,
-            "currentLongitude": 1.123,
-            "currentLatitude": 3.111,
-            "currentAddress": "武汉",
-            "mulStore": false,
-            "storeQty": 1,
-            "status": "down",
-            "statusCN": "车辆状态,待处理",
-            "isDelete": false,
-            "createBy": 1,
-            "createDate": "2019-02-18 15:09:18",
-            "carOwnerName": "车主张三",                 // 车主企业名称
-            "carOwner": {                              // 车主详细信息
-                "id": 1,
-                "name": "车主张三",
-                "creditCode": null,
-                "businessLicense": null,
-                "legalerName": null,
-                "legalerIdCardNo": null,
-                "legalerIdCardFront": null,
-                "tel": null,
-                "longitude": null,
-                "latitude": null,
-                "province": null,
-                "city": null,
-                "county": null,
-                "addressDetail": null,
-                "intro": null,
-                "customerType": null,
-                "avoidAudit": null,
-                "closeRate": null,
-                "favorableLevel": null,
-                "status": null,
-                "customerId": null,
-                "createDate": null
-            },
-            "driverName": "司机李四",                   // 司机姓名
-            "driver": {                                // 司机详细信息
-                "id": 1,
-                "name": "司机李四",
-                "logo": null,
-                "tel": null,
-                "sex": null,
-                "age": null,
-                "idCard": null,
-                "personType": null,
-                "customerId": null,
-                "drivingLicence": null,
-                "status": null,
-                "isDelete": null,
-                "createBy": null,
-                "createDate": null
-            },
-            "supercargoName": "压货人王五",             // 压货人姓名
-            "supercargo": {                            // 压货人详细信息
-                "id": 2,
-                "name": "压货人王五",
-                "logo": null,
-                "tel": null,
-                "sex": null,
-                "age": null,
-                "idCard": null,
-                "personType": null,
-                "customerId": null,
-                "drivingLicence": null,
-                "status": null,
-                "isDelete": null,
-                "createBy": null,
-                "createDate": null
-            }
-        }
-    }
+	{
+	    "code": 1,
+	    "msg": "success",
+	    "data": {
+	        "id": 1,
+	        "carNo": "京A10000",
+	        "carLoad": 1,
+	        "carUnit": "ton",
+	        "carUnitCN": "车载量单位,待处理",
+	        "carType": "car_type1",
+	        "carTypeCN": "车辆类型,待处理",
+	        "driverId": 1,
+	        "supercargoId": 2,
+	        "currentLongitude": null,
+	        "currentLatitude": null,
+	        "currentAddress": null,
+	        "mulStore": false,
+	        "storeQty": 1,
+	        "status": "wait_check",
+	        "statusCN": "车辆状态,待处理",
+	        "isDelete": false,
+	        "createBy": 1,
+	        "createDate": "2019-03-13 10:25:58",
+	        "carOwnerName": "山东中石化科技有限公司",			【车主企业名称】
+	        "carOwner": {									【车主信息】
+	            "id": 1,
+	            "name": "山东中石化科技有限公司",
+	            "creditCode": "KDOO124657788X",
+	            "businessLicense": "12",
+	            "legalerName": "张敬录",
+	            "legalerIdCardNo": "420922198011272852",
+	            "legalerIdCardFront": "12",
+	            "tel": "13163340532",
+	            "longitude": 104.567,
+	            "latitude": 234.123,
+	            "province": "山东省",
+	            "city": "济南",
+	            "county": "安华县",
+	            "addressDetail": "山东省济南市槐荫区",
+	            "intro": "企业简介",
+	            "customerType": "certification_organize",
+	            "customerTypeCN": null,
+	            "avoidAudit": false,
+	            "closeRate": null,
+	            "favorableLevel": null,
+	            "status": "audit_pass",
+	            "statusCN": null,
+	            "customerId": 1,
+	            "customer": null,
+	            "createDate": "2019-03-06 14:11:06"
+	        },
+	        "driverName": "张",						【司机姓名，可能为null】
+	        "driver": {								【司机信息，可能为null】
+	            "id": 1,	
+	            "name": "张",
+	            "logo": null,
+	            "tel": null,
+	            "sex": null,
+	            "age": null,
+	            "idCard": null,
+	            "personType": "driver",
+	            "personTypeCN": "司机",
+	            "customerId": null,
+	            "drivingLicence": null,
+	            "status": "wait_check",
+	            "statusCN": "状态：待处理",
+	            "isDelete": false,
+	            "createBy": 1,
+	            "createDate": null,
+	            "carOwnerName": null,
+	            "carOwner": null,
+	            "carOwnerId": 1,
+	            "isActive": null
+	        },
+	        "supercargoName": "张",					【压货人信息，可能为null】
+	        "supercargo": {							【压货人信息，可能为null】
+	            "id": 2,
+	            "name": "张",
+	            "logo": null,
+	            "tel": "1",
+	            "sex": null,
+	            "age": null,
+	            "idCard": null,
+	            "personType": "supercargo",
+	            "personTypeCN": "押货人",
+	            "customerId": null,
+	            "drivingLicence": null,
+	            "status": "wait_check",
+	            "statusCN": "状态：待处理",
+	            "isDelete": false,
+	            "createBy": null,
+	            "createDate": "2019-02-26 10:17:01",
+	            "carOwnerName": null,
+	            "carOwner": null,
+	            "carOwnerId": 1,
+	            "isActive": null
+	        },
+	        "carOwnerId": 1
+	    }
+	}
 
 <br>
 <br>
@@ -260,7 +277,7 @@
     {
 	    "code": 1,
 	    "msg": "success",
-	    "data": "成功"
+	    "data": "审核成功"
     }
 
 

@@ -22,10 +22,20 @@ public interface CarMapper {
 
     int updateByPrimaryKey(Car record);
     
+    
+    /**
+     * 管理员搜索车辆信息
+     * @author cat
+     * 
+     * @param record
+     * @return
+     */
     List<Car> selectSelective(CarPageDto record); 
     
     /**
      * 车主查询车辆分页
+     * @author cat
+     * 
      * @param record
      * @return
      */

@@ -2,14 +2,14 @@ package com.zrytech.framework.app.dto.car;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
 
 
 /**
- * 修改车辆信息入参（需要审核的内容）
+ * 车主 - 修改车辆信息入参（需要审核的内容）
  * @author cat
  *
  */
@@ -26,11 +26,11 @@ public class CarCheckUpdateDto {
 	private Integer carLoad;
 	
 	/**核载量单位*/
-	@NotEmpty(message = "核载量单位不能为空")
+	@NotBlank(message = "核载量单位不能为空")
 	private String carUnit;
 	
 	/**车辆类型*/
-	@NotEmpty(message = "车辆类型不能为空")
+	@NotBlank(message = "车辆类型不能为空")
 	private String carType;
 	
 	/**是否分仓*/

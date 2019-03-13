@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 修改车辆信息入参（不需要审核的内容）
+ * 车主 - 修改车辆信息入参（不需要审核的内容）
  * @author cat
  *
  */

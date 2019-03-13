@@ -29,9 +29,9 @@
     status              （str）车辆状态
     statusCN            （str）车辆状态
 
+    carOwnerId          （int）车主Id 
     createBy            （int）创建人Id
     createDate          （str）创建日期
-    carOwnerId          （int）车主Id 
     isDelete            （boolean）是否删除
 
 
@@ -48,7 +48,6 @@
 
 **备注**
 
-    1.新添加的车辆默认下架状态，需后台审核
 
 **URL**
 >/api/car/add 
