@@ -63,7 +63,13 @@
 		    <artifactId>pagehelper-spring-boot-starter</artifactId>
 		    <version>1.2.5</version>
 		</dependency>
-		
+
+		<!--RC4算法-->
+		<!--<dependency>
+			<groupId>com.google.collections</groupId>
+			<artifactId>google-collections</artifactId>
+			<version>1.0-rc4</version>
+		</dependency>-->
 	</dependencies>
 
 	<build>
