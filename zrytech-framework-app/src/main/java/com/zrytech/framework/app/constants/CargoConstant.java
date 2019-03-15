@@ -58,8 +58,8 @@ public class CargoConstant {
     public static final String SOURCE_EXPIRED = "source_expired";
     /**source_winning:中标;(中标)*/
     public static final String SOURCE_WINNING = "source_winning";
-    /**source_winning:已完成;*/
-    public static final String SOURCE_COMPLETE = "source_complete";
+    /**source_winning:已取消;*/
+    public static final String SOURCE_CANCEL = "source_cancel";
 
 
     /**

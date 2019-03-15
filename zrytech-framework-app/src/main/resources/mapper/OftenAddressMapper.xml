@@ -62,8 +62,8 @@
             <if test="oftenAddress.beginCity != null and oftenAddress.beginCity !=''">
                 and begin_city=#{oftenAddress.beginCity}
             </if>
-            <if test="oftenAddress.beginCountry != null and oftenAddress.beginCountry !=''">
-                and begin_county=#{oftenAddress.beginCountry}
+            <if test="oftenAddress.beginCounty != null and oftenAddress.beginCounty !=''">
+                and begin_county=#{oftenAddress.beginCounty}
             </if>
             <if test="oftenAddress.endProvince != null and oftenAddress.endProvince !=''">
                 and end_province=#{oftenAddress.endProvince}
@@ -71,8 +71,8 @@
             <if test="oftenAddress.endCity != null and oftenAddress.endCity !=''">
                 and end_city=#{oftenAddress.endCity}
             </if>
-            <if test="oftenAddress.endCountry != null and oftenAddress.endCountry !=''">
-                and end_country=#{oftenAddress.endCountry}
+            <if test="oftenAddress.endCounty != null and oftenAddress.endCounty !=''">
+                and end_country=#{oftenAddress.endCounty}
             </if>
             <if test="oftenAddress.customerId != null">
                 and customer_id=#{oftenAddress.customerId}

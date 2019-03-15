@@ -339,7 +339,7 @@ public class CargoServiceImpl implements CargoService {
     public ServerResponse cancelResource(CargoDto cargoDto) {
         Cargo cargo = cargoDao.get(cargoDto.getId());
         if (CargoConstant.SOURCE_UP.equalsIgnoreCase(cargo.getStatus())) {//针对报价中的货源,取消发布
-            cargo.setStatus(CargoConstant.SOURCE_DRAFT);//状态改为:草稿
+            cargo.setStatus(CargoConstant.SOURCE_CANCEL);//状态改为:已取消状态
             cargoDao.updateAudit(cargo);
             //TODO:是否删除推送记录和报价信息
         }
