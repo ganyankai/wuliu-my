@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +41,7 @@ public class CarController {
 	 * @return
 	 */
 	@Valid
-	@RequestMapping("/page")
+	@PostMapping("/page")
 	public ServerResponse page(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result) {
 		Integer pageNum = requestParams.getPage().getPageNum();
 		Integer pageSize = requestParams.getPage().getPageSize();
@@ -63,7 +64,7 @@ public class CarController {
 	 * @return
 	 */
 	@Valid
-	@RequestMapping("/details")
+	@PostMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
 		return carService.details(requestParams.getParams());
 	}
@@ -79,7 +80,7 @@ public class CarController {
 	 * @return
 	 */
 	@Valid
-	@RequestMapping("/check")
+	@PostMapping("/check")
 	public ServerResponse check(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result) {
 		User user = RequestUtil.getCurrentUser(User.class);
 		return carService.check(requestParams.getParams(), user);

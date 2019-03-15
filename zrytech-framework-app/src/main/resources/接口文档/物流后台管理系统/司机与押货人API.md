@@ -17,10 +17,10 @@
     customerId      客户Id
     drivingLicence  驾驶证
     status          状态
-    createBy        创建人
+    createBy        创建人Id
     createDate      创建时间
     isDelete        删除标识
-
+	carOwnerId		车主Id
 
 
 <br>
@@ -46,8 +46,8 @@
 
     {
     	"params": {
-            "carOwnerName": "",     （选填）（str）企业名称
-            "createBy": "",         （选填）（int）车主Id
+            "carOwnerName": "",     （选填）（str）车主企业名称
+            "createBy": "",         （选填）（int）创建人Id
             "id": "",               （选填）（int）主键
             "name": "",             （选填）（str）姓名
             "tel": "",              （选填）（str）电话
@@ -168,7 +168,8 @@
                 "status": null,
                 "customerId": null,
                 "createDate": null
-            }
+            },
+            "isActive": null					// 司机压货人账号禁用启用状态
         }
     }
     

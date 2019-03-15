@@ -11,8 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CarConstants;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
 
@@ -133,17 +137,25 @@ public class Car {
 	private CarPerson supercargo;
 	
 	public String getCarUnitCN() {
-		return "车载量单位,待处理";	// TODO
+		if (!StringUtils.isNotBlank(carUnit)) {
+            return DictionaryUtil.getValue(CarConstants.CAR_UNIT, carUnit);
+        }
+        return carUnitCN;
 	}
 	
 	public String getCarTypeCN() {
-		return "车辆类型,待处理";	// TODO
+		if (!StringUtils.isNotBlank(carType)) {
+            return DictionaryUtil.getValue(CarConstants.CAR_TYPE, carType);
+        }
+        return carTypeCN;
 	}
 	
 	public String getStatusCN() {
-		return "车辆状态,待处理";	// TODO
+		if (!StringUtils.isNotBlank(status)) {
+            return DictionaryUtil.getValue(CarConstants.CAR_STATUS, status);
+        }
+        return statusCN;
 	}
-	
 	
 	
 	

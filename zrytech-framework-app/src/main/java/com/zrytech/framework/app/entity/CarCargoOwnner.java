@@ -13,6 +13,10 @@ import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zrytech.framework.app.constants.ApproveConstants;
+import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
+import com.zrytech.framework.app.constants.CargoConstant;
 
 import lombok.Data;
 
@@ -54,7 +58,8 @@ public class CarCargoOwnner {
     private String legalerIdCardFront;
 
     /**联系电话*/
-	@Column(name = "`tel`")private String tel;
+	@Column(name = "`tel`")
+	private String tel;
 
     /**经度*/
 	@Column(name = "`longitude`")
@@ -90,8 +95,18 @@ public class CarCargoOwnner {
 	
 	/**类型*/
     @Transient
-    private String customerTypeCN; // TODO
-
+    private String customerTypeCN;
+    
+    public String getCustomerTypeCN() {
+    	if(CargoConstant.CERTIFICATION_PERSON.equalsIgnoreCase(customerType)) {
+    		return "个人";
+    	}else if(CargoConstant.CERTIFICATION_ORGANIZE.equalsIgnoreCase(customerType)) {
+    		return "企业";
+    	}else {
+    		return "";
+    	}
+    }
+    
     /**免审核*/
     @Column(name = "`avoid_audit`")
     private Boolean avoidAudit;
@@ -110,7 +125,17 @@ public class CarCargoOwnner {
 
     /**状态*/
     @Transient
-    private String statusCN; // TODO
+    private String statusCN;
+    
+    public String getStatusCN() {
+    	if(CarCargoOwnerConstants.STATUS_CERTIFIED.equalsIgnoreCase(status)) {
+    		return "已认证";
+    	}else if(CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(status)) {
+    		return "未认证";
+    	}else {
+    		return "";
+    	}
+    }
     
     /**客户Id*/
     @Column(name = "`cusomer_id`")
@@ -125,6 +150,42 @@ public class CarCargoOwnner {
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
     @Column(name = "`create_date`")
     private Date createDate;
-
     
+    /**审批状态*/
+    @Column(name = "`approve_status`")
+    private String approveStatus;
+    
+    public String getApproveStatusCN() {
+    	if(ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(approveStatus)) {
+    		return "待审批";
+    	}else if(ApproveConstants.STATUS_BE_APPROVED.equalsIgnoreCase(approveStatus)) {
+    		return "审批通过";
+    	}else if(ApproveConstants.STATUS_CANCEL.equalsIgnoreCase(approveStatus)) {
+    		return "已取消";
+    	}else if(ApproveConstants.STATUS_NOT_APPROVED.equalsIgnoreCase(approveStatus)) {
+    		return "审批未通过";
+    	}else {
+    		return "";
+    	}
+    }
+    
+    /**需要审批字段的JSON字符串*/
+    @JsonIgnore
+    @Column(name = "`approve_content`")
+    private String approveContent;
+    
+    
+    /**类型*/
+    @Column(name = "`type`")
+    private String type;
+    
+    public String getTypeCN() {
+    	if(CarCargoOwnerConstants.TYPE_CAR_OWNER.equalsIgnoreCase(type)) {
+    		return "车主";
+    	}else if(CarCargoOwnerConstants.TYPE_CARGO_OWNER.equalsIgnoreCase(type)) {
+    		return "货主";
+    	}else {
+    		return "";
+    	}
+    }
 }

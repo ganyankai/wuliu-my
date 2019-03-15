@@ -16,6 +16,7 @@
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="create_by" jdbcType="INTEGER" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="car_owner_id" property="carOwnerId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, logo, tel, sex, age, id_card, person_type, customer_id, driving_licence, 
@@ -202,8 +203,8 @@
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
   	select * from `car_person` 
   	<where>
-	  	<if test="name != null and name != ''">
-	  		`create_by` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
+	  	<if test="carOwnerName != null and carOwnerName != ''">
+	  		`car_owner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
 	  	</if>
 	  	<if test="name != null and name != ''">
 	  		and `name` like CONCAT('%', #{name}, '%')

@@ -3,16 +3,17 @@ package com.zrytech.framework.app.dto.carperson;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
+
+import com.zrytech.framework.app.constants.RegExConstants;
 
 import lombok.Getter;
 import lombok.Setter;
 
 
 /**
- * 添加司机，压货人入参
+ * 车主 - 添加司机，压货人入参
  * @author cat
  *
  */
@@ -20,18 +21,18 @@ import lombok.Setter;
 @Getter
 public class CarPersonAddDto {
 	
-	/**姓名*/
-	@NotEmpty(message = "姓名不能为空")
+	/**司机或压货人的姓名*/
+	@NotBlank(message = "姓名不能为空")
     private String name;
 	
-	/**手机号*/
-	@NotEmpty(message = "手机号不能为空")
-	@Pattern(regexp = "^1(3|4|5|7|8)\\d{9}$", message = "手机号码格式错误")
+	/**手机号码*/
+	@NotBlank(message = "手机号码不能为空")
+	@Pattern(regexp = RegExConstants.CHINA_PHONE_NUMBER, message = RegExConstants.CHINA_PHONE_NUMBER_ERR_MSG)
     private String tel;
 	
 	/**性别*/
-	@NotEmpty(message = "性别不能为空")
-	@Pattern(regexp = "^(男)|(女)$", message = "性别错误")
+	@NotBlank(message = "性别不能为空")
+	@Pattern(regexp = RegExConstants.SEX, message = RegExConstants.SEX_ERR_MSG)
     private String sex;
 
 	/**年龄*/
@@ -40,27 +41,27 @@ public class CarPersonAddDto {
     private Integer age;
 	
 	/**身份证*/
-	@NotEmpty(message = "身份证不能为空")
+	@NotBlank(message = "身份证不能为空")
     private String idCard;
 
 	/**类型*/
-	@NotEmpty(message = "类型不能为空")
+	@NotBlank(message = "类型不能为空")
 	@Pattern(regexp = "^(driver)|(supercargo)$", message = "类型错误")
     private String personType;
 	
 	/**驾驶证*/
-	@NotEmpty(message = "驾驶证不能为空")
+	@NotBlank(message = "驾驶证不能为空")
     private String drivingLicence;
 	
     
 	// 以下属于账号信息
 	
 	/**账号*/
-	@Length(min = 6, max = 20, message = "账号长度[6~20]")
+	@Pattern(regexp = RegExConstants.USER_ACCOUNT, message = RegExConstants.USER_ACCOUNT_ERR_MSG)
 	private String userAccount;
 	
 	/**账号手机号*/
-	@Pattern(regexp = "^1(3|4|5|7|8)\\d{9}$", message = "手机号码格式错误")
+	@Pattern(regexp = RegExConstants.CHINA_PHONE_NUMBER, message = RegExConstants.CHINA_PHONE_NUMBER_ERR_MSG)
 	private String userTel;
 	
 	/**密码*/
