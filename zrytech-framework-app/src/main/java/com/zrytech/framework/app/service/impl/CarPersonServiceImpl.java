@@ -597,5 +597,18 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 	
 	
+	@Override
+	public ServerResponse myDriver(CarOwnerCarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
+		dto.setPersonType(CarPersonConstants.PERSON_TYPE_DRIVER);
+		return page(dto, pageNum, pageSize, customer);
+	}
+	
+	
+	@Override
+	public ServerResponse mySupercargo(CarOwnerCarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
+		dto.setPersonType(CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+		return page(dto, pageNum, pageSize, customer);
+	}
+	
 	
 }

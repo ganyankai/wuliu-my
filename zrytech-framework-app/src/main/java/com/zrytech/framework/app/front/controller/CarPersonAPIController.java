@@ -222,4 +222,53 @@ public class CarPersonAPIController {
 	}
 	
 	
+	/**
+	 * 车主及车主子账号 - 我的司机
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@PostMapping("/myDriver")
+	public ServerResponse myDriver(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Integer pageNum = requestParams.getPage().getPageNum();
+		Integer pageSize = requestParams.getPage().getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		return carPersonService.myDriver(requestParams.getParams(), pageNum, pageSize, customer);
+	}
+	
+	
+	/**
+	 * 车主及车主子账号 - 我的压货人
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@PostMapping("/mySupercargo")
+	public ServerResponse mySupercargo(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Integer pageNum = requestParams.getPage().getPageNum();
+		Integer pageSize = requestParams.getPage().getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		return carPersonService.mySupercargo(requestParams.getParams(), pageNum, pageSize, customer);
+	}
+	
+	
+	
 }

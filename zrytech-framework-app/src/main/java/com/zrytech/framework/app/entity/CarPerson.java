@@ -10,9 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zrytech.framework.app.constants.CarPersonConstants;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
 
@@ -64,13 +67,10 @@ public class CarPerson {
 	
 	/**类型*/
 	public String getPersonTypeCN() {
-		if(CarPersonConstants.PERSON_TYPE_DRIVER.equals(personType)) {
-			return "司机";
-		}else if(CarPersonConstants.PERSON_TYPE_SUPERCARGO.equals(personType)) {
-			return "押货人";
-		}else {
-			return "";
-		}
+		if (!StringUtils.isNotBlank(personType)) {
+            return DictionaryUtil.getValue(CarPersonConstants.PERSON_TYPE, personType);
+        }
+        return personTypeCN;
 	}
 	
 	/**客户Id*/
@@ -91,7 +91,10 @@ public class CarPerson {
 	
 	/**状态*/
 	public String getStatusCN() {
-		return "状态：待处理";// TODO
+		if (!StringUtils.isNotBlank(status)) {
+            return DictionaryUtil.getValue(CarPersonConstants.PERSON_STATUS, status);
+        }
+        return statusCN;
 	}
 	
 	/**删除标识*/

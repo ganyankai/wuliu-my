@@ -24,17 +24,20 @@
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="cusomer_id" property="customerId" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
+    <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, credit_code, business_license, legaler_name, legaler_id_card_no, legaler_id_card_front, 
     tel, longitude, latitude, province, city, county, address_detail, intro, customer_type, 
-    avoid_audit, close_rate, favorable_level, status, cusomer_id, create_date
+    avoid_audit, close_rate, favorable_level, status, cusomer_id, create_date, type, approve_status, approve_content
   </sql>
   
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
 	  select * from `car_cargo_ownner`
 	  <where>
-	  	<if test="(userAccount != null and userAccount != '') or (tel != null and tel != '')">
+	  	<if test="(userAccount != null and userAccount != '') or (customerTel != null and customerTel != '')">
 	  		`cusomer_id` IN 
 	  		(
 	  			select `id` from `sys_customer` 
@@ -42,11 +45,14 @@
 	  				<if test="userAccount != null and userAccount != ''">
 	  					`user_account` LIKE CONCAT('%', #{userAccount}, '%')
 	  				</if>
-	  				<if test="tel != null and tel != ''">
-	  					and `tel` LIKE CONCAT('%', #{tel}, '%')
+	  				<if test="customerTel != null and customerTel != ''">
+	  					and `tel` LIKE CONCAT('%', #{customerTel}, '%')
 	  				</if>
 	  			</where>
 	  		)
+	  	</if>
+	  	<if test="id != null">
+	  		AND `id` = #{id}
 	  	</if>
 	  	<if test="name != null and name != ''">
 	  		AND `name` LIKE CONCAT('%', #{name}, '%')
@@ -54,14 +60,23 @@
 	  	<if test="legalerName != null and legalerName != ''">
 	  		AND `legaler_name` LIKE CONCAT('%', #{legalerName}, '%')
 	  	</if>
+	  	<if test="tel != null and tel != ''">
+	  		AND `tel` LIKE CONCAT('%', #{tel}, '%')
+	  	</if>
 	  	<if test="status != null and status != ''">
 	  		AND `status` = #{status}
 	  	</if>
 	  	<if test="customerType != null and customerType != ''">
 	  		AND `customer_type` = #{customerType}
 	  	</if>
-	  	<if test="id != null">
-	  		AND `id` = #{id}
+	  	<if test="avoidAudit != null">
+	  		AND `avoid_audit` = #{avoidAudit}
+	  	</if>
+	  	<if test="approveStatus != null and approveStatus != ''">
+	  		AND `approve_status` = #{approveStatus}
+	  	</if>
+	  	<if test="type != null and type != ''">
+	  		AND `type` = #{type}
 	  	</if>
 	  </where>
 	  order by `create_date` DESC

@@ -186,4 +186,31 @@ public interface CarPersonService {
 	 * @return
 	 */
 	public ServerResponse approve(CheckDto checkDto, User user);
+	
+	
+	
+	/**
+	 * 车主及车主子账号 - 我的压货人
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @param customer	当前登录人（车主账号）
+	 * @return
+	 */
+	public ServerResponse mySupercargo(CarOwnerCarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+	
+	
+	/**
+	 * 车主及车主子账号 - 我的司机
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @param customer	当前登录人（车主账号）
+	 * @return
+	 */
+	public ServerResponse myDriver(CarOwnerCarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
 }

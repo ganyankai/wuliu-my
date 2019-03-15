@@ -6,6 +6,9 @@ package com.zrytech.framework.app.constants;
  *
  */
 public class CarPersonConstants {
+	
+	
+	public static final String PERSON_TYPE = "car_person_type";
 
 	/**
 	 * 司机
@@ -16,6 +19,9 @@ public class CarPersonConstants {
 	 * 压货人
 	 */
 	public static final String PERSON_TYPE_SUPERCARGO = "supercargo";
+	
+	
+	
 	
 	/**
 	 * 待审核
@@ -33,6 +39,7 @@ public class CarPersonConstants {
 	public static final String PERSON_STATUS_DOWN = "down";
 	
 	
+	public static final String PERSON_STATUS = "car_person_status";
 	
 	/**空闲*/
 	public static final String PERSON_STATUS_FREE = "free";
@@ -43,7 +50,8 @@ public class CarPersonConstants {
 	/**初始状态*/
 	public static final String PERSON_STATUS_ORIGINAL = "original";
 	
-	
+	/**未认证*/
+	public static final String PERSON_STATUS_UNCERTIFIED = "uncertified";
 	
 	
 	/**待审批*/
