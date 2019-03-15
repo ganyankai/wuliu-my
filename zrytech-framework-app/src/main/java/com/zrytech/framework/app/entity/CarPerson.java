@@ -124,4 +124,12 @@ public class CarPerson {
 	@Transient
 	private Boolean isActive;
 	
+	/**审批状态*/
+	@Column(name = "`approve_status`")
+	private String approveStatus;
+	
+	/**需要审批字段的JSON字符串*/
+	@Column(name = "`approve_content`")
+	private String approveContent;
+	
 }

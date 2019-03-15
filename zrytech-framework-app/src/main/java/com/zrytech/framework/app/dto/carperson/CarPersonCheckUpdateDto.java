@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 司机压货人不需要检测字段更新入参
+ * 司机压货人需要检测字段更新入参
  * @author cat
  *
  */
