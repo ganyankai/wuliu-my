@@ -224,17 +224,15 @@
   </update>
   
   
+  <!-- 管理员搜索车辆信息 -->
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
   	select * from `car` 
   	<where>
 	  	<if test="name != null and name != ''">
-	  		`create_by` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{name}, '%'))
+	  		`car_owner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{name}, '%'))
 	  	</if>
 	  	<if test="carNo != null and carNo != ''">
 	  		and `car_no` like CONCAT('%', #{carNo}, '%')
-	  	</if>
-	  	<if test="createBy != null">
-	  		and `create_by` = #{createBy}
 	  	</if>
 	  	<if test="status != null and status != ''">
 	  		and `status` = #{status}
@@ -242,15 +240,16 @@
 	  	<if test="carType != null and carType != ''">
 	  		and `car_type` = #{carType}
 	  	</if>
-	  	<if test="id != null">
-	  		and `id` = #{id}
-	  	</if>
 	  	<if test="isDelete != null">
 	  		and `is_delete` = #{isDelete}
+	  	</if>
+	  	<if test="carOwnerId != null">
+	  		and `car_owner_id` = #{carOwnerId}
 	  	</if>
   	</where>
   	order by `create_date` desc
   </select>
+  
   
   <!-- 车主查询车辆分页 -->
   <select id="carOwnerSelectSelective" parameterType="Object" resultMap="BaseResultMap">

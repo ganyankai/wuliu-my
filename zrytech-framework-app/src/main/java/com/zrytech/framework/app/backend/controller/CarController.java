@@ -29,42 +29,49 @@ public class CarController {
 
 	@Autowired
 	private CarService carService;
+	
 
 	/**
 	 * 车辆分页
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param user
 	 * @return
 	 */
 	@Valid
 	@RequestMapping("/page")
 	public ServerResponse page(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result) {
-		User user = RequestUtil.getCurrentUser(User.class);
-		return carService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
-				requestParams.getPage().getPageSize());
+		Integer pageNum = requestParams.getPage().getPageNum();
+		Integer pageSize = requestParams.getPage().getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		return carService.page(requestParams.getParams(), pageNum, pageSize);
 	}
 	
 	
 	/**
 	 * 车辆详情
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param user
 	 * @return
 	 */
 	@Valid
 	@RequestMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
-		User user = RequestUtil.getCurrentUser(User.class);
-		return carService.details(requestParams.getParams().getId());
+		return carService.details(requestParams.getParams());
 	}
 
 	
 	/**
 	 * 车辆审核
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result

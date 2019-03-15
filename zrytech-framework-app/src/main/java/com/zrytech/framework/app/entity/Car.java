@@ -18,7 +18,7 @@ import lombok.Data;
 
 /**
  * 车辆
- *
+ * @author cat
  */
 @Data
 @Entity
@@ -104,6 +104,10 @@ public class Car {
 	@Column(name = "`create_date`")
     private Date createDate;
 	
+	/**车主Id*/
+	@Column(name = "`car_owner_id`")
+	private Integer carOwnerId;
+	
 	/**车主企业名称*/
 	@Transient
 	private String carOwnerName;
@@ -140,9 +144,7 @@ public class Car {
 		return "车辆状态,待处理";	// TODO
 	}
 	
-	/**车主Id*/
-	@Column(name = "`car_owner_id`")
-	private Integer carOwnerId;
+	
 	
 	
 }

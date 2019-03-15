@@ -38,6 +38,7 @@ public class CarAPIController {
 	
 	/**
 	 * 删除车辆
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -54,6 +55,7 @@ public class CarAPIController {
 	
 	/**
 	 * 提交审核
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -70,6 +72,7 @@ public class CarAPIController {
 	
 	/**
 	 * 修改车辆不需要审核的内容
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -86,6 +89,7 @@ public class CarAPIController {
 	
 	/**
 	 * 修改车辆需要审核的内容
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -102,6 +106,7 @@ public class CarAPIController {
 	
 	/**
 	 * 添加车辆
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -118,6 +123,7 @@ public class CarAPIController {
 	
 	/**
 	 * 车辆详情
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -134,6 +140,7 @@ public class CarAPIController {
 	
 	/**
 	 * 车辆分页
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
