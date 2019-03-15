@@ -10,7 +10,7 @@ public class CargoConstant {
     /**
      * cargo_status:资料认证状态;
      * */
-    public static final String CARGO_STATUS = "cargo_status";
+    public static final String CARGO_STATUS = "approve_status";
 
     /**audit_process:认证中*/
     public static final String AUDIT_PROCESS = "audit_process";
@@ -22,12 +22,12 @@ public class CargoConstant {
     /**
      * cargo_certification_type:客户认证资料类型;
      * */
-    public static final String CARGO_CUSTOMER_TYPE = "cargo_certification_type";
+    public static final String CARGO_CUSTOMER_TYPE = "owner_type";
 
     /**certification_organize:企业认证*/
-    public static final String CERTIFICATION_ORGANIZE = "certification_organize";
+    public static final String CERTIFICATION_ORGANIZE = "organize";
     /**certification_person:个人认证*/
-    public static final String CERTIFICATION_PERSON = "certification_person";
+    public static final String CERTIFICATION_PERSON = "person";
 
 
     /**
@@ -36,15 +36,15 @@ public class CargoConstant {
     public static final String CUSTOMER_TYPE = "customer_type";
 
     /**customer_cargo:货主*/
-    public static final String CUSTOMER_CARGO = "customer_cargo";
+    public static final String CUSTOMER_CARGO = "cargo_owner";
     /**customer_car_owner:车主;*/
-    public static final String CUSTOMER_CAR_OWNER = "customer_car_owner";
+    public static final String CUSTOMER_CAR_OWNER = "car_owner";
 
 
     /**
      * cargo_goods_status:货源状态;
      * */
-    public static final String CARGO_GOODS_STATUS = "cargo_goods_status";
+    public static final String CARGO_GOODS_STATUS = "cargo_source_status";
 
     /**source_draft:草稿;*/
     public static final String SOURCE_DRAFT = "source_draft";

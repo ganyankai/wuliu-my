@@ -99,9 +99,6 @@
                 and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
                 #{cargoOwnerName}, '%'))
             </if>
-            <if test="carOwnnerId != null">
-                and `cargo_ownner_id` = #{carOwnnerId}
-            </if>
             <if test="cargoId != null">
                 and `cargo_id` = #{cargoId}
             </if>
