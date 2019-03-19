@@ -34,7 +34,13 @@ public class CarPersonPageDto {
 	/**创建人Id*/
     private Integer createBy;
     
+    /**车主Id*/
+    private Integer carOwnerId;
+    
     /**车主企业名称*/
     private String carOwnerName;
+    
+    /**审批状态*/
+    private String approveStatus;
     
 }

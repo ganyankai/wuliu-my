@@ -6,6 +6,9 @@ package com.zrytech.framework.app.constants;
  *
  */
 public class ApproveConstants {
+	
+	/**审批状态*/
+	public static final String STATUS = "approve_status";
 
 	/**待审批*/
 	public static final String STATUS_APPROVAL_PENDING = "approval_pending";
@@ -18,5 +21,15 @@ public class ApproveConstants {
 	
 	/**审批未通过*/
 	public static final String STATUS_NOT_APPROVED = "not_approved";
+	
+	
+	
+	/**审批结果*/
+	public static final String RESULT = "approve_result";
+	
+	/**审批结果*/
+	public static final String RESULT_REFUSE = "refuse";
+	
+	public static final String RESULT_AGREE = "agree";
 	
 }

@@ -11,8 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CarConstants;
+import com.zrytech.framework.app.constants.CarSourceConstants;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
 
@@ -57,7 +62,10 @@ public class CarSource {
 	
 	/**车辆类型*/
 	public String getCarTypeCN() {
-		return "车辆类型，待处理"; // TODO
+		if (!StringUtils.isNotBlank(carType)) {
+            return DictionaryUtil.getValue(CarConstants.CAR_TYPE, carType);
+        }
+        return carTypeCN;
 	}
 	
 	/**运输量*/
@@ -68,6 +76,17 @@ public class CarSource {
 	@Column(name = "`unit`")
 	private String unit;
 
+	/**运输量单位*/
+	@Transient
+	private String unitCN;
+	
+	public String getCarUnitCN() {
+		if (!StringUtils.isNotBlank(unit)) {
+            return DictionaryUtil.getValue(CarConstants.CAR_UNIT, unit);
+        }
+        return unitCN;
+	}
+	
 	/**状态*/
 	@Column(name = "`status`")
     private String status;
@@ -78,7 +97,10 @@ public class CarSource {
 	
 	/**状态*/
 	public String getStatusCN() {
-		return "状态，待处理"; // TODO
+		if (!StringUtils.isNotBlank(status)) {
+            return DictionaryUtil.getValue(CarSourceConstants.CAR_SOURCE_STATUS, status);
+        }
+        return statusCN;
 	}
 	
     /**创建日期*/
@@ -94,5 +116,15 @@ public class CarSource {
 	/**车源车辆列表*/
 	@Transient
 	private List<CarSourceCar> carSourceCars;
+	
+	
+	/**审批状态*/
+	@Column(name = "`approve_status`")
+	private String approveStatus;
+	
+	/**需要审批的内容JSON*/
+	@Column(name = "`approve_content`")
+	private String approveContent;
+	
 	
 }

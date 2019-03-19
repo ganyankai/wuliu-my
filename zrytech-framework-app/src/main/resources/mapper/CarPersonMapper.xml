@@ -17,6 +17,8 @@
     <result column="create_by" jdbcType="INTEGER" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="car_owner_id" property="carOwnerId" jdbcType="INTEGER" />
+    <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
+    <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, logo, tel, sex, age, id_card, person_type, customer_id, driving_licence, 
@@ -215,11 +217,17 @@
 	  	<if test="createBy != null">
 	  		and `create_by` = #{createBy}
 	  	</if>
+	  	<if test="carOwnerId != null">
+	  		and `car_owner_id` = #{carOwnerId}
+	  	</if>
 	  	<if test="status != null and status != ''">
 	  		and `status` = #{status}
 	  	</if>
 	  	<if test="personType != null and personType != ''">
 	  		and `person_type` = #{personType}
+	  	</if>
+	  	<if test="approveStatus != null and approveStatus != ''">
+	  		and `approve_status` = #{approveStatus}
 	  	</if>
 	  	<if test="id != null">
 	  		and `id` = #{id}

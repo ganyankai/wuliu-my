@@ -9,12 +9,12 @@ public class ApproveLogConstants {
 	/**
 	 * 审核结果 通过
 	 */
-	public static final String APPROVE_RESULT_PASS = "pass";
+	//public static final String APPROVE_RESULT_PASS = "pass";
 	
 	/**
 	 * 审核结果 不通过
 	 */
-	public static final String APPROVE_RESULT_NO_PASS = "no_pass";
+	//public static final String APPROVE_RESULT_NO_PASS = "no_pass";
 	
 	
 	/**
@@ -27,6 +27,17 @@ public class ApproveLogConstants {
 	 * 审核类型 司机或押货人审核
 	 */
 	public static final String APPROVE_TYPE_CAR_PERSON = "car_person";
+	
+	/**
+	 * 审核类型 司机审核
+	 */
+	public static final String APPROVE_TYPE_CAR_PERSON_DRIVER = "car_person_driver";
+	
+	
+	/**
+	 * 审核类型 押货人审核
+	 */
+	public static final String APPROVE_TYPE_CAR_PERSON_SUPERCARGO = "car_person_supercargo";
 	
 	
 	/**

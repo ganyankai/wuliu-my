@@ -14,6 +14,7 @@ import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CarPersonRepository;
 import com.zrytech.framework.app.repository.CarRepository;
 import com.github.pagehelper.PageHelper;
+import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.dto.CheckDto;
@@ -100,7 +101,7 @@ public class CarServiceImpl implements CarService {
 		
 		// 修改车辆状态
 		String result = checkDto.getResult();
-		if(ApproveLogConstants.APPROVE_RESULT_PASS.equals(result)) {
+		if(ApproveConstants.RESULT_AGREE.equals(result)) {
 			car.setStatus(CarConstants.CAR_STATUS_UP);
 		}else {
 			car.setStatus(CarConstants.CAR_STATUS_DOWN);

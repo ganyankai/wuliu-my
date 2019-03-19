@@ -17,6 +17,7 @@ import com.zrytech.framework.app.repository.CarPersonRepository;
 import com.zrytech.framework.app.repository.LogisticsCustomerRepository;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarPersonConstants;
 import com.zrytech.framework.app.constants.CustomerConstants;
@@ -24,6 +25,8 @@ import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
+import com.zrytech.framework.app.dto.carperson.AdminSupercargoPageDto;
 import com.zrytech.framework.app.dto.carperson.CarOwnerCarPersonPageDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
@@ -62,20 +65,197 @@ public class CarPersonServiceImpl implements CarPersonService {
 	@Autowired private LogisticsCustomerRepository customerRepository;
 	
 	
-	
-	
 	@Override
 	public ServerResponse page(CarPersonPageDto dto, Integer pageNum, Integer pageSize){
+		PageData<CarPerson> pageData = this.carPersonPage(dto, pageNum, pageSize);
+		return ServerResponse.successWithData(pageData);
+	}
+	
+	/**
+	 * 司机压货人分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public PageData<CarPerson> carPersonPage(CarPersonPageDto dto, Integer pageNum, Integer pageSize){
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CarPerson> list = carPersonMapper.selectSelective(dto);
 		for (CarPerson carPerson : list) {
 			carPerson.setCarOwnerName(carCargoOwnnerRepository.findNameById(carPerson.getCarOwnerId()));
+			carPerson = this.bindingDriverCustomerStatus(carPerson);
 		}
-		PageData<CarPerson> pageData = new PageData<CarPerson>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
+		return new PageData<CarPerson>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
 	
 	
+	/**
+	 * 管理员 - 司机分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminDriverPage(AdminDriverPageDto dto, Integer pageNum, Integer pageSize) {
+		CarPersonPageDto carPersonPageDto = new CarPersonPageDto();
+		BeanUtils.copyProperties(dto, carPersonPageDto);
+		carPersonPageDto.setPersonType(CarPersonConstants.PERSON_TYPE_DRIVER);
+		return page(carPersonPageDto, pageNum, pageSize);
+	}
+	
+	
+	/**
+	 * 管理员 - 压货人分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminSupercargoPage(AdminSupercargoPageDto dto, Integer pageNum, Integer pageSize) {
+		CarPersonPageDto carPersonPageDto = new CarPersonPageDto();
+		BeanUtils.copyProperties(dto, carPersonPageDto);
+		carPersonPageDto.setPersonType(CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+		return page(carPersonPageDto, pageNum, pageSize);
+	}
+	
+	
+	/**
+	 * 管理员 - 某一个车主的司机分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminOneCarOwnerDriverPage(AdminDriverPageDto dto, Integer pageNum, Integer pageSize) {
+		if(dto.getCarOwnerId() == null) {
+			throw new BusinessException(112, "车主不能为空");
+		}
+		return adminDriverPage(dto, pageNum, pageSize);
+	}
+	
+	
+	/**
+	 * 管理员 - 某一个车主的压货人分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminOneCarOwnerSupercargoPage(AdminSupercargoPageDto dto, Integer pageNum, Integer pageSize) {
+		if(dto.getCarOwnerId() == null) {
+			throw new BusinessException(112, "车主不能为空");
+		}
+		return adminSupercargoPage(dto, pageNum, pageSize);
+	}
+	
+	
+	/**
+	 * 管理员 - 待认证的司机分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminApprovePendingDriverPage(AdminDriverPageDto dto, Integer pageNum, Integer pageSize) {
+		dto.setIsDelete(false);
+		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		return adminDriverPage(dto, pageNum, pageSize);
+	}
+	
+	
+	/**
+	 * 管理员 - 待认证的压货人分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminApprovePendingSupercargoPage(AdminSupercargoPageDto dto, Integer pageNum, Integer pageSize) {
+		dto.setIsDelete(false);
+		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		return adminSupercargoPage(dto, pageNum, pageSize);
+	}
+	
+	
+	/**
+	 * 管理员 - 司机详情
+	 * @author cat
+	 * 
+	 * @param dto	司机Id
+	 * @return
+	 */
+	public ServerResponse adminDriverDetails(DetailsDto dto) {
+		CarPerson carPerson = this.assertDriverExist(dto.getId());
+		carPerson = this.bindingCarOwner(carPerson);
+		carPerson = this.bindingDriverCustomerStatus(carPerson);
+		return ServerResponse.successWithData(carPerson);
+	}
+	
+	
+	/**
+	 * 管理员 - 压货人详情
+	 * @author cat
+	 * 
+	 * @param dto	压货人Id
+	 * @return
+	 */
+	public ServerResponse adminSupercargoDetails(DetailsDto dto) {
+		CarPerson carPerson = this.assertSupercargoExist(dto.getId());
+		carPerson = this.bindingCarOwner(carPerson);
+		return ServerResponse.successWithData(carPerson);
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * 断言司机存在
+	 * @author cat
+	 * 
+	 * @param driverId
+	 * @return
+	 */
+	public CarPerson assertDriverExist(Integer driverId) {
+		CarPerson carPerson = carPersonRepository.findByIdAndPersonType(driverId, CarPersonConstants.PERSON_TYPE_DRIVER);
+		if(carPerson == null) throw new BusinessException(112, "司机不存在");
+		return carPerson;
+	}
+	
+	
+	/**
+	 * 断言压货人存在
+	 * @author cat
+	 * 
+	 * @param supercargoId
+	 * @return
+	 */
+	public CarPerson assertSupercargoExist(Integer supercargoId) {
+		CarPerson carPerson = carPersonRepository.findByIdAndPersonType(supercargoId, CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+		if(carPerson == null) throw new BusinessException(112, "压货人不存在");
+		return carPerson;
+	}
+	
+	
+	
+	
+	
+	@Deprecated
 	@Override
 	public ServerResponse details(DetailsDto dto) {
 		CarPerson carPerson = this.assertCarPersonExist(dto.getId());
@@ -85,6 +265,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 	
 	
+	@Deprecated
 	@Transactional
 	@Override
 	public ServerResponse check(CheckDto checkDto, User user) {
@@ -95,7 +276,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 		}
 		// 修改司机或押货人状态
 		String result = checkDto.getResult();
-		if(ApproveLogConstants.APPROVE_RESULT_PASS.equals(result)) {
+		if(ApproveConstants.RESULT_AGREE.equals(result)) {
 			carPerson.setStatus(CarPersonConstants.PERSON_STATUS_UP);
 		}else {
 			carPerson.setStatus(CarPersonConstants.PERSON_STATUS_DOWN);
@@ -114,6 +295,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 	
 	
+	@Deprecated
 	@Transactional
 	@Override
 	public ServerResponse approve(CheckDto checkDto, User user) {
@@ -125,7 +307,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 		}
 		// 修改司机或押货人的审批状态和需要审核的字段
 		String result = checkDto.getResult();
-		this.approve(ApproveLogConstants.APPROVE_RESULT_PASS.equals(result), carPerson);
+		this.approve(ApproveConstants.RESULT_AGREE.equals(result), carPerson);
 		// 添加审核记录
 		ApproveLog entity = new ApproveLog();
 		entity.setApproveBy(user.getId());
@@ -136,6 +318,68 @@ public class CarPersonServiceImpl implements CarPersonService {
 		entity.setBusinessId(businessId);
 		approveLogRepository.save(entity);
 		return ServerResponse.successWithData("审核成功");
+	}
+	
+	
+	/**
+	 * 管理员 - 司机审批
+	 * @author cat
+	 * 
+	 * @param dto	审批结果
+	 * @param user	管理员
+	 * @return
+	 */
+	public ServerResponse adminDriverApprove(CheckDto dto, User user) {
+		CarPerson carPerson = this.assertDriverAvailable(dto.getBusinessId());
+		if(!CarPersonConstants.APPROVE_STATUS_APPROVAL_PENDING.equalsIgnoreCase(carPerson.getApproveStatus())) {
+			throw new BusinessException(112, "审批失败：司机的状态不是待审批");
+		}
+		// 审批
+		this.approve(ApproveConstants.RESULT_AGREE.equals(dto.getResult()), carPerson);
+		// 添加审批记录
+		this.insertApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_PERSON_DRIVER);
+		return ServerResponse.successWithData("审批成功");
+	}
+	
+	
+	/**
+	 * 管理员 - 压货人审批
+	 * @author cat
+	 * 
+	 * @param dto	审批结果
+	 * @param user	管理员
+	 * @return
+	 */
+	public ServerResponse adminSupercargoApprove(CheckDto dto, User user) {
+		CarPerson carPerson = this.assertSupercargoAvailable(dto.getBusinessId());
+		if(!CarPersonConstants.APPROVE_STATUS_APPROVAL_PENDING.equalsIgnoreCase(carPerson.getApproveStatus())) {
+			throw new BusinessException(112, "审批失败：压货人的状态不是待审批");
+		}
+		// 审批
+		this.approve(ApproveConstants.RESULT_AGREE.equals(dto.getResult()), carPerson);
+		// 添加审批记录
+		this.insertApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_PERSON_SUPERCARGO);
+		return ServerResponse.successWithData("审批成功");
+	}
+	
+	
+	/**
+	 * 添加审批记录
+	 * @author cat
+	 * 
+	 * @param dto	审批结果
+	 * @param approveBy	审批人Id
+	 * @param approveType	审批类型
+	 */
+	private void insertApproveLog(CheckDto dto, Integer approveBy, String approveType) {
+		ApproveLog entity = new ApproveLog();
+		entity.setApproveBy(approveBy);
+		entity.setBusinessId(dto.getBusinessId());
+		entity.setApproveResult(dto.getResult());
+		entity.setApproveContent(dto.getContent());
+		entity.setApproveTime(new Date());
+		entity.setApproveType(approveType);
+		approveLogRepository.save(entity);
 	}
 	
 	
@@ -171,8 +415,6 @@ public class CarPersonServiceImpl implements CarPersonService {
 		return carPerson;
 	}
 	
-
-	
 	
 	
 	/**
@@ -202,6 +444,53 @@ public class CarPersonServiceImpl implements CarPersonService {
 		if(carPerson.getIsDelete()){
 			throw new BusinessException(112, "司机或压货人不存在");
 		}
+	}
+	
+	/**
+	 * 断言司机没有被删除
+	 * @param carPerson	司机
+	 */
+	private void assertDriverNotDelete(CarPerson carPerson) {
+		if(carPerson.getIsDelete()){
+			throw new BusinessException(112, "司机不存在");
+		}
+	}
+	
+	/**
+	 * 断言压货人没有被删除
+	 * @param carPerson	压货人
+	 */
+	private void assertSupercargoNotDelete(CarPerson carPerson) {
+		if(carPerson.getIsDelete()){
+			throw new BusinessException(112, "压货人不存在");
+		}
+	}
+	
+	/**
+	 * 断言司机数据存在且未被删除
+	 * @author cat
+	 * 
+	 * @param driverId	司机Id
+	 * @return
+	 */
+	public CarPerson assertDriverAvailable(Integer driverId) {
+		CarPerson carPerson = this.assertDriverExist(driverId);
+		this.assertDriverNotDelete(carPerson);
+		return carPerson;
+	}
+	
+	
+	/**
+	 * 断言压货人数据存在且未被删除
+	 * @author cat
+	 * 
+	 * @param supercargoId	压货人Id
+	 * @return
+	 */
+	public CarPerson assertSupercargoAvailable(Integer supercargoId) {
+		CarPerson carPerson = this.assertSupercargoExist(supercargoId);
+		this.assertSupercargoNotDelete(carPerson);
+		return carPerson;
 	}
 	
 	

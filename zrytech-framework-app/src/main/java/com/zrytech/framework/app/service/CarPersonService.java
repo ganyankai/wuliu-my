@@ -6,6 +6,8 @@ import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
+import com.zrytech.framework.app.dto.carperson.AdminSupercargoPageDto;
 import com.zrytech.framework.app.dto.carperson.CarOwnerCarPersonPageDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
@@ -213,4 +215,133 @@ public interface CarPersonService {
 	 * @return
 	 */
 	public ServerResponse myDriver(CarOwnerCarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+	
+	
+	
+	
+	/**
+	 * 管理员 - 司机分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminDriverPage(AdminDriverPageDto dto, Integer pageNum, Integer pageSize);
+	
+	
+	/**
+	 * 管理员 - 压货人分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminSupercargoPage(AdminSupercargoPageDto dto, Integer pageNum, Integer pageSize);
+	
+	
+	/**
+	 * 管理员 - 某一个车主的司机分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminOneCarOwnerDriverPage(AdminDriverPageDto dto, Integer pageNum, Integer pageSize);
+	
+	
+	/**
+	 * 管理员 - 某一个车主的压货人分页
+	 * @author cat
+	 * 
+	 * @param dto	搜索条件
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminOneCarOwnerSupercargoPage(AdminSupercargoPageDto dto, Integer pageNum, Integer pageSize);
+	
+	
+	/**
+	 * 管理员 - 待审批的司机分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminApprovePendingDriverPage(AdminDriverPageDto dto, Integer pageNum, Integer pageSize);
+	
+	
+	/**
+	 * 管理员 - 待审批的压货人分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminApprovePendingSupercargoPage(AdminSupercargoPageDto dto, Integer pageNum, Integer pageSize);
+	
+	
+	/**
+	 * 管理员 - 司机详情
+	 * @author cat
+	 * 
+	 * @param dto	司机Id
+	 * @return
+	 */
+	public ServerResponse adminDriverDetails(DetailsDto dto);
+	
+	
+	/**
+	 * 管理员 - 压货人详情
+	 * @author cat
+	 * 
+	 * @param dto	压货人Id
+	 * @return
+	 */
+	public ServerResponse adminSupercargoDetails(DetailsDto dto);
+	
+	
+	/**
+	 * 管理员 - 司机审批
+	 * @author cat
+	 * 
+	 * @param dto	审批结果
+	 * @param user	管理员
+	 * @return
+	 */
+	public ServerResponse adminDriverApprove(CheckDto dto, User user);
+	
+	
+	/**
+	 * 管理员 - 压货人审批
+	 * @author cat
+	 * 
+	 * @param dto	审批结果
+	 * @param user	管理员
+	 * @return
+	 */
+	public ServerResponse adminSupercargoApprove(CheckDto dto, User user);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

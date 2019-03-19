@@ -2,6 +2,8 @@ package com.zrytech.framework.app.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zrytech.framework.app.dto.carsource.CarOwnerCarSourcePageDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
 import com.zrytech.framework.app.entity.CarSource;
@@ -36,4 +38,11 @@ public interface CarSourceMapper {
     List<CarSource> carOwnerSelectSelective(CarOwnerCarSourcePageDto dto);
     
     
+    /**
+     * 车主 - 我的车源
+     * @param dto	搜索条件
+     * @param carOwnerId	车主Id
+     * @return
+     */
+    List<CarSource> myCarSource(@Param("dto") CarOwnerCarSourcePageDto dto, @Param("carOwnerId") Integer carOwnerId);
 }

@@ -8,9 +8,11 @@
     <result column="qty" property="qty" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
+    <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, create_by, car_type, qty, status, create_date
+    id, create_by, car_type, qty, status, create_date, approve_status, approve_content
   </sql>
   
   
@@ -48,6 +50,23 @@
   	</if>
   	order by `create_date` desc
   </select>
+  
+  
+  <!-- 车主 - 我的车源 -->
+  <select id="myCarSource" parameterType="Object" resultMap="BaseResultMap">
+  	select * from `car_source` where `car_owner_id` = #{carOwnerId}
+  	<if test="dto.createBy != null">
+  		and `create_by` = #{dto.createBy}
+  	</if>
+  	<if test="dto.status != null and dto.status != ''">
+  		and `status` = #{dto.status}
+  	</if>
+  	<if test="dto.approveStatus != null and dto.approveStatus != ''">
+  		and `approve_status` = #{dto.approveStatus}
+  	</if>
+  	order by `create_date` desc
+  </select>
+  
   
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
