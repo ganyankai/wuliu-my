@@ -32,5 +32,5 @@ public class CarSourceCheckUpdateDto {
 	/** 运输量单位 */
 	@NotBlank(message = "运输量单位不能为空")
 	private String unit;
-
+	
 }

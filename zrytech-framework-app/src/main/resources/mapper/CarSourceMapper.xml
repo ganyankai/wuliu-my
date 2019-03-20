@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.zrytech.framework.app.entity.CarSource" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="car_owner_id" property="carOwnerId" jdbcType="INTEGER" />
     <result column="car_type" property="carType" jdbcType="VARCHAR" />
     <result column="qty" property="qty" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="VARCHAR" />
@@ -12,7 +13,7 @@
     <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, create_by, car_type, qty, status, create_date, approve_status, approve_content
+    id, create_by, car_type, qty, status, create_date, approve_status, approve_content, car_owner_id
   </sql>
   
   
@@ -20,13 +21,19 @@
   	select * from `car_source` 
   	<where>
 	  	<if test="carOwnerName != null and carOwnerName != ''">
-	  		`create_by` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
+	  		`car_owner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
 	  	</if>
 	  	<if test="createBy != null">
 	  		and `create_by` = #{createBy}
 	  	</if>
+	  	<if test="carOwnerId != null">
+	  		and `car_owner_id` = #{carOwnerId}
+	  	</if>
 	  	<if test="status != null and status != ''">
 	  		and `status` = #{status}
+	  	</if>
+	  	<if test="approveStatus != null and approveStatus != ''">
+	  		and `approve_status` = #{approveStatus}
 	  	</if>
 	  	<if test="carType != null and carType != ''">
 	  		and `car_type` = #{carType}

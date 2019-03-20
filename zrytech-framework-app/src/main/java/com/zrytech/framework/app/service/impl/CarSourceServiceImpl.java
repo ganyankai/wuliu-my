@@ -10,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.repository.ApproveLogRepository;
 import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CarRecordPlaceRepository;
 import com.zrytech.framework.app.repository.CarSourceCarRepository;
@@ -21,9 +20,9 @@ import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarSourceConstants;
-import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceAddDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceUpdateDto;
@@ -34,13 +33,13 @@ import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
-import com.zrytech.framework.app.entity.ApproveLog;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.CarRecordPlace;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.entity.CarSourceCar;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.mapper.CarSourceMapper;
+import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.app.service.CarService;
 import com.zrytech.framework.app.service.CarSourceService;
@@ -68,8 +67,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 	
 	@Autowired private CarSourceCarRepository carSourceCarRepository;
 	
-	@Autowired private ApproveLogRepository approveLogRepository;
-	
 	@Autowired private LogisticsCustomerRepository logisticsCustomerRepository;
 	
 	@Autowired private CarService carService;
@@ -78,53 +75,31 @@ public class CarSourceServiceImpl implements CarSourceService {
 	
 	
 	
-	
-	
-	/**
-	 * 车源分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
 	@Override
-	public ServerResponse page(CarSourcePageDto dto, Integer pageNum, Integer pageSize){
+	public PageData<CarSource> carSourcePage(CarSourcePageDto dto, Integer pageNum, Integer pageSize) {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CarSource> list = carSourceMapper.selectSelective(dto);
 		for (CarSource carSource : list) {
-			// 路线列表
-			List<CarRecordPlace> carRecordPlaces = carRecordPlaceRepository.findByCarSourceId(carSource.getId());
-			carSource.setCarRecordPlaces(carRecordPlaces);
-			// 车主企业名称
-			carSource = bindingCarOwnerName(carSource);
+			carSource = this.bindingCarRecordPlace(carSource);
+			carSource = this.bindingCarOwnerName(carSource);
 		}
-		PageData<CarSource> pageData = new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
+		return new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
 	
 	
-	/**
-	 * 车源详情
-	 * @author cat
-	 * 
-	 * @param id	车源Id
-	 * @return
-	 */
 	@Override
-	public ServerResponse details(Integer id) {
-		CarSource carSource = carSourceRepository.findOne(id);
-		// 路线列表
-		carSource = bindingCarRecordPlace(carSource);
-		// 车主企业名称
-		carSource = bindingCarOwnerName(carSource);
-		// 车辆列表
-		carSource = bindingCarSourceCar(carSource);
+	public ServerResponse adminDetails(DetailsDto dto) {
+		CarSource carSource = this.assertCarSourceExist(dto.getId());
+		carSource = this.bindingCarSourceCar(carSource);
+		carSource = this.bindingCarRecordPlace(carSource);
+		carSource = this.bindingCarOwnerName(carSource);
+		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(),
+				CarSourceCheckUpdateDto.class);
+		carSource.setApproveContentCN(temp);
 		return ServerResponse.successWithData(carSource);
 	}
 	
-	
+
 	/**
 	 * 为车源设置车辆列表
 	 * @author cat
@@ -132,7 +107,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSource
 	 * @return
 	 */
-	public CarSource bindingCarSourceCar(CarSource carSource) {
+	private CarSource bindingCarSourceCar(CarSource carSource) {
 		Integer carSourceId = carSource.getId();
 		if(carSourceId != null ) {
 			List<CarSourceCar> carSourceCars = carSourceCarRepository.findByCarSourceId(carSourceId);
@@ -149,7 +124,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSource
 	 * @return
 	 */
-	public CarSource bindingCarRecordPlace(CarSource carSource) {
+	private CarSource bindingCarRecordPlace(CarSource carSource) {
 		Integer carSourceId = carSource.getId();
 		if(carSourceId != null ) {
 			List<CarRecordPlace> carRecordPlaces = carRecordPlaceRepository.findByCarSourceId(carSourceId);
@@ -166,10 +141,10 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSource
 	 * @return
 	 */
-	public CarSource bindingCarOwnerName(CarSource carSource) {
-		Integer createBy = carSource.getCreateBy();
-		if(createBy != null ) {
-			carSource.setCarOwnerName(carCargoOwnnerRepository.findNameById(createBy));
+	private CarSource bindingCarOwnerName(CarSource carSource) {
+		Integer carOwnerId = carSource.getCarOwnerId();
+		if(carOwnerId != null ) {
+			carSource.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
 		}
 		return carSource;
 	}
@@ -191,7 +166,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 	}
 	
 	
-	
 	/**
 	 * 断言车源存在
 	 * @author cat
@@ -199,7 +173,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSourceId	车源Id
 	 * @return
 	 */
-	public CarSource assertCarSourceExist(Integer carSourceId) {
+	private CarSource assertCarSourceExist(Integer carSourceId) {
 		CarSource carSource = carSourceRepository.findOne(carSourceId);
 		if(carSource == null) {
 			throw new BusinessException(112, "车源不存在");
@@ -222,42 +196,51 @@ public class CarSourceServiceImpl implements CarSourceService {
 	}
 	
 	
+	@Autowired
+	private ApproveLogService approveLogService;
+
+	
 	/**
-	 * 车源审核
+	 * 管理员 - 车源审批
 	 * @author cat
 	 * 
-	 * @param checkDto
+	 * @param dto
+	 * @param user
+	 * @return
 	 */
-	@Override
-	public ServerResponse check(CheckDto checkDto, User user) {
-		Integer businessId = checkDto.getBusinessId();
-		
-		CarSource carSource = assertCarSourceExist(businessId);
-		
-		if(!CarSourceConstants.STATUS_WAIT_CHECK.equalsIgnoreCase(carSource.getStatus())) {
-			throw new BusinessException(112, "审核失败：车源的状态不是待审核");
+	public ServerResponse adminApprove(ApproveDto dto, User user) {
+		CarSource carSource = this.assertCarSourceExist(dto.getBusinessId());
+		if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(carSource.getApproveStatus())) {
+			throw new BusinessException(112, "审批失败：车源的状态不是待审批");
 		}
-		
-		// 修改车源状态
-		String result = checkDto.getResult();
-		if(ApproveConstants.RESULT_AGREE.equals(result)) {
-			carSource.setStatus(CarSourceConstants.STATUS_UP);
-		}else {
-			carSource.setStatus(CarSourceConstants.STATUS_DOWN);
+		this.approve(carSource, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_SOURCE);
+		return ServerResponse.successWithData("审核成功");
+	}
+	
+
+	/**
+	 * 车源的审批
+	 * @author cat
+	 * 
+	 * @param carSource
+	 * @param result
+	 */
+	private void approve(CarSource carSource, Boolean result) {
+		Integer id = carSource.getId();
+		if (result) {
+			CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(),
+					CarSourceCheckUpdateDto.class);
+			BeanUtils.copyProperties(temp, carSource);
+			carSource.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
+			carSource.setId(id);
+			if (carSource.getStatus().equalsIgnoreCase(CarSourceConstants.STATUS_UNCERTIFIED)) {
+				carSource.setStatus(CarSourceConstants.STATUS_RELEASE);
+			}
+		} else {
+			carSource.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
 		}
 		carSourceRepository.save(carSource);
-		
-		// 添加审核记录
-		ApproveLog entity = new ApproveLog();
-		entity.setApproveBy(user.getId());
-		entity.setApproveContent(checkDto.getContent());
-		entity.setApproveResult(checkDto.getResult());
-		entity.setApproveTime(new Date());
-		entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_CAR_SOURCE);
-		entity.setBusinessId(businessId);
-		approveLogRepository.save(entity);
-		
-		return ServerResponse.successWithData("审核成功");
 	}
 	
 	
