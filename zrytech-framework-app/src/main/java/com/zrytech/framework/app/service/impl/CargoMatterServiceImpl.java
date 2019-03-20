@@ -10,22 +10,29 @@ import org.springframework.stereotype.Service;
 import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CargoMatterRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.zrytech.framework.app.constants.ApproveConstants;
+import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CargoMatterConstants;
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.cargomatter.CarOwnerCargoMatterPageDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
+import com.zrytech.framework.app.dto.cargomatter.CargoMatterNeedApproveUpdateDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.app.entity.CargoMatter;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.mapper.CargoMatterMapper;
+import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CargoMatterService;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.entity.User;
 import com.zrytech.framework.base.exception.BusinessException;
 
 
@@ -37,51 +44,101 @@ import com.zrytech.framework.base.exception.BusinessException;
 @Service
 public class CargoMatterServiceImpl implements CargoMatterService {
 
+	@Autowired
+	private CargoMatterRepository cargoMatterRepository;
+
+	@Autowired
+	private CargoMatterMapper cargoMatterMapper;
+
+	@Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
+
+	@Autowired
+	private CargoRepository cargoRepository;
+
+	@Autowired
+	private CargoService cargoService;
 	
-	@Autowired private CargoMatterRepository cargoMatterRepository;
-	
-	@Autowired private CargoMatterMapper cargoMatterMapper;
-	
-	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
-	
-	@Autowired private CargoRepository cargoRepository;
-	
-	@Autowired private CargoService cargoService;
+	@Autowired
+	private ApproveLogService approveLogService;
 	
 	
 	
-	/**
-	 * 报价单分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
+	
 	@Override
-	public ServerResponse page(CargoMatterPageDto dto, Integer pageNum, Integer pageSize){
+	public PageData<CargoMatter> cargoMatterPage(CargoMatterPageDto dto, Integer pageNum, Integer pageSize) {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CargoMatter> list = cargoMatterMapper.selectSelective(dto);
 		for (CargoMatter cargoMatter : list) {
-			cargoMatter = bindingCarOwnerName(cargoMatter);
+			cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
 		}
-		PageData<CargoMatter> pageData = new PageData<CargoMatter>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
+		return new PageData<CargoMatter>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
+	}
+	
+	
+	@Override
+	public ServerResponse adminDetails(DetailsDto dto) {
+		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
+		cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
+		cargoMatter = this.bindingCargo(cargoMatter);
+		CargoMatterNeedApproveUpdateDto temp = JSON.parseObject(cargoMatter.getApproveContent(),
+				CargoMatterNeedApproveUpdateDto.class);
+		cargoMatter.setApproveContentCN(temp);
+		return ServerResponse.successWithData(cargoMatter);
+	}
+	
+	@Override
+	public ServerResponse adminApprove(ApproveDto dto, User user) {
+		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getBusinessId());
+		if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(cargoMatter.getApproveStatus())) {
+			throw new BusinessException(112, "审批失败：报价单的状态不是待审批");
+		}
+		this.approve(cargoMatter, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_MATTER);
+		return ServerResponse.successWithData("审批成功");
 	}
 	
 	
 	/**
-	 * 为报价单设置车主企业名称
+	 * 报价单的审批
+	 * @author cat
+	 * 
+	 * @param cargoMatter
+	 * @param result
+	 */
+	private void approve(CargoMatter cargoMatter, Boolean result) {
+		Integer id = cargoMatter.getId();
+		if (result) {
+			CargoMatterNeedApproveUpdateDto temp = JSON.parseObject(cargoMatter.getApproveContent(),
+					CargoMatterNeedApproveUpdateDto.class);
+			BeanUtils.copyProperties(temp, cargoMatter);
+			cargoMatter.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
+			cargoMatter.setId(id);
+			if (cargoMatter.getStatus().equalsIgnoreCase(CargoMatterConstants.STATUS_DRAFT)) {
+				cargoMatter.setStatus(CargoMatterConstants.STATUS_PROCESS);
+			}
+		} else {
+			cargoMatter.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
+		}
+		cargoMatterRepository.save(cargoMatter);
+	}
+	
+	
+	/**
+	 * 为报价单设置车主、货主企业名称
 	 * @author cat
 	 * 
 	 * @param cargoMatter
 	 * @return
 	 */
-	public CargoMatter bindingCarOwnerName(CargoMatter cargoMatter) {
-		Integer createBy = cargoMatter.getCarOwnnerId();
-		if(createBy != null ) {
-			cargoMatter.setCarOwnerName(carCargoOwnnerRepository.findNameById(createBy));
+	CargoMatter bindingCarCargoOwnerName(CargoMatter cargoMatter) {
+		Integer carOwnerId = cargoMatter.getCarOwnnerId();
+		if(carOwnerId != null ) {
+			cargoMatter.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
+		}
+		Integer cargoOwnerId = cargoMatter.getCargoOwnerId();
+		if(cargoOwnerId != null ) {
+			cargoMatter.setCargoOwnerName(carCargoOwnnerRepository.findNameById(cargoOwnerId));
 		}
 		return cargoMatter;
 	}
@@ -94,7 +151,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 * @param cargoMatter
 	 * @return
 	 */
-	public CargoMatter bindingCargo(CargoMatter cargoMatter) {
+	CargoMatter bindingCargo(CargoMatter cargoMatter) {
 		Integer cargoId = cargoMatter.getCargoId();
 		if(cargoId != null ) {
 			Cargo cargo = cargoRepository.findOne(cargoId);
@@ -104,36 +161,9 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	}
 	
 	
-	/**
-	 * 设置货主企业名称
-	 * @author cat
-	 * 
-	 * @param cargoMatter
-	 * @return
-	 */
-	public CargoMatter bindingCargoOwnerName(CargoMatter cargoMatter) {
-		// Integer cargoId = cargoMatter.getCargoId();
-		// TODO
-		cargoMatter.setCargoOwnerName("货主企业名称");
-		return cargoMatter;
-	}
 	
 	
 	
-	/**
-	 * 报价单详情
-	 * @author cat
-	 * 
-	 * @param id
-	 * @return
-	 */
-	@Override
-	public ServerResponse details(Integer id) {
-		CargoMatter cargoMatter = cargoMatterRepository.findOne(id);
-		cargoMatter = bindingCarOwnerName(cargoMatter);
-		cargoMatter = bindingCargo(cargoMatter);
-		return ServerResponse.successWithData(cargoMatter);
-	}
 	
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -155,7 +185,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CargoMatter> list = cargoMatterMapper.carOwnerSelectSelective(dto, carOwner.getId());
 		for (CargoMatter cargoMatter : list) {
-			cargoMatter = bindingCargoOwnerName(cargoMatter);
+			//cargoMatter = bindingCargoOwnerName(cargoMatter);
 		}
 		PageData<CargoMatter> pageData = new PageData<CargoMatter>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
@@ -175,7 +205,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
 		this.assertCargoMatterBelongToCurrentUser(cargoMatter, carOwner.getId());
 		// TODO 鉴权，展示结果待定
-		cargoMatter = bindingCargoOwnerName(cargoMatter);
+		//cargoMatter = bindingCargoOwnerName(cargoMatter);
 		cargoMatter = bindingCargo(cargoMatter);
 		return ServerResponse.successWithData(cargoMatter);
 	}
@@ -203,7 +233,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		CargoMatter cargoMatter = new CargoMatter();
 		BeanUtils.copyProperties(dto, cargoMatter);
 		cargoMatter.setCarOwnnerId(carOwnerId);
-		cargoMatter.setStatus(CargoMatterConstants.STATUS_PENDING);
+		cargoMatter.setStatus(CargoMatterConstants.STATUS_DRAFT);
 		cargoMatter.setCreateBy(customer.getId());
 		cargoMatter.setCreateDate(new Date());
 		cargoMatter.setId(null);

@@ -215,7 +215,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		}
 		this.approve(carSource, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
 		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_SOURCE);
-		return ServerResponse.successWithData("审核成功");
+		return ServerResponse.successWithData("审批成功");
 	}
 	
 

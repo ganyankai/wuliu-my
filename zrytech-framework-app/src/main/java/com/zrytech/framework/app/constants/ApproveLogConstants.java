@@ -44,7 +44,13 @@ public class ApproveLogConstants {
 	 * 审核类型 车源审核
 	 */
 	public static final String APPROVE_TYPE_CAR_SOURCE = "car_source";
-
+	
+	
+	/**
+	 * 审核类型 报价单
+	 */
+	public static final String APPROVE_TYPE_CARGO_MATTER = "cargo_matter";
+	
 
 	/**
 	 * 审核类型 货源审核
