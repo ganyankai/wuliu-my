@@ -15,7 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarConstants;
+import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
@@ -46,17 +49,9 @@ public class Car {
 	@Column(name = "`car_unit`")
     private String carUnit;
 
-	/**车载量单位*/
-	@Transient
-    private String carUnitCN;
-	
 	/**车辆类型*/
 	@Column(name = "`car_type`")
     private String carType;
-	
-	/**车辆类型*/
-	@Transient
-	private String carTypeCN;
 	
 	/**司机Id*/
 	@Column(name = "`driver_id`")
@@ -89,10 +84,6 @@ public class Car {
 	/**车辆状态*/
 	@Column(name = "`status`")
     private String status;
-	
-	/**车辆状态*/
-	@Transient
-	private String statusCN;
 	
 	/**是否删除*/
 	@Column(name = "`is_delete`")
@@ -137,26 +128,43 @@ public class Car {
 	private CarPerson supercargo;
 	
 	public String getCarUnitCN() {
-		if (!StringUtils.isNotBlank(carUnit)) {
+		if (StringUtils.isNotBlank(carUnit)) {
             return DictionaryUtil.getValue(CarConstants.CAR_UNIT, carUnit);
         }
-        return carUnitCN;
+        return carUnit;
 	}
 	
 	public String getCarTypeCN() {
-		if (!StringUtils.isNotBlank(carType)) {
+		if (StringUtils.isNotBlank(carType)) {
             return DictionaryUtil.getValue(CarConstants.CAR_TYPE, carType);
         }
-        return carTypeCN;
+        return carType;
 	}
 	
 	public String getStatusCN() {
-		if (!StringUtils.isNotBlank(status)) {
+		if (StringUtils.isNotBlank(status)) {
             return DictionaryUtil.getValue(CarConstants.CAR_STATUS, status);
         }
-        return statusCN;
+        return status;
 	}
 	
+    /**审批状态*/
+    @Column(name = "`approve_status`")
+    private String approveStatus;
+    
+    /**需要审批字段的JSON字符串*/
+    @JsonIgnore
+    @Column(name = "`approve_content`")
+    private String approveContent;
 	
-	
+    public String getApproveStatusCN() {
+    	if (StringUtils.isNotBlank(approveStatus)) {
+            return DictionaryUtil.getValue(ApproveConstants.STATUS, approveStatus);
+        }
+        return approveStatus;
+    }
+    
+    @Transient
+    private CarCheckUpdateDto approveContentCN;
+    
 }

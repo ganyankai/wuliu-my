@@ -2,44 +2,6 @@
 
 **作者：CAT**
 
-
-## 字段说明 ##
-
-    带 * 的内容需要审核
-
-    car
-    
-    id                  主键
-    carNo               *（str）车牌号
-    carLoad             *（int）车载量
-    carUnit             *（str）车载量单位
-    carUnitCN           *（str）车载量单位
-    cartype             *（str）车辆类型
-    cartypeCN           *（str）车辆类型
-    mulStore            *（boolean）是否分仓
-    storeQty            *（int）仓位数量
-
-    driverId            （int）司机Id
-    supercargoId        （int）压货人Id
-
-    currentLongitude    （str）经度
-    currentLatitude     （str）纬度
-    currentAddress      （str）当前位置
-
-    status              （str）车辆状态
-    statusCN            （str）车辆状态
-
-    carOwnerId          （int）车主Id 
-    createBy            （int）创建人Id
-    createDate          （str）创建日期
-    isDelete            （boolean）是否删除
-
-
-    1.车载量单位枚举待定
-    2.车辆类型枚举待定
-    
-
-<br>
 <br>
 <br>
 
@@ -58,14 +20,28 @@
     	"params": {
     		"carNo": "",              （必填）（str），车牌号
             "carLoad": "",            （必填）（int），核载量
-            "carUnit": "",            （必填）（str），核载量单位
-            "carType": "",            （必填）（str），车辆类型
+            "carUnit": "",            （必填）（str），核载量单位（字典取值）
+            "carType": "",            （必填）（str），车辆类型（字典取值）
             "mulStore": "",           （必填）（boolean），是否分仓 [true/false]
             "storeQty": ""            （必填）（int），仓位数量
     	},
     	"token": ""
 	}
+	
+**测试入参**
 
+    {
+    	"params": {
+			"carNo": "京A10111",             
+            "carLoad": "100",           
+            "carUnit": "ton",           
+            "carType": "car_tractor",           
+            "mulStore": "false",          
+            "storeQty": "1"             
+    	},
+    	"token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwiaXNzIjoiaHR0cHM6Ly93d3cua2FuZ2Fyb29iYWJ5Y2FyLmNvbSIsInN1YiI6IjEzMTYzMzQwNTY3Iiwicm9sZXMiOiJ1c2VyIiwiaWF0IjoxNTUxNDA1NDIxfQ.MWSqrSbGTgrMWbNat9g2sUkve3a0tu_tramGNEqe22M"
+	}
+	
 **响应示例**
 
     {
@@ -76,74 +52,96 @@
 
 <br>
 <br>
-<br>
 
 
-## 2.车主或车主子账号 - 查看车辆分页 ##
+## 2.车主或车主子账号 - 我的车辆分页 ##
 
 **备注**
 
     1.按照创建时间倒序
     2.查询当前登录账号车主的、未删除的车辆
-    3.暂定以下过滤条件
-    4.暂定以下返回值
 
 **URL**
->/api/car/page 
+>/api/car/myCarPage 
 
 **请求参数**
 
     {
     	"params": {
-    		"carNo": "",              （选填）（str），车牌号（模糊搜索）
-            "carType": "",            （选填）（str），车辆类型
-            "status": "",             （选填）（str），车辆状态
-            "createBy": ""            （选填）（int），创建人Id
+    		"carNo": "",              		（选填）（str），车牌号（模糊搜索）
+            "carType": "",            		（选填）（str），车辆类型（字典取值）
+            "createBy": "",            		（选填）（int），创建人Id
+            "status": "",             		（选填）（str），车辆状态（字典取值）
+            "approveStatus": ""  			（选填）（str），审批状态（字典取值）
     	},
+    	"page": {
+			"pageSize": "1",
+			"pageNum": "1"
+		},
     	"token": ""
 	}
+	
+**测试入参**
 
+    {
+    	"params": {
+            "carNo": "京A",             
+            "createBy": "1",             
+            "carType": "car_tractor", 
+            "status": "free", 
+            "approveStatus":"be_approved"         
+    	},
+    	"page": {
+			"pageSize": "1",
+			"pageNum": "1"
+		},
+    	"token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwiaXNzIjoiaHR0cHM6Ly93d3cua2FuZ2Fyb29iYWJ5Y2FyLmNvbSIsInN1YiI6IjEzMTYzMzQwNTY3Iiwicm9sZXMiOiJ1c2VyIiwiaWF0IjoxNTUxNDA1NDIxfQ.MWSqrSbGTgrMWbNat9g2sUkve3a0tu_tramGNEqe22M"
+	}
+	
 **响应示例**
 
     {
-        "code": 1,
-        "msg": "success",
-        "data": {
-            "total": 1,
-            "list": [
-                {
-                    "id": 7,
-                    "carNo": "鄂A10000",
-                    "carLoad": 100,
-                    "carUnit": "ton",
-                    "carUnitCN": "车载量单位,待处理",
-                    "carType": "car_type",
-                    "carTypeCN": "车辆类型,待处理",
-                    "driverId": null,
-                    "supercargoId": null,
-                    "currentLongitude": null,
-                    "currentLatitude": null,
-                    "currentAddress": null,
-                    "mulStore": true,
-                    "storeQty": 2,
-                    "status": "down",
-                    "statusCN": "车辆状态,待处理",
-                    "isDelete": false,
-                    "createBy": 1,
-                    "createDate": "2019-02-27 14:14:07",
-                    "carOwnerName": null,
-                    "carOwner": null,
-                    "driverName": null,                 // 司机姓名
-                    "driver": null,
-                    "supercargoName": null,             // 压货人姓名
-                    "supercargo": null,
-                    "carOwnerId": null
-                }
-            ],
-            "pageNo": 1,
-            "pageSize": 2
-        }
-    }
+	    "code": 1,
+	    "msg": "success",
+	    "data": {
+	        "total": 2,
+	        "list": [
+	            {
+	                "id": 13,
+	                "carNo": "京A10101",
+	                "carLoad": 100,
+	                "carUnit": "ton",
+	                "carType": "car_tractor",
+	                "driverId": 17,
+	                "supercargoId": 18,
+	                "currentLongitude": null,
+	                "currentLatitude": null,
+	                "currentAddress": null,
+	                "mulStore": false,
+	                "storeQty": 1,
+	                "status": "free",
+	                "isDelete": false,
+	                "createBy": 1,
+	                "createDate": "2019-03-21 17:11:23",
+	                "carOwnerId": 10,
+	                "carOwnerName": "中软云科技有限公司",
+	                "carOwner": null,
+	                "driverName": "司机",
+	                "driver": null,
+	                "supercargoName": "压货人",
+	                "supercargo": null,
+	                "approveStatus": "be_approved",
+	                "approveContentCN": null,
+	                "approveStatusCN": "审批通过",
+	                "carUnitCN": "吨",
+	                "statusCN": "空闲",
+	                "carTypeCN": "牵引车"
+	            }
+	        ],
+	        "pageNo": 1,
+	        "pageSize": 1
+	    }
+	}
 
 <br>
 <br>
@@ -168,104 +166,136 @@
     	"token": ""
 	}
 
+**测试入参**
+
+    {
+    	"params": {
+    		"id": "14" 
+    	},
+    	"token": ""
+	}
+	
 **响应示例**
 
     {
-        "code": 1,
-        "msg": "success",
-        "data": {                                   // 车辆基本信息
-            "id": 7,
-            "carNo": "鄂A10000",
-            "carLoad": 100,
-            "carUnit": "ton",
-            "carUnitCN": "车载量单位,待处理",
-            "carType": "car_type",
-            "carTypeCN": "车辆类型,待处理",
-            "driverId": 1,
-            "supercargoId": 1,
-            "currentLongitude": null,
-            "currentLatitude": null,
-            "currentAddress": null,
-            "mulStore": true,
-            "storeQty": 2,
-            "status": "down",
-            "statusCN": "车辆状态,待处理",
-            "isDelete": false,
-            "createBy": 1,
-            "createDate": "2019-02-27 14:14:07",
-            "carOwnerName": "车主张三",             // 车主姓名
-            "carOwner": {                          // 车主基本信息
-                "id": 1,
-                "name": "车主张三",
-                "creditCode": null,
-                "businessLicense": null,
-                "legalerName": "张三",
-                "legalerIdCardNo": null,
-                "legalerIdCardFront": null,
-                "tel": null,
-                "longitude": null,
-                "latitude": null,
-                "province": null,
-                "city": null,
-                "county": null,
-                "addressDetail": null,
-                "intro": null,
-                "customerType": "customer_car",
-                "customerTypeCN": null,
-                "avoidAudit": null,
-                "closeRate": null,
-                "favorableLevel": null,
-                "status": "1",
-                "statusCN": null,
-                "customerId": 1,
-                "customer": null,
-                "createDate": null
-            },
-            "driverName": "司机姓名",             // 司机姓名
-            "driver": {                          // 司机基本信息
-                "id": 1,
-                "name": "张",
-                "logo": null,
-                "tel": null,
-                "sex": null,
-                "age": null,
-                "idCard": null,
-                "personType": null,
-                "personTypeCN": "",
-                "customerId": null,
-                "drivingLicence": null,
-                "status": "down",
-                "statusCN": "状态：待处理",
-                "isDelete": false,
-                "createBy": 1,
-                "createDate": null,
-                "carOwnerName": null,
-                "carOwner": null
-            },
-            "supercargoName": "压货人张",       // 压货人姓名
-            "supercargo": {                    // 压货人基本信息
-                "id": 1,
-                "name": "张",
-                "logo": null,
-                "tel": null,
-                "sex": null,
-                "age": null,
-                "idCard": null,
-                "personType": null,
-                "personTypeCN": "",
-                "customerId": null,
-                "drivingLicence": null,
-                "status": "down",
-                "statusCN": "状态：待处理",
-                "isDelete": false,
-                "createBy": 1,
-                "createDate": null,
-                "carOwnerName": null,
-                "carOwner": null
-            },
-            "carOwnerId": 1
-        }
-    }
+	    "code": 1,
+	    "msg": "success",
+	    "data": {										// 车辆信息
+	        "id": 12,
+	        "carNo": "京A10012",
+	        "carLoad": 100,
+	        "carUnit": "ton",
+	        "carType": "car_tractor",
+	        "driverId": 17,
+	        "supercargoId": 18,
+	        "currentLongitude": null,
+	        "currentLatitude": null,
+	        "currentAddress": null,
+	        "mulStore": false,
+	        "storeQty": 1,
+	        "status": "uncertified",
+	        "isDelete": false,
+	        "createBy": 1,
+	        "createDate": "2019-03-13 15:14:41",
+	        "carOwnerId": 10,
+	        "carOwnerName": "中软云科技有限公司",
+	        "carOwner": {								// 车主信息
+	            "id": 10,
+	            "name": "中软云科技有限公司",
+	            "creditCode": "SKDOO124657788X",
+	            "businessLicense": "18",
+	            "legalerName": "张亮",
+	            "legalerIdCardNo": "420922198011272852",
+	            "legalerIdCardFront": "12",
+	            "tel": "13163340532",
+	            "longitude": 104.567,
+	            "latitude": 234.123,
+	            "province": "湖北省",
+	            "city": "荆州市",
+	            "county": "荆安村",
+	            "addressDetail": "湖北省荆州市荆安村",
+	            "intro": "企业简介",
+	            "customerType": "organize",
+	            "avoidAudit": false,
+	            "closeRate": null,
+	            "favorableLevel": null,
+	            "status": "audit_process",
+	            "customerId": 21,
+	            "customer": null,
+	            "createDate": "2019-03-14 17:18:55",
+	            "approveStatus": "be_approved",
+	            "approveContentCN": null,
+	            "type": "car_owner",
+	            "approveStatusCN": "审批通过",
+	            "customerTypeCN": "企业",
+	            "typeCN": "车主",
+	            "statusCN": null
+	        },
+	        "driverName": "司机",
+	        "driver": {									// 司机信息
+	            "id": 17,
+	            "name": "司机",
+	            "logo": null,
+	            "tel": "13612341234",
+	            "sex": "男",
+	            "age": 18,
+	            "idCard": "1",
+	            "customerId": 27,
+	            "drivingLicence": "1",
+	            "isDelete": false,
+	            "createBy": 10,
+	            "carOwnerId": 10,
+	            "createDate": "2019-03-14 18:22:21",
+	            "status": "free",
+	            "personType": "driver",
+	            "approveStatus": "be_approved",
+	            "isActive": null,
+	            "carOwnerName": null,
+	            "carOwner": null,
+	            "approveStatusCN": "审批通过",
+	            "personTypeCN": "司机",
+	            "statusCN": "空闲"
+	        },
+	        "supercargoName": "压货人",
+	        "supercargo": {									// 压货人信息
+	            "id": 18,
+	            "name": "压货人",
+	            "logo": null,
+	            "tel": "13612341234",
+	            "sex": "男",
+	            "age": 18,
+	            "idCard": "1",
+	            "customerId": null,
+	            "drivingLicence": "1",
+	            "isDelete": false,
+	            "createBy": 10,
+	            "carOwnerId": 10,
+	            "createDate": "2019-03-19 16:24:18",
+	            "status": "free",
+	            "personType": "supercargo",
+	            "approveStatus": "be_approved",
+	            "isActive": null,
+	            "carOwnerName": null,
+	            "carOwner": null,
+	            "approveStatusCN": "审批通过",
+	            "personTypeCN": "压货人",
+	            "statusCN": "空闲"
+	        },
+	        "approveStatus": "approval_pending",
+	        "approveContentCN": {							// 车辆审核的内容
+	            "id": null,
+	            "carLoad": 100,
+	            "carUnit": "ton",
+	            "carType": "car_tractor",
+	            "mulStore": false,
+	            "storeQty": 1
+	        },
+	        "approveStatusCN": "待审批",
+	        "carTypeCN": "牵引车",
+	        "carUnitCN": "吨",
+	        "statusCN": "未认证"
+	    }
+	}
 
 <br>
 <br>
@@ -294,7 +324,18 @@
     	},
     	"token": ""
 	}
+	
+**测试入参**
 
+    {
+    	"params": {
+    		"id": "14", 
+            "driverId": "17", 
+            "supercargoId": "18"   
+    	},
+    	"token": ""
+	}
+	
 **响应示例**
 
     {
@@ -313,7 +354,6 @@
 **备注**
 
     1.暂定以下需要审核的内容字段
-    2.修改成功会同时将车辆状态改为已下架
 
 **URL**
 >/api/car/updateCheck
@@ -328,6 +368,20 @@
             "carType": "",       （必填）（str），车辆类型
             "mulStore": "",      （必填）（boolean），是否分仓 [true/false]
             "storeQty": ""       （必填）（int），仓位数量
+    	},
+    	"token": ""
+	}
+	
+**测试入参**
+
+    {
+    	"params": {
+    		"id": "14",           
+            "carLoad": "200",      
+            "carUnit": "ton",      
+            "carType": "car_tractor",      
+            "mulStore": "true",     
+            "storeQty": "12"      
     	},
     	"token": ""
 	}
@@ -376,7 +430,7 @@
 <br>
 
 
-## 7.车主或车主子账号 - 车辆提交审核 ##
+## 7.车主或车主子账号 - 车辆提交审核(已作废) ##
 
 **备注**
 

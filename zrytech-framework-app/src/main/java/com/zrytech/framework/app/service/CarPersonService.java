@@ -23,6 +23,25 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public interface CarPersonService {
 	
+	/**
+	 * 断言司机数据存在且未被删除
+	 * @author cat
+	 * 
+	 * @param driverId	司机Id
+	 * @return
+	 */
+	public CarPerson assertDriverAvailable(Integer driverId);
+	
+	
+	/**
+	 * 断言压货人数据存在且未被删除
+	 * @author cat
+	 * 
+	 * @param supercargoId	压货人Id
+	 * @return
+	 */
+	public CarPerson assertSupercargoAvailable(Integer supercargoId);
+	
 	
 	/**
 	 * 断言司机压货人可用

@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.car.CarAddDto;
 import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
 import com.zrytech.framework.app.dto.car.CarNoCheckUpdateDto;
-import com.zrytech.framework.app.dto.car.CarOwnerCarPageDto;
+import com.zrytech.framework.app.dto.car.CarPageDto;
+import com.zrytech.framework.app.entity.Car;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarService;
+import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.RequestUtil;
@@ -53,22 +54,6 @@ public class CarAPIController {
 	}
 	
 	
-	/**
-	 * 提交审核
-	 * @author cat
-	 * 
-	 * @param requestParams
-	 * @param result
-	 * @param customer	车主或者车主子账号
-	 * @return
-	 */
-	@Valid
-	@RequestMapping("/submitAudit")
-	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
-		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		return carService.submitAudit(requestParams.getParams(), customer);
-	}
-
 	
 	/**
 	 * 修改车辆不需要审核的内容
@@ -122,7 +107,7 @@ public class CarAPIController {
 	
 	
 	/**
-	 * 车辆详情
+	 * 车主及车主子账号 - 车辆详情
 	 * @author cat
 	 * 
 	 * @param requestParams
@@ -138,22 +123,32 @@ public class CarAPIController {
 	}
 	
 	
+	
 	/**
-	 * 车辆分页
+	 * 车主及车主子账号 - 我的车辆分页
 	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
 	@Valid
-	@RequestMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarPageDto> requestParams, BindingResult result) {
+	@RequestMapping("/myCarPage")
+	public ServerResponse myCarPage(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		return carService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
-				requestParams.getPage().getPageSize(), customer);
+		Integer pageNum = requestParams.getPage().getPageNum();
+		Integer pageSize = requestParams.getPage().getPageSize();
+		if (pageNum == null)
+			pageNum = 1;
+		if (pageSize == null)
+			pageSize = 10;
+		CarPageDto dto = requestParams.getParams();
+		dto.setCarOwnerId(customer.getCarOwner().getId());
+		dto.setIsDelete(false);
+		PageData<Car> carPage = carService.carPage(dto, pageNum, pageSize);
+		return ServerResponse.successWithData(carPage);
 	}
+	
 	
 	
 }

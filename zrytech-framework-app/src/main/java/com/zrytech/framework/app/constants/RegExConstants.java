@@ -17,6 +17,8 @@ public class RegExConstants {
 	/**车牌号正则*/
 	public static final String CAR_NO = "^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1})|()$";
 	
+	public static final String CAR_NO_ERR_MSG = "车牌号格式有误";
+	
 	/**用户名正则*/
 	public static final String USER_ACCOUNT = "^[A-Za-z]{1}[A-Za-z0-9_-]{2,15}|()$";
 	public static final String USER_ACCOUNT_ERR_MSG = "账号格式有误：账号可包含数字、字母、减号、下划线，需以字母开头，长度（3-16）";

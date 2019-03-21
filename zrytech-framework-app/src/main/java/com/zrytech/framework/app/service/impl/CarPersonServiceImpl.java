@@ -466,13 +466,8 @@ public class CarPersonServiceImpl implements CarPersonService {
 		}
 	}
 	
-	/**
-	 * 断言司机数据存在且未被删除
-	 * @author cat
-	 * 
-	 * @param driverId	司机Id
-	 * @return
-	 */
+	
+	@Override
 	public CarPerson assertDriverAvailable(Integer driverId) {
 		CarPerson carPerson = this.assertDriverExist(driverId);
 		this.assertDriverNotDelete(carPerson);
@@ -480,13 +475,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 	
 	
-	/**
-	 * 断言压货人数据存在且未被删除
-	 * @author cat
-	 * 
-	 * @param supercargoId	压货人Id
-	 * @return
-	 */
+	@Override
 	public CarPerson assertSupercargoAvailable(Integer supercargoId) {
 		CarPerson carPerson = this.assertSupercargoExist(supercargoId);
 		this.assertSupercargoNotDelete(carPerson);
