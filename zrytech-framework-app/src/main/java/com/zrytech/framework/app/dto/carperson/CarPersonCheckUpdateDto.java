@@ -6,6 +6,8 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
+import com.zrytech.framework.app.constants.RegExConstants;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,11 +25,11 @@ public class CarPersonCheckUpdateDto {
 	private Integer id;
 	
 	@NotBlank(message = "手机号不能为空")
-	@Pattern(regexp = "^1(3|4|5|7|8)\\d{9}$", message = "手机号码格式错误")
+	@Pattern(regexp = RegExConstants.CHINA_PHONE_NUMBER, message = RegExConstants.CHINA_PHONE_NUMBER_ERR_MSG)
 	private String tel;
 	
 	@NotBlank(message = "性别不能为空")
-	@Pattern(regexp = "^(男)|(女)$", message = "性别错误")
+	@Pattern(regexp = RegExConstants.SEX, message = RegExConstants.SEX_ERR_MSG)
 	private String sex;
 	
 	@NotNull(message = "年龄不能为空")

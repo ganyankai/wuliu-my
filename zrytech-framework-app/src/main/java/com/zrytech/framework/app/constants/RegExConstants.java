@@ -28,8 +28,12 @@ public class RegExConstants {
 	public static final String SEX = "^(男)|(女)|()$";
 	public static final String SEX_ERR_MSG = "性别格式有误：可选“男”，“女”。";
 	
+	public static final String PASSWORD = "^.*(?=.{6,16})(?=.*\\d)(?=.*[A-Za-z])(?=.*[\\p{Punct}]).*|()$";
+	public static final String PASSWORDERR_MSG = "密码格式错误：密码必须同时包含字母、数字、特殊符号，长度（6-16）";
+	
+	
 	
 	public static void main(String[] args) {
-		System.out.println("a1a-_1a1a1".matches(RegExConstants.USER_ACCOUNT));
+		System.out.println("".matches(RegExConstants.PASSWORD));
 	}
 }

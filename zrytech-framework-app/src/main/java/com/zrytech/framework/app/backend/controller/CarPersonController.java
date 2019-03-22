@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
 import com.zrytech.framework.app.dto.carperson.AdminSupercargoPageDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonPageDto;
@@ -256,7 +257,7 @@ public class CarPersonController {
 	 */
 	@Valid
 	@PostMapping("/driverApprove")
-	public ServerResponse driverApprove(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result) {
+	public ServerResponse driverApprove(@RequestBody @Valid RequestParams<ApproveDto> requestParams, BindingResult result) {
 		User user = RequestUtil.getCurrentUser(User.class);
 		return carPersonService.adminDriverApprove(requestParams.getParams(), user);
 	}
@@ -271,7 +272,7 @@ public class CarPersonController {
 	 */
 	@Valid
 	@PostMapping("/supercargoApprove")
-	public ServerResponse supercargoApprove(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result) {
+	public ServerResponse supercargoApprove(@RequestBody @Valid RequestParams<ApproveDto> requestParams, BindingResult result) {
 		User user = RequestUtil.getCurrentUser(User.class);
 		return carPersonService.adminSupercargoApprove(requestParams.getParams(), user);
 	}

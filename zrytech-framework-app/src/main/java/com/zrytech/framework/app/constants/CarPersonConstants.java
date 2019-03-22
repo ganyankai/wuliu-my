@@ -48,7 +48,7 @@ public class CarPersonConstants {
 	public static final String PERSON_STATUS_BUSY = "busy";
 	
 	/**初始状态*/
-	public static final String PERSON_STATUS_ORIGINAL = "original";
+	// public static final String PERSON_STATUS_ORIGINAL = "original";
 	
 	/**未认证*/
 	public static final String PERSON_STATUS_UNCERTIFIED = "uncertified";

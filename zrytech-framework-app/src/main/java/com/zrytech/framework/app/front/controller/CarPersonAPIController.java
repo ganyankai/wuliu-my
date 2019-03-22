@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
-import com.zrytech.framework.app.dto.carperson.CarOwnerCarPersonPageDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonEnabledDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonNoCheckUpdateDto;
+import com.zrytech.framework.app.dto.carperson.CarPersonPageDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.base.entity.RequestParams;
@@ -26,7 +26,6 @@ import com.zrytech.framework.base.util.RequestUtil;
 
 /**
  * 前台 - 司机与压货人
- * 
  * @author cat
  *
  */
@@ -39,7 +38,7 @@ public class CarPersonAPIController {
 
 	
 	/**
-	 * 司机与压货人启用禁用
+	 * 车主及车主子账号 - 司机与压货人启用禁用
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -48,14 +47,15 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/enabled")
-	public ServerResponse enabled(@RequestBody @Valid RequestParams<CarPersonEnabledDto> requestParams, BindingResult result) {
+	public ServerResponse enabled(@RequestBody @Valid RequestParams<CarPersonEnabledDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.enabled(requestParams.getParams(), customer);
 	}
 	
 	
 	/**
-	 * 删除司机与压货人
+	 * 车主及车主子账号 - 删除司机与压货人
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -69,8 +69,17 @@ public class CarPersonAPIController {
 		return carPersonService.delete(requestParams.getParams(), customer);
 	}
 	
+	
+	/**
+	 * 车主及车主子账号 - 取消审批
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
 	@Valid
-	@PostMapping("/cancel")
+	@PostMapping("/cancelApprove")
 	public ServerResponse cancel(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.cancelApprove(requestParams.getParams(), customer);
@@ -78,13 +87,14 @@ public class CarPersonAPIController {
 	
 	
 	/**
-	 * 提交审核
+	 * 车主及车主子账号 - 提交审核
 	 * 
 	 * @param requestParams
 	 * @param result
 	 * @param customer
 	 * @return
 	 */
+	@Deprecated
 	@Valid
 	@PostMapping("/submitAudit")
 	public ServerResponse submitAudit(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
@@ -103,14 +113,15 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/submitApprove")
-	public ServerResponse submitApprove(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
+	public ServerResponse submitApprove(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.submitApprove(requestParams.getParams(), customer);
 	}
-
 	
 	/**
-	 * 修改司机与压货人不需要审核的内容
+	 * 车主及车主子账号 - 修改司机或压货人不需要审核的内容
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
@@ -119,7 +130,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/updateNoCheck")
-	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarPersonNoCheckUpdateDto> requestParams, BindingResult result) {
+	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarPersonNoCheckUpdateDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.updateNoCheck(requestParams.getParams(), customer);
 	}
@@ -133,6 +145,7 @@ public class CarPersonAPIController {
 	 * @param customer
 	 * @return
 	 */
+	@Deprecated
 	@Valid
 	@PostMapping("/updateCheck")
 	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarPersonCheckUpdateDto> requestParams, BindingResult result) {
@@ -140,9 +153,8 @@ public class CarPersonAPIController {
 		return carPersonService.updateCheck(requestParams.getParams(), customer);
 	}
 	
-	
 	/**
-	 * 车主及车主子账号 - 修改需要审批的字段（待审批状态的司机压货人不可修改）
+	 * 车主及车主子账号 - 修改司机压货人需要审批的字段
 	 * @author cat
 	 * 
 	 * @param requestParams
@@ -151,7 +163,8 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/updateNeedApprove")
-	public ServerResponse updateNeedApprove(@RequestBody @Valid RequestParams<CarPersonCheckUpdateDto> requestParams, BindingResult result) {
+	public ServerResponse updateNeedApprove(@RequestBody @Valid RequestParams<CarPersonCheckUpdateDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.updateNeedApprove(requestParams.getParams(), customer);
 	}
@@ -165,6 +178,7 @@ public class CarPersonAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@Deprecated
 	@Valid
 	@PostMapping("/add")
 	public ServerResponse add(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams, BindingResult result) {
@@ -183,18 +197,18 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/create")
-	public ServerResponse create(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams, BindingResult result) {
+	public ServerResponse create(@RequestBody @Valid RequestParams<CarPersonAddDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.create(requestParams.getParams(), customer);
 	}
 	
-	
 	/**
-	 * 司机与压货人详情
+	 * 车主及车主子账号 - 司机与压货人详情
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer
 	 * @return
 	 */
 	@Valid
@@ -204,21 +218,29 @@ public class CarPersonAPIController {
 		return carPersonService.details(requestParams.getParams(), customer);
 	}
 	
-	
 	/**
-	 * 司机与压货人分页
+	 * 车主及车主子账号 - 司机与压货人分页
+	 * @author cat
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer
 	 * @return
 	 */
 	@Valid
 	@PostMapping("/page")
-	public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result) {
+	public ServerResponse page(@RequestBody @Valid RequestParams<CarPersonPageDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		return carPersonService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
-				requestParams.getPage().getPageSize(), customer);
+		Integer pageNum = requestParams.getPage().getPageNum();
+		Integer pageSize = requestParams.getPage().getPageSize();
+		if (pageNum == null)
+			pageNum = 1;
+		if (pageSize == null)
+			pageSize = 10;
+		CarPersonPageDto dto = requestParams.getParams();
+		dto.setIsDelete(false);
+		dto.setCarOwnerId(customer.getCarOwner().getId());
+		return carPersonService.page(dto, pageNum, pageSize);
 	}
 	
 	
@@ -232,19 +254,18 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/myDriver")
-	public ServerResponse myDriver(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result) {
+	public ServerResponse myDriver(@RequestBody @Valid RequestParams<CarPersonPageDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		Integer pageNum = requestParams.getPage().getPageNum();
 		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null) {
+		if (pageNum == null)
 			pageNum = 1;
-		}
-		if (pageSize == null) {
+		if (pageSize == null)
 			pageSize = 10;
-		}
-		return carPersonService.myDriver(requestParams.getParams(), pageNum, pageSize, customer);
+		CarPersonPageDto dto = requestParams.getParams();
+		return carPersonService.myDriver(dto, pageNum, pageSize, customer);
 	}
-	
 	
 	/**
 	 * 车主及车主子账号 - 我的压货人
@@ -256,17 +277,17 @@ public class CarPersonAPIController {
 	 */
 	@Valid
 	@PostMapping("/mySupercargo")
-	public ServerResponse mySupercargo(@RequestBody @Valid RequestParams<CarOwnerCarPersonPageDto> requestParams, BindingResult result) {
+	public ServerResponse mySupercargo(@RequestBody @Valid RequestParams<CarPersonPageDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		Integer pageNum = requestParams.getPage().getPageNum();
 		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null) {
+		if (pageNum == null)
 			pageNum = 1;
-		}
-		if (pageSize == null) {
+		if (pageSize == null)
 			pageSize = 10;
-		}
-		return carPersonService.mySupercargo(requestParams.getParams(), pageNum, pageSize, customer);
+		CarPersonPageDto dto = requestParams.getParams();
+		return carPersonService.mySupercargo(dto, pageNum, pageSize, customer);
 	}
 	
 	
