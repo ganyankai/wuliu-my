@@ -143,7 +143,8 @@ public class Waybill {
 	/**运单项*/
 	@Transient
 	private List<WaybillDetail> waybillDetails;
-	
+
+
 	/**运单评价*/
 	@Transient
 	private List<Evaluate> evaluates;

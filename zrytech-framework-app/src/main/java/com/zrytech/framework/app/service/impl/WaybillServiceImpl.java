@@ -1,6 +1,5 @@
 package com.zrytech.framework.app.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,11 +10,9 @@ import javax.transaction.Transactional;
 
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.constants.BillLocationConstants;
-import com.zrytech.framework.app.constants.CarPersonConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.constants.IndentConstants;
 import com.zrytech.framework.app.dao.CargoDao;
-import com.zrytech.framework.app.dao.WaybillDao;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.WaybillDto;
@@ -25,6 +22,7 @@ import com.zrytech.framework.app.enums.LogisticsResultEnum;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.service.impl.ServiceImpl;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.base.util.TradeNoUtil;
@@ -53,6 +51,7 @@ import com.zrytech.framework.app.service.WaybillDetailService;
 import com.zrytech.framework.app.service.WaybillService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  * 运单
@@ -60,7 +59,8 @@ import com.zrytech.framework.base.entity.ServerResponse;
  * @author cat
  */
 @Service
-public class WaybillServiceImpl implements WaybillService {
+@org.springframework.transaction.annotation.Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,Integer> implements WaybillService {
 
     @Autowired
     private WaybillMapper waybillMapper;
@@ -83,8 +83,8 @@ public class WaybillServiceImpl implements WaybillService {
     @Autowired
     private EvaluateRepository evaluateRepository;
 
-    @Autowired
-    private WaybillDao waybillDao;
+   /* @Autowired
+    private WaybillDao waybillDao;*/
 
     @Autowired
     private CargoDao cargoDao;
@@ -165,7 +165,7 @@ public class WaybillServiceImpl implements WaybillService {
         waybill.setCargoOwnnerId(sysCustomer.getId());//TODO:认证材料ID
         waybill.setPayType(cargo.getPayType());
         supplementWabill(cargo, waybill);
-        int num = waybillDao.createIndent(waybill);
+        int num = waybillMapper.insert(waybill);
         CheckFieldUtils.assertSuccess(num);
         //TODO:修改货源状态以及报价单状态
         updateCargoAndMatter(cargo, waybillDto.getCarOwnnerId());
@@ -198,13 +198,13 @@ public class WaybillServiceImpl implements WaybillService {
      */
     @Override
     public ServerResponse confirmIndent(WaybillDto waybillDto) {
-        Waybill bill = waybillDao.get(waybillDto.getId());
+        Waybill bill = waybillMapper.get(waybillDto.getId());
         if (bill == null || bill.getStatus() == null || !bill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_DETERMINE)) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.INDENT_STATUS_ERROR));
         }
         Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
         waybill.setStatus(CargoConstant.AWAIT_LOADING);
-        int num = waybillDao.updateIndentStatus(waybill);
+        int num = waybillMapper.updateIndentStatus(waybill);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
@@ -219,7 +219,10 @@ public class WaybillServiceImpl implements WaybillService {
     public ServerResponse indentPage(WaybillDto waybillDto, Page page) {
         CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
         Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
-        PageInfo<Waybill> pageInfo = waybillDao.indentPage(waybill, page);
+        if(page==null){
+            page=new Page();
+        }
+        PageInfo<Waybill> pageInfo = waybillMapper.indentPage(waybill, page);
         return ServerResponse.successWithData(pageInfo);
     }
 
@@ -232,7 +235,7 @@ public class WaybillServiceImpl implements WaybillService {
     @Override
     public ServerResponse coundIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
-        List<String> typeCount = waybillDao.coundIndent(waybillDto.getCargoOwnnerId());
+        List<String> typeCount = waybillMapper.coundIndent(waybillDto.getCargoOwnnerId());
         Map<String, Object> map = countList(typeCount);
         return ServerResponse.successWithData(map);
     }
@@ -246,7 +249,7 @@ public class WaybillServiceImpl implements WaybillService {
     @Override
     public ServerResponse get(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getId());
-        Waybill waybill = waybillDao.get(waybillDto.getId());
+        Waybill waybill = waybillMapper.get(waybillDto.getId());
         if (waybill != null && waybill.getCargoId() != null) {
             Cargo cargo = cargoDao.get(waybill.getCargoId());
             waybill.setCargo(cargo);
@@ -263,10 +266,10 @@ public class WaybillServiceImpl implements WaybillService {
     @Override
     public ServerResponse changeIndent(WaybillDto waybillDto) {
         CheckFieldUtils.checkObjecField(waybillDto.getTotalMoney());
-        Waybill bill=waybillDao.get(waybillDto.getId());
+        Waybill bill=waybillMapper.get(waybillDto.getId());
         if(bill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_LOADING)|| bill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_ACCEPT)|| bill.getStatus().equalsIgnoreCase(CargoConstant.SIGN_PAY)){
             Waybill waybill = BeanUtil.copy(waybillDto, Waybill.class);
-            int num = waybillDao.changeIndent(waybill);
+            int num = waybillMapper.changeIndent(waybill);
             CheckFieldUtils.assertSuccess(num);
         }else{
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.INDENT_CHANGE_ERROR));
@@ -282,9 +285,9 @@ public class WaybillServiceImpl implements WaybillService {
      */
     @Override
     public ServerResponse delete(WaybillDto waybillDto) {
-        Waybill waybill = waybillDao.get(waybillDto.getId());
+        Waybill waybill = waybillMapper.get(waybillDto.getId());
         if (CargoConstant.AWAIT_GENERATE.equalsIgnoreCase(waybill.getStatus())) {
-            int num = waybillDao.delete(waybillDto.getId());
+            int num = waybillMapper.delete(waybillDto.getId());
             CheckFieldUtils.assertSuccess(num);
             return ServerResponse.success();
         } else {
@@ -609,12 +612,12 @@ public class WaybillServiceImpl implements WaybillService {
      */
     @Override
     public ServerResponse cancelIndent(WaybillDto waybillDto) {
-        Waybill waybill = waybillDao.get(waybillDto.getId());
+        Waybill waybill = waybillMapper.get(waybillDto.getId());
         if (!CargoConstant.AWAIT_GENERATE.equalsIgnoreCase(waybill.getStatus())) {
             throw new BusinessException(new LogisticsResult(LogisticsResultEnum.CANCEL_NOT_FAIL));
         }
         waybill.setStatus(IndentConstants.CANCEL_STATUS_CANCELLED);
-        waybillDao.updateIndentStatus(waybill);
+        waybillMapper.updateIndentStatus(waybill);
         //TODO:取消订单是否需要后台管理员同意;订单取消成功后,货源状态改为什么
         return ServerResponse.success();
     }
@@ -627,12 +630,12 @@ public class WaybillServiceImpl implements WaybillService {
      */
     @Override
     public ServerResponse signAccpet(WaybillDto waybillDto) {
-         Waybill waybill=waybillDao.get(waybillDto.getId());
+         Waybill waybill=waybillMapper.get(waybillDto.getId());
          if(waybill==null|| waybill.getStatus()==null|| !waybill.getStatus().equalsIgnoreCase(CargoConstant.AWAIT_ACCEPT)){
              throw new BusinessException(new LogisticsResult(LogisticsResultEnum.INDENT_SIGN_ERROR));
          }
         waybill.setStatus(CargoConstant.SIGN_PAY);
-        waybillDao.updateIndentStatus(waybill);
+        waybillMapper.updateIndentStatus(waybill);
         return ServerResponse.success();
     }
 
