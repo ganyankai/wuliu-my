@@ -12,9 +12,13 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarPersonConstants;
+import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
@@ -57,22 +61,6 @@ public class CarPerson {
 	@Column(name = "`id_card`")
     private String idCard;
 
-	/**类型*/
-	@Column(name = "`person_type`")
-    private String personType;
-	
-	/**类型*/
-	@Transient
-	private String personTypeCN;
-	
-	/**类型*/
-	public String getPersonTypeCN() {
-		if (!StringUtils.isNotBlank(personType)) {
-            return DictionaryUtil.getValue(CarPersonConstants.PERSON_TYPE, personType);
-        }
-        return personTypeCN;
-	}
-	
 	/**客户Id*/
 	@Column(name = "`customer_id`")
     private Integer customerId;
@@ -80,22 +68,6 @@ public class CarPerson {
 	/**驾驶证*/
 	@Column(name = "`driving_licence`")
     private String drivingLicence;
-	
-	/**状态*/
-	@Column(name = "`status`")
-    private String status;
-	
-	/**状态*/
-	@Transient
-	private String statusCN;
-	
-	/**状态*/
-	public String getStatusCN() {
-		if (!StringUtils.isNotBlank(status)) {
-            return DictionaryUtil.getValue(CarPersonConstants.PERSON_STATUS, status);
-        }
-        return statusCN;
-	}
 	
 	/**删除标识*/
 	@Column(name = "`is_delete`")
@@ -105,11 +77,60 @@ public class CarPerson {
 	@Column(name = "`create_by`")
     private Integer createBy;
 
+	/**车主Id*/
+	@Column(name = "`car_owner_id`")
+	private Integer carOwnerId;
+	
+	/**需要审批字段的JSON字符串*/
+	@JsonIgnore
+	@Column(name = "`approve_content`")
+	private String approveContent;
+	
     /**创建日期*/
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`create_date`")
     private Date createDate;
+	
+	/**状态*/
+	@Column(name = "`status`")
+    private String status;
+	
+	/**状态*/
+	public String getStatusCN() {
+		if (StringUtils.isNotBlank(status)) {
+            return DictionaryUtil.getValue(CarPersonConstants.PERSON_STATUS, status);
+        }
+        return status;
+	}
+	
+	/**类型*/
+	@Column(name = "`person_type`")
+    private String personType;
+	
+	/**类型*/
+	public String getPersonTypeCN() {
+		if (StringUtils.isNotBlank(personType)) {
+            return DictionaryUtil.getValue(CarPersonConstants.PERSON_TYPE, personType);
+        }
+        return personType;
+	}
+	
+	/**审批状态*/
+	@Column(name = "`approve_status`")
+	private String approveStatus;
+	
+	/**审批状态*/
+	public String getApproveStatusCN() {
+		if (StringUtils.isNotBlank(approveStatus)) {
+            return DictionaryUtil.getValue(ApproveConstants.STATUS, approveStatus);
+        }
+        return approveStatus;
+	}
+	
+	/**司机账号状态*/
+	@Transient
+	private Boolean isActive;
 	
 	/**车主企业名称*/
 	@Transient
@@ -119,20 +140,8 @@ public class CarPerson {
 	@Transient
 	private CarCargoOwnner carOwner;
 	
-	/**车主Id*/
-	@Column(name = "`car_owner_id`")
-	private Integer carOwnerId;
-	
-	/**司机账号状态*/
-	@Transient
-	private Boolean isActive;
-	
-	/**审批状态*/
-	@Column(name = "`approve_status`")
-	private String approveStatus;
-	
-	/**需要审批字段的JSON字符串*/
-	@Column(name = "`approve_content`")
-	private String approveContent;
-	
+	/**需要审核的内容*/
+	public CarPersonCheckUpdateDto getApproveContentCN() {
+		return JSON.parseObject(approveContent, CarPersonCheckUpdateDto.class);
+	}
 }

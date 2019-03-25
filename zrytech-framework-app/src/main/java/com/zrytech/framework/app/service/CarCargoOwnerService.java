@@ -19,19 +19,39 @@ public interface CarCargoOwnerService {
 	public ServerResponse check(CheckDto checkDto, User user);
 	
 	
-	public ServerResponse approveCarOwner(CheckDto checkDto, User user);
-	
-	public ServerResponse approveCargoOwner(CheckDto dto, User user);
 	
 	
-	public ServerResponse carOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
 	
-	public ServerResponse cargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
+	/**
+	 * 管理员 - 车主分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminCarOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
 	
-	public ServerResponse carOwnerDetails(DetailsDto dto);
+	/**
+	 * 管理员 - 待审批的车主分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminApprovePendingCarOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
 	
-	public ServerResponse cargoOwnerDetails(DetailsDto dto);
-	
+	/**
+	 * 管理员 - 车主详情
+	 * @author cat
+	 * 
+	 * @param dto	车主Id
+	 * @return
+	 */
+	public ServerResponse adminCarOwnerDetails(DetailsDto dto);
 	
 	/**
 	 * 管理员 - 修改车主免审核状态
@@ -43,6 +63,49 @@ public interface CarCargoOwnerService {
 	 */
 	public ServerResponse carOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto);
 	
+	/**
+	 * 管理员 - 车主审批
+	 * @author cat
+	 * 
+	 * @param checkDto	审批结果
+	 * @param user	管理员
+	 * @return
+	 */
+	public ServerResponse adminApproveCarOwner(CheckDto checkDto, User user);
+	
+
+	
+	
+	/**
+	 * 管理员 - 货主分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
+	
+	/**
+	 * 管理员 - 待审批的货主分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public ServerResponse adminApprovePendingCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
+	
+	/**
+	 * 管理员 - 货主详情
+	 * @author cat
+	 * 
+	 * @param dto	货主Id
+	 * @return
+	 */
+	public ServerResponse adminCargoOwnerDetails(DetailsDto dto);
 	
 	/**
 	 * 管理员 - 修改货主免审核状态
@@ -53,4 +116,16 @@ public interface CarCargoOwnerService {
 	 * @return
 	 */
 	public ServerResponse cargoOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto);
+	
+	/**
+	 * 管理员 - 货主审批
+	 * @author cat
+	 * 
+	 * @param checkDto	审批结果
+	 * @param user	管理员
+	 * @return
+	 */
+	public ServerResponse adminApproveCargoOwner(CheckDto dto, User user);
+	
+	
 }

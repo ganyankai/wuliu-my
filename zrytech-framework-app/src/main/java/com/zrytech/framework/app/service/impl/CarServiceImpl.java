@@ -9,28 +9,27 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.repository.ApproveLogRepository;
 import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CarPersonRepository;
 import com.zrytech.framework.app.repository.CarRepository;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarConstants;
-import com.zrytech.framework.app.dto.CheckDto;
-import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.car.CarAddDto;
 import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
 import com.zrytech.framework.app.dto.car.CarNoCheckUpdateDto;
-import com.zrytech.framework.app.dto.car.CarOwnerCarPageDto;
 import com.zrytech.framework.app.dto.car.CarPageDto;
-import com.zrytech.framework.app.entity.ApproveLog;
 import com.zrytech.framework.app.entity.Car;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.CarPerson;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.mapper.CarMapper;
+import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.app.service.CarService;
 import com.zrytech.framework.base.entity.PageData;
@@ -48,76 +47,102 @@ import com.zrytech.framework.common.entity.User;
 @Transactional
 public class CarServiceImpl implements CarService {
 	
-	@Autowired private CarRepository carRepository;
+	@Autowired
+	private CarRepository carRepository;
+
+	@Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
+
+	@Autowired
+	private CarPersonRepository carPersonRepository;
+
+	@Autowired
+	private CarMapper carMapper;
+
+	@Autowired
+	private CarPersonService carPersonService;
 	
-	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
+	@Autowired
+	private ApproveLogService approveLogService;
 	
-	@Autowired private CarPersonRepository carPersonRepository;
 	
-	@Autowired private ApproveLogRepository approveLogRepository;
-	
-	@Autowired private CarMapper carMapper;
-	
-	@Autowired private CarPersonService carPersonService;
 	
 	
 	@Override
-	public ServerResponse page(CarPageDto dto, Integer pageNum, Integer pageSize){
+	public PageData<Car> carPage(CarPageDto dto, Integer pageNum, Integer pageSize) {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<Car> list = carMapper.selectSelective(dto);
 		for (Car temp : list) {
-			temp.setCarOwnerName(carCargoOwnnerRepository.findNameById(temp.getCreateBy()));
-			if(temp.getDriverId() != null) {
+			temp.setCarOwnerName(carCargoOwnnerRepository.findNameById(temp.getCarOwnerId()));
+			if (temp.getDriverId() != null) {
 				temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
 			}
-			if(temp.getSupercargoId() != null) {
+			if (temp.getSupercargoId() != null) {
 				temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
 			}
 		}
-		PageData<Car> pageData = new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
+		return new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
 	
 	
-	@Override
-	public ServerResponse details(DetailsDto dto) {
+	/**
+	 * 管理员 - 车辆详情
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse adminDetails(DetailsDto dto) {
 		Car car = this.assertCarExist(dto.getId());
-		car = bindingCarOwner(car);		// 车主
-		car = bindingDriver(car);		// 司机
-		car = bindingSupercargo(car);	// 压货人
+		car = this.bindingCarOwner(car);
+		car = this.bindingDriver(car);
+		car = this.bindingSupercargo(car);
+		CarCheckUpdateDto temp = JSON.parseObject(car.getApproveContent(), CarCheckUpdateDto.class);
+		car.setApproveContentCN(temp);
 		return ServerResponse.successWithData(car);
 	}
 	
 	
-	@Override
-	@Transactional
-	public ServerResponse check(CheckDto checkDto, User user) {
-		Integer businessId = checkDto.getBusinessId();
-		Car car = this.assertCarAvailable(businessId);
-		if(!CarConstants.CAR_STATUS_WAIT_CHECK.equalsIgnoreCase(car.getStatus())) {
-			throw new BusinessException(112, "审核失败：车辆状态不是待审核");
+	/**
+	 * 管理员 - 车辆审批
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param user
+	 * @return
+	 */
+	public ServerResponse adminApprove(ApproveDto dto, User user) {
+		Car car = this.assertCarAvailable(dto.getBusinessId());
+		if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(car.getApproveStatus())) {
+			throw new BusinessException(112, "审批失败：车辆的状态不是待审批");
 		}
-		
-		// 修改车辆状态
-		String result = checkDto.getResult();
-		if(ApproveLogConstants.APPROVE_RESULT_PASS.equals(result)) {
-			car.setStatus(CarConstants.CAR_STATUS_UP);
-		}else {
-			car.setStatus(CarConstants.CAR_STATUS_DOWN);
+		this.approve(car, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR);
+		return ServerResponse.successWithData("审批成功");
+	}
+	
+	
+	/**
+	 * 车辆的审批
+	 * @author cat
+	 * 
+	 * @param car
+	 * @param result
+	 */
+	private void approve(Car car, Boolean result) {
+		Integer id = car.getId();
+		if (result) {
+			CarCheckUpdateDto temp = JSON.parseObject(car.getApproveContent(), CarCheckUpdateDto.class);
+			BeanUtils.copyProperties(temp, car);
+			car.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
+			car.setId(id);
+			if (car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
+				car.setStatus(CarConstants.CAR_STATUS_FREE);
+			}
+		} else {
+			car.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
 		}
 		carRepository.save(car);
-		
-		// 添加审核记录
-		ApproveLog entity = new ApproveLog();
-		entity.setApproveBy(user.getId());
-		entity.setApproveContent(checkDto.getContent());
-		entity.setApproveResult(checkDto.getResult());
-		entity.setApproveTime(new Date());
-		entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_CAR);
-		entity.setBusinessId(businessId);
-		approveLogRepository.save(entity);
-		
-		return ServerResponse.successWithData("审核成功");
 	}
 	
 
@@ -244,33 +269,12 @@ public class CarServiceImpl implements CarService {
 	
 	
 	
-	
-	
-	
-
-	@Override
-	public ServerResponse page(CarOwnerCarPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
-		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-		List<Car> list = carMapper.carOwnerSelectSelective(dto, customer.getCarOwner().getId());
-		for (Car temp : list) {
-			if(temp.getDriverId() != null) {
-				temp.setDriverName(carPersonRepository.findNameById(temp.getDriverId()));
-			}
-			if(temp.getSupercargoId() != null) {
-				temp.setSupercargoName(carPersonRepository.findNameById(temp.getSupercargoId()));
-			}
-		}
-		PageData<Car> pageData = new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
-	}
-	
-	
 	@Override
 	public ServerResponse details(DetailsDto dto, Customer customer) {
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
-		car = bindingCarOwner(car); // 车主
-		car = bindingDriver(car); // 司机
-		car = bindingSupercargo(car); // 压货人
+		car = this.bindingCarOwner(car);
+		car = this.bindingDriver(car);
+		car = this.bindingSupercargo(car);
 		return ServerResponse.successWithData(car);
 	}
 	
@@ -285,10 +289,15 @@ public class CarServiceImpl implements CarService {
 		car.setCreateBy(customer.getId());
 		car.setCarOwnerId(carOwner.getId());
 		if(carOwner.getAvoidAudit()) { // 免审核
-			car.setStatus(CarConstants.CAR_STATUS_UP);
+			car.setStatus(CarConstants.CAR_STATUS_FREE);
+			car.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
 		}else {
-			car.setStatus(CarConstants.CAR_STATUS_WAIT_CHECK);
+			car.setStatus(CarConstants.CAR_STATUS_UNCERTIFIED);
+			car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		}
+		CarCheckUpdateDto temp = new CarCheckUpdateDto();
+		BeanUtils.copyProperties(dto, temp);
+		car.setApproveContent(JSON.toJSONString(temp));
 		car.setId(null);
 		car.setCreateDate(new Date());
 		car.setIsDelete(false);
@@ -323,15 +332,24 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public ServerResponse updateCheck(CarCheckUpdateDto dto, Customer customer) {
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
-		BeanUtils.copyProperties(dto, car);
+		if(car.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)){
+			throw new BusinessException(112, "修改失败：不能修改待审批的车辆");
+		}
 		if(!dto.getMulStore()) { // 如果不分仓，默认仓位数为【1】
-			car.setStoreQty(1);
+			dto.setStoreQty(1);
 		}
 		if(customer.getCarOwner().getAvoidAudit()) { // 免审核
-			// car.setStatus(CarConstants.CAR_STATUS_DOWN); 保留原状态
+			BeanUtils.copyProperties(dto, car);
+			car.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
+			if (car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
+				car.setStatus(CarConstants.CAR_STATUS_FREE);
+			}
 		}else {
-			car.setStatus(CarConstants.CAR_STATUS_WAIT_CHECK);
+			car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		}
+		CarCheckUpdateDto temp = new CarCheckUpdateDto();
+		BeanUtils.copyProperties(dto, temp);
+		car.setApproveContent(JSON.toJSONString(temp));
 		carRepository.save(car);
 		return ServerResponse.successWithData("修改成功");
 	}
@@ -340,30 +358,13 @@ public class CarServiceImpl implements CarService {
 	@Transactional
 	@Override
 	public ServerResponse delete(DeleteDto dto, Customer customer) {
-		this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
-		// TODO 判断当前车辆是否可以删除（暂未确认哪些条件下车辆可以删除）
-		// TODO 车辆删除日志（暂未确认是否需要日志）
+		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
+		if(!car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
+			throw new BusinessException(112, "删除失败：仅可删除未认证的车辆");
+		}
 		carRepository.deleteCarById(dto.getId());
 		return ServerResponse.successWithData("删除成功");
 	}
-	
-	
-	@Transactional
-	@Override
-	public ServerResponse submitAudit(CommonDto dto, Customer customer) {
-		Integer carId = dto.getId();
-		Car car = this.assertCarBelongToCurrentUser(carId, customer.getCarOwner().getId());
-		if (!CarConstants.CAR_STATUS_DOWN.equalsIgnoreCase(car.getStatus())) {
-			throw new BusinessException(112, "提交审核失败：仅下架状态的车辆可以提交审核");
-		}
-		if (customer.getCarOwner().getAvoidAudit()) { // 免审核
-			carRepository.updateStatusById(carId, CarConstants.CAR_STATUS_UP);
-		} else {
-			carRepository.updateStatusById(carId, CarConstants.CAR_STATUS_WAIT_CHECK);
-		}
-		return ServerResponse.successWithData("提交审核成功");
-	}
-	
 	
 	
 }

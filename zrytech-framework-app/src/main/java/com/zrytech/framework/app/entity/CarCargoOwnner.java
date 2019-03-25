@@ -11,12 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
-import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerNeedApproveDto;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
 
@@ -93,18 +96,11 @@ public class CarCargoOwnner {
 	@Column(name = "`customer_type`")
     private String customerType;
 	
-	/**类型*/
-    @Transient
-    private String customerTypeCN;
-    
     public String getCustomerTypeCN() {
-    	if(CargoConstant.CERTIFICATION_PERSON.equalsIgnoreCase(customerType)) {
-    		return "个人";
-    	}else if(CargoConstant.CERTIFICATION_ORGANIZE.equalsIgnoreCase(customerType)) {
-    		return "企业";
-    	}else {
-    		return "";
-    	}
+    	if (StringUtils.isNotBlank(customerType)) {
+            return DictionaryUtil.getValue(CarCargoOwnerConstants.CUSTOMER_TYPE, customerType);
+        }
+        return customerType;
     }
     
     /**免审核*/
@@ -123,18 +119,11 @@ public class CarCargoOwnner {
     @Column(name = "`status`")
     private String status;
 
-    /**状态*/
-    @Transient
-    private String statusCN;
-    
     public String getStatusCN() {
-    	if(CarCargoOwnerConstants.STATUS_CERTIFIED.equalsIgnoreCase(status)) {
-    		return "已认证";
-    	}else if(CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(status)) {
-    		return "未认证";
-    	}else {
-    		return "";
-    	}
+    	if (StringUtils.isNotBlank(status)) {
+            return DictionaryUtil.getValue(CarCargoOwnerConstants.STATUS, status);
+        }
+        return status;
     }
     
     /**客户Id*/
@@ -156,17 +145,10 @@ public class CarCargoOwnner {
     private String approveStatus;
     
     public String getApproveStatusCN() {
-    	if(ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(approveStatus)) {
-    		return "待审批";
-    	}else if(ApproveConstants.STATUS_BE_APPROVED.equalsIgnoreCase(approveStatus)) {
-    		return "审批通过";
-    	}else if(ApproveConstants.STATUS_CANCEL.equalsIgnoreCase(approveStatus)) {
-    		return "已取消";
-    	}else if(ApproveConstants.STATUS_NOT_APPROVED.equalsIgnoreCase(approveStatus)) {
-    		return "审批未通过";
-    	}else {
-    		return "";
-    	}
+    	if (StringUtils.isNotBlank(approveStatus)) {
+            return DictionaryUtil.getValue(ApproveConstants.STATUS, approveStatus);
+        }
+        return approveStatus;
     }
     
     /**需要审批字段的JSON字符串*/
@@ -174,18 +156,18 @@ public class CarCargoOwnner {
     @Column(name = "`approve_content`")
     private String approveContent;
     
+    @Transient
+    private CarCargoOwnerNeedApproveDto approveContentCN;
     
     /**类型*/
     @Column(name = "`type`")
     private String type;
     
     public String getTypeCN() {
-    	if(CarCargoOwnerConstants.TYPE_CAR_OWNER.equalsIgnoreCase(type)) {
-    		return "车主";
-    	}else if(CarCargoOwnerConstants.TYPE_CARGO_OWNER.equalsIgnoreCase(type)) {
-    		return "货主";
-    	}else {
-    		return "";
-    	}
+    	if (StringUtils.isNotBlank(type)) {
+            return DictionaryUtil.getValue(CarCargoOwnerConstants.TYPE, type);
+        }
+        return type;
     }
+    
 }

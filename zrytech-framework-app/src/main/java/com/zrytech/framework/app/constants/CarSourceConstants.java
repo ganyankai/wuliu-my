@@ -22,4 +22,19 @@ public class CarSourceConstants {
 	 */
 	public static final String STATUS_DOWN = "down";
 	
+	
+	
+	/**车源状态*/
+	public static final String CAR_SOURCE_STATUS = "car_source_status";
+	
+	/**未认证*/
+	public static final String STATUS_UNCERTIFIED = "uncertified";
+	/**发布中*/
+	public static final String STATUS_RELEASE = "release";
+	
+	
+	
+	
+	
+	
 }

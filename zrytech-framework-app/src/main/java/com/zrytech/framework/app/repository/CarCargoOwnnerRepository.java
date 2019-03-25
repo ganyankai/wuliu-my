@@ -39,5 +39,8 @@ public interface CarCargoOwnnerRepository extends JpaRepository<CarCargoOwnner, 
 	@Query(value = "update CarCargoOwnner set avoidAudit = ?1 where id = ?2")
 	public void updateAvoidAuditById(Boolean avoidAudit, Integer id);
 	
+	
+	public CarCargoOwnner findByIdAndType(Integer id, String type);
+	
 }
 

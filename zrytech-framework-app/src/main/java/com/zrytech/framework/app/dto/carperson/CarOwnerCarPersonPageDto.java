@@ -13,11 +13,11 @@ import lombok.Setter;
 public class CarOwnerCarPersonPageDto {
 	
 	/**类型*/
-	@Pattern(regexp = "^(driver)|(supercargo)$", message = "类型错误")
+	@Pattern(regexp = "^(driver)|(supercargo)|()$", message = "类型错误")
     private String personType;
 	
 	/**状态*/
-	@Pattern(regexp = "^(up)|(wait_check)|(down)$", message = "状态错误")
+	@Pattern(regexp = "^(uncertified)|(free)|(busy)|()$", message = "状态错误")
     private String status;
     
 }

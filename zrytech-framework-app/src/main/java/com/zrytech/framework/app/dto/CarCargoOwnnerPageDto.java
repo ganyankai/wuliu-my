@@ -1,5 +1,7 @@
 package com.zrytech.framework.app.dto;
 
+import javax.validation.constraints.Pattern;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,14 +11,8 @@ public class CarCargoOwnnerPageDto {
 
 	private Integer id;
 	
-	/**状态*/
-	private String status;
-	
 	/**法人姓名*/
 	private String legalerName;
-	
-	/**用户类型*/
-	private String customerType;
 	
 	/**企业名称*/
 	private String name;
@@ -28,10 +24,20 @@ public class CarCargoOwnnerPageDto {
 	private Boolean avoidAudit;
 	
 	/**类型*/
+	@Pattern(regexp = "^(car_owner)|(cargo_owner)|()$", message = "类型错误")
 	private String type;
 	
 	/**审批状态*/
 	private String approveStatus;
+	
+	/**状态*/
+	//@Pattern(regexp = "^(certified)|(uncertified)|()$", message = "类型错误")
+	private String status;
+	
+	/**用户类型*/
+	//@Pattern(regexp = "^(organize)|(person)|()$", message = "类型错误")
+	private String customerType;
+	
 	
 	
 	/**账号手机号*/

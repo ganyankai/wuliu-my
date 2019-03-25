@@ -11,8 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zrytech.framework.app.constants.ApproveConstants;
+import com.zrytech.framework.app.constants.CargoMatterConstants;
+import com.zrytech.framework.app.dto.cargomatter.CargoMatterNeedApproveUpdateDto;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 
 import lombok.Data;
 
@@ -46,10 +53,18 @@ public class CargoMatter {
 	/**车主Id*/
 	@Column(name = "`car_ownner_id`")
     private Integer carOwnnerId;
-
+	
+	/**货主Id*/
+	@Column(name = "`cargo_owner_id`")
+    private Integer cargoOwnerId;
+	
 	/**车主企业名称*/
 	@Transient
 	private String carOwnerName;
+	
+	/**货主企业名称*/
+	@Transient
+	private String cargoOwnerName;
 	
 	/**应标价格*/
 	@Column(name = "`matter_price`")
@@ -60,12 +75,11 @@ public class CargoMatter {
     private String status;
 	
 	/**状态*/
-	@Transient
-	private String statusCN;
-	
-	/**状态*/
 	public String getStatusCN() {
-		return "待处理";
+		if (StringUtils.isNotBlank(status)) {
+            return DictionaryUtil.getValue(CargoMatterConstants.STATUS, status);
+        }
+        return status;
 	}
 
 	/**中标时间*/
@@ -80,10 +94,24 @@ public class CargoMatter {
 	@Column(name = "`create_date`")
     private Date createDate;
 	
-	
-	/**货主企业名称*/
-	@Transient
-	private String cargoOwnerName;
+    /**审批状态*/
+    @Column(name = "`approve_status`")
+    private String approveStatus;
+    
+    public String getApproveStatusCN() {
+    	if (StringUtils.isNotBlank(approveStatus)) {
+            return DictionaryUtil.getValue(ApproveConstants.STATUS, approveStatus);
+        }
+        return approveStatus;
+    }
+    
+    /**需要审批字段的JSON字符串*/
+    @JsonIgnore
+    @Column(name = "`approve_content`")
+    private String approveContent;
+    
+    @Transient
+    private CargoMatterNeedApproveUpdateDto approveContentCN;
 	
    
 }

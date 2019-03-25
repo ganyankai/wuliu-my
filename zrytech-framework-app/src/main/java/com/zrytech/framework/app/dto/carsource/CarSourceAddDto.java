@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceAddDto;
@@ -36,6 +37,7 @@ public class CarSourceAddDto {
     /**车源的路线*/
     @Valid
     @NotNull(message = "车源起止地不能为空")
+    @Size(min = 1, max = 1, message = "当前只能有一个车源起止地")
     List<CarRecordPlaceAddDto> carRecordPlaces;
     
     /**车源的车辆司机压货人*/

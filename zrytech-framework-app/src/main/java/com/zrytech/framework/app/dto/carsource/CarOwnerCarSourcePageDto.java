@@ -22,4 +22,6 @@ public class CarOwnerCarSourcePageDto {
 	/**车源状态*/
 	private String status;
 	
+	private String approveStatus;
+	
 }

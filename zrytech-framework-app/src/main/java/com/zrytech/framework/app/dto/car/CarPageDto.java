@@ -1,7 +1,5 @@
 package com.zrytech.framework.app.dto.car;
 
-import javax.validation.constraints.Pattern;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,11 +19,16 @@ public class CarPageDto {
 	 * 车主Id
 	 */
 	private Integer carOwnerId;
+	
+	/**
+	 * 创建人Id
+	 */
+	private Integer createBy;
 
 	/**
 	 * 车主企业名称（模糊搜索）
 	 */
-	private String name;
+	private String carOwnerName;
 
 	/**
 	 * 车辆类型
@@ -40,7 +43,11 @@ public class CarPageDto {
 	/**
 	 * 车辆状态
 	 */
-	@Pattern(regexp = "^(up)|(wait_check)|(down)$", message = "类型错误")
 	private String status;
+	
+	/**
+	 * 审批状态
+	 */
+	private String approveStatus;
 
 }

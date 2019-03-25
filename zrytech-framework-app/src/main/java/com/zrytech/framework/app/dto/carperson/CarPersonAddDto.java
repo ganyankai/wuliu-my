@@ -26,7 +26,7 @@ public class CarPersonAddDto {
     private String name;
 	
 	/**手机号码*/
-	@NotBlank(message = "手机号码不能为空")
+	@NotBlank(message = "联系方式不能为空")
 	@Pattern(regexp = RegExConstants.CHINA_PHONE_NUMBER, message = RegExConstants.CHINA_PHONE_NUMBER_ERR_MSG)
     private String tel;
 	
@@ -65,6 +65,7 @@ public class CarPersonAddDto {
 	private String userTel;
 	
 	/**密码*/
+	@Pattern(regexp = RegExConstants.PASSWORD, message = RegExConstants.PASSWORDERR_MSG)
 	private String password;
 	
 

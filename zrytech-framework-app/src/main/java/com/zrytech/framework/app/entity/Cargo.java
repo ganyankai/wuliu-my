@@ -200,6 +200,7 @@ public class Cargo implements Serializable {
     private Date createDate;
 
     @ApiModelProperty(value = "参考总价", required = false)
+    @Transient
     private BigDecimal totalPrice;
 
     public String getWeightUnitCN() {

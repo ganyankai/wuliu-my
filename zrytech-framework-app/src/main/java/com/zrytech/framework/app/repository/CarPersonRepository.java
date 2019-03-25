@@ -52,4 +52,7 @@ public interface CarPersonRepository extends JpaRepository<CarPerson, Integer>{
 	
 	CarPerson findByIdAndIsDeleteAndCarOwnerId(Integer id, Boolean isDelete, Integer carOwnerId);
 	
+	
+	public CarPerson findByIdAndPersonType(Integer id, String personType);
+	
 }
