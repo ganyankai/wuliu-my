@@ -25,6 +25,7 @@ import com.zrytech.framework.app.enums.LogisticsResultEnum;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.service.impl.ServiceImpl;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.base.util.TradeNoUtil;
@@ -60,7 +61,7 @@ import com.zrytech.framework.base.entity.ServerResponse;
  * @author cat
  */
 @Service
-public class WaybillServiceImpl implements WaybillService {
+public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,Integer> implements WaybillService {
 
     @Autowired
     private WaybillMapper waybillMapper;
