@@ -1,13 +1,13 @@
 package com.zrytech.framework.app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.zrytech.framework.app.entity.CarSource;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
-public interface CarSourceRepository extends JpaRepository<CarSource, Integer>{
+public interface CarSourceRepository extends BaseRepository<CarSource, Integer>{
 
 	
 	/**

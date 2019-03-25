@@ -2,13 +2,13 @@ package com.zrytech.framework.app.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zrytech.framework.app.entity.Evaluate;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 @Repository
-public interface EvaluateRepository extends JpaRepository<Evaluate, Integer> {
+public interface EvaluateRepository extends BaseRepository<Evaluate, Integer> {
 
 	List<Evaluate> findByBillNo(String billNo);
 }

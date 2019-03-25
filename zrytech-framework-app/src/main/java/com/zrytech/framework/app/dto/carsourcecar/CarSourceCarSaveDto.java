@@ -3,6 +3,7 @@ package com.zrytech.framework.app.dto.carsourcecar;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,12 +16,14 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CarSourceCarSaveDto {
-	
-	/**车源Id*/
-	@NotNull(message= "车源Id不能为空")
+
+	/** 车源Id */
+	@NotNull(message = "车源Id不能为空")
 	private Integer carSourceId;
+
+	/** 车辆 */
+	@NotNull(message = "车辆不能为空")
+	@Size(min = 1, message = "车辆不能为空")
+	private List<CarSourceCarUpdateDto> carSourceCars;
 	
-	/**车辆*/
-	@NotNull(message= "车辆不能为空")
-    private List<CarSourceCarUpdateDto> carSourceCars;
 }

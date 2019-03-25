@@ -23,6 +23,10 @@ public class CarConstants {
 	/**牵引车*/
 	public static final String CAR_TYPE_TRACTOR = "car_tractor";
 	
+	public static final String REG_EX_CAR_TYPE = "^(" + CAR_TYPE_TRACTOR + ")|()$";
+	public static final String REG_EX_CAR_TYPE_ERR_MSG = "车辆类型有误";
+	
+	
 	
 	/**车辆核载量单位*/
 	public static final String CAR_UNIT = "car_unit";
@@ -31,5 +35,6 @@ public class CarConstants {
 	/**车辆核载量单位:升*/
 	public static final String CAR_UNIT_LITRE = "litre";
 	
-	
+	public static final String REG_EX_CAR_UNIT = "^(" + CAR_UNIT_TON + ")|(" + CAR_UNIT_LITRE + ")|()$";
+	public static final String REG_EX_CAR_UNIT_ERR_MSG = "车辆核载量单位有误";
 }

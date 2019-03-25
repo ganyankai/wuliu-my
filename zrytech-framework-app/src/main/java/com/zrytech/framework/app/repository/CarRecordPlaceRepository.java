@@ -2,12 +2,11 @@ package com.zrytech.framework.app.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.zrytech.framework.app.entity.CarRecordPlace;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
-public interface CarRecordPlaceRepository extends JpaRepository<CarRecordPlace, Integer> {
+public interface CarRecordPlaceRepository extends BaseRepository<CarRecordPlace, Integer> {
 	
 	
 	List<CarRecordPlace> findByCarSourceId(Integer carSourceId);

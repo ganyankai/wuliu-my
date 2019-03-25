@@ -1,6 +1,8 @@
 package com.zrytech.framework;
 
 import com.zrytech.framework.base.base.BaseApp;
+import com.zrytech.framework.base.repository.BaseRepositoryFactoryBean;
+
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +25,7 @@ import javax.servlet.MultipartConfigElement;
 //@ComponentScan({"com.zrytech.framework.*.*", "com.zrytech.framework.*.*"})
 //@EnableJpaRepositories({"com.zrytech.framework.*.repository"})
 //@EntityScan({"com.zrytech.framework.*.entity"})
+@EnableJpaRepositories(repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)
 @EnableAspectJAutoProxy
 @EnableScheduling
 public class BaseApplication extends BaseApp {

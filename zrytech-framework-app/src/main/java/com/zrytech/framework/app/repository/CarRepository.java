@@ -2,12 +2,12 @@ package com.zrytech.framework.app.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.zrytech.framework.app.entity.Car;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
 /**
@@ -15,7 +15,7 @@ import com.zrytech.framework.app.entity.Car;
  *
  */
 @Repository
-public interface CarRepository extends JpaRepository<Car, Integer>{
+public interface CarRepository extends BaseRepository<Car, Integer>{
 	
 	/**
 	 * 修改车辆状态

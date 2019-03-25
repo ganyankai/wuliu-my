@@ -1,13 +1,13 @@
 package com.zrytech.framework.app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
-public interface LogisticsCustomerRepository extends JpaRepository<Customer, Integer> {
+public interface LogisticsCustomerRepository extends BaseRepository<Customer, Integer> {
 
 	
 	/**
