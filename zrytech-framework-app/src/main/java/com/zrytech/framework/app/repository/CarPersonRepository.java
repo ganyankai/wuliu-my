@@ -1,11 +1,11 @@
 package com.zrytech.framework.app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.zrytech.framework.app.entity.CarPerson;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
 /**
@@ -13,7 +13,7 @@ import com.zrytech.framework.app.entity.CarPerson;
  *
  */
 @Repository
-public interface CarPersonRepository extends JpaRepository<CarPerson, Integer>{
+public interface CarPersonRepository extends BaseRepository<CarPerson, Integer>{
 	
 	/**
 	 * 获取司机或压货人姓名

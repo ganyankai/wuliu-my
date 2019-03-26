@@ -1,10 +1,12 @@
 package com.zrytech.framework.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,18 +17,24 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
-import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
+import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerAddDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerNeedApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
-import com.zrytech.framework.app.entity.ApproveLog;
+import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
+import com.zrytech.framework.app.dto.oftenaddress.OftenAddressAddDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.app.entity.OftenAddress;
 import com.zrytech.framework.app.mapper.CarCargoOwnerMapper;
-import com.zrytech.framework.app.repository.ApproveLogRepository;
 import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.LogisticsCustomerRepository;
+import com.zrytech.framework.app.repository.OftenAddressRepository;
+import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
+import com.zrytech.framework.app.service.CustomerService;
+import com.zrytech.framework.app.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -35,14 +43,177 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
+	@Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
 
-	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
+	@Autowired
+	private CarCargoOwnerMapper carCargoOwnerMapper;
+
+	@Autowired
+	private LogisticsCustomerRepository customerRepository;
+
+	@Autowired
+	private CustomerService customerService;
 	
-	@Autowired private CarCargoOwnerMapper carCargoOwnerMapper;
+	@Autowired
+	private OftenAddressRepository oftenAddressRepository;
 	
-	@Autowired private LogisticsCustomerRepository customerRepository;
+	/**
+	 * 添加用户账号数据
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	private Customer saveCustomer(CustomerRegisterDto dto) {
+		Customer customer = new Customer();
+		BeanUtils.copyProperties(dto, customer);
+		if (StringUtils.isBlank(dto.getUserName())) {
+			customer.setUserName(dto.getUserAccount());
+		}
+		customer.setId(null);
+		customer.setCreateBy(0);
+		customer.setCreateDate(new Date());
+		customer.setIsActive(false);
+		customer.setPassword(PasswordUtils.encryptStringPassword(dto.getPassword(), dto.getUserAccount()));
+		customerRepository.save(customer);
+		return customer;
+	}
 	
-	@Autowired private ApproveLogRepository approveLogRepository;
+	/**
+	 * 验证码校验
+	 * @author cat
+	 * 
+	 * @param code	验证码
+	 * @param tel	手机号
+	 */
+	private void codeCheck(String code, String tel) {
+		// TODO 
+	}
+	
+	
+	/**
+	 * 添加车主或货主
+	 * @author cat
+	 * 
+	 * @param dto	车主或货主信息
+	 * @param customerId	车主或货主账号Id
+	 * @param type	类型
+	 * @param referrerId	推荐人Id
+	 * @return
+	 */
+	private CarCargoOwnner saveCarCargoOwnner(CarCargoOwnerAddDto dto, Integer customerId, String type,
+			Integer referrerId) {
+		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
+		if (dto == null) { // 跳过资料认证，资料默认为空
+			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
+		} else {
+			BeanUtils.copyProperties(dto, carCargoOwner);
+			CarCargoOwnerNeedApproveDto temp = new CarCargoOwnerNeedApproveDto();
+			BeanUtils.copyProperties(dto, temp);
+			carCargoOwner.setApproveContent(JSON.toJSONString(temp));
+			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		}
+		carCargoOwner.setType(type);
+		carCargoOwner.setCustomerId(customerId);
+		carCargoOwner.setReferrerId(referrerId);
+		carCargoOwner.setCreateDate(new Date());
+		carCargoOwner.setAvoidAudit(true);
+		carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_UNCERTIFIED);
+		carCargoOwnnerRepository.save(carCargoOwner);
+		return carCargoOwner;
+	}
+	
+	/**
+	 * 推荐人电话校验
+	 * @author cat
+	 * 
+	 * @param referencesTel	推荐人电话
+	 * @return 推荐人Id
+	 */
+	private Integer checkReferencesTel(String referrerTel) {
+		if (StringUtils.isNotBlank(referrerTel)) {
+			try {
+				Customer customer = customerService.assertTelExist(referrerTel);
+				return customer.getId();
+			} catch (Exception e) {
+				throw new BusinessException(112, "推荐人不存在");
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 添加常用地址
+	 * @author cat
+	 * 
+	 * @param list
+	 * @param customerId
+	 * @return
+	 */
+	private void saveOftenAddress(List<OftenAddressAddDto> list, Integer customerId) {
+		List<OftenAddress> save = new ArrayList<>();
+		for (OftenAddressAddDto oftenAddressAddDto : list) {
+			OftenAddress oftenAddress = new OftenAddress();
+			BeanUtils.copyProperties(oftenAddressAddDto, oftenAddress);
+			oftenAddress.setCustomerId(customerId);
+			save.add(oftenAddress);
+		}
+		oftenAddressRepository.save(save);
+	}
+	
+	@Transactional
+	@Override
+	public ServerResponse register(CustomerRegisterDto dto) {
+		// 推荐人手机号校验
+		Integer referrerId = this.checkReferencesTel(dto.getReferrerTel());
+		// 手机号、用户名校验
+		customerService.assertCustomerNotExist(dto.getTel(), dto.getUserAccount());
+		// 验证码校验
+		this.codeCheck(dto.getCode(), dto.getTel());
+		// 添加用户账号数据
+		Customer customer = this.saveCustomer(dto);
+		// 添加车主或货主
+		this.saveCarCargoOwnner(dto.getCarCargoOwner(), customer.getId(), dto.getCustomerType(), referrerId);
+		// 添加常用地址
+		List<OftenAddressAddDto> oftenAddress = dto.getOftenAddress();
+		if (oftenAddress != null && oftenAddress.size() > 0) {
+			this.saveOftenAddress(oftenAddress, customer.getId());
+		}
+		return ServerResponse.success();
+	}
+	
+	@Autowired
+	private ApproveLogService approveLogService;
+	
+	@Transactional
+	@Override
+	public ServerResponse adminApproveCarOwner(ApproveDto dto, User user) {
+		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
+		if(!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "审批失败：车主状态不是待审核");
+		}
+		this.approveCarCargoOwner(carOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
+		return ServerResponse.successWithData("审批成功");
+	}
+	
+	
+	@Transactional
+	@Override
+	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
+		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
+		if(!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "审批失败：货主状态不是待审核");
+		}
+		this.approveCarCargoOwner(cargoOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
+		return ServerResponse.successWithData("审批成功");
+	}
+	
+	
+	
 	
 	
 	/**
@@ -118,21 +289,6 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	}
 	
 	
-	/**
-	 * 车主货主详情
-	 * @author cat
-	 * 
-	 * @param id
-	 * @return
-	 */
-	@Deprecated
-	@Override
-	public ServerResponse details(Integer id) {
-		CarCargoOwnner carCargoOwnner = carCargoOwnnerRepository.findOne(id);
-		carCargoOwnner = bindingCustomer(carCargoOwnner);
-		return ServerResponse.successWithData(carCargoOwnner);
-	}
-	
 	
 	@Override
 	public ServerResponse adminCarOwnerDetails(DetailsDto dto) {
@@ -202,76 +358,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	}
 	
 	
-	/**
-	 * 车主货主审核
-	 * @author cat
-	 * 
-	 * @param checkDto
-	 * @param user
-	 * @return
-	 */
-	@Deprecated
-	@Override
-	public ServerResponse check(CheckDto checkDto, User user) {
-		Integer businessId = checkDto.getBusinessId();
-		// 添加审核记录
-		ApproveLog entity = new ApproveLog();
-		entity.setApproveBy(user.getId());
-		entity.setApproveContent(checkDto.getContent());
-		entity.setApproveResult(checkDto.getResult());
-		entity.setApproveTime(new Date());
-		entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
-		entity.setBusinessId(businessId);
-		approveLogRepository.save(entity);
-		return ServerResponse.successWithData("审核成功");
-	}
-	
-
-	
-	@Transactional
-	@Override
-	public ServerResponse adminApproveCarOwner(CheckDto dto, User user) {
-		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
-		if(!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "审批失败：车主状态不是待审核");
-		}
-		this.approveCarCargoOwner(carOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
-		this.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
-		return ServerResponse.successWithData("审批成功");
-	}
 	
 	
-	@Transactional
-	@Override
-	public ServerResponse adminApproveCargoOwner(CheckDto dto, User user) {
-		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
-		if(!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "审批失败：货主状态不是待审核");
-		}
-		this.approveCarCargoOwner(cargoOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
-		this.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_OWNER);
-		return ServerResponse.successWithData("审批成功");
-	}
 	
-	
-	/**
-	 * 添加审批记录
-	 * @author cat
-	 * 
-	 * @param dto	审批结果
-	 * @param approveBy	审批人
-	 * @param approveType	审批类型
-	 */
-	private void addApproveLog(CheckDto dto, Integer approveBy, String approveType) {
-		ApproveLog entity = new ApproveLog();
-		entity.setApproveBy(approveBy);
-		entity.setApproveType(approveType);
-		entity.setApproveContent(dto.getContent());
-		entity.setApproveResult(dto.getResult());
-		entity.setBusinessId(dto.getBusinessId());
-		entity.setApproveTime(new Date());
-		approveLogRepository.save(entity);
-	}
 	
 	
 	/**

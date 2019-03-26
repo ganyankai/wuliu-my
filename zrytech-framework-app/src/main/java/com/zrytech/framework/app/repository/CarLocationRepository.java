@@ -1,12 +1,12 @@
 package com.zrytech.framework.app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zrytech.framework.app.entity.CarLocation;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
 @Repository
-public interface CarLocationRepository extends JpaRepository<CarLocation, Integer> {
+public interface CarLocationRepository extends BaseRepository<CarLocation, Integer> {
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.base.annotation.CurrentUser;
@@ -51,38 +52,8 @@ public class CarCargoOwnerController {
 	}
 	
 	
-	/**
-	 * 车主货主详情
-	 * 
-	 * @param requestParams
-	 * @param result
-	 * @param user
-	 * @return
-	 */
-	@Deprecated
-	@Valid
-	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result,
-			@CurrentUser User user) {
-		return carCargoOwnerService.details(requestParams.getParams().getId());
-	}
 
 	
-	/**
-	 * 车辆审核
-	 * 
-	 * @param requestParams
-	 * @param result
-	 * @param user
-	 * @return
-	 */
-	@Deprecated
-	@Valid
-	@RequestMapping("/check")
-	public ServerResponse check(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result,
-			@CurrentUser User user) {
-		return carCargoOwnerService.check(requestParams.getParams(), user);
-	}
 	
 	
 	/**
@@ -164,7 +135,7 @@ public class CarCargoOwnerController {
 	 */
 	@Valid
 	@RequestMapping("/approveCarOwner")
-	public ServerResponse approveCarOwner(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result) {
+	public ServerResponse approveCarOwner(@RequestBody @Valid RequestParams<ApproveDto> requestParams, BindingResult result) {
 		User user = RequestUtil.getCurrentUser(User.class);
 		return carCargoOwnerService.adminApproveCarOwner(requestParams.getParams(), user);
 	}
@@ -253,7 +224,7 @@ public class CarCargoOwnerController {
 	 */
 	@Valid
 	@RequestMapping("/approveCargoOwner")
-	public ServerResponse approveCargoOwner(@RequestBody @Valid RequestParams<CheckDto> requestParams, BindingResult result) {
+	public ServerResponse approveCargoOwner(@RequestBody @Valid RequestParams<ApproveDto> requestParams, BindingResult result) {
 		User user = RequestUtil.getCurrentUser(User.class);
 		return carCargoOwnerService.adminApproveCargoOwner(requestParams.getParams(), user);
 	}

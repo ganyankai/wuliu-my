@@ -4,15 +4,15 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.zrytech.framework.app.entity.CarCargoOwnner;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 @Repository
-public interface CarCargoOwnnerRepository extends JpaRepository<CarCargoOwnner, Integer> {
+public interface CarCargoOwnnerRepository extends BaseRepository<CarCargoOwnner, Integer> {
 
 	/**
 	 * 获取车主或者货主企业名称

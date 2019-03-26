@@ -97,6 +97,10 @@ public class BillLocation {
 	/**状态*/
 	@Column(name = "`status`")
     private String status;
+	
+	/**货源装卸地Id*/
+	@Column(name = "`cargo_location_id`")
+	private Integer cargoLocationId;
 
     /**创建日期*/
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

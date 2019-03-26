@@ -2,10 +2,10 @@ package com.zrytech.framework.app.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zrytech.framework.app.entity.CargoMatter;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
 /**
@@ -13,7 +13,7 @@ import com.zrytech.framework.app.entity.CargoMatter;
  *
  */
 @Repository
-public interface CargoMatterRepository extends JpaRepository<CargoMatter, Integer>{
+public interface CargoMatterRepository extends BaseRepository<CargoMatter, Integer>{
 
 	List<CargoMatter> findByCargoIdAndCarOwnnerId(Integer cargoId, Integer carOwnnerId);
 	

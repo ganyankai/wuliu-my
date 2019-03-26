@@ -1,13 +1,15 @@
 package com.zrytech.framework.app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.base.repository.BaseRepository;
 
 
-public interface LogisticsCustomerRepository extends JpaRepository<Customer, Integer> {
+public interface LogisticsCustomerRepository extends BaseRepository<Customer, Integer> {
 
 	
 	/**
@@ -22,13 +24,17 @@ public interface LogisticsCustomerRepository extends JpaRepository<Customer, Int
 	@Query("update Customer set isActive = ?2 where id = ?1")
 	int updateIsActiveById(Integer id, Boolean enabled);
 	
+	List<Customer> findByTel(String tel);
 	
-	Customer findByUserAccount(String userAccount);
+	List<Customer> findByUserAccount(String userAccount);
 	
 	@Query(value = "select userName from Customer where id = ?1")
 	String findUserNameById(Integer id);
 	
 	@Query(value = "select isActive from Customer where id = ?1")
 	Boolean findIsActiveById(Integer id);
+	
+	
+	
 	
 }

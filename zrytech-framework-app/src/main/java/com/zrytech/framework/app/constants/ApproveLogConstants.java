@@ -6,15 +6,6 @@ package com.zrytech.framework.app.constants;
  */
 public class ApproveLogConstants {
 	
-	/**
-	 * 审核结果 通过
-	 */
-	//public static final String APPROVE_RESULT_PASS = "pass";
-	
-	/**
-	 * 审核结果 不通过
-	 */
-	//public static final String APPROVE_RESULT_NO_PASS = "no_pass";
 	
 	
 	/**

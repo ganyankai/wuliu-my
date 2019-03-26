@@ -2,15 +2,15 @@ package com.zrytech.framework.app.service;
 
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
-import com.zrytech.framework.app.dto.carsource.CarOwnerCarSourcePageDto;
+import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
+import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarUpdateDto;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.PageData;
@@ -49,23 +49,62 @@ public interface CarSourceService {
 	 * @return
 	 */
 	public ServerResponse adminApprove(ApproveDto dto, User user);
+
+	
+	/**
+	 * 车主及车主子账号 - 新增车源
+	 * @author cat
+	 * 
+	 * @param dto	新增车源入参
+	 * @param customer	当前登录人（车主）
+	 * @return
+	 */
+	public ServerResponse createCarSource(CarSourceAddDto dto, Customer customer);
 	
 	
-	
-	
-	public ServerResponse add(CarSourceAddDto dto, Customer customer);
-	
-	public ServerResponse updateCheck(CarSourceCheckUpdateDto dto, Customer customer);
-	
-	public ServerResponse submitAudit(CommonDto dto, Customer customer);
-	
+	/**
+	 * 车主及车主子账号 - 车源详情
+	 * @author cat
+	 * 
+	 * @param dto	车源Id
+	 * @param customer	车主及车主子账号
+	 * @return
+	 */
 	public ServerResponse details(DetailsDto dto, Customer customer);
 	
-	public ServerResponse page(CarOwnerCarSourcePageDto dto, Integer pageNum, Integer pageSize, Customer customer);
 	
-	public ServerResponse saveLine(CarRecordPlaceSaveDto dto, Customer customer);
+	/**
+	 * 车主及车主子账号 - 修改车源基本信息需要审核的字段
+	 * @author cat
+	 * 
+	 * @param dto	待修改字段
+	 * @param customer	当前登录人（车主）
+	 * @return
+	 */
+	public ServerResponse updateNeedApprove(CarSourceCheckUpdateDto dto, Customer customer);
 	
+	
+	/**
+	 * 车主及车主子账号 - 修改起止地（包含起止地的更新和添加）
+	 * <p>当 {@link CarRecordPlaceUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer	当前登录人（车主）
+	 * @return
+	 */
+	public ServerResponse addOrUpdateCarRecordPlace(CarRecordPlaceSaveDto dto, Customer customer);
+	
+	
+	/**
+	 * 车主及车主子账号 - 车源之新增车辆或更新车辆
+	 * <p>当 {@link CarSourceCarUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer	当前登录人
+	 * @return
+	 */
 	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer);
-	
 	
 }

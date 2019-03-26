@@ -20,13 +20,11 @@ import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarSourceConstants;
-import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceAddDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceUpdateDto;
-import com.zrytech.framework.app.dto.carsource.CarOwnerCarSourcePageDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarAddDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
@@ -57,21 +55,32 @@ import com.zrytech.framework.common.entity.User;
 @Transactional
 public class CarSourceServiceImpl implements CarSourceService {
 	
-	@Autowired private CarSourceRepository carSourceRepository;
-	
-	@Autowired private CarRecordPlaceRepository carRecordPlaceRepository;
-	
-	@Autowired private CarSourceMapper carSourceMapper;
-	
-	@Autowired private CarCargoOwnnerRepository carCargoOwnnerRepository;
-	
-	@Autowired private CarSourceCarRepository carSourceCarRepository;
-	
-	@Autowired private LogisticsCustomerRepository logisticsCustomerRepository;
-	
-	@Autowired private CarService carService;
-	
-	@Autowired private CarPersonService carPersonService;
+	@Autowired
+	private CarSourceRepository carSourceRepository;
+
+	@Autowired
+	private CarRecordPlaceRepository carRecordPlaceRepository;
+
+	@Autowired
+	private CarSourceMapper carSourceMapper;
+
+	@Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
+
+	@Autowired
+	private CarSourceCarRepository carSourceCarRepository;
+
+	@Autowired
+	private LogisticsCustomerRepository logisticsCustomerRepository;
+
+	@Autowired
+	private CarService carService;
+
+	@Autowired
+	private CarPersonService carPersonService;
+
+	@Autowired
+	private ApproveLogService approveLogService;
 	
 	
 	
@@ -82,10 +91,10 @@ public class CarSourceServiceImpl implements CarSourceService {
 		for (CarSource carSource : list) {
 			carSource = this.bindingCarRecordPlace(carSource);
 			carSource = this.bindingCarOwnerName(carSource);
+			carSource = this.bindingCustomerUserName(carSource);
 		}
 		return new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
-	
 	
 	@Override
 	public ServerResponse adminDetails(DetailsDto dto) {
@@ -93,13 +102,12 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCarRecordPlace(carSource);
 		carSource = this.bindingCarOwnerName(carSource);
-		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(),
-				CarSourceCheckUpdateDto.class);
+		carSource = this.bindingCustomerUserName(carSource);
+		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(), CarSourceCheckUpdateDto.class);
 		carSource.setApproveContentCN(temp);
 		return ServerResponse.successWithData(carSource);
 	}
 	
-
 	/**
 	 * 为车源设置车辆列表
 	 * @author cat
@@ -109,13 +117,12 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 */
 	private CarSource bindingCarSourceCar(CarSource carSource) {
 		Integer carSourceId = carSource.getId();
-		if(carSourceId != null ) {
+		if (carSourceId != null) {
 			List<CarSourceCar> carSourceCars = carSourceCarRepository.findByCarSourceId(carSourceId);
 			carSource.setCarSourceCars(carSourceCars);
 		}
 		return carSource;
 	}
-	
 	
 	/**
 	 * 为车源设置路线列表
@@ -126,13 +133,12 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 */
 	private CarSource bindingCarRecordPlace(CarSource carSource) {
 		Integer carSourceId = carSource.getId();
-		if(carSourceId != null ) {
+		if (carSourceId != null) {
 			List<CarRecordPlace> carRecordPlaces = carRecordPlaceRepository.findByCarSourceId(carSourceId);
 			carSource.setCarRecordPlaces(carRecordPlaces);
 		}
 		return carSource;
 	}
-	
 	
 	/**
 	 * 为车源设置车主企业名称
@@ -143,12 +149,11 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 */
 	private CarSource bindingCarOwnerName(CarSource carSource) {
 		Integer carOwnerId = carSource.getCarOwnerId();
-		if(carOwnerId != null ) {
+		if (carOwnerId != null) {
 			carSource.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
 		}
 		return carSource;
 	}
-	
 	
 	/**
 	 * 为车源绑定创建者名称
@@ -159,12 +164,11 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 */
 	private CarSource bindingCustomerUserName(CarSource carSource) {
 		Integer createBy = carSource.getCreateBy();
-		if(createBy != null ) {
+		if (createBy != null) {
 			carSource.setUserName(logisticsCustomerRepository.findUserNameById(createBy));
 		}
 		return carSource;
 	}
-	
 	
 	/**
 	 * 断言车源存在
@@ -175,12 +179,11 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 */
 	private CarSource assertCarSourceExist(Integer carSourceId) {
 		CarSource carSource = carSourceRepository.findOne(carSourceId);
-		if(carSource == null) {
+		if (carSource == null) {
 			throw new BusinessException(112, "车源不存在");
 		}
 		return carSource;
 	}
-	
 	
 	/**
 	 * 断言车源归于与当前登录人
@@ -190,15 +193,10 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSource	车源
 	 */
 	private void assertCarSourceBolongToCurrentUser(CarCargoOwnner carOwner, CarSource carSource) {
-		if(!carOwner.getId().equals(carSource.getCarOwnerId())) {
+		if (!carOwner.getId().equals(carSource.getCarOwnerId())) {
 			throw new BusinessException(112, "车源不存在");
 		}
 	}
-	
-	
-	@Autowired
-	private ApproveLogService approveLogService;
-
 	
 	/**
 	 * 管理员 - 车源审批
@@ -210,7 +208,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 */
 	public ServerResponse adminApprove(ApproveDto dto, User user) {
 		CarSource carSource = this.assertCarSourceExist(dto.getBusinessId());
-		if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(carSource.getApproveStatus())) {
+		if (!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(carSource.getApproveStatus())) {
 			throw new BusinessException(112, "审批失败：车源的状态不是待审批");
 		}
 		this.approve(carSource, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
@@ -246,7 +244,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 	
 	
 	/*以下为车主及车主子账号接口*/
-	/////////////////////////////////////////////////////////////////////////////////
 	
 	
 	/**
@@ -260,23 +257,21 @@ public class CarSourceServiceImpl implements CarSourceService {
 	@Transactional
 	public ServerResponse createCarSource(CarSourceAddDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
-		Integer carOwnerId = carOwner.getId();
 		// 车源车辆关系入参校验
 		List<CarSourceCarAddDto> carSourceCars = dto.getCarSourceCars();
-		if(carSourceCars != null && carSourceCars.size() > 0) {
-			this.carSourceCarAddCheck(carSourceCars, carOwnerId);
+		if (carSourceCars != null && carSourceCars.size() > 0) {
+			this.carSourceCarAddCheck(carSourceCars, carOwner.getId());
 		}
 		// 新增车源基本信息
-		CarSource carSource = this.addCarSource(dto, customer.getId(), carOwnerId, carOwner.getAvoidAudit());
+		CarSource carSource = this.addCarSource(dto, customer.getId(), carOwner.getId(), carOwner.getAvoidAudit());
 		// 新增车源路线
 		this.addCarRecordPlace(dto.getCarRecordPlaces(), carSource.getId());
 		// 新增车源的车辆、司机、压货人
-		if(carSourceCars != null && carSourceCars.size() > 0) {
+		if (carSourceCars != null && carSourceCars.size() > 0) {
 			this.addCarSourceCar(carSourceCars, carSource.getId());
 		}
 		return ServerResponse.successWithData("添加成功");
 	}
-	
 	
 	/**
 	 * 新增车源基本信息
@@ -295,10 +290,10 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource.setCarOwnerId(carOwnerId);
 		carSource.setCreateBy(createBy);
 		carSource.setCreateDate(new Date());
-		if(avoidAudit) { // 免审核
+		if (avoidAudit) {
 			carSource.setStatus(CarSourceConstants.STATUS_RELEASE);
 			carSource.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-		}else {
+		} else {
 			carSource.setStatus(CarSourceConstants.STATUS_UNCERTIFIED);
 			carSource.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		}
@@ -309,49 +304,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSourceRepository.save(carSource);
 		return carSource;
 	}
-	
-	
-	
-	/**
-	 * 车主及车主子账号 - 新增车源
-	 * @author cat
-	 * 
-	 * @param dto	新增车源入参
-	 * @param customer	当前登录人
-	 * @return
-	 */
-	@Override
-	public ServerResponse add(CarSourceAddDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		Integer carOwnerId = carOwner.getId();
-		// TODO 鉴权,判断当前登录人是否有权限新增车源
-		
-		// 新增车源基本信息
-		CarSource carSource = new CarSource();
-		BeanUtils.copyProperties(dto, carSource);
-		carSource.setId(null);
-		carSource.setCarOwnerId(carOwnerId);
-		carSource.setCreateBy(customer.getId());
-		carSource.setCreateDate(new Date());
-		if(carOwner.getAvoidAudit()) { // 免审核
-			carSource.setStatus(CarSourceConstants.STATUS_UP);
-		}else {
-			carSource.setStatus(CarSourceConstants.STATUS_WAIT_CHECK);
-		}
-		carSource = carSourceRepository.save(carSource);
-		Integer carSourceId = carSource.getId();
-		// 新增车源路线
-		this.addCarRecordPlace(dto.getCarRecordPlaces(), carSourceId);
-		// 新增车源的车辆、司机、压货人
-		List<CarSourceCarAddDto> carSourceCars = dto.getCarSourceCars();
-		if(carSourceCars != null && carSourceCars.size() > 0) {
-			this.carSourceCarAddCheck(carSourceCars, carOwnerId);
-			this.addCarSourceCar(carSourceCars, carSourceId);
-		}
-		
-		return ServerResponse.successWithData("添加成功");
-	}
-	
 	
 	/**
 	 * 新增车源路线
@@ -369,7 +321,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carRecordPlaceRepository.save(lines);
 	}
 	
-	
 	/**
 	 * 新增车源的车辆、司机、压货人
 	 * @author cat
@@ -377,61 +328,38 @@ public class CarSourceServiceImpl implements CarSourceService {
 	private void addCarSourceCar(List<CarSourceCarAddDto> carSourceCars, Integer carSourceId) {
 		List<CarSourceCar> list = new ArrayList<>();
 		for (CarSourceCarAddDto carSourceCarAddDto : carSourceCars) {
+			Integer carId = carSourceCarAddDto.getCarId();
+			Integer driverId = carSourceCarAddDto.getDriverId();
+			Integer supercargoId = carSourceCarAddDto.getSupercargoId();
+			if (driverId == null && supercargoId == null && carId == null) {
+				continue;
+			}
 			CarSourceCar carSourceCar = new CarSourceCar();
 			BeanUtils.copyProperties(carSourceCarAddDto, carSourceCar);
 			carSourceCar.setId(null);
 			carSourceCar.setCarSourceId(carSourceId);
 			list.add(carSourceCar);
 		}
-		carSourceCarRepository.save(list);
-	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 修改车源基本信息需要审核的字段
-	 * @author cat
-	 * 
-	 * @param dto	待修改字段
-	 * @param customer	当前登录人
-	 * @return
-	 */
-	@Override
-	public ServerResponse updateCheck(CarSourceCheckUpdateDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		// TODO 鉴权,判断当前登录人是否可以修改车源
-		CarSource carSource = this.assertCarSourceExist(dto.getId());
-		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		BeanUtils.copyProperties(dto, carSource);
-		if(!carOwner.getAvoidAudit()) { // 非免审核
-			carSource.setStatus(CarSourceConstants.STATUS_WAIT_CHECK);
+		if (list.size() > 0) {
+			carSourceCarRepository.save(list);
 		}
-		carSourceRepository.save(carSource);
-		return ServerResponse.successWithData("修改成功");
 	}
 	
-	
-	/**
-	 * 车主及车主子账号 - 修改车源基本信息需要审核的字段
-	 * @author cat
-	 * 
-	 * @param dto	待修改字段
-	 * @param customer	当前登录人
-	 * @return
-	 */
+	@Override
 	public ServerResponse updateNeedApprove(CarSourceCheckUpdateDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		if(carSource.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (carSource.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			throw new BusinessException(112, "修改失败：不能修改待审核的车源");
 		}
-		if(carOwner.getAvoidAudit()) { // 免审核
+		if (carOwner.getAvoidAudit()) {
 			BeanUtils.copyProperties(dto, carSource);
 			carSource.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-			if(carSource.getStatus().equalsIgnoreCase(CarSourceConstants.STATUS_UNCERTIFIED)) {
+			if (carSource.getStatus().equalsIgnoreCase(CarSourceConstants.STATUS_UNCERTIFIED)) {
 				carSource.setStatus(CarSourceConstants.STATUS_RELEASE);
 			}
-		}else {
+		} else {
 			carSource.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		}
 		dto.setId(null);
@@ -439,216 +367,26 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSourceRepository.save(carSource);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 提交审核
-	 * @author cat
-	 * 
-	 * @param dto	车源Id
-	 * @param customer	当前登录人
-	 * @return
-	 */
-	@Override
-	public ServerResponse submitAudit(CommonDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		// TODO 鉴权
-		CarSource carSource = this.assertCarSourceExist(dto.getId());
-		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		if(!CarSourceConstants.STATUS_DOWN.equalsIgnoreCase(carSource.getStatus())) {
-			throw new BusinessException(112, "提交审核失败：仅下架状态的车源可以提交审核");
-		}
-		if(carOwner.getAvoidAudit()) { // 免审核，直接更新为【上架】
-			carSourceRepository.updateStatusById(dto.getId(), CarSourceConstants.STATUS_UP);
-		}else {
-			carSourceRepository.updateStatusById(dto.getId(), CarSourceConstants.STATUS_WAIT_CHECK);
-		}
-		return ServerResponse.successWithData("提交审核成功");
-	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 车源分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	@Override
-	public ServerResponse page(CarOwnerCarSourcePageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		dto.setCarOwnerId(carOwner.getId());
-		// dto.setCreateBy(customer.getId()); TODO 子账号需要赋值
-		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-		List<CarSource> list = carSourceMapper.carOwnerSelectSelective(dto);
-		for (CarSource carSource : list) {
-			List<CarRecordPlace> carRecordPlaces = carRecordPlaceRepository.findByCarSourceId(carSource.getId());
-			carSource.setCarRecordPlaces(carRecordPlaces); // 路线列表
-			carSource = bindingCustomerUserName(carSource);
-		}
-		PageData<CarSource> pageData = new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
-	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 我的车源分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @param customer
-	 * @return
-	 */
-	public ServerResponse myCarSourcePage(CarOwnerCarSourcePageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-		List<CarSource> list = carSourceMapper.myCarSource(dto, carOwner.getId());
-		for (CarSource carSource : list) {
-			carSource = this.bindingCarRecordPlace(carSource);
-			carSource = this.bindingCustomerUserName(carSource);
-		}
-		PageData<CarSource> pageData = new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
-	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 我的车源详情
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param customer
-	 * @return
-	 */
-	public ServerResponse myCarSourceDetails(DetailsDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		CarSource carSource = this.assertCarSourceExist(dto.getId());
-		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		carSource = this.bindingCarRecordPlace(carSource);
-		carSource = this.bindingCarSourceCar(carSource);
-		carSource = this.bindingCustomerUserName(carSource);
-		return ServerResponse.successWithData(carSource);
-	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 车源详情
-	 * @author cat
-	 * 
-	 * @param dto	车源Id
-	 * @return
-	 */
+
 	@Override
 	public ServerResponse details(DetailsDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		
-		// TODO 子账号仅可看自己创建的?
-		// if(customer.getId() != carSource.getCreateBy()) {
-		// 	return ServerResponse.successWithData(new CarSource());
-		// }
-		
 		carSource = this.bindingCarRecordPlace(carSource);
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCustomerUserName(carSource);
+		carSource = this.bindingCarOwnerName(carSource);
+		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(), CarSourceCheckUpdateDto.class);
+		carSource.setApproveContentCN(temp);
 		return ServerResponse.successWithData(carSource);
 	}
-	
 
 	/**
-	 * 车主及车主子账号 - 更新起止地或新增起止地
-	 * <p>当 {@link CarRecordPlaceUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
+	 * 判断入参：车辆、司机、压货人是否属于当前登录车主
 	 * @author cat
 	 * 
-	 * @param dto
-	 * @param customer	当前登录人
-	 * @return
-	 */
-	@Transactional
-	@Override
-	public ServerResponse saveLine(CarRecordPlaceSaveDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		Integer carSourceId = dto.getCarSourceId();
-		// TODO 鉴权
-		CarSource carSource = this.assertCarSourceExist(dto.getCarSourceId());
-		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		// 新增或更新起止地
-		List<CarRecordPlace> save = new ArrayList<>(); // 待更新和新增的路线
-		for (CarRecordPlaceUpdateDto carRecordPlaceDto : dto.getCarRecordPlaces()) {
-			Integer id = carRecordPlaceDto.getId();
-			if(id != null) { // 更新
-				CarRecordPlace carRecordPlace = carRecordPlaceRepository.findByIdAndCarSourceId(id, carSourceId);
-				if(carRecordPlace == null) {
-					throw new BusinessException(112, "修改失败：要修改的起止地不存在");
-				}
-				BeanUtils.copyProperties(carRecordPlaceDto, carRecordPlace);
-				save.add(carRecordPlace);
-			}else { // 新增
-				CarRecordPlace carRecordPlace = new CarRecordPlace();
-				carRecordPlace.setCarSourceId(carSourceId);
-				BeanUtils.copyProperties(carRecordPlaceDto, carRecordPlace);
-				save.add(carRecordPlace);	
-			}
-		}
-		carRecordPlaceRepository.save(save);
-		// TODO 起止地更新之后是否需要重新审核，待定。
-		return ServerResponse.successWithData("起止地修改成功");
-	}
-	
-	
-	/**
-	 * 车主及车主子账号 - 车源之新增车辆或更新车辆
-	 * <p>当 {@link CarSourceCarUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param customer	当前登录人
-	 * @return
-	 */
-	@Transactional
-	@Override
-	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		this.carSourceCarsCheck(dto.getCarSourceCars(), carOwner.getId());
-		
-		// TODO 鉴权
-		Integer carSourceId = dto.getCarSourceId();
-		CarSource carSource = this.assertCarSourceExist(carSourceId);
-		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		
-		List<CarSourceCar> save = new ArrayList<>();
-		for (CarSourceCarUpdateDto carSourceCarUpdateDto : dto.getCarSourceCars()) {
-			Integer id = carSourceCarUpdateDto.getId();
-			if(id != null){ // 更新
-				CarSourceCar carSourceCar = carSourceCarRepository.findByIdAndCarSourceId(id, carSourceId);
-				if(carSourceCar == null) {
-					throw new BusinessException(112, "修改失败：要修改的车辆不存在");
-				}
-				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
-				save.add(carSourceCar);
-			}else { // 新增
-				CarSourceCar carSourceCar = new CarSourceCar();
-				carSourceCar.setCarSourceId(carSourceId);
-				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
-				save.add(carSourceCar);
-			}
-		}
-		carSourceCarRepository.save(save);
-		
-		return ServerResponse.successWithData("车辆修改成功");
-	}
-	
-	
-	/**
-	 * 判断入参 车辆、司机、压货人 是否属于当前登录车主
-	 * @author cat
-	 * 
-	 * @param carSourceCars	车辆、司机、压货人Id
+	 * @param carSourceCars	车辆、司机、压货人
 	 * @param carOwnerId	车主Id
 	 */
 	private void carSourceCarsCheck(List<CarSourceCarUpdateDto> carSourceCars, Integer carOwnerId) {
@@ -656,24 +394,26 @@ public class CarSourceServiceImpl implements CarSourceService {
 			Integer driverId = carSourceCarUpdateDto.getDriverId();
 			Integer supercargoId = carSourceCarUpdateDto.getSupercargoId();
 			Integer carId = carSourceCarUpdateDto.getCarId();
-			if(driverId != null) {
+			if (driverId == null && supercargoId == null && carId == null) {
+				throw new BusinessException(112, "车辆，司机，压货人不能同时为空");
+			}
+			if (driverId != null) {
 				carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
 			}
-			if(supercargoId != null) {
+			if (supercargoId != null) {
 				carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
 			}
-			if(carId != null) {
+			if (carId != null) {
 				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
 			}
 		}
 	}
 	
-	
 	/**
-	 * 判断入参 车辆、司机、压货人 是否属于当前登录车主
+	 * 判断入参：车辆、司机、压货人是否属于当前登录车主
 	 * @author cat
 	 * 
-	 * @param carSourceCars	车辆、司机、压货人Id
+	 * @param carSourceCars	车辆、司机、压货人
 	 * @param carOwnerId	车主Id
 	 */
 	private void carSourceCarAddCheck(List<CarSourceCarAddDto> carSourceCars, Integer carOwnerId) {
@@ -681,55 +421,75 @@ public class CarSourceServiceImpl implements CarSourceService {
 			Integer driverId = carSourceCarAddDto.getDriverId();
 			Integer supercargoId = carSourceCarAddDto.getSupercargoId();
 			Integer carId = carSourceCarAddDto.getCarId();
-			if(driverId != null) {
+			if (driverId != null) {
 				carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
 			}
-			if(supercargoId != null) {
+			if (supercargoId != null) {
 				carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
 			}
-			if(carId != null) {
+			if (carId != null) {
 				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
 			}
 		}
 	}
 	
-	
-	/**
-	 * 车主及车主子账号 - 更新起止地或新增起止地
-	 * <p>当 {@link CarRecordPlaceUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param customer	当前登录人
-	 * @return
-	 */
 	@Transactional
+	@Override
 	public ServerResponse addOrUpdateCarRecordPlace(CarRecordPlaceSaveDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		Integer carSourceId = dto.getCarSourceId();
-		// TODO 鉴权
 		CarSource carSource = this.assertCarSourceExist(dto.getCarSourceId());
 		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
 		// 新增或更新起止地
-		List<CarRecordPlace> save = new ArrayList<>(); // 待更新和新增的路线
+		List<CarRecordPlace> save = new ArrayList<>(); // 待更新和待新增的起止地
 		for (CarRecordPlaceUpdateDto carRecordPlaceDto : dto.getCarRecordPlaces()) {
 			Integer id = carRecordPlaceDto.getId();
-			if(id != null) { // 更新
+			if (id != null) { // 更新
 				CarRecordPlace carRecordPlace = carRecordPlaceRepository.findByIdAndCarSourceId(id, carSourceId);
-				if(carRecordPlace == null) {
+				if (carRecordPlace == null) {
 					throw new BusinessException(112, "修改失败：要修改的起止地不存在");
 				}
 				BeanUtils.copyProperties(carRecordPlaceDto, carRecordPlace);
 				save.add(carRecordPlace);
-			}else { // 新增
+			} else { // 新增
 				CarRecordPlace carRecordPlace = new CarRecordPlace();
 				carRecordPlace.setCarSourceId(carSourceId);
 				BeanUtils.copyProperties(carRecordPlaceDto, carRecordPlace);
-				save.add(carRecordPlace);	
+				save.add(carRecordPlace);
 			}
 		}
 		carRecordPlaceRepository.save(save);
-		// TODO 起止地更新之后是否需要重新审核，待定。
-		return ServerResponse.successWithData("起止地修改成功");
+		return ServerResponse.successWithData("修改成功");
 	}
+	
+	@Transactional
+	@Override
+	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer carSourceId = dto.getCarSourceId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
+		this.carSourceCarsCheck(dto.getCarSourceCars(), carOwner.getId());
+		List<CarSourceCar> save = new ArrayList<>();
+		for (CarSourceCarUpdateDto carSourceCarUpdateDto : dto.getCarSourceCars()) {
+			Integer id = carSourceCarUpdateDto.getId();
+			if (id != null) { // 更新
+				CarSourceCar carSourceCar = carSourceCarRepository.findByIdAndCarSourceId(id, carSourceId);
+				if (carSourceCar == null) {
+					throw new BusinessException(112, "修改失败：要修改的车辆不存在");
+				}
+				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
+				save.add(carSourceCar);
+			} else { // 新增
+				CarSourceCar carSourceCar = new CarSourceCar();
+				carSourceCar.setCarSourceId(carSourceId);
+				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
+				save.add(carSourceCar);
+			}
+		}
+		carSourceCarRepository.save(save);
+		return ServerResponse.successWithData("修改成功");
+	}
+	
+	
 }

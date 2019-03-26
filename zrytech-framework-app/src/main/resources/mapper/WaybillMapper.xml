@@ -19,6 +19,7 @@
         <result column="proof_imgs" property="proofImgs" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="VARCHAR"/>
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="create_by" property="createBy" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, bill_no, cargo_id, cargo_ownner_id, car_ownner_id, advance_moeny, final_money, 
@@ -89,15 +90,16 @@
         select * from `waybill`
         <where>
             <if test="carOwnerName != null and carOwnerName != ''">
-                `car_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName},
-                '%'))
+                `car_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName},'%'))
             </if>
             <if test="carOwnerId != null">
                 and `car_ownner_id` = #{carOwnerId}
             </if>
             <if test="cargoOwnerName != null and cargoOwnerName != ''">
-                and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%',
-                #{cargoOwnerName}, '%'))
+                and `cargo_ownner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{cargoOwnerName}, '%'))
+            </if>
+            <if test="cargoOwnerId != null">
+                and `cargo_ownner_id` = #{cargoOwnerId}
             </if>
             <if test="cargoId != null">
                 and `cargo_id` = #{cargoId}
@@ -119,6 +121,9 @@
             </if>
             <if test="id != null">
                 and `id` = #{id}
+            </if>
+            <if test="createBy != null">
+                and `create_by` = #{createBy}
             </if>
         </where>
         order by `create_date` desc
