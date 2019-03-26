@@ -17,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.utils.DictionaryUtil;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 

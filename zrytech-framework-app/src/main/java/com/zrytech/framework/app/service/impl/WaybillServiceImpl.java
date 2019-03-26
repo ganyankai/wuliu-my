@@ -62,88 +62,76 @@ import org.springframework.transaction.annotation.Propagation;
 @org.springframework.transaction.annotation.Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,Integer> implements WaybillService {
 
-    @Autowired
-    private WaybillMapper waybillMapper;
+	@Autowired
+	private WaybillMapper waybillMapper;
 
-    @Autowired
-    private WaybillRepository waybillRepository;
+	@Autowired
+	private WaybillRepository waybillRepository;
 
-    @Autowired
-    private WaybillDetailRepository waybillDetailRepository;
+	@Autowired
+	private WaybillDetailRepository waybillDetailRepository;
 
-    @Autowired
-    private CarCargoOwnnerRepository carCargoOwnnerRepository;
+	@Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
 
-    @Autowired
-    private CargoRepository cargoRepository;
+	@Autowired
+	private CargoRepository cargoRepository;
 
-    @Autowired
-    private BillLocationRepository billLocationRepository;
+	@Autowired
+	private BillLocationRepository billLocationRepository;
 
-    @Autowired
-    private EvaluateRepository evaluateRepository;
+	@Autowired
+	private EvaluateRepository evaluateRepository;
 
-   /* @Autowired
-    private WaybillDao waybillDao;*/
+	@Autowired
+	private CargoDao cargoDao;
 
-    @Autowired
-    private CargoDao cargoDao;
+	@Autowired
+	private CarService carService;
 
-    @Autowired
-    private CarService carService;
+	@Autowired
+	private CarPersonService carPersonService;
 
-    @Autowired
-    private CarPersonService carPersonService;
+	@Autowired
+	private BillLocationService billLocationService;
 
-    @Autowired
-    private BillLocationService billLocationService;
+	@Autowired
+	private WaybillDetailService waybillDetailService;
 
-    @Autowired
-    private WaybillDetailService waybillDetailService;
-
-
-    /**
-     * 运单分页
-     *
-     * @param dto      查询条件，详见{@link WaybillPageDto}
-     * @param pageNum
-     * @param pageSize
-     * @return
-     * @author cat
-     */
+	@Autowired
+	private TradeNoUtil tradeNoUtil;
+    
+	
+    
     @Override
-    public ServerResponse page(WaybillPageDto dto, Integer pageNum, Integer pageSize) {
-        com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-        List<Waybill> list = waybillMapper.selectSelective(dto);
-        for (Waybill waybill : list) {
-            waybill = bindingCarOwnerName(waybill);
-            waybill = bindingCargoOwnerName(waybill);
-        }
-        PageData<Waybill> pageData = new PageData<Waybill>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-        return ServerResponse.successWithData(pageData);
-    }
+	public PageData<Waybill> waybillPage(WaybillPageDto dto, Integer pageNum, Integer pageSize) {
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
+		List<Waybill> list = waybillMapper.selectSelective(dto);
+		for (Waybill waybill : list) {
+			waybill = this.bindingCarOwnerName(waybill);
+			waybill = this.bindingCargoOwnerName(waybill);
+		}
+		return new PageData<Waybill>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
+	}
+
+	@Override
+	public ServerResponse adminDetails(DetailsDto dto) {
+		Waybill waybill = this.assertWaybillExist(dto.getId());
+		waybill = this.bindingCargo(waybill);
+		waybill = this.bindingCarOwnerName(waybill);
+		waybill = this.bindingCargoOwnerName(waybill);
+		waybill = this.bindingWaybillDetail(waybill);
+		waybill = this.bindingEvaluate(waybill);
+		return ServerResponse.successWithData(waybill);
+	}
+    
+    
+    
 
 
-    /**
-     * 运单详情
-     *
-     * @param id
-     * @return
-     * @author cat
-     */
-    @Override
-    public ServerResponse details(Integer id) {
-        Waybill waybill = waybillRepository.findOne(id);
-        waybill = bindingCargo(waybill);
-        waybill = bindingCarOwnerName(waybill);
-        waybill = bindingCargoOwnerName(waybill);
-        waybill = bindingWaybillDetail(waybill);
-        waybill = bindingEvaluate(waybill);
-        return ServerResponse.successWithData(waybill);
-    }
+    
 
-    @Autowired
-    private TradeNoUtil tradeNoUtil;
+
 
     /**
      * @return

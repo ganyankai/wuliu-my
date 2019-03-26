@@ -1,8 +1,11 @@
-# 运单后台管理系统接口 #
+# 后台管理系统接口 #
 
 ** 作者：CAT **
 
 <br>
+
+# 运单 #
+
 
     运单  waybill
 
@@ -10,7 +13,8 @@
     "billNo": "",              str 订单编号
     "cargoId": "",             int 货源Id 
     "cargoOwnnerId": "",       int 货主Id
-    "carId": "",               int 车主Id
+    "carOwnnerId": "",         int 车主Id
+    "createBy": "",            int 创建人Id
     "advanceMoeny": "",        str 预付款
     "finalMoney": "",          str 尾款
     "totalMoney": "",          str 总金额
@@ -63,29 +67,29 @@
 
 <br>
 <br>
-<br>
 
 
-## 1.运单列表分页 ##
+## 1.管理员 - 运单分页 ##
 
 **URL**
->admin/waybill/page
+>/admin/waybill/page
 
 **请求参数**
 
     {
     	"params": {
             "id":"1",                     (选填)（int）运单Id
-    		"carOwnerName":"1",           (选填)（str）车主企业名称
+    		"carOwnerName":"1",           (选填)（str）车主企业名称			// 模糊搜索
     		"carOwnerId":"1",             (选填)（int）车主Id
-    		"cargoOwnerName":"1",         (选填)（str）货主企业名称
+    		"createBy": "",               (选填)（int） 创建人Id
+    		"cargoOwnerName":"1",         (选填)（str）货主企业名称			// 模糊搜索
     		"cargoOwnerId":"2",           (选填)（int）货主Id
     		"cargoId": "1",               (选填)（int）货源Id
-    		"billNo": "1",                (选填)（str）运单号
-    		"payType": "1",               (选填)（str）支付类型
-    		"payWay":"1",                 (选填)（str）支付方式
-    		"billType":"1",               (选填)（str）运单类型
-    		"status":"1"                  (选填)（str）运单状态
+    		"billNo": "1",                (选填)（str）运单号				// 模糊搜索
+    		"payType": "1",               (选填)（str）支付类型（字典取值）
+    		"payWay":"1",                 (选填)（str）支付方式（字典取值）
+    		"billType":"1",               (选填)（str）运单类型（字典取值）
+    		"status":"1"                  (选填)（str）运单状态（字典取值）
     	},
         "page":{
             "pageNum": "",
@@ -93,57 +97,294 @@
         },
     	"token": ""
 	}
+	
+**测试入参**
+
+	{
+	    "params": {
+	        "id": "13",
+	        "carOwnerName": "中软云科技有限公司",
+	        "carOwnerId": "10",
+	        "createBy": "1",
+	        "cargoOwnerName": "货主公司",
+	        "cargoOwnerId": "1",
+	        "cargoId": "8",
+	        "billNo": "2019",
+	        "payType": "offline_pay",
+	        "payWay": "arrival_pay",
+	        "billType": "",
+	        "status": "await_generate"
+	    },
+	    "page": {
+	        "pageNum": "1",
+	        "pageSize": "10"
+	    },
+	    "token": ""
+	}
 
 **响应示例**
 
     {
-        "code": 1,
-        "msg": "success",
-        "data": {
-            "total": 1,
-            "list": [
-                {
-                    "id": 1,
-                    "billNo": "12580",
-                    "cargoId": 1,
-                    "cargo": null,
-                    "cargoOwnnerId": 2,
-                    "cargoOwnerName": "货主李四",           【货主企业名称】
-                    "carOwnnerId": 1,
-                    "carOwnerName": "车主张三",             【车主企业名称】
-                    "advanceMoeny": 1,
-                    "finalMoney": 1,
-                    "totalMoney": 1,
-                    "payType": "1",
-                    "payTypeCN": null,
-                    "payWay": "1",
-                    "payWayCN": null,
-                    "remark": "1",
-                    "qty": 1,
-                    "weightUnit": "1",
-                    "billType": "1",
-                    "billTypeCN": null,
-                    "proofImgs": "1",
-                    "status": "1",
-                    "statusCN": null,
-                    "createDate": "2019-02-20 15:42:18",
-                    "waybillDetails": null
-                }
-            ],
-            "pageNo": 1,
-            "pageSize": 2
-        }
-    }
+	    "code": 1,
+	    "msg": "success",
+	    "data": {
+	        "total": 1,
+	        "list": [
+	            {
+	                "id": 13,
+	                "billNo": "2019030700014428223",
+	                "cargoId": 8,
+	                "cargoName": null,
+	                "cargo": null,
+	                "cargoOwnnerId": 1,
+	                "cargoOwnerName": "货主公司",
+	                "carOwnnerId": 10,
+	                "createBy": 1,
+	                "carOwnerName": "中软云科技有限公司",
+	                "advanceMoeny": 1121,
+	                "finalMoney": 1224,
+	                "totalMoney": 2345,
+	                "payType": "offline_pay",
+	                "payTypeCN": "线下支付",
+	                "payWay": "arrival_pay",
+	                "payWayCN": "货到付款",
+	                "remark": "订单测试123",
+	                "qty": 450,
+	                "weightUnit": "ton",
+	                "weightUnitCN": "吨",
+	                "billType": null,
+	                "billTypeCN": null,
+	                "proofImgs": null,
+	                "status": "await_generate",
+	                "statusCN": "待生成",
+	                "createDate": "2019-03-07 17:20:28",
+	                "waybillDetails": null,
+	                "evaluates": null
+	            }
+	        ],
+	        "pageNo": 1,
+	        "pageSize": 10
+	    }
+	}
 
 <br>
 <br>
-<br>
 
 
-## 2.运单详情 ##
+## 2.管理员 - 某一个货主的运单分页 ##
+
+**备注**
+
+	参数cargoOwnerId不能为空
 
 **URL**
->admin/waybill/details
+>/admin/waybill/oneCargoOwnerWaybillPage
+
+**请求参数**
+
+    {
+    	"params": {
+            "id":"1",                     (选填)（int）运单Id
+    		"carOwnerName":"1",           (选填)（str）车主企业名称			// 模糊搜索
+    		"carOwnerId":"1",             (选填)（int）车主Id
+    		"createBy": "",               (选填)（int） 创建人Id
+    		"cargoOwnerName":"1",         (选填)（str）货主企业名称			// 模糊搜索
+    		"cargoOwnerId":"2",           (选填)（int）货主Id
+    		"cargoId": "1",               (选填)（int）货源Id
+    		"billNo": "1",                (选填)（str）运单号				// 模糊搜索
+    		"payType": "1",               (选填)（str）支付类型（字典取值）
+    		"payWay":"1",                 (选填)（str）支付方式（字典取值）
+    		"billType":"1",               (选填)（str）运单类型（字典取值）
+    		"status":"1"                  (选填)（str）运单状态（字典取值）
+    	},
+        "page":{
+            "pageNum": "",
+            "pageSize":""
+        },
+    	"token": ""
+	}
+	
+**测试入参**
+
+	{
+	    "params": {
+	        "id": "13",
+	        "carOwnerName": "中软云科技有限公司",
+	        "carOwnerId": "10",
+	        "createBy": "1",
+	        "cargoOwnerName": "货主公司",
+	        "cargoOwnerId": "1",
+	        "cargoId": "8",
+	        "billNo": "2019",
+	        "payType": "offline_pay",
+	        "payWay": "arrival_pay",
+	        "billType": "",
+	        "status": "await_generate"
+	    },
+	    "page": {
+	        "pageNum": "1",
+	        "pageSize": "10"
+	    },
+	    "token": ""
+	}
+
+**响应示例**
+
+    {
+	    "code": 1,
+	    "msg": "success",
+	    "data": {
+	        "total": 1,
+	        "list": [
+	            {
+	                "id": 13,
+	                "billNo": "2019030700014428223",
+	                "cargoId": 8,
+	                "cargoName": null,
+	                "cargo": null,
+	                "cargoOwnnerId": 1,
+	                "cargoOwnerName": "货主公司",
+	                "carOwnnerId": 10,
+	                "createBy": 1,
+	                "carOwnerName": "中软云科技有限公司",
+	                "advanceMoeny": 1121,
+	                "finalMoney": 1224,
+	                "totalMoney": 2345,
+	                "payType": "offline_pay",
+	                "payTypeCN": "线下支付",
+	                "payWay": "arrival_pay",
+	                "payWayCN": "货到付款",
+	                "remark": "订单测试123",
+	                "qty": 450,
+	                "weightUnit": "ton",
+	                "weightUnitCN": "吨",
+	                "billType": null,
+	                "billTypeCN": null,
+	                "proofImgs": null,
+	                "status": "await_generate",
+	                "statusCN": "待生成",
+	                "createDate": "2019-03-07 17:20:28",
+	                "waybillDetails": null,
+	                "evaluates": null
+	            }
+	        ],
+	        "pageNo": 1,
+	        "pageSize": 10
+	    }
+	}
+
+<br>
+<br>
+
+## 3.管理员 - 某一个车主的运单分页 ##
+
+**备注**
+
+	参数carOwnerId不能为空
+
+**URL**
+>/admin/waybill/oneCarOwnerWaybillPage
+
+**请求参数**
+
+    {
+    	"params": {
+            "id":"1",                     (选填)（int）运单Id
+    		"carOwnerName":"1",           (选填)（str）车主企业名称			// 模糊搜索
+    		"carOwnerId":"1",             (选填)（int）车主Id
+    		"createBy": "",               (选填)（int） 创建人Id
+    		"cargoOwnerName":"1",         (选填)（str）货主企业名称			// 模糊搜索
+    		"cargoOwnerId":"2",           (选填)（int）货主Id
+    		"cargoId": "1",               (选填)（int）货源Id
+    		"billNo": "1",                (选填)（str）运单号				// 模糊搜索
+    		"payType": "1",               (选填)（str）支付类型（字典取值）
+    		"payWay":"1",                 (选填)（str）支付方式（字典取值）
+    		"billType":"1",               (选填)（str）运单类型（字典取值）
+    		"status":"1"                  (选填)（str）运单状态（字典取值）
+    	},
+        "page":{
+            "pageNum": "",
+            "pageSize":""
+        },
+    	"token": ""
+	}
+	
+**测试入参**
+
+	{
+	    "params": {
+	        "id": "13",
+	        "carOwnerName": "中软云科技有限公司",
+	        "carOwnerId": "10",
+	        "createBy": "1",
+	        "cargoOwnerName": "货主公司",
+	        "cargoOwnerId": "1",
+	        "cargoId": "8",
+	        "billNo": "2019",
+	        "payType": "offline_pay",
+	        "payWay": "arrival_pay",
+	        "billType": "",
+	        "status": "await_generate"
+	    },
+	    "page": {
+	        "pageNum": "1",
+	        "pageSize": "10"
+	    },
+	    "token": ""
+	}
+
+**响应示例**
+
+    {
+	    "code": 1,
+	    "msg": "success",
+	    "data": {
+	        "total": 1,
+	        "list": [
+	            {
+	                "id": 13,
+	                "billNo": "2019030700014428223",
+	                "cargoId": 8,
+	                "cargoName": null,
+	                "cargo": null,
+	                "cargoOwnnerId": 1,
+	                "cargoOwnerName": "货主公司",
+	                "carOwnnerId": 10,
+	                "createBy": 1,
+	                "carOwnerName": "中软云科技有限公司",
+	                "advanceMoeny": 1121,
+	                "finalMoney": 1224,
+	                "totalMoney": 2345,
+	                "payType": "offline_pay",
+	                "payTypeCN": "线下支付",
+	                "payWay": "arrival_pay",
+	                "payWayCN": "货到付款",
+	                "remark": "订单测试123",
+	                "qty": 450,
+	                "weightUnit": "ton",
+	                "weightUnitCN": "吨",
+	                "billType": null,
+	                "billTypeCN": null,
+	                "proofImgs": null,
+	                "status": "await_generate",
+	                "statusCN": "待生成",
+	                "createDate": "2019-03-07 17:20:28",
+	                "waybillDetails": null,
+	                "evaluates": null
+	            }
+	        ],
+	        "pageNo": 1,
+	        "pageSize": 10
+	    }
+	}
+
+<br>
+<br>
+
+## 4.管理员 - 运单详情 ##
+
+**URL**
+>/admin/waybill/details
 
 **请求参数**
 
@@ -153,7 +394,16 @@
     	},
     	"token": ""
 	}
+	
+**测试入参**
 
+    {
+    	"params": {
+            "id": "13"
+    	},
+    	"token": ""
+	}
+	
 **响应示例**
 
     {

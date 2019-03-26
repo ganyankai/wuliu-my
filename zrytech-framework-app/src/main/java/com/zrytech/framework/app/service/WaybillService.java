@@ -5,8 +5,7 @@ import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.WaybillDto;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.base.service.IService;
-import org.springframework.stereotype.Service;
+import com.zrytech.framework.base.entity.PageData;
 
 import com.zrytech.framework.app.dto.WaybillPageDto;
 import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
@@ -16,10 +15,31 @@ import com.zrytech.framework.base.entity.ServerResponse;
 
 
 public interface WaybillService {
+	
+    /**
+     * 运单分页
+     * @author cat
+     * 
+     * @param dto	搜索条件
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+	public PageData<Waybill> waybillPage(WaybillPageDto dto, Integer pageNum, Integer pageSize);
+	
+	/**
+     * 管理员 - 运单详情
+     * @author cat
+     * 
+     * @param dto
+     * @return
+     */
+    public ServerResponse adminDetails(DetailsDto dto);
+    
+    
 
-    public ServerResponse page(WaybillPageDto dto, Integer pageNum, Integer pageSize);
 
-    public ServerResponse details(Integer id);
+	
 
     /**
      * @return
