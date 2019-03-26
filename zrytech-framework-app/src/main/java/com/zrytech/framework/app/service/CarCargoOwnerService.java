@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
+import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
 
@@ -14,12 +16,15 @@ public interface CarCargoOwnerService {
 
 	public ServerResponse page(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
 	
-	public ServerResponse details(Integer id);
 	
-	public ServerResponse check(CheckDto checkDto, User user);
-	
-	
-	
+	/**
+	 * 车主货主注册
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse register(CustomerRegisterDto dto);
 	
 	
 	/**
@@ -71,7 +76,7 @@ public interface CarCargoOwnerService {
 	 * @param user	管理员
 	 * @return
 	 */
-	public ServerResponse adminApproveCarOwner(CheckDto checkDto, User user);
+	public ServerResponse adminApproveCarOwner(ApproveDto checkDto, User user);
 	
 
 	
@@ -125,7 +130,7 @@ public interface CarCargoOwnerService {
 	 * @param user	管理员
 	 * @return
 	 */
-	public ServerResponse adminApproveCargoOwner(CheckDto dto, User user);
+	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user);
 	
 	
 }

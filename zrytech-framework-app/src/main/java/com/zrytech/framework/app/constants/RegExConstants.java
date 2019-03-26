@@ -21,7 +21,7 @@ public class RegExConstants {
 	
 	/**用户名正则*/
 	public static final String USER_ACCOUNT = "^[A-Za-z]{1}[A-Za-z0-9_-]{2,15}|()$";
-	public static final String USER_ACCOUNT_ERR_MSG = "账号格式有误：账号可包含数字、字母、减号、下划线，需以字母开头，长度（3-16）";
+	public static final String USER_ACCOUNT_ERR_MSG = "用户名格式有误：用户名可包含数字、字母、减号、下划线，需以字母开头，长度（3-16）";
 	
 	
 	/**性别正则*/

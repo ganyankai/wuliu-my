@@ -14,6 +14,8 @@ import com.zrytech.framework.app.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -27,6 +29,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CustomerPageDto;
+import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.repository.LogisticsCustomerRepository;
 import com.zrytech.framework.app.service.CustomerService;
@@ -40,6 +43,37 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
     @Autowired
     private LogisticsCustomerRepository customerRepository;
 
+	@Override
+	public void assertTelNotExist(String tel) {
+		List<Customer> list = customerRepository.findByTel(tel);
+		if (list != null && list.size() > 0) {
+			throw new BusinessException(112, "手机号码已被注册");
+		}
+	}
+    
+	@Override
+	public Customer assertTelExist(String tel) {
+		List<Customer> list = customerRepository.findByTel(tel);
+		if (list == null || list.size() == 0) {
+			throw new BusinessException(112, "手机号码未被注册");
+		}
+		return list.get(0);
+	}
+    
+	private void assertUserAccountNotExist(String userAccount) {
+		List<Customer> list = customerRepository.findByUserAccount(userAccount);
+		if (list != null && list.size() > 0) {
+			throw new BusinessException(112, "用户名已被注册");
+		}
+	}
+
+	@Override
+	public void assertCustomerNotExist(String tel, String userAccount) {
+		this.assertTelNotExist(tel);
+		this.assertUserAccountNotExist(userAccount);
+	}
+	
+	
 
     /**
      * @param pageNumber

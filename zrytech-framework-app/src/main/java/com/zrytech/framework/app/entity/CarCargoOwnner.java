@@ -130,6 +130,10 @@ public class CarCargoOwnner {
     @Column(name = "`cusomer_id`")
     private Integer customerId;
     
+    /**推荐人Id*/
+    @Column(name = "`referrer_id`")
+    private Integer referrerId;
+    
     /**客户*/
     @Transient
     private Customer customer;

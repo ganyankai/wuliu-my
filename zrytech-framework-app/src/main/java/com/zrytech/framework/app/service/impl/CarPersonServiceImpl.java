@@ -719,8 +719,8 @@ public class CarPersonServiceImpl implements CarPersonService {
 			throw new BusinessException(112, "手机号码不能为空");
 		}
 		// 判断账号是否已存在，当前仅判断用户名唯一
-		Customer account = customerRepository.findByUserAccount(dto.getUserAccount());
-		if (account != null) {
+		List<Customer> account = customerRepository.findByUserAccount(dto.getUserAccount());
+		if (account != null && account.size() > 0) {
 			throw new BusinessException(112, "账号已存在");
 		}
 		// 新建账号
