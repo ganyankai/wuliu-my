@@ -131,8 +131,8 @@ public class CarCargoOwnner {
     private Integer customerId;
     
     /**推荐人Id*/
-    @Column(name = "`referrer_id`")
-    private Integer referrerId;
+    @Column(name = "`referees_id`")
+    private Integer refereesId;
     
     /**客户*/
     @Transient

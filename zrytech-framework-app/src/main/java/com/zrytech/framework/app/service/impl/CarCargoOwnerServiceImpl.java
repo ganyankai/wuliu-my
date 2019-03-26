@@ -74,7 +74,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		customer.setId(null);
 		customer.setCreateBy(0);
 		customer.setCreateDate(new Date());
-		customer.setIsActive(false);
+		customer.setIsActive(true);
 		customer.setPassword(PasswordUtils.encryptStringPassword(dto.getPassword(), dto.getUserAccount()));
 		customerRepository.save(customer);
 		return customer;
@@ -104,8 +104,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 */
 	private CarCargoOwnner saveCarCargoOwnner(CarCargoOwnerAddDto dto, Integer customerId, String type,
 			Integer referrerId) {
+		this.check(dto);
 		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
-		if (dto == null) { // 跳过资料认证，资料默认为空
+		if (dto.getJump()) { // 跳过资料认证，资料默认为空
 			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
 		} else {
 			BeanUtils.copyProperties(dto, carCargoOwner);
@@ -116,13 +117,49 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		carCargoOwner.setType(type);
 		carCargoOwner.setCustomerId(customerId);
-		carCargoOwner.setReferrerId(referrerId);
+		carCargoOwner.setRefereesId(referrerId);
 		carCargoOwner.setCreateDate(new Date());
-		carCargoOwner.setAvoidAudit(true);
+		carCargoOwner.setAvoidAudit(false);
 		carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_UNCERTIFIED);
 		carCargoOwnnerRepository.save(carCargoOwner);
 		return carCargoOwner;
 	}
+	
+	
+	/**
+	 * 认证参数校验
+	 * @param dto
+	 */
+	private void check(CarCargoOwnerAddDto dto) {
+		if (!dto.getJump()) {
+			if (StringUtils.isBlank(dto.getLegalerIdCardNo())) {
+				throw new BusinessException(112, "身份证号码不能为空");
+			}
+			if (StringUtils.isBlank(dto.getLegalerIdCardFront())) {
+				throw new BusinessException(112, "身份证照片不能为空");
+			}
+			if (StringUtils.isBlank(dto.getLegalerName())) {
+				throw new BusinessException(112, "姓名不能为空");
+			}
+			if (StringUtils.isBlank(dto.getTel())) {
+				throw new BusinessException(112, "联系电话不能为空");
+			}
+			if (dto.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) { // 企业
+				if (StringUtils.isBlank(dto.getName())) {
+					throw new BusinessException(112, "企业名称不能为空");
+				}
+				if (StringUtils.isBlank(dto.getCreditCode())) {
+					throw new BusinessException(112, "信用代码不能为空");
+				}
+				if (StringUtils.isBlank(dto.getBusinessLicense())) {
+					throw new BusinessException(112, "营业执照不能为空");
+				}
+			} else if (dto.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) { // 个人
+
+			}
+		}
+	}
+	
 	
 	/**
 	 * 推荐人电话校验
@@ -191,7 +228,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Override
 	public ServerResponse adminApproveCarOwner(ApproveDto dto, User user) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
-		if(!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			throw new BusinessException(112, "审批失败：车主状态不是待审核");
 		}
 		this.approveCarCargoOwner(carOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
@@ -199,12 +236,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		return ServerResponse.successWithData("审批成功");
 	}
 	
-	
 	@Transactional
 	@Override
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
-		if(!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			throw new BusinessException(112, "审批失败：货主状态不是待审核");
 		}
 		this.approveCarCargoOwner(cargoOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
@@ -212,40 +248,24 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		return ServerResponse.successWithData("审批成功");
 	}
 	
-	
-	
-	
-	
-	/**
-	 * 车主货主分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
+	@Transactional
 	@Override
-	public ServerResponse page(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize){
-		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-		List<CarCargoOwnner> list = carCargoOwnerMapper.selectSelective(dto);
-		for (CarCargoOwnner carCargoOwnner : list) {
-			carCargoOwnner = this.bindingCustomer(carCargoOwnner);
-		}
-		PageData<CarCargoOwnner> pageData = new PageData<CarCargoOwnner>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
+	public ServerResponse carOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto) {
+		this.assertCarOwnerExist(dto.getId());
+		carCargoOwnnerRepository.updateAvoidAuditById(dto.getAvoidAudit(), dto.getId());
+		return ServerResponse.successWithData("修改成功");
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse cargoOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto) {
+		this.assertCargoOwnerExist(dto.getId());
+		carCargoOwnnerRepository.updateAvoidAuditById(dto.getAvoidAudit(), dto.getId());
+		return ServerResponse.successWithData("修改成功");
 	}
 	
-	/**
-	 * 车主货主分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	private PageData<CarCargoOwnner> carCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize){
+	@Override
+	public PageData<CarCargoOwnner> carCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize) {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CarCargoOwnner> list = carCargoOwnerMapper.selectSelective(dto);
 		for (CarCargoOwnner carCargoOwnner : list) {
@@ -254,62 +274,25 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		return new PageData<CarCargoOwnner>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
 	
-	
-	@Override
-	public ServerResponse adminCarOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize) {
-		dto.setType(CarCargoOwnerConstants.TYPE_CAR_OWNER);
-		PageData<CarCargoOwnner> pageData = carCargoOwnerPage(dto, pageNum, pageSize);
-		return ServerResponse.successWithData(pageData);
-	}
-	
-	
-	@Override
-	public ServerResponse adminCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize) {
-		dto.setType(CarCargoOwnerConstants.TYPE_CARGO_OWNER);
-		PageData<CarCargoOwnner> pageData = carCargoOwnerPage(dto, pageNum, pageSize);
-		return ServerResponse.successWithData(pageData);
-	}
-	
-	
-	@Override
-	public ServerResponse adminApprovePendingCarOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize) {
-		dto.setType(CarCargoOwnerConstants.TYPE_CAR_OWNER);
-		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
-		PageData<CarCargoOwnner> pageData = carCargoOwnerPage(dto, pageNum, pageSize);
-		return ServerResponse.successWithData(pageData);
-	}
-
-	
-	@Override
-	public ServerResponse adminApprovePendingCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize) {
-		dto.setType(CarCargoOwnerConstants.TYPE_CARGO_OWNER);
-		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
-		PageData<CarCargoOwnner> pageData = carCargoOwnerPage(dto, pageNum, pageSize);
-		return ServerResponse.successWithData(pageData);
-	}
-	
-	
-	
 	@Override
 	public ServerResponse adminCarOwnerDetails(DetailsDto dto) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getId());
-		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(carOwner.getApproveContent(), CarCargoOwnerNeedApproveDto.class);
+		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(carOwner.getApproveContent(),
+				CarCargoOwnerNeedApproveDto.class);
 		carOwner.setApproveContentCN(temp);
 		carOwner = this.bindingCustomer(carOwner);
 		return ServerResponse.successWithData(carOwner);
 	}
-	
-	
 
 	@Override
 	public ServerResponse adminCargoOwnerDetails(DetailsDto dto) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getId());
-		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(cargoOwner.getApproveContent(), CarCargoOwnerNeedApproveDto.class);
+		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(cargoOwner.getApproveContent(),
+				CarCargoOwnerNeedApproveDto.class);
 		cargoOwner.setApproveContentCN(temp);
 		cargoOwner = this.bindingCustomer(cargoOwner);
 		return ServerResponse.successWithData(cargoOwner);
 	}
-	
 	
 	/**
 	 * 断言车主存在
@@ -319,14 +302,14 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * @return
 	 */
 	public CarCargoOwnner assertCarOwnerExist(Integer carOwnerId) {
-		CarCargoOwnner carOwner = carCargoOwnnerRepository.findByIdAndType(carOwnerId, CarCargoOwnerConstants.TYPE_CAR_OWNER);
-		if(carOwner == null) {
+		CarCargoOwnner carOwner = carCargoOwnnerRepository.findByIdAndType(carOwnerId,
+				CarCargoOwnerConstants.TYPE_CAR_OWNER);
+		if (carOwner == null) {
 			throw new BusinessException(112, "车主不存在");
 		}
 		return carOwner;
 	}
-	
-	
+
 	/**
 	 * 断言货主存在
 	 * @author cat
@@ -335,13 +318,13 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * @return
 	 */
 	public CarCargoOwnner assertCargoOwnerExist(Integer cargoOwnerId) {
-		CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findByIdAndType(cargoOwnerId, CarCargoOwnerConstants.TYPE_CARGO_OWNER);
-		if(cargoOwner == null) {
+		CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findByIdAndType(cargoOwnerId,
+				CarCargoOwnerConstants.TYPE_CARGO_OWNER);
+		if (cargoOwner == null) {
 			throw new BusinessException(112, "货主不存在");
 		}
 		return cargoOwner;
 	}
-	
 	
 	/**
 	 * 为车主货主绑定账号信息
@@ -356,12 +339,6 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnner.setCustomer(customer);
 		return carCargoOwnner;
 	}
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * 车主货主审核（修改车主货主状态和待审核的内容）
@@ -387,6 +364,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		carCargoOwnnerRepository.save(carCargoOwner);
 	}
+	
+	
+	
 	
 	
 	
@@ -438,29 +418,6 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		
 		return ServerResponse.successWithData("修改成功");
 	}
-	
-	
-	@Transactional
-	@Override
-	public ServerResponse carOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto) {
-		this.assertCarOwnerExist(dto.getId());
-		carCargoOwnnerRepository.updateAvoidAuditById(dto.getAvoidAudit(), dto.getId());
-		return ServerResponse.successWithData("修改成功");
-	}
-	
-	
-	@Transactional
-	@Override
-	public ServerResponse cargoOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto) {
-		this.assertCargoOwnerExist(dto.getId());
-		carCargoOwnnerRepository.updateAvoidAuditById(dto.getAvoidAudit(), dto.getId());
-		return ServerResponse.successWithData("修改成功");
-	}
-	
-	
-	
-	
-	
 	
 	
 }

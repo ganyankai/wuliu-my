@@ -16,7 +16,7 @@ import com.zrytech.framework.base.entity.ServerResponse;
 
 
 /**
- * 前台 - 车辆
+ * 前台 - 车主货主
  * 
  * @author cat
  *

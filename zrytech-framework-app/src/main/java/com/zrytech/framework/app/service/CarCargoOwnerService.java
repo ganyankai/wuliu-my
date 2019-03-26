@@ -3,19 +3,28 @@ package com.zrytech.framework.app.service;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
-import com.zrytech.framework.app.dto.CheckDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
+import com.zrytech.framework.app.entity.CarCargoOwnner;
+import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
 
 @Service
 public interface CarCargoOwnerService {
 
-	public ServerResponse page(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
-	
+	/**
+	 * 车主货主分页
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public PageData<CarCargoOwnner> carCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
 	
 	/**
 	 * 车主货主注册
@@ -25,29 +34,6 @@ public interface CarCargoOwnerService {
 	 * @return
 	 */
 	public ServerResponse register(CustomerRegisterDto dto);
-	
-	
-	/**
-	 * 管理员 - 车主分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	public ServerResponse adminCarOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
-	
-	/**
-	 * 管理员 - 待审批的车主分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	public ServerResponse adminApprovePendingCarOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
 	
 	/**
 	 * 管理员 - 车主详情
@@ -78,31 +64,6 @@ public interface CarCargoOwnerService {
 	 */
 	public ServerResponse adminApproveCarOwner(ApproveDto checkDto, User user);
 	
-
-	
-	
-	/**
-	 * 管理员 - 货主分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	public ServerResponse adminCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
-	
-	/**
-	 * 管理员 - 待审批的货主分页
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	public ServerResponse adminApprovePendingCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize);
-	
 	/**
 	 * 管理员 - 货主详情
 	 * @author cat
@@ -131,6 +92,5 @@ public interface CarCargoOwnerService {
 	 * @return
 	 */
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user);
-	
 	
 }

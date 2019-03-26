@@ -32,5 +32,8 @@ public class CarCargoOwnerConstants {
 	/**企业*/
 	public static final String CUSTOMER_TYPE_ORGANIZE = "organize";
 	
+	public static final String REG_EX_CUSTOMER_TYPE = "^(" + CUSTOMER_TYPE_PERSON + ")|(" + CUSTOMER_TYPE_ORGANIZE + ")|()$";
+	public static final String REG_EX_CUSTOMER_TYPE_ERR_MSG = "账号类型有误";
+	
 	
 }
