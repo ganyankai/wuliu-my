@@ -17,7 +17,7 @@ public class WaybillPageDto {
 	
 	private String carOwnerName;
 	
-	private Integer carOwnnerId;
+	private Integer carOwnerId;
 	
 	private String cargoOwnerName;
 	
