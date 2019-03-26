@@ -33,11 +33,14 @@
         <result column="create_by" property="createBy"/>
         <result column="create_date" property="createDate"/>
         <result column="pay_type" property="payType"/>
+        <result column="userAccount" property="userAccount"/>
+        <result column="tel" property="tel"/>
     </resultMap>
 
     <sql id="columns">
        id,name,logo,qty,weight_unit,tender_way,pay_type,mul_shipment,mul_unload,packaged,matter_price,real_price,market_price,price_unit,price_type,start_province,
        start_city,pay_type,start_country,end_province,end_city,end_country,line,can_share,car_type,status,arrival_date,pickup_date,end_date,remark,create_by,create_date
+       ,(select DISTINCT user_account FROM sys_customer WHERE id=create_by) AS userAccount,(select DISTINCT tel FROM sys_customer WHERE id=create_by) AS tel
     </sql>
 
     <select id="cargoPage" resultMap="cargo">
@@ -279,7 +282,7 @@
 
     <select id="get" resultMap="cargo">
         select
-        <include refid="columns"/>
+        <include refid="columns"/>,(select DISTINCT user_account FROM sys_customer WHERE id=create_by) AS userAccount,(select DISTINCT tel FROM sys_customer WHERE id=create_by) AS tel
         from cargo
         where id =#{id}
     </select>

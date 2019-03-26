@@ -199,6 +199,13 @@ public class Cargo implements Serializable {
     @Column
     private Date createDate;
 
+
+    @Transient
+    private String userAccount;
+
+    @Transient
+    private String tel;
+
     @ApiModelProperty(value = "参考总价", required = false)
     @Transient
     private BigDecimal totalPrice;
