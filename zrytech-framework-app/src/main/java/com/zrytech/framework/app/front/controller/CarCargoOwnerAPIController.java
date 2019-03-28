@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.ano.CargoOwnerRole;
 import com.zrytech.framework.app.constants.CustomerConstants;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
 import com.zrytech.framework.app.dto.carcargoowner.OrganizeInfoUpdateDto;
@@ -77,6 +79,7 @@ public class CarCargoOwnerAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/cargoOwnerUpdatePersonInfo")
 	public ServerResponse cargoOwnerUpdatePersonInfo(
@@ -93,6 +96,7 @@ public class CarCargoOwnerAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/cargoOwnerUpdateOrganizeInfo")
 	public ServerResponse cargoOwnerUpdateOrganizeInfo(
@@ -109,6 +113,7 @@ public class CarCargoOwnerAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/carOwnerUpdatePersonInfo")
 	public ServerResponse carOwnerUpdatePersonInfo(@RequestBody @Valid RequestParams<PersonInfoUpdateDto> requestParams,
@@ -125,6 +130,7 @@ public class CarCargoOwnerAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/carOwnerUpdateOrganizeInfo")
 	public ServerResponse carOwnerUpdateOrganizeInfo(
@@ -141,6 +147,7 @@ public class CarCargoOwnerAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/updateCarOwner")
 	public ServerResponse updateCarOwner(@RequestBody @Valid RequestParams<CarCargoOwnerUpdateDto> requestParams,
@@ -157,6 +164,7 @@ public class CarCargoOwnerAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/updateCargoOwner")
 	public ServerResponse updateCargoOwner(@RequestBody @Valid RequestParams<CarCargoOwnerUpdateDto> requestParams,
@@ -172,6 +180,7 @@ public class CarCargoOwnerAPIController {
 	 * 
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/carOwnerDetails")
 	public ServerResponse carOwnerDetails() {
@@ -186,6 +195,7 @@ public class CarCargoOwnerAPIController {
 	 * 
 	 * @return
 	 */
+	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/cargoOwnerDetails")
 	public ServerResponse cargoOwnerDetails() {

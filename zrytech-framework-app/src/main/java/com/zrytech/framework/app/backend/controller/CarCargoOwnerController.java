@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zrytech.framework.app.ano.AdminRole;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
@@ -46,6 +47,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/carOwnerPage")
 	public ServerResponse carOwnerPage(@RequestBody @Valid RequestParams<CarCargoOwnnerPageDto> requestParams,
@@ -71,6 +73,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/approvePendingCarOwnerPage")
 	public ServerResponse approvePendingCarOwnerPage(
@@ -97,6 +100,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/carOwnerDetails")
 	public ServerResponse carOwnerDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
@@ -113,6 +117,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/updateCarOwnerAvoidAudit")
 	public ServerResponse updateCarOwnerAvoidAudit(
@@ -130,6 +135,7 @@ public class CarCargoOwnerController {
 	 * @param user
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/approveCarOwner")
 	public ServerResponse approveCarOwner(@RequestBody @Valid RequestParams<ApproveDto> requestParams,
@@ -151,6 +157,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/cargoOwnerPage")
 	public ServerResponse cargoOwnerPage(@RequestBody @Valid RequestParams<CarCargoOwnnerPageDto> requestParams,
@@ -176,6 +183,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/approvePendingCargoOwnerPage")
 	public ServerResponse approvePendingCargoOwnerPage(
@@ -202,6 +210,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/cargoOwnerDetails")
 	public ServerResponse cargoOwnerDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
@@ -218,6 +227,7 @@ public class CarCargoOwnerController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/updateCargoOwnerAvoidAudit")
 	public ServerResponse updateCargoOwnerAvoidAudit(
@@ -235,6 +245,7 @@ public class CarCargoOwnerController {
 	 * @param user
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/approveCargoOwner")
 	public ServerResponse approveCargoOwner(@RequestBody @Valid RequestParams<ApproveDto> requestParams,
