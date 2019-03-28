@@ -27,6 +27,9 @@
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
     <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="referees_id" property="refereesId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, credit_code, business_license, legaler_name, legaler_id_card_no, legaler_id_card_front, 
@@ -283,19 +286,19 @@
       <if test="latitude != null" >
         latitude = #{latitude,jdbcType=DECIMAL},
       </if>
-      <if test="province != null" >
+      <if test="province != null and province != ''" >
         province = #{province,jdbcType=VARCHAR},
       </if>
-      <if test="city != null" >
+      <if test="city != null and city != ''" >
         city = #{city,jdbcType=VARCHAR},
       </if>
-      <if test="county != null" >
+      <if test="county != null and county != ''" >
         county = #{county,jdbcType=VARCHAR},
       </if>
-      <if test="addressDetail != null" >
+      <if test="addressDetail != null and addressDetail != ''" >
         address_detail = #{addressDetail,jdbcType=VARCHAR},
       </if>
-      <if test="intro != null" >
+      <if test="intro != null and intro != ''" >
         intro = #{intro,jdbcType=VARCHAR},
       </if>
       <if test="customerType != null" >
@@ -313,11 +316,17 @@
       <if test="status != null" >
         status = #{status,jdbcType=VARCHAR},
       </if>
-      <if test="cusomerId != null" >
-        cusomer_id = #{cusomerId,jdbcType=INTEGER},
+      <if test="customerId != null" >
+        cusomer_id = #{customerId,jdbcType=INTEGER},
       </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender},
+      </if>
+      <if test="headImg != null and headImg != ''" >
+        head_img = #{headImg},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

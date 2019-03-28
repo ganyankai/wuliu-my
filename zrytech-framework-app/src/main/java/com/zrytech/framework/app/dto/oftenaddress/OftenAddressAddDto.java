@@ -29,7 +29,7 @@ public class OftenAddressAddDto {
 
 	/** 出发县 */
 	@NotBlank(message = "出发县不能为空")
-	private String beginCountry;
+	private String beginCounty;
 
 	/** 到达省 */
 	@NotBlank(message = "到达省不能为空")
@@ -41,5 +41,5 @@ public class OftenAddressAddDto {
 
 	/** 到达县 */
 	@NotBlank(message = "到达县不能为空")
-	private String endCountry;
+	private String endCounty;
 }

@@ -73,7 +73,13 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
 		this.assertUserAccountNotExist(userAccount);
 	}
 	
-	
+	public Customer assertCustomerExist(String userAccount) {
+		List<Customer> list = customerRepository.findByUserAccount(userAccount);
+		if (list == null || list.size() == 0) {
+			throw new BusinessException(112, "用户不存在");
+		}
+		return list.get(0);
+	}
 
     /**
      * @param pageNumber

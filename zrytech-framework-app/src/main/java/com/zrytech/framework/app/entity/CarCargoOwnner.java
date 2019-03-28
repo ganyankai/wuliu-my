@@ -96,6 +96,9 @@ public class CarCargoOwnner {
 	@Column(name = "`customer_type`")
     private String customerType;
 	
+	@Transient
+	private String customerTypeCN;
+	
     public String getCustomerTypeCN() {
     	if (StringUtils.isNotBlank(customerType)) {
             return DictionaryUtil.getValue(CarCargoOwnerConstants.CUSTOMER_TYPE, customerType);
@@ -119,12 +122,20 @@ public class CarCargoOwnner {
     @Column(name = "`status`")
     private String status;
 
+    @Transient
+	private String statusCN;
+    
     public String getStatusCN() {
     	if (StringUtils.isNotBlank(status)) {
             return DictionaryUtil.getValue(CarCargoOwnerConstants.STATUS, status);
         }
         return status;
     }
+    
+    /**性别*/
+    @Column(name = "`gender`")
+    private Integer gender;
+    
     
     /**客户Id*/
     @Column(name = "`cusomer_id`")
@@ -133,6 +144,9 @@ public class CarCargoOwnner {
     /**推荐人Id*/
     @Column(name = "`referees_id`")
     private Integer refereesId;
+    
+    @Column(name = "`head_img`")
+    private String headImg;
     
     /**客户*/
     @Transient
@@ -147,6 +161,9 @@ public class CarCargoOwnner {
     /**审批状态*/
     @Column(name = "`approve_status`")
     private String approveStatus;
+    
+    @Transient
+	private String approveStatusCN;
     
     public String getApproveStatusCN() {
     	if (StringUtils.isNotBlank(approveStatus)) {
@@ -166,6 +183,9 @@ public class CarCargoOwnner {
     /**类型*/
     @Column(name = "`type`")
     private String type;
+    
+    @Transient
+	private String typeCN;
     
     public String getTypeCN() {
     	if (StringUtils.isNotBlank(type)) {

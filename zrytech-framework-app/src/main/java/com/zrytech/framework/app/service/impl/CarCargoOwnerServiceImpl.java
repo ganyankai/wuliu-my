@@ -22,6 +22,9 @@ import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerAddDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerNeedApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
+import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.OrganizeInfoUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.PersonInfoUpdateDto;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressAddDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
@@ -58,6 +61,8 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Autowired
 	private OftenAddressRepository oftenAddressRepository;
 	
+	
+	
 	/**
 	 * 添加用户账号数据
 	 * @author cat
@@ -73,6 +78,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		customer.setId(null);
 		customer.setCreateBy(0);
+		customer.setUserStatus(1);
 		customer.setCreateDate(new Date());
 		customer.setIsActive(true);
 		customer.setPassword(PasswordUtils.encryptStringPassword(dto.getPassword(), dto.getUserAccount()));
@@ -91,14 +97,13 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		// TODO 
 	}
 	
-	
 	/**
 	 * 添加车主或货主
 	 * @author cat
 	 * 
 	 * @param dto	车主或货主信息
 	 * @param customerId	车主或货主账号Id
-	 * @param type	类型
+	 * @param type	类型：车主、货主
 	 * @param referrerId	推荐人Id
 	 * @return
 	 */
@@ -110,11 +115,22 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
 		} else {
 			BeanUtils.copyProperties(dto, carCargoOwner);
-			CarCargoOwnerNeedApproveDto temp = new CarCargoOwnerNeedApproveDto();
-			BeanUtils.copyProperties(dto, temp);
-			carCargoOwner.setApproveContent(JSON.toJSONString(temp));
 			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+			if (dto.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) { // 企业
+				OrganizeInfoUpdateDto temp = new OrganizeInfoUpdateDto();
+				BeanUtils.copyProperties(dto, temp);
+				carCargoOwner.setApproveContent(JSON.toJSONString(temp));
+				carCargoOwner.setGender(null);
+			}else if (dto.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) { // 个人
+				PersonInfoUpdateDto temp = new PersonInfoUpdateDto();
+				BeanUtils.copyProperties(dto, temp);
+				carCargoOwner.setApproveContent(JSON.toJSONString(temp));
+				carCargoOwner.setName(null);
+				carCargoOwner.setCreditCode(null);
+				carCargoOwner.setBusinessLicense(null);
+			}
 		}
+		carCargoOwner.setCustomerType(dto.getCustomerType());
 		carCargoOwner.setType(type);
 		carCargoOwner.setCustomerId(customerId);
 		carCargoOwner.setRefereesId(referrerId);
@@ -124,7 +140,6 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnnerRepository.save(carCargoOwner);
 		return carCargoOwner;
 	}
-	
 	
 	/**
 	 * 认证参数校验
@@ -155,17 +170,18 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 					throw new BusinessException(112, "营业执照不能为空");
 				}
 			} else if (dto.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) { // 个人
-
+				if (dto.getGender() == null) {
+					throw new BusinessException(112, "性别不能为空");
+				}
 			}
 		}
 	}
-	
 	
 	/**
 	 * 推荐人电话校验
 	 * @author cat
 	 * 
-	 * @param referencesTel	推荐人电话
+	 * @param referrerTel	推荐人电话
 	 * @return 推荐人Id
 	 */
 	private Integer checkReferencesTel(String referrerTel) {
@@ -229,7 +245,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	public ServerResponse adminApproveCarOwner(ApproveDto dto, User user) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
 		if (!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "审批失败：车主状态不是待审核");
+			throw new BusinessException(112, "审批失败：车主状态不是待审批");
 		}
 		this.approveCarCargoOwner(carOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
 		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
@@ -241,10 +257,10 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
 		if (!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "审批失败：货主状态不是待审核");
+			throw new BusinessException(112, "审批失败：货主状态不是待审批");
 		}
 		this.approveCarCargoOwner(cargoOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
-		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_OWNER);
 		return ServerResponse.successWithData("审批成功");
 	}
 	
@@ -365,59 +381,108 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnnerRepository.save(carCargoOwner);
 	}
 	
-	
-	
-	
-	
-	
 	@Transactional
-	public ServerResponse carOwnerUpdateNeedApprove(CarCargoOwnerNeedApproveDto dto, Customer customer) {
-		CarCargoOwnner carOwner = customer.getCarOwner();
-		carOwner = this.assertCarOwnerExist(carOwner.getId());
-		
-		if(carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "修改失败：存在待审批的内容");
-		}
-		
-		if(carOwner.getAvoidAudit()) { // 免审核
-			BeanUtils.copyProperties(dto, carOwner);
-			carOwner.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-			if(carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
-				carOwner.setStatus(CarCargoOwnerConstants.STATUS_CERTIFIED);
-			}
-		}else {
-			carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
-		}
-		carOwner.setApproveContent(JSON.toJSONString(dto));
-		carCargoOwnnerRepository.save(carOwner);
-		
-		return ServerResponse.successWithData("修改成功");
-	}
-	
-	
-	@Transactional
-	public ServerResponse cargoOwnerUpdateNeedApprove(CarCargoOwnerNeedApproveDto dto, Customer customer) {
+	public ServerResponse cargoOwnerUpdatePersonInfo(PersonInfoUpdateDto dto, Customer customer) {
 		CarCargoOwnner cargoOwner = customer.getCargoOwner();
 		cargoOwner = this.assertCargoOwnerExist(cargoOwner.getId());
-		
-		if(cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "修改失败：存在待审批的内容");
+		if (!cargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
+			throw new BusinessException(112, "修改失败：无访问权限");
 		}
-		
-		if(cargoOwner.getAvoidAudit()) { // 免审核
-			BeanUtils.copyProperties(dto, cargoOwner);
-			cargoOwner.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-			if(cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
-				cargoOwner.setStatus(CarCargoOwnerConstants.STATUS_CERTIFIED);
-			}
-		}else {
-			cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		if (cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
+		cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		cargoOwner.setApproveContent(JSON.toJSONString(dto));
 		carCargoOwnnerRepository.save(cargoOwner);
-		
+		return ServerResponse.successWithData("修改成功");
+	}
+
+	@Transactional
+	public ServerResponse carOwnerUpdatePersonInfo(PersonInfoUpdateDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		carOwner = this.assertCarOwnerExist(carOwner.getId());
+		if (!carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
+			throw new BusinessException(112, "修改失败：无访问权限");
+		}
+		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
+		}
+		carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		carOwner.setApproveContent(JSON.toJSONString(dto));
+		carCargoOwnnerRepository.save(carOwner);
+		return ServerResponse.successWithData("修改成功");
+	}
+
+	@Transactional
+	public ServerResponse cargoOwnerUpdateOrganizeInfo(OrganizeInfoUpdateDto dto, Customer customer) {
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		cargoOwner = this.assertCargoOwnerExist(cargoOwner.getId());
+		if (!cargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) {
+			throw new BusinessException(112, "修改失败：无访问权限");
+		}
+		if (cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
+		}
+		cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		cargoOwner.setApproveContent(JSON.toJSONString(dto));
+		carCargoOwnnerRepository.save(cargoOwner);
+		return ServerResponse.successWithData("修改成功");
+	}
+
+	@Transactional
+	public ServerResponse carOwnerUpdateOrganizeInfo(OrganizeInfoUpdateDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		carOwner = this.assertCarOwnerExist(carOwner.getId());
+		if (!carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) {
+			throw new BusinessException(112, "修改失败：无访问权限");
+		}
+		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
+		}
+		carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		carOwner.setApproveContent(JSON.toJSONString(dto));
+		carCargoOwnnerRepository.save(carOwner);
 		return ServerResponse.successWithData("修改成功");
 	}
 	
+	@Transactional
+	@Override
+	public ServerResponse updateCarOwner(CarCargoOwnerUpdateDto dto, Customer customer) {
+		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
+		BeanUtils.copyProperties(dto, carCargoOwner);
+		carCargoOwner.setId(customer.getCarOwner().getId());
+		carCargoOwnerMapper.updateByPrimaryKeySelective(carCargoOwner);
+		return ServerResponse.successWithData("修改成功");
+	}
+	
+	@Transactional
+	@Override
+	public ServerResponse updateCargoOwner(CarCargoOwnerUpdateDto dto, Customer customer) {
+		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
+		BeanUtils.copyProperties(dto, carCargoOwner);
+		carCargoOwner.setId(customer.getCargoOwner().getId());
+		carCargoOwnerMapper.updateByPrimaryKeySelective(carCargoOwner);
+		return ServerResponse.successWithData("修改成功");
+	}
+	
+	@Override
+	public ServerResponse carOwnerDetails(Customer customer) {
+		CarCargoOwnner carOwner = this.assertCarOwnerExist(customer.getCarOwner().getId());
+		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(carOwner.getApproveContent(),
+				CarCargoOwnerNeedApproveDto.class);
+		carOwner.setApproveContentCN(temp);
+		carOwner = this.bindingCustomer(carOwner);
+		return ServerResponse.successWithData(carOwner);
+	}
+
+	@Override
+	public ServerResponse cargoOwnerDetails(Customer customer) {
+		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(customer.getCargoOwner().getId());
+		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(cargoOwner.getApproveContent(),
+				CarCargoOwnerNeedApproveDto.class);
+		cargoOwner.setApproveContentCN(temp);
+		cargoOwner = this.bindingCustomer(cargoOwner);
+		return ServerResponse.successWithData(cargoOwner);
+	}
 	
 }

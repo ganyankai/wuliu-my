@@ -9,6 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CustomerService {
 	
+	/**
+	 * 断言用户存在
+	 * @author cat
+	 * 
+	 * @param userAccount
+	 * @return
+	 */
+	public Customer assertCustomerExist(String userAccount);
+	
+	
     /**
      * 断言手机号未被注册
      * @author cat

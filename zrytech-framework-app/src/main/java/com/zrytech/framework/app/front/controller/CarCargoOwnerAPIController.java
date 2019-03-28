@@ -9,10 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.constants.CustomerConstants;
+import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.OrganizeInfoUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.PersonInfoUpdateDto;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
+import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.RequestUtil;
 
 
 /**
@@ -47,7 +52,6 @@ public class CarCargoOwnerAPIController {
 		return carCargoOwnerService.register(params);
 	}
 	
-	
 	/**
 	 * 货主注册
 	 * @author cat
@@ -63,6 +67,130 @@ public class CarCargoOwnerAPIController {
 		CustomerRegisterDto params = requestParams.getParams();
 		params.setCustomerType(CustomerConstants.TYPE_CARGO_OWNER);
 		return carCargoOwnerService.register(params);
+	}
+	
+	/**
+	 * 个人货主修改认证信息
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/cargoOwnerUpdatePersonInfo")
+	public ServerResponse cargoOwnerUpdatePersonInfo(
+			@RequestBody @Valid RequestParams<PersonInfoUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.cargoOwnerUpdatePersonInfo(requestParams.getParams(), customer);
+	}
+
+	/**
+	 * 企业货主修改认证信息
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/cargoOwnerUpdateOrganizeInfo")
+	public ServerResponse cargoOwnerUpdateOrganizeInfo(
+			@RequestBody @Valid RequestParams<OrganizeInfoUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.cargoOwnerUpdateOrganizeInfo(requestParams.getParams(), customer);
+	}
+
+	/**
+	 * 个人车主修改认证信息
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/carOwnerUpdatePersonInfo")
+	public ServerResponse carOwnerUpdatePersonInfo(@RequestBody @Valid RequestParams<PersonInfoUpdateDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.carOwnerUpdatePersonInfo(requestParams.getParams(), customer);
+	}
+
+	/**
+	 * 企业车主修改认证信息
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/carOwnerUpdateOrganizeInfo")
+	public ServerResponse carOwnerUpdateOrganizeInfo(
+			@RequestBody @Valid RequestParams<OrganizeInfoUpdateDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.carOwnerUpdateOrganizeInfo(requestParams.getParams(), customer);
+	}
+	
+	/**
+	 * 修改车主不需要审批的字段
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/updateCarOwner")
+	public ServerResponse updateCarOwner(@RequestBody @Valid RequestParams<CarCargoOwnerUpdateDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.updateCarOwner(requestParams.getParams(), customer);
+	}
+	
+	/**
+	 * 修改货主不需要审批的字段
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/updateCargoOwner")
+	public ServerResponse updateCargoOwner(@RequestBody @Valid RequestParams<CarCargoOwnerUpdateDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.updateCargoOwner(requestParams.getParams(), customer);
+	}
+	
+	
+	/**
+	 * 车主详情
+	 * @author cat
+	 * 
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/carOwnerDetails")
+	public ServerResponse carOwnerDetails() {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.carOwnerDetails(customer);
+	}
+	
+	
+	/**
+	 * 货主详情
+	 * @author cat
+	 * 
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/cargoOwnerDetails")
+	public ServerResponse cargoOwnerDetails() {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return carCargoOwnerService.cargoOwnerDetails(customer);
 	}
 	
 	

@@ -14,6 +14,10 @@ import com.zrytech.framework.base.repository.BaseRepository;
 @Repository
 public interface CarCargoOwnnerRepository extends BaseRepository<CarCargoOwnner, Integer> {
 
+	
+	List<CarCargoOwnner> findByCustomerIdAndType(Integer customerId, String type);
+	
+	
 	/**
 	 * 获取车主或者货主企业名称
 	 * 

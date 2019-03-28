@@ -15,6 +15,8 @@ public class CarCargoOwnerConstants {
 	/**未认证*/
 	public static final String STATUS_UNCERTIFIED = "uncertified";
 	
+	public static final String REG_EX_STATUS = "^(" + STATUS_CERTIFIED + ")|(" + STATUS_UNCERTIFIED + ")|()$";
+	public static final String REG_EX_STATUS_ERR_MSG = "状态有误";
 	
 	
 	/**车主货主类型*/
@@ -23,6 +25,9 @@ public class CarCargoOwnerConstants {
 	public static final String TYPE_CAR_OWNER = "car_owner";
 	/**货主*/
 	public static final String TYPE_CARGO_OWNER = "cargo_owner";
+	
+	public static final String REG_EX_TYPE = "^(" + TYPE_CAR_OWNER + ")|(" + TYPE_CARGO_OWNER + ")|()$";
+	public static final String REG_EX_TYPE_ERR_MSG = "客户类型有误";
 	
 	
 	/**车主货主账号类型*/
@@ -33,7 +38,7 @@ public class CarCargoOwnerConstants {
 	public static final String CUSTOMER_TYPE_ORGANIZE = "organize";
 	
 	public static final String REG_EX_CUSTOMER_TYPE = "^(" + CUSTOMER_TYPE_PERSON + ")|(" + CUSTOMER_TYPE_ORGANIZE + ")|()$";
-	public static final String REG_EX_CUSTOMER_TYPE_ERR_MSG = "账号类型有误";
+	public static final String REG_EX_CUSTOMER_TYPE_ERR_MSG = "身份类型有误";
 	
 	
 }

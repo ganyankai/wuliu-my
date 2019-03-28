@@ -59,6 +59,12 @@ public class CarCargoOwnerAddDto {
 
 	/** 企业简介 */
 	private String intro;
+	
+	/** 头像 */
+	private String headImg;
+	
+	/** 性别 */
+	private Integer gender;
 
 	/** 类型 */
 	@NotBlank(message = "账号类型不能为空")

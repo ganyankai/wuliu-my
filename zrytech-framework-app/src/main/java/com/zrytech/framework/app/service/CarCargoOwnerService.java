@@ -6,8 +6,12 @@ import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
+import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.OrganizeInfoUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.PersonInfoUpdateDto;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
+import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
@@ -93,4 +97,82 @@ public interface CarCargoOwnerService {
 	 */
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user);
 	
+	/**
+	 * 个人货主修改认证信息
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse cargoOwnerUpdatePersonInfo(PersonInfoUpdateDto dto, Customer customer);
+	
+	/**
+	 * 个人车主修改认证信息
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse carOwnerUpdatePersonInfo(PersonInfoUpdateDto dto, Customer customer);
+	
+	/**
+	 * 企业货主修改认证信息
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse cargoOwnerUpdateOrganizeInfo(OrganizeInfoUpdateDto dto, Customer customer);
+	
+	/**
+	 * 企业车主修改认证信息
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse carOwnerUpdateOrganizeInfo(OrganizeInfoUpdateDto dto, Customer customer);
+	
+	/**
+	 * 修改车主不需要审批的字段
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse updateCarOwner(CarCargoOwnerUpdateDto dto, Customer customer);
+	
+	/**
+	 * 修改货主不需要审批的字段
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse updateCargoOwner(CarCargoOwnerUpdateDto dto, Customer customer);
+	
+	
+	/**
+	 * 车主详情
+	 * @author cat
+	 * 
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse carOwnerDetails(Customer customer);
+	
+	/**
+	 * 货主详情
+	 * @author cat
+	 * 
+	 * @param customer
+	 * @return
+	 */
+	public ServerResponse cargoOwnerDetails(Customer customer);
 }
