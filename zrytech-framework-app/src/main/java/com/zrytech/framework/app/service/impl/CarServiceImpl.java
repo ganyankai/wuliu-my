@@ -83,15 +83,8 @@ public class CarServiceImpl implements CarService {
 		}
 		return new PageData<Car>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
-	
-	
-	/**
-	 * 管理员 - 车辆详情
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @return
-	 */
+
+	@Override
 	public ServerResponse adminDetails(DetailsDto dto) {
 		Car car = this.assertCarExist(dto.getId());
 		car = this.bindingCarOwner(car);
@@ -101,19 +94,11 @@ public class CarServiceImpl implements CarService {
 		car.setApproveContentCN(temp);
 		return ServerResponse.successWithData(car);
 	}
-	
-	
-	/**
-	 * 管理员 - 车辆审批
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param user
-	 * @return
-	 */
+
+	@Override
 	public ServerResponse adminApprove(ApproveDto dto, User user) {
 		Car car = this.assertCarAvailable(dto.getBusinessId());
-		if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(car.getApproveStatus())) {
+		if (!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(car.getApproveStatus())) {
 			throw new BusinessException(112, "审批失败：车辆的状态不是待审批");
 		}
 		this.approve(car, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
@@ -154,7 +139,7 @@ public class CarServiceImpl implements CarService {
 	 * @return
 	 */
 	private Car bindingCarOwner(Car car) {
-		if(car.getCarOwnerId() != null) {
+		if (car.getCarOwnerId() != null) {
 			CarCargoOwnner carOwner = carCargoOwnnerRepository.findOne(car.getCarOwnerId());
 			car.setCarOwnerName(carOwner.getName());
 			car.setCarOwner(carOwner);
@@ -171,7 +156,7 @@ public class CarServiceImpl implements CarService {
 	 * @return
 	 */
 	private Car bindingDriver(Car car) {
-		if(car.getDriverId() != null) {
+		if (car.getDriverId() != null) {
 			CarPerson driver = carPersonRepository.findOne(car.getDriverId());
 			car.setDriver(driver);
 			car.setDriverName(driver.getName());
@@ -188,7 +173,7 @@ public class CarServiceImpl implements CarService {
 	 * @return
 	 */
 	private Car bindingSupercargo(Car car) {
-		if(car.getSupercargoId() != null) {
+		if (car.getSupercargoId() != null) {
 			CarPerson supercargo = carPersonRepository.findOne(car.getSupercargoId());
 			car.setSupercargo(supercargo);
 			car.setSupercargoName(supercargo.getName());
@@ -206,7 +191,7 @@ public class CarServiceImpl implements CarService {
 	 */
 	private Car assertCarExist(Integer id) {
 		Car car = carRepository.findOne(id);
-		if(car == null) {
+		if (car == null) {
 			throw new BusinessException(112, "车辆不存在");
 		}
 		return car;
@@ -221,29 +206,26 @@ public class CarServiceImpl implements CarService {
 	 * @return
 	 */
 	private void assertCarNotDelete(Car car) {
-		if(car.getIsDelete()){
+		if (car.getIsDelete()) {
 			throw new BusinessException(112, "车辆不存在");
 		}
 	}
-	
-	
+
 	@Override
 	public Car assertCarAvailable(Integer carId) {
 		Car car = this.assertCarExist(carId);
 		this.assertCarNotDelete(car);
 		return car;
 	}
-	
-	
+
 	@Override
 	public Car assertCarBelongToCurrentUser(Integer carId, Integer carOwnerId) {
 		Car car = carRepository.findByIdAndIsDeleteAndCarOwnerId(carId, false, carOwnerId);
-		if(car == null) {
+		if (car == null) {
 			throw new BusinessException(112, "车辆不存在");
 		}
 		return car;
 	}
-	
 	
 	/**
 	 * 断言车牌号未被使用
@@ -253,20 +235,12 @@ public class CarServiceImpl implements CarService {
 	 */
 	private void assertCarNoNotExist(String carNo) {
 		List<Car> list = carRepository.findByCarNo(carNo);
-		if(list != null) {
-			if(list.size() > 0) {
+		if (list != null) {
+			if (list.size() > 0) {
 				throw new BusinessException(112, "车牌号为[" + carNo + "]的车辆已存在");
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	/*以下为车主及车主子账号接口*/
-	
 	
 	
 	@Override
@@ -277,8 +251,7 @@ public class CarServiceImpl implements CarService {
 		car = this.bindingSupercargo(car);
 		return ServerResponse.successWithData(car);
 	}
-	
-	
+
 	@Transactional
 	@Override
 	public ServerResponse add(CarAddDto dto, Customer customer) {
@@ -288,83 +261,65 @@ public class CarServiceImpl implements CarService {
 		BeanUtils.copyProperties(dto, car);
 		car.setCreateBy(customer.getId());
 		car.setCarOwnerId(carOwner.getId());
-		if(carOwner.getAvoidAudit()) { // 免审核
-			car.setStatus(CarConstants.CAR_STATUS_FREE);
-			car.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-		}else {
-			car.setStatus(CarConstants.CAR_STATUS_UNCERTIFIED);
-			car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
-		}
+		car.setStatus(CarConstants.CAR_STATUS_UNCERTIFIED);
+		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		CarCheckUpdateDto temp = new CarCheckUpdateDto();
 		BeanUtils.copyProperties(dto, temp);
 		car.setApproveContent(JSON.toJSONString(temp));
 		car.setId(null);
 		car.setCreateDate(new Date());
 		car.setIsDelete(false);
-		if(!dto.getMulStore()) { // 如果不分仓，默认仓位数为【1】
+		if (!dto.getMulStore()) { // 如果不分仓，默认仓位数为【1】
 			car.setStoreQty(1);
 		}
 		carRepository.save(car);
 		return ServerResponse.successWithData("添加成功");
 	}
 
-	
 	@Transactional
 	@Override
 	public ServerResponse updateNoCheck(CarNoCheckUpdateDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		Integer carOwnerId = carOwner.getId();
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), carOwnerId);
-		// 司机压货人检验
-		if(dto.getDriverId() != null) {
+		if (dto.getDriverId() != null) {
 			carPersonService.assertDriverBelongToCurrentUser(dto.getDriverId(), carOwnerId);
 		}
-		if(dto.getSupercargoId() != null) {
+		if (dto.getSupercargoId() != null) {
 			carPersonService.assertSupercargoBelongToCurrentUser(dto.getSupercargoId(), carOwnerId);
 		}
 		BeanUtils.copyProperties(dto, car);
 		carRepository.save(car);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
-	
+
 	@Transactional
 	@Override
 	public ServerResponse updateCheck(CarCheckUpdateDto dto, Customer customer) {
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
-		if(car.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)){
+		if (car.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			throw new BusinessException(112, "修改失败：不能修改待审批的车辆");
 		}
-		if(!dto.getMulStore()) { // 如果不分仓，默认仓位数为【1】
+		if (!dto.getMulStore()) { // 如果不分仓，默认仓位数为【1】
 			dto.setStoreQty(1);
 		}
-		if(customer.getCarOwner().getAvoidAudit()) { // 免审核
-			BeanUtils.copyProperties(dto, car);
-			car.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-			if (car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
-				car.setStatus(CarConstants.CAR_STATUS_FREE);
-			}
-		}else {
-			car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
-		}
+		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		CarCheckUpdateDto temp = new CarCheckUpdateDto();
 		BeanUtils.copyProperties(dto, temp);
 		car.setApproveContent(JSON.toJSONString(temp));
 		carRepository.save(car);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
-	
+
 	@Transactional
 	@Override
 	public ServerResponse delete(DeleteDto dto, Customer customer) {
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
-		if(!car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
+		if (!car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "删除失败：仅可删除未认证的车辆");
 		}
 		carRepository.deleteCarById(dto.getId());
 		return ServerResponse.successWithData("删除成功");
 	}
-	
 	
 }

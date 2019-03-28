@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.car.CarAddDto;
@@ -46,13 +47,13 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/delete")
 	public ServerResponse delete(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.delete(requestParams.getParams(), customer);
 	}
-	
 	
 	
 	/**
@@ -64,9 +65,11 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/updateNoCheck")
-	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarNoCheckUpdateDto> requestParams, BindingResult result) {
+	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarNoCheckUpdateDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.updateNoCheck(requestParams.getParams(), customer);
 	}
@@ -81,9 +84,11 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/updateCheck")
-	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarCheckUpdateDto> requestParams, BindingResult result) {
+	public ServerResponse updateCheck(@RequestBody @Valid RequestParams<CarCheckUpdateDto> requestParams,
+			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.updateCheck(requestParams.getParams(), customer);
 	}
@@ -98,6 +103,7 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/add")
 	public ServerResponse add(@RequestBody @Valid RequestParams<CarAddDto> requestParams, BindingResult result) {
@@ -115,13 +121,13 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carService.details(requestParams.getParams(), customer);
 	}
-	
 	
 	
 	/**
@@ -132,6 +138,7 @@ public class CarAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@RequestMapping("/myCarPage")
 	public ServerResponse myCarPage(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result) {
