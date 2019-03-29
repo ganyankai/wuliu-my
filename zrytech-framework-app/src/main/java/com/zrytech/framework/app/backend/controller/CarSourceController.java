@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zrytech.framework.app.ano.AdminRole;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
@@ -45,6 +46,7 @@ public class CarSourceController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/page")
 	public ServerResponse carSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
@@ -68,6 +70,7 @@ public class CarSourceController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/oneCarOwnerCarSourcePage")
 	public ServerResponse oneCarOwnerCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
@@ -95,6 +98,7 @@ public class CarSourceController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/approvePendingCarSourcePage")
 	public ServerResponse approvePendingCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
@@ -120,6 +124,7 @@ public class CarSourceController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
@@ -135,6 +140,7 @@ public class CarSourceController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/approve")
 	public ServerResponse approve(@RequestBody @Valid RequestParams<ApproveDto> requestParams, BindingResult result) {

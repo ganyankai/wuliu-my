@@ -48,6 +48,7 @@ import com.zrytech.framework.common.entity.User;
 
 /**
  * 车源
+ * 
  * @author cat
  *
  */
@@ -246,14 +247,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 	/*以下为车主及车主子账号接口*/
 	
 	
-	/**
-	 * 车主及车主子账号 - 新增车源
-	 * @author cat
-	 * 
-	 * @param dto	新增车源入参
-	 * @param customer	当前登录人（车主）
-	 * @return
-	 */
 	@Transactional
 	public ServerResponse createCarSource(CarSourceAddDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
@@ -351,7 +344,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
 		if (carSource.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			throw new BusinessException(112, "修改失败：不能修改待审核的车源");
+			throw new BusinessException(112, "修改失败：不能修改待审批的车源");
 		}
 		if (carOwner.getAvoidAudit()) {
 			BeanUtils.copyProperties(dto, carSource);
@@ -461,7 +454,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carRecordPlaceRepository.save(save);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer) {

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
@@ -46,6 +47,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/add")
 	public ServerResponse add(@RequestBody @Valid RequestParams<CarSourceAddDto> requestParams, BindingResult result) {
@@ -62,6 +64,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/myCarSourcePage")
 	public ServerResponse myCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
@@ -88,6 +91,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
@@ -104,6 +108,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/updateNeedApprove")
 	public ServerResponse updateNeedApprove(@RequestBody @Valid RequestParams<CarSourceCheckUpdateDto> requestParams,
@@ -121,6 +126,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/saveLine")
 	public ServerResponse saveLine(@RequestBody @Valid RequestParams<CarRecordPlaceSaveDto> requestParams,
@@ -138,6 +144,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/saveCarSourceCar")
 	public ServerResponse saveCarSourceCar(@RequestBody @Valid RequestParams<CarSourceCarSaveDto> requestParams,
