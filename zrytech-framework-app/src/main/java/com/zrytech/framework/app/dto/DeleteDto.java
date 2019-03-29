@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class DeleteDto {
-	
+
 	@NotNull(message = "Id不能为空")
 	private Integer id;
 
