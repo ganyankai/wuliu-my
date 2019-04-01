@@ -3,6 +3,8 @@ package com.zrytech.framework.app.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.utils.DictionaryUtil;
+import com.zrytech.framework.base.entity.BaseEntity;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -27,7 +29,7 @@ import javax.persistence.Transient;
 @ApiModel(value = "货源entry")
 @Entity
 @Table(name = "cargo")
-public class Cargo implements Serializable {
+public class Cargo extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -1555792098489335740L;
 

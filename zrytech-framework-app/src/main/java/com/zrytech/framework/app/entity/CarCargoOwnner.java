@@ -20,6 +20,7 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerNeedApproveDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -29,8 +30,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`car_cargo_ownner`")
-public class CarCargoOwnner {
+public class CarCargoOwnner extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3999780324818937946L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

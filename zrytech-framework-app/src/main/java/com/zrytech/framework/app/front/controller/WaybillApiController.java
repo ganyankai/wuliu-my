@@ -1,12 +1,17 @@
 package com.zrytech.framework.app.front.controller;
 
+import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.WaybillDto;
-import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
+import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.billlocation.BillLocationAddDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.app.entity.Waybill;
+import com.zrytech.framework.app.service.BillLocationService;
 import com.zrytech.framework.app.service.WaybillService;
+import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -39,6 +44,10 @@ public class WaybillApiController {
     @Autowired
     private WaybillService waybillService;
 
+    @Autowired
+    private BillLocationService billLocationService;
+    
+    
     /**
      * @return
      * @Desinition:运单分页列表展示
@@ -190,29 +199,51 @@ public class WaybillApiController {
 
     
     /**
-     * 新增运单项
+     * 车主或车主子账号 - 新增运单项
      * @author cat
      * 
      * @param requestParams
      * @param result
      * @return
      */
+    @CarOwnerRole
     @Valid
     @PostMapping("/addWaybillDetail")
-    public ServerResponse addWaybillDetail(@RequestBody @Valid RequestParams<WaybillDetailAddDto> requestParams, BindingResult result) {
-        Customer customer = RequestUtil.getCurrentUser(Customer.class);
-        return waybillService.addWaybillDetail(requestParams.getParams(), customer);
-    }
-    
+	public ServerResponse addWaybillDetail(@RequestBody @Valid RequestParams<WaybillDetailAddDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return waybillService.addWaybillDetail(requestParams.getParams(), customer);
+	}
     
     /**
-     * 删除运单项
+     * 车主或车主子账号 - 新增或更新运单装卸地
+     * <pre>
+     * 如果指定的运单装卸地已存在则更新，根据运单Id,运单项Id,货源装卸地Id确认运单装卸地
+     * </pre>
      * @author cat
      * 
      * @param requestParams
      * @param result
      * @return
      */
+    @CarOwnerRole
+	@Valid
+	@PostMapping("/addBillLocation")
+	public ServerResponse addBillLocation(@RequestBody @Valid RequestParams<BillLocationAddDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return billLocationService.addBillLocation(requestParams.getParams(), customer);
+	}
+    
+    /**
+     * 车主或车主子账号 - 删除运单项
+     * @author cat
+     * 
+     * @param requestParams
+     * @param result
+     * @return
+     */
+    @CarOwnerRole
     @Valid
     @PostMapping("/deleteWaybillDetail")
     public ServerResponse deleteWaybillDetail(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result) {
@@ -220,15 +251,15 @@ public class WaybillApiController {
         return waybillService.deleteWaybillDetail(requestParams.getParams(), customer);
     }
     
-    
     /**
-     * 删除运单装卸地
+     * 车主或车主子账号 - 删除运单装卸地
      * @author cat
      * 
      * @param requestParams
      * @param result
      * @return
      */
+    @CarOwnerRole
     @Valid
     @PostMapping("/deleteBillLocation")
     public ServerResponse deleteBillLocation(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result) {
@@ -236,36 +267,45 @@ public class WaybillApiController {
         return waybillService.deleteBillLocation(requestParams.getParams(), customer);
     }
     
-    
     /**
-     * 车主及车主子账号 - 运单分页
+     * 车主或车主子账号 - 运单分页
      * @author cat
      * 
      * @param requestParams
      * @param result
      * @return
      */
+    @CarOwnerRole
     @Valid
-    @PostMapping("/page")
-    public ServerResponse page(@RequestBody @Valid RequestParams<CarOwnerWaybillPageDto> requestParams, BindingResult result) {
-        Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		return waybillService.page(requestParams.getParams(), requestParams.getPage().getPageNum(),
-				requestParams.getPage().getPageSize(), customer);
-    }
-    
+    @PostMapping("/myWaybill")
+	public ServerResponse myWaybill(@RequestBody @Valid RequestParams<WaybillPageDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Integer pageNum = requestParams.getPage().getPageNum();
+		Integer pageSize = requestParams.getPage().getPageSize();
+		if (pageNum == null)
+			pageNum = 1;
+		if (pageSize == null)
+			pageSize = 10;
+		WaybillPageDto dto = requestParams.getParams();
+		dto.setCarOwnerId(customer.getCarOwner().getId());
+		PageData<Waybill> pageData = waybillService.waybillPage(dto, pageNum, pageSize);
+		return ServerResponse.successWithData(pageData);
+	}
     
     /**
-     * 车主及车主子账号 - 运单详情
+     * 车主或车主子账号 - 运单详情
      * @author cat
      * 
      * @param requestParams
      * @param result
      * @return
      */
-    @Valid
-    @PostMapping("/details")
-    public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
-        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+    @CarOwnerRole
+	@Valid
+	@PostMapping("/details")
+	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return waybillService.details(requestParams.getParams(), customer);
-    }
+	}
+	
 }

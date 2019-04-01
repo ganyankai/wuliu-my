@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -21,7 +22,12 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`car_location`")
-public class CarLocation {
+public class CarLocation extends BaseEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3200469396722595197L;
 
 	/**主键，自增*/
 	@Id

@@ -20,6 +20,7 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CargoMatterConstants;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterNeedApproveUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -31,8 +32,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`cargo_matter`")
-public class CargoMatter {
+public class CargoMatter extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1877310111421674701L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

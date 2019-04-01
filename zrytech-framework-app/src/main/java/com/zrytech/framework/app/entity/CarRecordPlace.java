@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.zrytech.framework.base.entity.BaseEntity;
+
 import lombok.Data;
 
 /**
@@ -15,8 +17,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`car_record_place`")
-public class CarRecordPlace {
+public class CarRecordPlace extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -555395914746562992L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

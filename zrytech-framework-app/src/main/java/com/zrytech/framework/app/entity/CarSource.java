@@ -21,6 +21,7 @@ import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.constants.CarSourceConstants;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -32,7 +33,12 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`car_source`")
-public class CarSource {
+public class CarSource extends BaseEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6093142606960464583L;
 
 	/**主键，自增*/
 	@Id

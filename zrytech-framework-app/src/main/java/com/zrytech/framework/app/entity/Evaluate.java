@@ -12,6 +12,7 @@ import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -23,8 +24,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`evaluate`")
-public class Evaluate {
+public class Evaluate extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7342312148796379565L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

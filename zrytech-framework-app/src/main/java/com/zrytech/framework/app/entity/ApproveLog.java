@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -23,8 +24,10 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`sys_approve_log`")
-public class ApproveLog {
+public class ApproveLog extends BaseEntity {
 	
+	private static final long serialVersionUID = 6291015433239753286L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

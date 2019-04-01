@@ -321,5 +321,12 @@ public class CarServiceImpl implements CarService {
 		carRepository.deleteCarById(dto.getId());
 		return ServerResponse.successWithData("删除成功");
 	}
+
+	@Override
+	public void assertCarCertified(Car car) {
+		if(CarConstants.CAR_STATUS_UNCERTIFIED.equalsIgnoreCase(car.getStatus())) {
+			throw new BusinessException(112, "车辆未认证");
+		}
+	}
 	
 }

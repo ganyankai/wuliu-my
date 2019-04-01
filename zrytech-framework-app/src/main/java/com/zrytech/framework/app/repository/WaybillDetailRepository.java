@@ -12,5 +12,10 @@ import com.zrytech.framework.base.repository.BaseRepository;
 public interface WaybillDetailRepository extends BaseRepository<WaybillDetail, Integer> {
 	
 	List<WaybillDetail> findByBillNo(String billNo);
-
+	
+	WaybillDetail findByBillNoAndCarId(String billNo, Integer carId);
+	
+	WaybillDetail findByBillNoAndDriverId(String billNo, Integer driverId);
+	
+	WaybillDetail findByBillNoAndSupercargoId(String billNo, Integer supercargoId);
 }

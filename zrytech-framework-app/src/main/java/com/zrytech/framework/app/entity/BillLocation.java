@@ -12,9 +12,9 @@ import javax.persistence.Table;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
-
 
 /**
  * 运单装卸地
@@ -23,88 +23,90 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`bill_location`")
-public class BillLocation {
-	
-	/**主键，自增*/
+public class BillLocation extends BaseEntity {
+
+	private static final long serialVersionUID = 4461717652097394184L;
+
+	/** 主键，自增 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-	
-	/**运单明细ID*/
+	private Integer id;
+
+	/** 运单明细ID */
 	@Column(name = "`waybill_detail_id`")
-    private Integer waybillDetailId;
+	private Integer waybillDetailId;
 
-	/**运单Id*/
+	/** 运单Id */
 	@Column(name = "`waybill_id`")
-    private Integer waybillId;
+	private Integer waybillId;
 
-	/**经度*/
+	/** 经度 */
 	@Column(name = "`longitude`")
-    private BigDecimal longitude;
+	private BigDecimal longitude;
 
-	/**纬度*/
+	/** 纬度 */
 	@Column(name = "`latitude`")
-    private BigDecimal latitude;
+	private BigDecimal latitude;
 
-	/**省份*/
+	/** 省份 */
 	@Column(name = "`province`")
-    private String province;
+	private String province;
 
-	/**城市*/
+	/** 城市 */
 	@Column(name = "`city`")
-    private String city;
+	private String city;
 
-	/**县*/
+	/** 县 */
 	@Column(name = "`county`")
-    private String county;
+	private String county;
 
-	/**地址详情*/
+	/** 地址详情 */
 	@Column(name = "`address_detail`")
-    private String addressDetail;
+	private String addressDetail;
 
-	/**装卸数量*/
+	/** 装卸数量 */
 	@Column(name = "`qty`")
-    private Integer qty;
+	private Integer qty;
 
-	/**重量单位*/
+	/** 重量单位 */
 	@Column(name = "`weight_unit`")
-    private String weightUnit;
+	private String weightUnit;
 
-	/**类型*/
+	/** 类型 */
 	@Column(name = "`type`")
-    private String type;
+	private String type;
 
-	/**序号*/
+	/** 序号 */
 	@Column(name = "`seq_no`")
-    private Integer seqNo;
+	private Integer seqNo;
 
-	/**说明*/
+	/** 说明 */
 	@Column(name = "`remark`")
-    private String remark;
+	private String remark;
 
-	/**装卸日期*/
+	/** 装卸日期 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`load_date`")
-    private Date loadDate;
+	private Date loadDate;
 
-	/**截止日期*/
+	/** 截止日期 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`end_date`")
-    private Date endDate;
+	private Date endDate;
 
-	/**状态*/
+	/** 状态 */
 	@Column(name = "`status`")
-    private String status;
-	
-	/**货源装卸地Id*/
+	private String status;
+
+	/** 货源装卸地Id */
 	@Column(name = "`cargo_location_id`")
 	private Integer cargoLocationId;
 
-    /**创建日期*/
+	/** 创建日期 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`create_date`")
 	private Date createDate;
 

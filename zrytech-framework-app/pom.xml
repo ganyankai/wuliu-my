@@ -15,7 +15,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<zrytech.framework.version>1.2.190218-SNAPSHOT</zrytech.framework.version>
+		<!-- <zrytech.framework.version>1.2.190218-SNAPSHOT</zrytech.framework.version> -->
+		<zrytech.framework.version>1.2.190328-SNAPSHOT</zrytech.framework.version>
 	</properties>
 
 	<dependencies>

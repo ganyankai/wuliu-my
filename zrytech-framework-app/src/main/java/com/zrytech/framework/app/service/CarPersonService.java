@@ -23,6 +23,22 @@ import com.zrytech.framework.common.entity.User;
 public interface CarPersonService {
 	
 	/**
+	 * 断言司机已认证
+	 * @author cat
+	 * 
+	 * @param driver	司机
+	 */
+	public void assertDriverCertified(CarPerson driver);
+	
+	/**
+	 * 断言压货人已认证
+	 * @author cat
+	 * 
+	 * @param supercargo	压货人
+	 */
+	public void assertSupercargoCertified(CarPerson supercargo);
+	
+	/**
 	 * 断言司机数据存在且未被删除
 	 * @author cat
 	 * 

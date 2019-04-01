@@ -18,6 +18,13 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public interface CarService {
 	
+	/**
+	 * 断言车辆已认证
+	 * @author cat
+	 * 
+	 * @param car
+	 */
+	public void assertCarCertified(Car car);
 	
 	/**
 	 * 车辆分页

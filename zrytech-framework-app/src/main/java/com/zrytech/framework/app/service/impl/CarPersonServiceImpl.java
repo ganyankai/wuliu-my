@@ -556,5 +556,19 @@ public class CarPersonServiceImpl implements CarPersonService {
 		carPerson = this.bindingCarOwner(carPerson);
 		return ServerResponse.successWithData(carPerson);
 	}
+
+	@Override
+	public void assertDriverCertified(CarPerson driver) {
+		if(CarPersonConstants.PERSON_STATUS_UNCERTIFIED.equalsIgnoreCase(driver.getStatus())) {
+			throw new BusinessException(112, "司机未认证");
+		}
+	}
+
+	@Override
+	public void assertSupercargoCertified(CarPerson supercargo) {
+		if(CarPersonConstants.PERSON_STATUS_UNCERTIFIED.equalsIgnoreCase(supercargo.getStatus())) {
+			throw new BusinessException(112, "压货人未认证");
+		}
+	}
 	
 }

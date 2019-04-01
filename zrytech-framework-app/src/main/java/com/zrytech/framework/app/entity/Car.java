@@ -20,6 +20,7 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
+import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Data;
 
@@ -30,8 +31,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "`car`")
-public class Car {
+public class Car extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1763351958891301342L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,5 @@
 package com.zrytech.framework.app.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import com.github.pagehelper.PageInfo;
-import com.zrytech.framework.app.constants.BillLocationConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.constants.IndentConstants;
 import com.zrytech.framework.app.dao.CargoDao;
@@ -34,8 +32,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.dto.WaybillPageDto;
-import com.zrytech.framework.app.dto.billlocation.BillLocationAddDto;
-import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.mapper.WaybillMapper;
 import com.zrytech.framework.app.repository.BillLocationRepository;
@@ -448,90 +444,107 @@ public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,In
     }
 
 
-    /**
-     * 断言运单存在
-     *
-     * @param id 运单Id
-     * @return
-     * @author cat
-     */
-    public Waybill assertWaybillExist(Integer id) {
-        Waybill waybill = waybillRepository.findOne(id);
-        if (waybill == null) {
-            throw new BusinessException(112, "运单不存在");
-        }
-        return waybill;
-    }
+	/**
+	 * 断言运单存在
+	 * @author cat
+	 * 
+	 * @param waybillId	运单Id
+	 * @return
+	 */
+    private Waybill assertWaybillExist(Integer waybillId) {
+		Waybill waybill = waybillRepository.findOne(waybillId);
+		if (waybill == null)
+			throw new BusinessException(112, "运单不存在");
+		return waybill;
+	}
 
-
+	public Waybill assertWaybillBelongToCurrentUser(Integer waybillId, Integer carOwnerId) {
+		Waybill waybill = this.assertWaybillExist(waybillId);
+		if (!waybill.getCarOwnnerId().equals(carOwnerId))
+			throw new BusinessException(112, "运单不存在");
+		return waybill;
+	}
+    
+    
     /**
      * 断言运单属于当前登录车主
+     * @author cat
      *
-     * @param watbill    运单
+     * @param billNo    运单号
      * @param carOwnerId 车主Id
+     */
+	private Waybill assertWaybillBelongToCurrentUser(String billNo, Integer carOwnerId) {
+		Waybill waybill = waybillRepository.findByBillNo(billNo);
+		if (waybill == null) {
+			throw new BusinessException(112, "运单项不存在");
+		}
+		if (!waybill.getCarOwnnerId().equals(carOwnerId)) {
+			throw new BusinessException(112, "运单项不存在");
+		}
+		return waybill;
+	}
+    
+    
+    @Transactional
+	@Override
+	public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Waybill waybill = this.assertWaybillBelongToCurrentUser(dto.getWaybillId(), carOwner.getId());
+		this.waybillDetailCheck(dto, carOwner.getId(), waybill.getBillNo());
+		this.insertWaybillDetail(dto, waybill);
+		return ServerResponse.successWithData("添加成功");
+	}
+    
+    /**
+     * 添加运单项参数校验
+     * <pre>
+     * 1.同一个运单下，车辆唯一，司机唯一，压货人唯一。
+     * 2.车辆、司机、压货人均属于当前登录车主
+     * 3.车辆、司机、压货人均已认证
+     * </pre>
      * @author cat
+     * 
+     * @param dto	添加运单项入参
+     * @param carOwnerId	车主Id
+     * @param billNo	运单编号
      */
-    private void assertWaybillBelongToCurrentUser(Waybill waybill, Integer carOwnerId) {
-        if (!waybill.getCarOwnnerId().equals(carOwnerId)) {
-            throw new BusinessException(112, "参数有误");
-        }
-    }
-
-
-    /**
+	private void waybillDetailCheck(WaybillDetailAddDto dto, Integer carOwnerId, String billNo) {
+		Integer driverId = dto.getDriverId();
+		Integer supercargoId = dto.getSupercargoId();
+		Integer carId = dto.getCarId();
+		if (driverId != null) {
+			CarPerson driver = carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
+			carPersonService.assertDriverCertified(driver);
+			WaybillDetail waybillDetail = waybillDetailRepository.findByBillNoAndDriverId(billNo, driverId);
+			if (waybillDetail != null) {
+				throw new BusinessException(112, "司机已被分配到当前运单");
+			}
+		}
+		if (supercargoId != null) {
+			CarPerson supercargo = carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
+			carPersonService.assertSupercargoCertified(supercargo);
+			WaybillDetail waybillDetail = waybillDetailRepository.findByBillNoAndSupercargoId(billNo, supercargoId);
+			if (waybillDetail != null) {
+				throw new BusinessException(112, "压货人已被分配到当前运单");
+			}
+		}
+		if (carId != null) {
+			Car car = carService.assertCarBelongToCurrentUser(carId, carOwnerId);
+			carService.assertCarCertified(car);
+			WaybillDetail waybillDetail = waybillDetailRepository.findByBillNoAndCarId(billNo, carId);
+			if (waybillDetail != null) {
+				throw new BusinessException(112, "车辆已被分配到当前运单");
+			}
+		}
+	}
+	
+	/**
      * 新增运单项
-     *
-     * @param dto
-     * @param customer
-     * @return
      * @author cat
-     */
-    @Override
-    public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer) {
-        // 验证运单项数量与装卸地总数量是否相等
-        this.checkQty(dto);
-        CarCargoOwnner carOwner = customer.getCarOwner();
-        if (customer.getCreateBy() != 0) { // 子账号
-            // TODO 鉴权
-
-        }
-        Integer carOwnerId = carOwner.getId();
-        Waybill waybill = this.assertWaybillExist(dto.getWaybillId());
-        this.assertWaybillBelongToCurrentUser(waybill, carOwnerId);
-        this.waybillDetailCheck(dto, carOwnerId);
-        // 新增运单项
-        WaybillDetail waybillDetail = this.insertWaybillDetail(dto, waybill);
-        // 新增装卸地
-        this.insertBillLocation(dto, waybill, waybillDetail.getId());
-        return ServerResponse.successWithData("添加成功");
-    }
-
-
-    /**
-     * 验证运单项数量与装卸地总数量是否相等
-     *
-     * @param dto
-     */
-    private void checkQty(WaybillDetailAddDto dto) {
-        Integer qty = dto.getQty(); // 运单项数量
-        List<BillLocationAddDto> billLocations = dto.getBillLocations();
-        int count = 0;
-        for (BillLocationAddDto billLocationAddDto : billLocations) {
-            count = count + billLocationAddDto.getQty();// 装卸地总数量
-        }
-        if (qty - count != 0) {
-            throw new BusinessException(112, "参数有误：运单项数量与装卸地总数量不相等");
-        }
-    }
-
-
-    /**
-     * 新增运单项
      *
      * @param dto
      * @param waybill
      * @return
-     * @author cat
      */
     private WaybillDetail insertWaybillDetail(WaybillDetailAddDto dto, Waybill waybill) {
         WaybillDetail waybillDetail = new WaybillDetail();
@@ -543,55 +556,7 @@ public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,In
         return waybillDetail;
     }
 
-
-    /**
-     * 新增装卸地
-     *
-     * @param dto
-     * @param waybill
-     * @param waybillDetailId
-     * @author cat
-     */
-    private void insertBillLocation(WaybillDetailAddDto dto, Waybill waybill, Integer waybillDetailId) {
-        List<BillLocation> list = new ArrayList<>();
-        List<BillLocationAddDto> billLocations = dto.getBillLocations();
-        for (BillLocationAddDto billLocationAddDto : billLocations) {
-            BillLocation billLocation = new BillLocation();
-            BeanUtils.copyProperties(billLocationAddDto, billLocation);
-            billLocation.setCreateDate(new Date());
-            billLocation.setStatus(BillLocationConstants.STATUS_DEFAULT);
-            billLocation.setWaybillDetailId(waybillDetailId);
-            billLocation.setWaybillId(waybill.getId());
-            billLocation.setWeightUnit(waybill.getWeightUnit());
-            list.add(billLocation);
-        }
-        billLocationRepository.save(list);
-    }
-
-
-    /**
-     * 判断入参 车辆、司机、压货人 是否属于当前登录车主
-     *
-     * @param dto        车辆、司机、压货人Id
-     * @param carOwnerId 车主Id
-     * @author cat
-     */
-    private void waybillDetailCheck(WaybillDetailAddDto dto, Integer carOwnerId) {
-        Integer driverId = dto.getDriverId();
-        Integer supercargoId = dto.getSupercargoId();
-        Integer carId = dto.getCarId();
-        if (driverId != null) {
-            carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
-        }
-        if (supercargoId != null) {
-            carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
-        }
-        if (carId != null) {
-            carService.assertCarBelongToCurrentUser(carId, carOwnerId);
-        }
-    }
-
-
+    
     /**
      * @return
      * @Desinition:取消运单
@@ -628,113 +593,37 @@ public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,In
     }
 
 
-    /**
-     * 车主及车主子账号 - 删除运单装卸地（物理删除）
-     *
-     * @param dto      运单装卸地Id
-     * @param customer 当前登录人
-     * @return
-     * @author cat
-     */
-    @Transactional
-    @Override
-    public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer) {
-        CarCargoOwnner carOwner = customer.getCarOwner();
-        if (customer.getCreateBy() != 0) { // 子账号
-            // TODO 鉴权
+	@Transactional
+	@Override
+	public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		BillLocation billLocation = billLocationService.assertBillLocationExist(dto.getId());
+		this.assertWaybillBelongToCurrentUser(billLocation.getWaybillId(), carOwner.getId());
+		billLocationRepository.delete(dto.getId());
+		return ServerResponse.successWithData("删除成功");
+	}
 
-        }
-        BillLocation billLocation = billLocationService.assertBillLocationExist(dto.getId());
-        Waybill waybill = this.assertWaybillExist(billLocation.getWaybillId());
-        this.assertWaybillBelongToCurrentUser(waybill, carOwner.getId());
+	@Override
+	public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer waybillDetailId = dto.getId();
+		WaybillDetail waybillDetail = waybillDetailService.assertWaybillDetailExist(waybillDetailId);
+		this.assertWaybillBelongToCurrentUser(waybillDetail.getBillNo(), carOwner.getId());
+		waybillDetailRepository.delete(waybillDetailId);
+		billLocationService.deleteByWaybillDetailId(waybillDetailId);
+		return ServerResponse.successWithData("删除成功");
+	}
 
-        billLocationRepository.delete(dto.getId());
-        return ServerResponse.successWithData("删除成功");
-    }
-
-
-    /**
-     * 车主及车主子账号 - 删除运单项及运单项下的装卸地（物理删除）
-     *
-     * @param dto      运单项Id
-     * @param customer 当前登录人
-     * @return
-     * @author cat
-     */
-    @Override
-    public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer) {
-        CarCargoOwnner carOwner = customer.getCarOwner();
-        if (customer.getCreateBy() != 0) { // 子账号
-            // TODO 鉴权
-
-        }
-
-        Integer waybillDetailId = dto.getId();
-        WaybillDetail waybillDetail = waybillDetailService.assertWaybillDetailExist(dto.getId());
-        Waybill waybill = waybillRepository.findByBillNo(waybillDetail.getBillNo());
-        if (waybill == null) {
-            throw new BusinessException(112, "运单项不存在");
-        }
-        this.assertWaybillBelongToCurrentUser(waybill, carOwner.getId());
-
-        // 删除运单项
-        waybillDetailRepository.delete(waybillDetailId);
-        // 删除运单项对应的装卸地
-        billLocationService.deleteByWaybillDetailId(waybillDetailId);
-
-        return ServerResponse.successWithData("删除成功");
-    }
-
-
-    /**
-     * 运单分页
-     *
-     * @param dto      查询条件，详见{@link CarOwnerWaybillPageDto}
-     * @param pageNum
-     * @param pageSize
-     * @return
-     * @author cat
-     */
-    @Override
-    public ServerResponse page(CarOwnerWaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
-        CarCargoOwnner carOwner = customer.getCarOwner();
-        if (customer.getCreateBy() != 0) { // 子账号
-            dto.setCreateBy(customer.getCreateBy());
-        }
-        com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
-        List<Waybill> list = waybillMapper.carOwnerSelectSelective(dto, carOwner.getId());
-        for (Waybill waybill : list) {
-            waybill = bindingCarOwnerName(waybill);
-            waybill = bindingCargoOwnerName(waybill);
-        }
-        PageData<Waybill> pageData = new PageData<Waybill>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
-        return ServerResponse.successWithData(pageData);
-    }
-
-
-    /**
-     * 运单详情
-     *
-     * @param id 运单Id
-     * @return
-     * @author cat
-     */
-    @Override
-    public ServerResponse details(DetailsDto dto, Customer customer) {
-        CarCargoOwnner carOwner = customer.getCarOwner();
-        Waybill waybill = this.assertWaybillExist(dto.getId());
-        this.assertWaybillBelongToCurrentUser(waybill, carOwner.getId());
-        if (customer.getCreateBy() != 0) { // 子账号
-            if (customer.getCreateBy() - waybill.getCreateBy() != 0) {
-                throw new BusinessException(112, "参数有误");
-            }
-        }
-        waybill = bindingCargo(waybill);
-        waybill = bindingCarOwnerName(waybill);
-        waybill = bindingCargoOwnerName(waybill);
-        waybill = bindingWaybillDetail(waybill);
-        waybill = bindingEvaluate(waybill);
-        return ServerResponse.successWithData(waybill);
-    }
+	@Override
+	public ServerResponse details(DetailsDto dto, Customer customer) {
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Waybill waybill = this.assertWaybillBelongToCurrentUser(dto.getId(), carOwner.getId());
+		waybill = this.bindingCargo(waybill);
+		waybill = this.bindingCarOwnerName(waybill);
+		waybill = this.bindingCargoOwnerName(waybill);
+		waybill = this.bindingWaybillDetail(waybill);
+		waybill = this.bindingEvaluate(waybill);
+		return ServerResponse.successWithData(waybill);
+	}
 
 }

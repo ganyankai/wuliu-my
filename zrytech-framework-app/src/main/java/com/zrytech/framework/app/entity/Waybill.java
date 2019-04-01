@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.utils.DictionaryUtil;
+import com.zrytech.framework.base.entity.BaseEntity;
+
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
@@ -27,8 +29,13 @@ import org.springframework.util.StringUtils;
 @Data
 @Entity
 @Table(name = "`waybill`")
-public class Waybill {
+public class Waybill extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3551244863833466202L;
+
 	/**主键，自增*/
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

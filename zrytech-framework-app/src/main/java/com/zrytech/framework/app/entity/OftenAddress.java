@@ -1,6 +1,8 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.base.entity.BaseEntity;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -20,7 +22,7 @@ import javax.persistence.Table;
 @ApiModel(value = "常用地址entry")
 @Entity
 @Table(name = "`address`")
-public class OftenAddress implements Serializable {
+public class OftenAddress extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -1555792098489335740L;
 

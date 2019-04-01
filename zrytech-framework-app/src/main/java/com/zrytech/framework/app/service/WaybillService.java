@@ -1,5 +1,7 @@
 package com.zrytech.framework.app.service;
 
+import org.springframework.stereotype.Service;
+
 import com.zrytech.framework.app.dto.DeleteDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.WaybillDto;
@@ -8,12 +10,11 @@ import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.PageData;
 
 import com.zrytech.framework.app.dto.WaybillPageDto;
-import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.ServerResponse;
 
-
+@Service
 public interface WaybillService {
 	
     /**
@@ -37,7 +38,14 @@ public interface WaybillService {
     public ServerResponse adminDetails(DetailsDto dto);
     
     
-
+	 /**
+     * 断言运单属于当前登录车主
+     * @author cat
+     *
+     * @param waybillId    运单Id
+     * @param carOwnerId 车主Id
+     */
+	public Waybill assertWaybillBelongToCurrentUser(Integer waybillId, Integer carOwnerId);
 
 	
 
@@ -97,14 +105,46 @@ public interface WaybillService {
      */
     ServerResponse delete(WaybillDto waybillDto);
 
+    /**
+     * 车主或车主子账号 - 运单详情
+     * @author cat
+     *
+     * @param dto 运单Id
+     * @return
+     */
     public ServerResponse details(DetailsDto dto, Customer customer);
 
-    public ServerResponse page(CarOwnerWaybillPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
 
+    /**
+     * 车主及车主子账号 - 删除运单项及运单项下的装卸地（物理删除）
+     * @author cat
+     *
+     * @param dto      运单项Id
+     * @param customer 当前登录人
+     * @return
+     */
     public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer);
 
+    
+    /**
+     * 车主及车主子账号 - 删除运单装卸地（物理删除）
+     * @author cat
+     *
+     * @param dto      运单装卸地Id
+     * @param customer 当前登录人
+     * @return
+     */
     public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer);
-
+    
+    
+    /**
+     * 车主及车主子账号 - 新增运单项
+     * @author cat
+     *
+     * @param dto
+     * @param customer
+     * @return
+     */
     public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer);
 
     /**
