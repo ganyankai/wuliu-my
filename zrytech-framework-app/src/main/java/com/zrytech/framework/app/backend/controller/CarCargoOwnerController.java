@@ -13,6 +13,7 @@ import com.zrytech.framework.app.ano.AdminRole;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
@@ -252,4 +253,78 @@ public class CarCargoOwnerController {
 	}
 	
 	
+	/**
+	 * 管理员 - 启用车主
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
+	@AdminRole
+	@Valid
+	@PostMapping("/enableCarOwner")
+	public ServerResponse enableCarOwner(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
+		return carCargoOwnerService.adminEnableCarOwner(requestParams.getParams(), user);
+	}
+	
+	
+	/**
+	 * 管理员 - 禁用车主
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
+	@AdminRole
+	@Valid
+	@PostMapping("/disableCarOwner")
+	public ServerResponse disableCarOwner(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
+		return carCargoOwnerService.adminDisableCarOwner(requestParams.getParams(), user);
+	}
+	
+	
+	/**
+	 * 管理员 - 启用货主
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
+	@AdminRole
+	@Valid
+	@PostMapping("/enableCargoOwner")
+	public ServerResponse enableCargoOwner(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
+		return carCargoOwnerService.adminEnableCargoOwner(requestParams.getParams(), user);
+	}
+	
+	
+	/**
+	 * 管理员 - 禁用货主
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @param user
+	 * @return
+	 */
+	@AdminRole
+	@Valid
+	@PostMapping("/disableCargoOwner")
+	public ServerResponse disableCargoOwner(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		User user = RequestUtil.getCurrentUser(User.class);
+		return carCargoOwnerService.adminDisableCargoOwner(requestParams.getParams(), user);
+	}
 }

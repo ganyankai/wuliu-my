@@ -17,6 +17,7 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerAddDto;
@@ -483,6 +484,42 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		cargoOwner.setApproveContentCN(temp);
 		cargoOwner = this.bindingCustomer(cargoOwner);
 		return ServerResponse.successWithData(cargoOwner);
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse adminEnableCarOwner(CommonDto dto, User user) {
+		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getId());
+		customerRepository.updateIsActiveById(carOwner.getCustomerId(), true);
+		// 启用子账号 TODO
+		return ServerResponse.success();
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse adminDisableCarOwner(CommonDto dto, User user) {
+		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getId());
+		customerRepository.updateIsActiveById(carOwner.getCustomerId(), false);
+		// 退出主账号、子账号登录态，禁用子账号 TODO
+		return ServerResponse.success();
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse adminEnableCargoOwner(CommonDto dto, User user) {
+		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getId());
+		customerRepository.updateIsActiveById(cargoOwner.getCustomerId(), true);
+		// 启用子账号 TODO
+		return ServerResponse.success();
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse adminDisableCargoOwner(CommonDto dto, User user) {
+		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getId());
+		customerRepository.updateIsActiveById(cargoOwner.getCustomerId(), false);
+		// 退出主账号、子账号登录态，禁用子账号 TODO
+		return ServerResponse.success();
 	}
 	
 }

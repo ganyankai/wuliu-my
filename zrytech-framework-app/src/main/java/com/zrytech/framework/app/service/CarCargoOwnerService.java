@@ -3,6 +3,7 @@ package com.zrytech.framework.app.service;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
@@ -76,6 +77,46 @@ public interface CarCargoOwnerService {
 	 * @return
 	 */
 	public ServerResponse adminCargoOwnerDetails(DetailsDto dto);
+	
+	/**
+	 * 管理员 - 启用车主
+	 * @author cat
+	 * 
+	 * @param dto	车主Id
+	 * @param user
+	 * @return
+	 */
+	public ServerResponse adminEnableCarOwner(CommonDto dto, User user);
+	
+	/**
+	 * 管理员 - 禁用车主
+	 * @author cat
+	 * 
+	 * @param dto	车主Id
+	 * @param user
+	 * @return
+	 */
+	public ServerResponse adminDisableCarOwner(CommonDto dto, User user);
+	
+	/**
+	 * 管理员 - 启用货主
+	 * @author cat
+	 * 
+	 * @param dto	货主Id
+	 * @param user
+	 * @return
+	 */
+	public ServerResponse adminEnableCargoOwner(CommonDto dto, User user);
+	
+	/**
+	 * 管理员 - 禁用货主
+	 * @author cat
+	 * 
+	 * @param dto	货主Id
+	 * @param user
+	 * @return
+	 */
+	public ServerResponse adminDisableCargoOwner(CommonDto dto, User user);
 	
 	/**
 	 * 管理员 - 修改货主免审核状态
@@ -175,4 +216,5 @@ public interface CarCargoOwnerService {
 	 * @return
 	 */
 	public ServerResponse cargoOwnerDetails(Customer customer);
+	
 }
