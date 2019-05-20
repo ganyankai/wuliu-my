@@ -2,13 +2,17 @@ package com.zrytech.framework.app.service;
 
 import org.springframework.stereotype.Service;
 
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
+import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
+import com.zrytech.framework.app.dto.carsource.CarSourceNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
+import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarDelDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarUpdateDto;
 import com.zrytech.framework.app.entity.CarSource;
@@ -95,7 +99,6 @@ public interface CarSourceService {
 	 */
 	public ServerResponse addOrUpdateCarRecordPlace(CarRecordPlaceSaveDto dto, Customer customer);
 	
-	
 	/**
 	 * 车主及车主子账号 - 车源之新增车辆或更新车辆
 	 * <p>当 {@link CarSourceCarUpdateDto} 的id为空时，表示在新增，id不为空时表示更新</P>
@@ -106,5 +109,43 @@ public interface CarSourceService {
 	 * @return
 	 */
 	public ServerResponse saveCarSourceCar(CarSourceCarSaveDto dto, Customer customer);
+	
+	/**
+	 * 删除车源起止地，最后一条记录无法删除，必须保留至少一条起止地数据
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse delCarRecordPlace(CarRecordPlaceDelDto dto);
+	
+	/**
+	 * 删除车源的车辆，最后一条记录无法删除，必须保留至少一条车源的车辆数据
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse delCarSourceCar(CarSourceCarDelDto dto);
+	
+	/**
+	 * 修改车源不需要审核的信息
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse updateNoCheck(CarSourceNoCheckUpdateDto dto);
+	
+	
+	/**
+	 * 车源下架
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse down(CommonDto dto);
+	
 	
 }

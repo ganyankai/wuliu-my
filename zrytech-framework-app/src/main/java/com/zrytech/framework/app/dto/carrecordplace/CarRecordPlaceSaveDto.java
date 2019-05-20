@@ -23,7 +23,7 @@ public class CarRecordPlaceSaveDto {
 
 	/** 路线 */
 	@NotNull(message = "车源起止地不能为空")
-	@Size(min = 1, max = 1, message = "当前只能有一个车源起止地")
+	@Size(min = 1, message = "至少有一个车源起止地")
 	private List<CarRecordPlaceUpdateDto> carRecordPlaces;
 
 }

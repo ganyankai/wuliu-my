@@ -46,5 +46,11 @@ public class CarSourceCar extends BaseEntity {
 	/**压货人Id*/
 	@Column(name = "`supercargo_id`")
     private Integer supercargoId;
+	
+	// 2019-5-20 13:53:59 新增字段
+	
+	/** 空闲运输量 */
+	@Column(name = "`free_qty`")
+	private Integer freeQty;
 
 }

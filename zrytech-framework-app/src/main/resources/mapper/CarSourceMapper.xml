@@ -11,7 +11,12 @@
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
     <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_share" property="isShare" />
   </resultMap>
+  
+  
   
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
   	select * from `car_source` 
@@ -40,5 +45,23 @@
   	</where>
   	order by `create_date` desc
   </select>
+  
+  
+  <update id="updateNoCheck" parameterType="Object">
+  	update `car_source` 
+  	<set>
+  		<if test="isShare != null">
+  			`is_share` = #{isShare},
+  		</if>
+  		<if test="startDate != null">
+	  		`start_date` = #{startDate},
+	  	</if>
+	  	<if test="remark != null and remark != ''">
+	  		`remark` = #{remark},
+	  	</if>
+  	</set>
+  	where `id` = #{id}
+  </update>
+  
   
 </mapper>

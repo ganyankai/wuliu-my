@@ -20,17 +20,22 @@ import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarSourceConstants;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceAddDto;
+import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarAddDto;
+import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarDelDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
+import com.zrytech.framework.app.dto.carsource.CarSourceNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
+import com.zrytech.framework.app.entity.Car;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.CarRecordPlace;
 import com.zrytech.framework.app.entity.CarSource;
@@ -44,6 +49,7 @@ import com.zrytech.framework.app.service.CarSourceService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
 
 /**
@@ -243,7 +249,6 @@ public class CarSourceServiceImpl implements CarSourceService {
 	}
 	
 	
-	
 	/*以下为车主及车主子账号接口*/
 	
 	
@@ -252,19 +257,33 @@ public class CarSourceServiceImpl implements CarSourceService {
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		// 车源车辆关系入参校验
 		List<CarSourceCarAddDto> carSourceCars = dto.getCarSourceCars();
-		if (carSourceCars != null && carSourceCars.size() > 0) {
-			this.carSourceCarAddCheck(carSourceCars, carOwner.getId());
-		}
+		carSourceCars = this.carSourceCarAddCheck(carSourceCars, carOwner.getId());
+		Integer total = this.sumTotal(carSourceCars);
 		// 新增车源基本信息
-		CarSource carSource = this.addCarSource(dto, customer.getId(), carOwner.getId(), carOwner.getAvoidAudit());
+		CarSource carSource = this.addCarSource(dto, customer.getId(), carOwner.getId(), carOwner.getAvoidAudit(), total);
 		// 新增车源路线
 		this.addCarRecordPlace(dto.getCarRecordPlaces(), carSource.getId());
 		// 新增车源的车辆、司机、压货人
-		if (carSourceCars != null && carSourceCars.size() > 0) {
-			this.addCarSourceCar(carSourceCars, carSource.getId());
-		}
+		this.addCarSourceCar(carSourceCars, carSource.getId());
 		return ServerResponse.successWithData("添加成功");
 	}
+	
+	
+	/**
+	 * 计算车源总运输量
+	 * 
+	 * @param carSourceCars
+	 * @return
+	 */
+	private Integer sumTotal(List<CarSourceCarAddDto> carSourceCars) {
+		Integer total = 0;
+		for (CarSourceCarAddDto carSourceCarAddDto : carSourceCars) {
+			Integer freeQty = carSourceCarAddDto.getFreeQty();
+			total = total + freeQty;
+		}
+		return total;
+	}
+	
 	
 	/**
 	 * 新增车源基本信息
@@ -276,9 +295,16 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param avoidAudit	车主是否免审核
 	 * @return	新增的车源
 	 */
-	private CarSource addCarSource(CarSourceAddDto dto, Integer createBy, Integer carOwnerId, Boolean avoidAudit) {
+	private CarSource addCarSource(CarSourceAddDto dto, Integer createBy, Integer carOwnerId, Boolean avoidAudit, Integer total) {
 		CarSource carSource = new CarSource();
 		BeanUtils.copyProperties(dto, carSource);
+		
+		// 设置车源的运输量单位为车辆的荷载量单位，2019-5-20 14:03:56新增的。
+		Integer carId = dto.getCarSourceCars().get(0).getCarId();
+		Car car = carService.assertCarBelongToCurrentUser(carId, carOwnerId);
+		carSource.setUnit(car.getCarUnit());
+		
+		carSource.setQty(total);
 		carSource.setId(null);
 		carSource.setCarOwnerId(carOwnerId);
 		carSource.setCreateBy(createBy);
@@ -321,23 +347,17 @@ public class CarSourceServiceImpl implements CarSourceService {
 	private void addCarSourceCar(List<CarSourceCarAddDto> carSourceCars, Integer carSourceId) {
 		List<CarSourceCar> list = new ArrayList<>();
 		for (CarSourceCarAddDto carSourceCarAddDto : carSourceCars) {
-			Integer carId = carSourceCarAddDto.getCarId();
-			Integer driverId = carSourceCarAddDto.getDriverId();
-			Integer supercargoId = carSourceCarAddDto.getSupercargoId();
-			if (driverId == null && supercargoId == null && carId == null) {
-				continue;
-			}
 			CarSourceCar carSourceCar = new CarSourceCar();
 			BeanUtils.copyProperties(carSourceCarAddDto, carSourceCar);
 			carSourceCar.setId(null);
 			carSourceCar.setCarSourceId(carSourceId);
 			list.add(carSourceCar);
 		}
-		if (list.size() > 0) {
-			carSourceCarRepository.save(list);
-		}
+		carSourceCarRepository.save(list);
 	}
 	
+	@Deprecated
+	@Transactional
 	@Override
 	public ServerResponse updateNeedApprove(CarSourceCheckUpdateDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
@@ -382,48 +402,56 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSourceCars	车辆、司机、压货人
 	 * @param carOwnerId	车主Id
 	 */
-	private void carSourceCarsCheck(List<CarSourceCarUpdateDto> carSourceCars, Integer carOwnerId) {
+	private List<CarSourceCarUpdateDto> carSourceCarsCheck(List<CarSourceCarUpdateDto> carSourceCars, Integer carOwnerId) {
 		for (CarSourceCarUpdateDto carSourceCarUpdateDto : carSourceCars) {
 			Integer driverId = carSourceCarUpdateDto.getDriverId();
 			Integer supercargoId = carSourceCarUpdateDto.getSupercargoId();
 			Integer carId = carSourceCarUpdateDto.getCarId();
-			if (driverId == null && supercargoId == null && carId == null) {
-				throw new BusinessException(112, "车辆，司机，压货人不能同时为空");
-			}
+			Car car = carService.assertCarBelongToCurrentUser(carId, carOwnerId);
 			if (driverId != null) {
 				carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
+			} else {
+				carSourceCarUpdateDto.setDriverId(car.getDriverId());
 			}
 			if (supercargoId != null) {
 				carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
-			}
-			if (carId != null) {
-				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
+			} else {
+				carSourceCarUpdateDto.setSupercargoId(car.getSupercargoId());
 			}
 		}
+		return carSourceCars;
 	}
 	
 	/**
-	 * 判断入参：车辆、司机、压货人是否属于当前登录车主
+	 * 判断入参：车辆、司机、压货人是否属于当前登录车主，如果司机压货人为空则将其设置为车辆的司机压货人
 	 * @author cat
 	 * 
 	 * @param carSourceCars	车辆、司机、压货人
 	 * @param carOwnerId	车主Id
 	 */
-	private void carSourceCarAddCheck(List<CarSourceCarAddDto> carSourceCars, Integer carOwnerId) {
+	private List<CarSourceCarAddDto> carSourceCarAddCheck(List<CarSourceCarAddDto> carSourceCars, Integer carOwnerId) {
 		for (CarSourceCarAddDto carSourceCarAddDto : carSourceCars) {
 			Integer driverId = carSourceCarAddDto.getDriverId();
 			Integer supercargoId = carSourceCarAddDto.getSupercargoId();
 			Integer carId = carSourceCarAddDto.getCarId();
+			Car car = carService.assertCarBelongToCurrentUser(carId, carOwnerId);
+			/*Integer freeQty = carSourceCarAddDto.getFreeQty();
+			if (car.getCarLoad() < freeQty) {
+				throw new BusinessException(112, "车辆的空闲运输量不能大于车辆荷载量");
+			}*/
+			// 考虑到车辆实际运输量可能比荷载量要大，此处不做限制。
 			if (driverId != null) {
 				carPersonService.assertDriverBelongToCurrentUser(driverId, carOwnerId);
+			} else {
+				carSourceCarAddDto.setDriverId(car.getDriverId());
 			}
 			if (supercargoId != null) {
 				carPersonService.assertSupercargoBelongToCurrentUser(supercargoId, carOwnerId);
-			}
-			if (carId != null) {
-				carService.assertCarBelongToCurrentUser(carId, carOwnerId);
+			} else {
+				carSourceCarAddDto.setSupercargoId(car.getSupercargoId());
 			}
 		}
+		return carSourceCars;
 	}
 	
 	@Transactional
@@ -462,15 +490,21 @@ public class CarSourceServiceImpl implements CarSourceService {
 		Integer carSourceId = dto.getCarSourceId();
 		CarSource carSource = this.assertCarSourceExist(carSourceId);
 		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
-		this.carSourceCarsCheck(dto.getCarSourceCars(), carOwner.getId());
+		List<CarSourceCarUpdateDto> carSourceCars = this.carSourceCarsCheck(dto.getCarSourceCars(), carOwner.getId());
 		List<CarSourceCar> save = new ArrayList<>();
-		for (CarSourceCarUpdateDto carSourceCarUpdateDto : dto.getCarSourceCars()) {
+		Integer totalQty = 0;
+		for (CarSourceCarUpdateDto carSourceCarUpdateDto : carSourceCars) {
 			Integer id = carSourceCarUpdateDto.getId();
 			if (id != null) { // 更新
 				CarSourceCar carSourceCar = carSourceCarRepository.findByIdAndCarSourceId(id, carSourceId);
 				if (carSourceCar == null) {
 					throw new BusinessException(112, "修改失败：要修改的车辆不存在");
 				}
+				Integer oldFreeQty = carSourceCar.getFreeQty();
+				Integer newFreeQty = carSourceCarUpdateDto.getFreeQty();
+				Integer temp = newFreeQty - oldFreeQty;  // 空闲运输量在原来的基础上所增加的数值
+				totalQty = totalQty + temp;
+				
 				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
 				save.add(carSourceCar);
 			} else { // 新增
@@ -478,10 +512,106 @@ public class CarSourceServiceImpl implements CarSourceService {
 				carSourceCar.setCarSourceId(carSourceId);
 				BeanUtils.copyProperties(carSourceCarUpdateDto, carSourceCar);
 				save.add(carSourceCar);
+				
+				Integer newFreeQty = carSourceCarUpdateDto.getFreeQty();
+				totalQty = totalQty + newFreeQty;
 			}
 		}
 		carSourceCarRepository.save(save);
+		carSource.setQty(carSource.getQty() + totalQty);
+		carSourceRepository.save(carSource);
 		return ServerResponse.successWithData("修改成功");
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse delCarRecordPlace(CarRecordPlaceDelDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer carSourceId = dto.getCarSourceId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
+
+		Integer carRecordPlaceId = dto.getCarRecordPlaceId();
+		CarRecordPlace carRecordPlace = carRecordPlaceRepository.findByIdAndCarSourceId(carRecordPlaceId, carSourceId);
+		if (carRecordPlace == null) {
+			throw new BusinessException(112, "删除失败：要删除的起止地不存在");
+		}
+
+		int count = carRecordPlaceRepository.countByCarSourceId(carSourceId);
+		if (count > 1) {
+			carRecordPlaceRepository.delete(carRecordPlaceId);
+		} else {
+			throw new BusinessException(112, "删除失败：需保留最后一条起止地数据");
+		}
+		return ServerResponse.successWithData("删除成功");
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse delCarSourceCar(CarSourceCarDelDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer carSourceId = dto.getCarSourceId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
+
+		Integer carSourceCarId = dto.getCarSourceCarId();
+		CarSourceCar carSourceCar = carSourceCarRepository.findByIdAndCarSourceId(carSourceCarId, carSourceId);
+		if (carSourceCar == null) {
+			throw new BusinessException(112, "删除失败：要删除的车辆不存在");
+		}
+
+		int count = carSourceCarRepository.countByCarSourceId(carSourceId);
+		if (count > 1) {
+			carSourceCarRepository.delete(carSourceCarId);
+			Integer freeQty = carSourceCar.getFreeQty();
+			carSource.setQty(carSource.getQty() - freeQty);
+			carSourceRepository.save(carSource);
+		} else {
+			throw new BusinessException(112, "删除失败：需保留最后一条车辆数据");
+		}
+
+		return ServerResponse.successWithData("删除成功");
+	}
+
+	
+	@Transactional
+	@Override
+	public ServerResponse updateNoCheck(CarSourceNoCheckUpdateDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer carSourceId = dto.getId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
+
+		int update = carSourceMapper.updateNoCheck(carSourceId, dto.getStartDate(), dto.getIsShare(), dto.getRemark());
+		if (update == 1) {
+			return ServerResponse.successWithData("修改成功");
+		}
+		return ServerResponse.successWithData("修改失败");
+	}
+
+	
+	@Transactional
+	@Override
+	public ServerResponse down(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner carOwner = customer.getCarOwner();
+		Integer carSourceId = dto.getId();
+		CarSource carSource = this.assertCarSourceExist(carSourceId);
+		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
+
+		String status = carSource.getStatus();
+		if (!CarSourceConstants.STATUS_RELEASE.equalsIgnoreCase(status)) {
+			throw new BusinessException(112, "仅发布中的车源可以下架");
+		}
+
+		int update = carSourceMapper.updateStatusById(carSourceId, CarSourceConstants.STATUS_DOWN);
+		if (update == 1) {
+			return ServerResponse.successWithData("修改成功");
+		}
+		return ServerResponse.successWithData("修改失败");
 	}
 	
 	

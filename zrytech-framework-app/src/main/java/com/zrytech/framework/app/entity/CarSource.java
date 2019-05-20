@@ -23,14 +23,16 @@ import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
  * 车源
  *
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "`car_source`")
 public class CarSource extends BaseEntity {
@@ -135,5 +137,20 @@ public class CarSource extends BaseEntity {
 	@Transient
 	private CarSourceCheckUpdateDto approveContentCN;
 	
+	
+	// 2019-5-20 13:53:59 新增字段
+	
+	/** 发车时间 */
+	@Column(name = "`start_date`")
+	@JsonFormat(pattern = "yyyy-MM-dd a", timezone = "GMT+8")
+	private Date startDate;
+	
+	/** 是否拼车 */
+	@Column(name = "`is_share`")
+	private Boolean isShare;
+	
+	/** 备注 */
+	@Column(name = "`remark`")
+	private String remark;
 	
 }

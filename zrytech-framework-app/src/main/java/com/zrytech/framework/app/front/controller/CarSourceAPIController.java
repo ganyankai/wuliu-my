@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
-import com.zrytech.framework.app.dto.carsource.CarSourceCheckUpdateDto;
+import com.zrytech.framework.app.dto.carsource.CarSourceNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
+import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarDelDto;
 import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.entity.Customer;
@@ -108,14 +111,15 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
-	@CarOwnerRole
+	/*@CarOwnerRole
 	@Valid
 	@PostMapping("/updateNeedApprove")
 	public ServerResponse updateNeedApprove(@RequestBody @Valid RequestParams<CarSourceCheckUpdateDto> requestParams,
 			BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.updateNeedApprove(requestParams.getParams(), customer);
-	}
+	}*/
+	// 作废 2019-5-20 15:07:07
 	
 	
 	/**
@@ -137,6 +141,23 @@ public class CarSourceAPIController {
 	
 	
 	/**
+	 * 车主及车主子账号 - 删除车源起止地，最后一条记录无法删除，必须保留至少一条起止地数据
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@CarOwnerRole
+	@Valid
+	@PostMapping("/delLine")
+	public ServerResponse delLine(@RequestBody @Valid RequestParams<CarRecordPlaceDelDto> requestParams,
+			BindingResult result) {
+		return carSourceService.delCarRecordPlace(requestParams.getParams());
+	}
+	
+	
+	/**
 	 * 车主及车主子账号 - 修改车辆（包含车辆的更新和添加）
 	 * @author cat
 	 * 
@@ -153,4 +174,52 @@ public class CarSourceAPIController {
 		return carSourceService.saveCarSourceCar(requestParams.getParams(), customer);
 	}
 	
+	/**
+	 * 车主及车主子账号 - 删除车源的车辆，最后一条记录无法删除，必须保留至少一条车源的车辆数据
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@CarOwnerRole
+	@Valid
+	@PostMapping("/delCarSourceCar")
+	public ServerResponse delCarSourceCar(@RequestBody @Valid RequestParams<CarSourceCarDelDto> requestParams,
+			BindingResult result) {
+		return carSourceService.delCarSourceCar(requestParams.getParams());
+	}
+	
+	/**
+	 * 车主及车主子账号 - 修改车源不需要审核的信息
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@CarOwnerRole
+	@Valid
+	@PostMapping("/updateNoCheck")
+	public ServerResponse updateNoCheck(@RequestBody @Valid RequestParams<CarSourceNoCheckUpdateDto> requestParams,
+			BindingResult result) {
+		return carSourceService.updateNoCheck(requestParams.getParams());
+	}
+	
+	
+	/**
+	 * 车主及车主子账号 - 车源下架
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@CarOwnerRole
+	@Valid
+	@PostMapping("/down")
+	public ServerResponse down(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		return carSourceService.down(requestParams.getParams());
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
 import com.zrytech.framework.app.constants.CustomerConstants;
@@ -20,6 +21,7 @@ import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.RequestUtil;
+import com.zrytech.framework.base.util.TokenUtil;
 
 
 /**

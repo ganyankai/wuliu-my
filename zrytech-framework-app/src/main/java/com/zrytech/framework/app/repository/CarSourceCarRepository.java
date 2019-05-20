@@ -14,4 +14,7 @@ public interface CarSourceCarRepository extends BaseRepository<CarSourceCar, Int
 	List<CarSourceCar> findByCarSourceId(Integer carSourceId);
 
 	CarSourceCar findByIdAndCarSourceId(Integer id, Integer carSourceId);
+	
+	int countByCarSourceId(Integer carSourceId);
+	
 }

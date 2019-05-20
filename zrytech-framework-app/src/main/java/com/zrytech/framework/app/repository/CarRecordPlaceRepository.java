@@ -13,4 +13,6 @@ public interface CarRecordPlaceRepository extends BaseRepository<CarRecordPlace,
 	
 	CarRecordPlace findByIdAndCarSourceId(Integer id, Integer carSourceId);
 	
+	int countByCarSourceId(Integer carSourceId);
+	
 }
