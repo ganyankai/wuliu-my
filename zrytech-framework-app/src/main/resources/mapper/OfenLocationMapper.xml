@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrytech.framework.app.mapper.OfenLocationMapper">
+    <resultMap id="ofenLocation" type="com.zrytech.framework.app.entity.OfenLocation">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="tel" property="tel"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+
+        <result column="county" property="county"/>
+        <result column="detailed_address" property="detailedAddress"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="create_date" property="createDate"/>
+
+        <result column="cargo_owner_id" property="cargoOwnerId"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,name,tel,province,city, county,detailed_address,longitude,latitude,create_date, cargo_owner_id
+    </sql>
+
+
+
+    <select id="addressPage" resultMap="ofenLocation">
+        select
+        <include refid="columns"/>
+        from ofen_location
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="ofenLocation.name != null and ofenLocation.name != ''">
+                and name like concat('%',#{ofenLocation.cargoName},'%')
+            </if>
+            <if test="ofenLocation.tel != null and ofenLocation.tel !=''">
+                and tel=#{ofenLocation.tel}
+            </if>
+            <if test="ofenLocation.province != null and ofenLocation.province !=''">
+                and province=#{ofenLocation.province}
+            </if>
+            <if test="ofenLocation.city != null and ofenLocation.city !=''">
+                and city=#{ofenLocation.city}
+            </if>
+            <if test="ofenLocation.county != null and ofenLocation.county !=''">
+                and county=#{ofenLocation.county}
+            </if>
+
+            <if test="ofenLocation.detailedAddress != null and ofenLocation.detailedAddress !=''">
+                and detailed_address=#{ofenLocation.detailedAddress}
+            </if>
+            <if test="ofenLocation.longitude != null and ofenLocation.longitude !=''">
+                and longitude=#{ofenLocation.longitude}
+            </if>
+            <if test="ofenLocation.latitude != null and ofenLocation.latitude !=''">
+                and latitude=#{ofenLocation.latitude}
+            </if>
+            <if test="ofenLocation.cargoOwnerId != null and ofenLocation.cargoOwnerId !=''">
+                and cargo_owner_id=#{ofenLocation.cargoOwnerId}
+            </if>
+
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <update id="update">
+        update ofen_location
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="tel != null and tel !=''">
+                tel=#{tel},
+            </if>
+            <if test="province != null and province !=''">
+                province=#{province},
+            </if>
+            <if test="city != null and city !=''">
+                city=#{city},
+            </if>
+            <if test="county != null and county !=''">
+                county=#{county},
+            </if>
+
+            <if test="detailedAddress != null and detailedAddress !=''">
+                detailed_address=#{detailedAddress},
+            </if>
+            <if test="longitude != null and longitude !=''">
+                longitude=#{longitude},
+            </if>
+            <if test="latitude != null and latitude !=''">
+                latitude=#{latitude},
+            </if>
+            <if test="cargoOwnerId != null and cargoOwnerId !=''">
+                cargo_owner_id=#{cargoOwnerId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="get" resultMap="ofenLocation">
+        select
+        <include refid="columns"/>
+        from ofen_location
+        where id =#{id}
+    </select>
+
+    <delete id="delete">
+        delete from ofen_location
+        where id = #{id}
+    </delete>
+
+</mapper>
