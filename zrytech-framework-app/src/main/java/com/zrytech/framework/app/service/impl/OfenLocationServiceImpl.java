@@ -83,8 +83,8 @@ public class OfenLocationServiceImpl implements OfenLocationService {
 //    @Override
     public ServerResponse get(OfenLocationCommonDto ofenLocationCommonDto) {
         CheckFieldUtils.checkObjecField(ofenLocationCommonDto.getId());
-        OfenLocation oftenAddress=ofenLocationDao.get(ofenLocationCommonDto.getId());
-        return ServerResponse.successWithData(oftenAddress);
+        OfenLocation ofenLocation=ofenLocationDao.get(ofenLocationCommonDto.getId());
+        return ServerResponse.successWithData(ofenLocation);
     }
 
     /**
