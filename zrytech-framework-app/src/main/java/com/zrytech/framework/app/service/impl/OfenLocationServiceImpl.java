@@ -2,8 +2,6 @@ package com.zrytech.framework.app.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.dao.OfenLocationDao;
-import com.zrytech.framework.app.dao.OftenAddressDao;
-import com.zrytech.framework.app.dto.OftenAddressDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationAddDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationCommonDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationDto;
@@ -11,19 +9,18 @@ import com.zrytech.framework.app.dto.ofenlocation.OfenLocationUpdateDto;
 import com.zrytech.framework.app.entity.*;
 import com.zrytech.framework.app.repository.OfenLocationRepository;
 import com.zrytech.framework.app.service.OfenLocationService;
-import com.zrytech.framework.app.service.OftenAddressService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.RequestUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -46,6 +43,10 @@ public class OfenLocationServiceImpl implements OfenLocationService {
 //    @Override
     public ServerResponse addressPage(OfenLocationDto ofenLocationDto, Page page) {
         OfenLocation ofenLocation= BeanUtil.copy(ofenLocationDto,OfenLocation.class);
+        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+        //货主id
+        Integer id = customer.getCargoOwner().getId();
+        ofenLocation.setCargoOwnerId(id);
         PageInfo<OfenLocation> pageInfo=ofenLocationDao.addressPage(ofenLocation,page);
         return ServerResponse.successWithData(pageInfo);
     }
@@ -114,4 +115,35 @@ public class OfenLocationServiceImpl implements OfenLocationService {
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
+
+    /**
+     * 校验当前用户身份
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean checkCustomer(Integer id) {
+        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+        Integer cargoOwnerId = customer.getCargoOwner().getId();
+
+        OfenLocation ofenLocation = ofenLocationDao.get(id);
+        //数据库中的货主id
+        if(ofenLocation!=null) {
+            Integer dataId = ofenLocation.getCargoOwnerId();
+            return cargoOwnerId == dataId;
+        }
+       return false;
+    }
+
+    /**
+     * 查询货主id在表中是否有记录
+     * @param cargoOwnerId
+     * @return
+     */
+    @Override
+    public List<OfenLocation> findByCargoOwnerId(Integer cargoOwnerId) {
+        return ofenLocationRepository.findByCargoOwnerId(cargoOwnerId);
+    }
+
+
 }

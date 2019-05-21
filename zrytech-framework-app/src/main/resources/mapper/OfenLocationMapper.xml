@@ -30,7 +30,7 @@
         <trim prefix="where " prefixOverrides="and ">
             1=1
             <if test="ofenLocation.name != null and ofenLocation.name != ''">
-                and name like concat('%',#{ofenLocation.cargoName},'%')
+                and name like concat('%',#{ofenLocation.name},'%')
             </if>
             <if test="ofenLocation.tel != null and ofenLocation.tel !=''">
                 and tel=#{ofenLocation.tel}
@@ -54,7 +54,7 @@
             <if test="ofenLocation.latitude != null and ofenLocation.latitude !=''">
                 and latitude=#{ofenLocation.latitude}
             </if>
-            <if test="ofenLocation.cargoOwnerId != null and ofenLocation.cargoOwnerId !=''">
+            <if test="ofenLocation.cargoOwnerId != null">
                 and cargo_owner_id=#{ofenLocation.cargoOwnerId}
             </if>
 
@@ -90,7 +90,7 @@
             <if test="latitude != null and latitude !=''">
                 latitude=#{latitude},
             </if>
-            <if test="cargoOwnerId != null and cargoOwnerId !=''">
+            <if test="cargoOwnerId != null">
                 cargo_owner_id=#{cargoOwnerId}
             </if>
         </set>
@@ -98,14 +98,14 @@
     </update>
 
 
-    <select id="get" resultMap="ofenLocation">
+    <select id="get" resultMap="ofenLocation" parameterType="int">
         select
         <include refid="columns"/>
         from ofen_location
         where id =#{id}
     </select>
 
-    <delete id="delete">
+    <delete id="delete" parameterType="int">
         delete from ofen_location
         where id = #{id}
     </delete>

@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.dto.ofenlocation;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.RegExConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 @Setter
@@ -24,6 +26,7 @@ public class OfenLocationAddDto {
 
     @ApiModelProperty(value = "联系人手机号", required = false)
     @NotBlank(message = "联系人手机号不能为空")
+    @Pattern(regexp = RegExConstants.CHINA_PHONE_NUMBER, message = "联系人手机号格式有误")
     private String tel;
 
     @ApiModelProperty(value = "省", required = false)

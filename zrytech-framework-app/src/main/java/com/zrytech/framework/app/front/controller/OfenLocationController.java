@@ -5,6 +5,7 @@ import com.zrytech.framework.app.dto.ofenlocation.OfenLocationCommonDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationUpdateDto;
 import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.app.entity.OfenLocation;
 import com.zrytech.framework.app.service.OfenLocationService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Date;
+import java.util.List;
 
 @Api(description = "货主常用地址api")
 @RestController
@@ -44,6 +45,14 @@ public class OfenLocationController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
+        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+        //货主id
+        Integer id = customer.getCargoOwner().getId();
+        //判断货主id在数据库中是否存在
+        List<OfenLocation> list = ofenLocationService.findByCargoOwnerId(id);
+        if (list == null || list.size() == 0){
+            throw new BusinessException(new CommonResult(ResultEnum.CUSTOMER_NOT_EXIST));
+        }
         return ofenLocationService.addressPage(requestParams.getParams(),requestParams.getPage());
     }
 
@@ -60,7 +69,7 @@ public class OfenLocationController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+
         return ofenLocationService.add(requestParams.getParams());
     }
 
@@ -93,6 +102,10 @@ public class OfenLocationController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
+        //判断当前用户身份
+        if(!ofenLocationService.checkCustomer(requestParams.getParams().getId())){
+            throw new BusinessException(new CommonResult(ResultEnum.CUSTOMER_NOT_EXIST));
+        }
         return ofenLocationService.update(requestParams.getParams());
     }
 
@@ -108,6 +121,10 @@ public class OfenLocationController {
     public ServerResponse delete(@RequestBody @Valid RequestParams<OfenLocationCommonDto> requestParams,BindingResult result) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        //判断当前用户身份
+        if(!ofenLocationService.checkCustomer(requestParams.getParams().getId())){
+            throw new BusinessException(new CommonResult(ResultEnum.CUSTOMER_NOT_EXIST));
         }
         return ofenLocationService.delete(requestParams.getParams());
     }

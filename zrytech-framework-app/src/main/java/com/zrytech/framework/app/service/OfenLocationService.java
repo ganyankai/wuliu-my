@@ -5,8 +5,12 @@ import com.zrytech.framework.app.dto.ofenlocation.OfenLocationAddDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationCommonDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationUpdateDto;
+import com.zrytech.framework.app.entity.OfenLocation;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
+import io.swagger.models.auth.In;
+
+import java.util.List;
 
 public interface OfenLocationService {
 
@@ -53,4 +57,13 @@ public interface OfenLocationService {
      * @return:ServerResponse
      */
     ServerResponse delete(OfenLocationCommonDto ofenLocationCommonDto);
+
+    /**
+     * 判断当前用户身份
+     * @param id
+     * @return
+     */
+    public Boolean checkCustomer(Integer id);
+
+    public List<OfenLocation> findByCargoOwnerId(Integer cargoOwnerId);
 }
