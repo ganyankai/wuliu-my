@@ -130,7 +130,7 @@ public class OfenLocationServiceImpl implements OfenLocationService {
         //数据库中的货主id
         if(ofenLocation!=null) {
             Integer dataId = ofenLocation.getCargoOwnerId();
-            return cargoOwnerId == dataId;
+            return cargoOwnerId.equals(dataId);
         }
        return false;
     }
