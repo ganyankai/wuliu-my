@@ -49,9 +49,7 @@ public class FamiliarCarServiceImpl implements FamiliarCarService {
     public ServerResponse familiarCarPage(FamiliarCarDto familiarCarDto, Page page) {
         FamiliarCar familiarCar= BeanUtil.copy(familiarCarDto,FamiliarCar.class);
         Customer customer = RequestUtil.getCurrentUser(Customer.class);
-//        货主id
-//        Integer id = customer.getCargoOwner().getId();
-//        ofenLocation.setCargoOwnerId(id);
+
         //设置关注人id
         if(customer.getCustomerType().equals("car_owner")){
             familiarCar.setCargoOwnnerId(customer.getCarOwner().getId());

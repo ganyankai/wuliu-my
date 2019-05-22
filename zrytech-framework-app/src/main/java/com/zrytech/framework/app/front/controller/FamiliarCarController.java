@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.front.controller;
 
 import com.zrytech.framework.app.dto.familiarcar.FamiliarCarDto;
+import com.zrytech.framework.app.dto.familiarcar.FamiliarCarPageDto;
 import com.zrytech.framework.app.service.FamiliarCarService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Api(description = "familiarCar API")
+@Api(description = "关注人 API")
 @RestController
 @RequestMapping("/familiarCar")
 public class FamiliarCarController {
@@ -29,12 +30,12 @@ public class FamiliarCarController {
      * Desintion:关注人分页列表信息
      *
      * @author:dante
-     * @param:OfenLocationDto常用地址dto
+     * @param:familiarCar dto
      * @return:ServerResponse
      */
     @PostMapping("/page")
     @ApiOperation(value = "关注人分页列表信息")
-    public ServerResponse familiarCarPage(@RequestBody RequestParams<FamiliarCarDto> requestParams, BindingResult result) {
+    public ServerResponse familiarCarPage(@RequestBody @Valid RequestParams<FamiliarCarPageDto> requestParams, BindingResult result) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
@@ -42,7 +43,7 @@ public class FamiliarCarController {
     }
 
     /**
-     * Desintion:常用地址添加
+     * Desintion:关注人添加
      *
      * @author:dante
      * @param:familiarCar dto

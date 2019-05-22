@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.service;
 
 import com.zrytech.framework.app.dto.familiarcar.FamiliarCarDto;
+import com.zrytech.framework.app.dto.familiarcar.FamiliarCarPageDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationAddDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationCommonDto;
 import com.zrytech.framework.app.dto.ofenlocation.OfenLocationDto;
@@ -20,7 +21,7 @@ public interface FamiliarCarService {
      * @param:familiarCar  dto
      * @return:ServerResponse
      */
-    ServerResponse familiarCarPage(FamiliarCarDto familiarCarDto, Page page);
+    ServerResponse familiarCarPage(FamiliarCarPageDto familiarCarDto, Page page);
 
     /**
      * Desintion:familiarCar添加
