@@ -3,6 +3,7 @@ package com.zrytech.framework.app.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.dao.FamiliarCarDao;
 import com.zrytech.framework.app.dto.familiarcar.FamiliarCarDto;
+import com.zrytech.framework.app.dto.familiarcar.FamiliarCarPageDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.entity.FamiliarCar;
@@ -46,7 +47,7 @@ public class FamiliarCarServiceImpl implements FamiliarCarService {
      */
 //    @Override
 
-    public ServerResponse familiarCarPage(FamiliarCarDto familiarCarDto, Page page) {
+    public ServerResponse familiarCarPage(FamiliarCarPageDto familiarCarDto, Page page) {
         FamiliarCar familiarCar= BeanUtil.copy(familiarCarDto,FamiliarCar.class);
         Customer customer = RequestUtil.getCurrentUser(Customer.class);
 
