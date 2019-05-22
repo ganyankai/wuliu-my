@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 public class FamiliarCarPageDto {
-    /*
-        hello
-     */
+
     /** 关注者Id */
     @NotNull(message = "关注者Id不能为空")
     private Integer cargoOwnnerId;
