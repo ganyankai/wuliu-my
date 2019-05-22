@@ -1,9 +1,6 @@
 package com.zrytech.framework.app.front.controller;
 
 import com.zrytech.framework.app.dto.familiarcar.FamiliarCarDto;
-import com.zrytech.framework.app.dto.ofenlocation.OfenLocationAddDto;
-import com.zrytech.framework.app.dto.ofenlocation.OfenLocationCommonDto;
-import com.zrytech.framework.app.dto.ofenlocation.OfenLocationDto;
 import com.zrytech.framework.app.service.FamiliarCarService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -29,14 +26,14 @@ public class FamiliarCarController {
     @Autowired
     private FamiliarCarService familiarCarService;
     /**
-     * Desintion:常用地址分页列表信息
+     * Desintion:关注人分页列表信息
      *
      * @author:dante
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
     @PostMapping("/page")
-    @ApiOperation(value = "常用地址分页列表信息")
+    @ApiOperation(value = "关注人分页列表信息")
     public ServerResponse familiarCarPage(@RequestBody RequestParams<FamiliarCarDto> requestParams, BindingResult result) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
@@ -61,23 +58,18 @@ public class FamiliarCarController {
     }
 
     /**
-     * Desintion:常用地址删除
+     * Desintion:关注人删除
      *
      * @author:dante
      * @param : familiarCar dto
      * @return:ServerResponse
      */
     @PostMapping("/delete")
-    @ApiOperation(value = "常用地址删除")
+    @ApiOperation(value = "关注人删除")
     public ServerResponse delete(@RequestBody @Valid RequestParams<FamiliarCarDto> requestParams,BindingResult result) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        //判断当前用户身份
-//        if(!ofenLocationService.checkCustomer(requestParams.getParams().getId())){
-//            throw new BusinessException(new CommonResult(ResultEnum.CUSTOMER_NOT_EXIST));
-//        }
-
         return familiarCarService.delete(requestParams.getParams());
     }
 }
