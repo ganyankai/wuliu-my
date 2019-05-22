@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
@@ -111,7 +111,7 @@ public class WaybillDetail extends BaseEntity {
 
     public String getWeightUnitCN() {
         if (!StringUtils.isEmpty(weightUnit)) {
-            return DictionaryUtil.getValue(CargoConstant.WEIGHT_UNIT, weightUnit);
+            return DictionaryUtil.getValue(CarConstants.CAR_UNIT, weightUnit);
         }
         return weightUnitCN;
     }

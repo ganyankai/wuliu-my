@@ -76,6 +76,8 @@ public interface CarSourceService {
 	 */
 	public ServerResponse details(DetailsDto dto, Customer customer);
 	
+	ServerResponse openDetails(DetailsDto dto);
+	
 	
 	/**
 	 * 车主及车主子账号 - 修改车源基本信息需要审核的字段

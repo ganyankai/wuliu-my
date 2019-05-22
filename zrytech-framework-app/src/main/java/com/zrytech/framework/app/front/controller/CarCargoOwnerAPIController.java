@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSON;
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
 import com.zrytech.framework.app.constants.CustomerConstants;
@@ -16,12 +15,13 @@ import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
 import com.zrytech.framework.app.dto.carcargoowner.OrganizeInfoUpdateDto;
 import com.zrytech.framework.app.dto.carcargoowner.PersonInfoUpdateDto;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
+import com.zrytech.framework.app.dto.customer.TelDto;
+import com.zrytech.framework.app.dto.customer.UserAccountDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.RequestUtil;
-import com.zrytech.framework.base.util.TokenUtil;
 
 
 /**
@@ -37,7 +37,35 @@ public class CarCargoOwnerAPIController {
 	@Autowired
 	private CarCargoOwnerService carCargoOwnerService;
 
+	/**
+	 * 验证手机号是否已注册
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/checkTel")
+	public ServerResponse checkTel(@RequestBody @Valid RequestParams<TelDto> requestParams, BindingResult result) {
+		return carCargoOwnerService.checkTel(requestParams.getParams().getTel());
+	}
+
 	
+	/**
+	 * 验证用户名是否已注册
+	 * @author cat
+	 * 
+	 * @param requestParams
+	 * @param result
+	 * @return
+	 */
+	@Valid
+	@RequestMapping("/checkUserAccount")
+	public ServerResponse checkUserAccount(@RequestBody @Valid RequestParams<UserAccountDto> requestParams,
+			BindingResult result) {
+		return carCargoOwnerService.checkUserAccount(requestParams.getParams().getUserAccount());
+	}
 	
 	/**
 	 * 车主注册

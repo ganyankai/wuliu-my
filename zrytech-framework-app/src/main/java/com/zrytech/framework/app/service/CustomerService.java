@@ -18,6 +18,7 @@ public interface CustomerService {
 	 */
 	public Customer assertCustomerExist(String userAccount);
 	
+	public void assertUserAccountNotExist(String userAccount);
 	
     /**
      * 断言手机号未被注册

@@ -217,4 +217,21 @@ public interface CarCargoOwnerService {
 	 */
 	public ServerResponse cargoOwnerDetails(Customer customer);
 	
+	/**
+	 * 验证手机号是否已注册
+	 * 
+	 * @param tel
+	 * @return
+	 */
+	public ServerResponse checkTel(String tel);
+	
+	
+	/**
+	 * 验证用户名是否已注册
+	 * 
+	 * @param userAccount
+	 * @return
+	 */
+	public ServerResponse checkUserAccount(String userAccount);
+	
 }

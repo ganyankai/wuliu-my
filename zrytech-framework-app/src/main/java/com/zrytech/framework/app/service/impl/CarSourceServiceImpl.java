@@ -613,6 +613,19 @@ public class CarSourceServiceImpl implements CarSourceService {
 		}
 		return ServerResponse.successWithData("修改失败");
 	}
+
+	@Override
+	public ServerResponse openDetails(DetailsDto dto) {
+		CarSource carSource = this.assertCarSourceExist(dto.getId());
+		if (!CarSourceConstants.STATUS_RELEASE.equalsIgnoreCase(carSource.getStatus())) {
+			throw new BusinessException(112, "仅可查看发布中的车源详情");
+		}
+		carSource = this.bindingCarRecordPlace(carSource);
+		carSource = this.bindingCarSourceCar(carSource);
+		carSource = this.bindingCustomerUserName(carSource);
+		carSource = this.bindingCarOwnerName(carSource);
+		return ServerResponse.successWithData(carSource);
+	}
 	
 	
 }

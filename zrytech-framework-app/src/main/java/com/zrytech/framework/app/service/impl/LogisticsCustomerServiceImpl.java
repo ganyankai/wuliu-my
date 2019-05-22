@@ -60,7 +60,8 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
 		return list.get(0);
 	}
     
-	private void assertUserAccountNotExist(String userAccount) {
+	@Override
+	public void assertUserAccountNotExist(String userAccount) {
 		List<Customer> list = customerRepository.findByUserAccount(userAccount);
 		if (list != null && list.size() > 0) {
 			throw new BusinessException(112, "用户名已被注册");

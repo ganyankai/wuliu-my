@@ -1,27 +1,47 @@
 package com.zrytech.framework.app.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
+import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.dao.CargoCustomerDao;
 import com.zrytech.framework.app.dao.CargoDao;
 import com.zrytech.framework.app.dao.LoadingDao;
 import com.zrytech.framework.app.dao.ShipperDao;
 import com.zrytech.framework.app.dto.CargoDto;
+import com.zrytech.framework.app.dto.CommonDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
+import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerNeedApproveDto;
+import com.zrytech.framework.app.dto.cargolocation.CargoLocationAddDto;
+import com.zrytech.framework.app.dto.cargolocation.CargoLocationUpdateDto;
+import com.zrytech.framework.app.dto.cargosource.CargoSourceAddDto;
+import com.zrytech.framework.app.dto.cargosource.CargoSourceCheckUpdateDto;
+import com.zrytech.framework.app.dto.cargosource.CargoSourceNoCheckUpdateDto;
+import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
 import com.zrytech.framework.app.entity.*;
 import com.zrytech.framework.app.enums.LogisticsResult;
 import com.zrytech.framework.app.enums.LogisticsResultEnum;
+import com.zrytech.framework.app.mapper.CargoMapper;
+import com.zrytech.framework.app.mapper.LoadingMapper;
 import com.zrytech.framework.app.repository.ApproveLogRepository;
+import com.zrytech.framework.app.repository.CargoLocationRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
+import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
+import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.entity.User;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.SysCustomer;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,9 +50,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class CargoServiceImpl implements CargoService {
 
     @Autowired
@@ -50,7 +72,19 @@ public class CargoServiceImpl implements CargoService {
     @Autowired
     private CargoRepository cargoRepository;
 
+    @Autowired
+    private CargoLocationRepository cargoLocationRepository;
+    
+    @Autowired
+    private LoadingMapper loadingMapper;
+    
+    @Autowired
+    private CargoMapper cargoMapper;
+    
 
+   
+    
+    
     /**
      * Desintion:货源分页列表信息
      *
@@ -80,12 +114,12 @@ public class CargoServiceImpl implements CargoService {
         //获取多点装货地址
         List<Loading> lodingList = loadingDao.selectLoadingList(cargo.getId(), CargoConstant.LOADING_TYPE);
         if (lodingList != null && lodingList.size() > 0) {
-            cargo.setMulShipmentList(lodingList);
+            //cargo.setMulShipmentList(lodingList);
         }
         //获取多点卸货地址
         List<Loading> unLodingList = loadingDao.selectLoadingList(cargo.getId(), CargoConstant.UNLOADING_TYPE);
         if (unLodingList != null && unLodingList.size() > 0) {
-            cargo.setMulUnloadList(unLodingList);
+            //cargo.setMulUnloadList(unLodingList);
         }
         return ServerResponse.successWithData(cargo);
     }
@@ -100,6 +134,7 @@ public class CargoServiceImpl implements CargoService {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+    @Deprecated
     @Override
     public ServerResponse auditSource(CargoDto cargoDto, User user) {
         CheckFieldUtils.checkObjecField(cargoDto.getStatus());
@@ -114,21 +149,51 @@ public class CargoServiceImpl implements CargoService {
         entity.setApproveContent(cargoDto.getDescribe());
         entity.setApproveResult(cargoDto.getStatus());
         entity.setApproveTime(new Date());
-        entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_GOODS_SOURCE);
+        //entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_GOODS_SOURCE);
         entity.setBusinessId(cargoDto.getId());
         approveLogRepository.save(entity);
-        if (CargoConstant.SOURCE_REFUSE.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:下架
+        /*if (CargoConstant.CARGO_SOURCE_STATUS_CHECK_REJECTED.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:下架
             //TODO:短信通知
-            cargo.setStatus(CargoConstant.SOURCE_DRAFT);//变为草稿状态
+            cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);//变为草稿状态
             int num = cargoDao.updateAudit(cargo);
             CheckFieldUtils.assertSuccess(num);
             return ServerResponse.success();
-        }
+        }*/
         pushGoodSource(cargoGoods);
         int num = cargoDao.updateAudit(cargo);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
     }
+    
+    
+    
+    @Autowired
+	private ApproveLogService approveLogService;
+    
+    
+	@Transactional
+	@Override
+	public ServerResponse adminCheckCargoSource(ApproveDto dto) {
+		User user = RequestUtil.getCurrentUser(User.class);
+		Cargo cargo = this.assertCargoAvailable(dto.getBusinessId());
+		if (!CargoConstant.CARGO_SOURCE_STATUS_WAIT_CHECK.equalsIgnoreCase(cargo.getStatus())) {
+			throw new BusinessException(112, "审批失败：货源状态不是待审批");
+		}
+
+		if (ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())) {
+			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
+			cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
+			this.pushGoodSource(cargo);
+		} else {
+			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_DOWN);
+			// TODO 短信通知
+		}
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_SOURCE);
+		return ServerResponse.successWithData("审批成功");
+	}
+    
+    
+    
 
     public void pushGoodSource(Cargo cargoGoods) {
         if (cargoGoods != null && CargoConstant.TENDER_MARK.equalsIgnoreCase(cargoGoods.getTenderWay())) {
@@ -140,7 +205,223 @@ public class CargoServiceImpl implements CargoService {
             cargoDao.batch(list, cargoGoods.getId(), new Date());//批量添加推送记录
         }
     }
+    
+    
+	private Cargo assertCargoBelongToCurrentCargoOwner(Integer cargoSourceId, Integer cargoOwnerId) {
+		Cargo cargo = cargoRepository.findByIdAndCreateBy(cargoSourceId, cargoOwnerId);
+		if (cargo == null) {
+			throw new BusinessException(112, "货源不存在");
+		}
+		return cargo;
+	}
 
+	@Transactional
+	public ServerResponse updateCargoLocations(CargoLocationUpdateDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Integer cargoSourceId = dto.getCargoSourceId();
+
+		Cargo cargo = assertCargoBelongToCurrentCargoOwner(cargoSourceId, cargoOwnerId);
+		if(!CargoConstant.CARGO_SOURCE_STATUS_DOWN.equalsIgnoreCase(cargo.getStatus())) {
+			throw new BusinessException(112, "仅下架状态的货源可以修改装卸地");
+		}
+		
+		// 货源装卸地
+		List<CargoLocationAddDto> cargoLocationList = dto.getCargoLocationList();
+
+		cargo = this.cargoLocationCheck(cargo, cargoLocationList);
+		List<CargoLocationAddDto> cargoLocations = this.cargoLocationSort(cargoLocationList);
+
+		CargoLocationAddDto firstCargoLocation = cargoLocations.get(0);
+		CargoLocationAddDto lastCargoLocation = cargoLocations.get(cargoLocations.size() - 1);
+
+		cargo = this.setCargoLine(cargo, firstCargoLocation, lastCargoLocation);
+		cargoRepository.save(cargo);
+		Integer cargoId = cargo.getId();
+
+		loadingMapper.deleteByCargoId(cargoId);
+		
+		List<Loading> list = this.setCargoLocations(cargoLocations, cargoId);
+		cargoLocationRepository.save(list);
+
+		return ServerResponse.success();
+	}
+    
+	@Transactional
+	public ServerResponse saveCargoSource(CargoSourceAddDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		// 验证货主是否已认证
+		String status = cargoOwner.getStatus();
+		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(status)) {
+			throw new BusinessException(112, "货主未认证，无法发布货源");
+		}
+
+		// 车源装卸地
+		List<CargoLocationAddDto> cargoLocationList = dto.getCargoLocationList();
+		
+		Cargo cargo = new Cargo();
+		cargo = this.cargoLocationCheck(cargo, cargoLocationList);
+		
+		List<CargoLocationAddDto> cargoLocations = this.cargoLocationSort(cargoLocationList);
+
+		CargoLocationAddDto firstCargoLocation = cargoLocations.get(0);
+		CargoLocationAddDto lastCargoLocation = cargoLocations.get(cargoLocations.size() - 1);
+
+		BeanUtils.copyProperties(dto, cargo);
+		cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);
+		cargo.setCreateDate(new Date());
+		cargo.setCreateBy(cargoOwnerId);
+		cargo = this.setCargoLine(cargo, firstCargoLocation, lastCargoLocation);
+		cargo = cargoRepository.save(cargo);
+		Integer cargoId = cargo.getId();
+
+		List<Loading> list = this.setCargoLocations(cargoLocations, cargoId);
+		cargoLocationRepository.save(list);
+
+		return ServerResponse.success();
+	}
+    
+    
+    /**
+     * 设置将要保存的货源装卸地列表
+     * @author cat
+     * 
+     * @param cargoLocations	货源装卸地列表
+     * @param cargoId	货源Id
+     * @return
+     */
+	private List<Loading> setCargoLocations(List<CargoLocationAddDto> cargoLocations, Integer cargoId) {
+		List<Loading> list = new ArrayList<>();
+		for (CargoLocationAddDto temp : cargoLocations) {
+			Loading loading = new Loading();
+			BeanUtils.copyProperties(temp, loading);
+			loading.setCargoId(cargoId);
+			list.add(loading);
+		}
+		return list;
+	}
+    
+	
+    /**
+     * 设置货源的路线和起止时间
+     * @author cat
+     * 
+     * @param cargo	货源
+     * @param firstCargoLocation	最开始的装货地
+     * @param lastCargoLocation	最后的卸货地
+     * @return
+     */
+	private Cargo setCargoLine(Cargo cargo, CargoLocationAddDto firstCargoLocation,
+			CargoLocationAddDto lastCargoLocation) {
+		cargo.setStartProvince(firstCargoLocation.getProvince());
+		cargo.setStartCity(firstCargoLocation.getCity());
+		cargo.setStartCountry(firstCargoLocation.getCounty());
+		cargo.setEndProvince(lastCargoLocation.getProvince());
+		cargo.setEndCity(lastCargoLocation.getCity());
+		cargo.setEndCountry(lastCargoLocation.getCounty());
+		cargo.setPickupDate(firstCargoLocation.getLoadDate());
+		cargo.setArrivalDate(lastCargoLocation.getLoadDate());
+		return cargo;
+	}
+    
+    
+    
+    /**
+     * 将货源装卸地按照时间先后顺序排序，同时会验证第一个必须是装货地，最后一个必须是卸货地
+     * @author cat
+     * 
+     * @param cargoLocationList	车源装卸地列表
+     * @return 排序后的车源装卸地
+     */
+	private List<CargoLocationAddDto> cargoLocationSort(List<CargoLocationAddDto> cargoLocationList) {
+		TreeMap<Long, CargoLocationAddDto> treeMap = new TreeMap<>();
+		for (CargoLocationAddDto cargoLocationAddDto : cargoLocationList) {
+			long time = cargoLocationAddDto.getLoadDate().getTime();
+			treeMap.put(time, cargoLocationAddDto);
+		}
+
+		if(treeMap.size() - cargoLocationList.size() != 0) {
+			throw new BusinessException(112, "不允许有装卸时间一样的装卸地");
+		}
+		
+		List<CargoLocationAddDto> cargoLocations = new ArrayList<>();
+		for (Entry<Long, CargoLocationAddDto> entry : treeMap.entrySet()) {
+			cargoLocations.add(entry.getValue());
+		}
+
+		CargoLocationAddDto firstCargoLocation = cargoLocations.get(0);
+		CargoLocationAddDto lastCargoLocation = cargoLocations.get(cargoLocations.size() - 1);
+		if (CargoConstant.UNLOADING_TYPE.equalsIgnoreCase(firstCargoLocation.getType())) {
+			throw new BusinessException(112, "最开始的一个地址不能是卸货地");
+		}
+		if (CargoConstant.LOADING_TYPE.equalsIgnoreCase(lastCargoLocation.getType())) {
+			throw new BusinessException(112, "最后的一个地址不能是装货地");
+		}
+
+		return cargoLocations;
+	}
+	
+    
+    /**
+     * 货源装卸地验证
+     * @author cat
+     * 
+     * @param mulShipment	是否多点装货
+     * @param mulUnload	是否多点卸货
+     * @param cargoLocationList	货源装卸地列表
+     * @return	货源装货地总装货数量
+     */
+	private Cargo cargoLocationCheck(Cargo cargo, List<CargoLocationAddDto> cargoLocationList) {
+		int load = 0; // 装货地的数量
+		int unload = 0; // 卸货地的数量
+		Integer loadQty = 0; // 所有装货地运输数量之和
+		Integer unloadQty = 0; // 所有卸货地运输数量之和
+		for (CargoLocationAddDto cargoLocationAddDto : cargoLocationList) {
+			Integer qty = cargoLocationAddDto.getQty();
+			if (CargoConstant.LOADING_TYPE.equalsIgnoreCase(cargoLocationAddDto.getType())) {
+				load++;
+				loadQty = loadQty + qty;
+			} else {
+				unload++;
+				unloadQty = unloadQty + qty;
+			}
+			Date loadDate = cargoLocationAddDto.getLoadDate();
+			Date endDate = cargoLocationAddDto.getEndDate();
+			if (endDate.before(loadDate)) {
+				throw new BusinessException(112, "装卸时间不能大于截止时间");
+			}
+		}
+
+		if (!loadQty.equals(unloadQty)) {
+			throw new BusinessException(112, "装货总数量需要与卸货总数量一致");
+		}
+
+		if (load == 0) {
+			throw new BusinessException(112, "至少有一个装货地");
+		} else if (load == 1) {
+			cargo.setMulShipment(false);
+		} else {
+			cargo.setMulShipment(true);
+		}
+
+		if (unload == 0) {
+			throw new BusinessException(112, "至少有一个卸货地");
+		} else if (unload == 1) {
+			cargo.setMulUnload(false);
+		} else {
+			cargo.setMulUnload(true);
+		}
+		
+		cargo.setQty(loadQty);
+		
+		return cargo;
+	}
+    
+    
+    
     /**
      * Desintion:发布货源(前端)
      *
@@ -148,6 +429,7 @@ public class CargoServiceImpl implements CargoService {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+	@Deprecated
     @Override
     public ServerResponse pushResource(CargoDto cargoDto) {
         //验证
@@ -163,7 +445,7 @@ public class CargoServiceImpl implements CargoService {
         }
         Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
         cargo.setCreateDate(new Date());
-        cargo.setStatus(CargoConstant.SOURCE_DRAFT);
+        cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);
         int num = cargoDao.pushSave(cargo);
         CheckFieldUtils.assertSuccess(num);
         List<Loading> loadingList = cargoDto.getMulShipmentList();
@@ -190,6 +472,7 @@ public class CargoServiceImpl implements CargoService {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+	@Deprecated
     @Override
     public ServerResponse updateSource(CargoDto cargoDto) {
         List<Loading> loadingList = cargoDto.getMulShipmentList();//多点装货地址
@@ -206,6 +489,7 @@ public class CargoServiceImpl implements CargoService {
      * @param:unloadingList
      * @param:cargoId
      */
+	@Deprecated
     public void updateOrSave(List<Loading> loadingList, List<Loading> unloadingList, Integer cargoId) {
         List<Loading> loadings = loadingDao.selectLoadingList(cargoId, CargoConstant.LOADING_TYPE);
         List<Loading> unloadings = loadingDao.selectLoadingList(cargoId, CargoConstant.UNLOADING_TYPE);
@@ -228,7 +512,7 @@ public class CargoServiceImpl implements CargoService {
             loadingDao.batchUpdate(updateList);
         }
     }
-
+	@Deprecated
     public void getLoadList(List<Loading> list, List<Loading> batchAdds, List<Integer> ids, List<Loading> updateList, String type) {
         if (list != null && list.size() > 0) {
             for (Loading loading : list) {
@@ -242,7 +526,7 @@ public class CargoServiceImpl implements CargoService {
             }
         }
     }
-
+	@Deprecated
     public void getDeleteList(List<Loading> list, List<Integer> ids, List<Integer> deleteIds) {
         if (list != null && list.size() > 0) {
             for (Loading load : list) {
@@ -262,6 +546,7 @@ public class CargoServiceImpl implements CargoService {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+	@Deprecated
     @Override
     public ServerResponse deleteSource(CargoDto cargoDto) {
         Cargo cargo = cargoDao.get(cargoDto.getId());
@@ -284,6 +569,7 @@ public class CargoServiceImpl implements CargoService {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+	@Deprecated
     @Override
     public ServerResponse invitationOffer(CargoDto cargoDto) {
         CheckFieldUtils.checkObjecField(cargoDto.getCargoIds());
@@ -297,6 +583,7 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.success();
     }
 
+	@Deprecated
     public List<Offer> getOfferList(List<Integer> cargoIds, List<Integer> carIds, Integer createBy) {
         List<Offer> offerList = new ArrayList<>();
         for (Integer cargoId : cargoIds) {
@@ -327,6 +614,27 @@ public class CargoServiceImpl implements CargoService {
         PageInfo<Cargo> pageInfo = cargoDao.cargoPage(cargoCustomer, orderField, page);
         return ServerResponse.successWithData(pageInfo);
     }
+    
+    
+	public ServerResponse search(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
+		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+		List<Cargo> list = cargoMapper.cargoSearch(dto);
+		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
+    
+	
+	public ServerResponse details(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
+		cargo.setCargoLocations(list);
+		return ServerResponse.successWithData(cargo);
+	}
+	
+	
 
     /**
      * Desintion:取消发布货源(前端)
@@ -335,31 +643,121 @@ public class CargoServiceImpl implements CargoService {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+    @Deprecated
     @Override
     public ServerResponse cancelResource(CargoDto cargoDto) {
-        Cargo cargo = cargoDao.get(cargoDto.getId());
+        /*Cargo cargo = cargoDao.get(cargoDto.getId());
         if (CargoConstant.SOURCE_UP.equalsIgnoreCase(cargo.getStatus())) {//针对报价中的货源,取消发布
             cargo.setStatus(CargoConstant.SOURCE_CANCEL);//状态改为:已取消状态
             cargoDao.updateAudit(cargo);
             //TODO:是否删除推送记录和报价信息
-        }
+        }*/
         return ServerResponse.success();
     }
 
+    
+    @Transactional
+	@Override
+	public ServerResponse cancel(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		if (CargoConstant.CARGO_SOURCE_STATUS_DOWN.equalsIgnoreCase(cargo.getStatus())) {
+			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_CANCELED);
+		} else {
+			throw new BusinessException(112, "仅下架状态的货源可以取消");
+		}
+		return ServerResponse.success();
+	}
 
-    /**
-     * 断言货源可用
-     *
-     * @param cargoId 货源Id
-     * @return
-     * @author cat
-     */
-    @Override
-    public Cargo assertCargoAvailable(Integer cargoId) {
-        Cargo cargo = cargoRepository.findOne(cargoId);
-        if (cargo == null) {
-            throw new BusinessException(112, "货源不存在");
-        }
-        return cargo;
-    }
+	@Override
+	public Cargo assertCargoAvailable(Integer cargoId) {
+		Cargo cargo = cargoRepository.findOne(cargoId);
+		if (cargo == null) {
+			throw new BusinessException(112, "货源不存在");
+		}
+		return cargo;
+	}
+
+	
+	@Transactional
+	@Override
+	public ServerResponse submitChcek(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		if (CargoConstant.CARGO_SOURCE_STATUS_DOWN.equalsIgnoreCase(cargo.getStatus())) {
+			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_WAIT_CHECK);
+		} else {
+			throw new BusinessException(112, "仅下架状态的货源可以提交审核");
+		}
+		return ServerResponse.success();
+	}
+
+	
+	@Transactional
+	@Override
+	public ServerResponse down(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		if (CargoConstant.CARGO_SOURCE_STATUS_WAIT_CHECK.equalsIgnoreCase(cargo.getStatus()) 
+				|| CargoConstant.CARGO_SOURCE_STATUS_RELEASE.equalsIgnoreCase(cargo.getStatus())) {
+			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_DOWN);
+		} else {
+			throw new BusinessException(112, "仅待审核、发布中的货源可以下架");
+		}
+		return ServerResponse.success();
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse updateNoCheck(CargoSourceNoCheckUpdateDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		
+		cargo = new Cargo();
+		BeanUtils.copyProperties(dto, cargo);
+		
+		cargoMapper.updateSource(cargo);
+		return ServerResponse.success();
+	}
+
+	@Transactional
+	@Override
+	public ServerResponse updateCheck(CargoSourceCheckUpdateDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		
+		if(!CargoConstant.CARGO_SOURCE_STATUS_DOWN.equalsIgnoreCase(cargo.getStatus())) {
+			throw new BusinessException(112, "仅下架状态的货源可以修改需要审核的内容");
+		}
+		
+		cargo = new Cargo();
+		BeanUtils.copyProperties(dto, cargo);
+		
+		cargoMapper.updateSource(cargo);
+		return ServerResponse.success();
+	}
+
+	@Override
+	public ServerResponse openDetails(CommonDto dto) {
+		Cargo cargo = this.assertCargoAvailable(dto.getId());
+		if (CargoConstant.CARGO_SOURCE_STATUS_RELEASE.equalsIgnoreCase(cargo.getStatus())
+				|| CargoConstant.CARGO_SOURCE_STATUS_COMPLETED.equalsIgnoreCase(cargo.getStatus())) {
+			List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
+			cargo.setCargoLocations(list);
+			return ServerResponse.successWithData(cargo);
+		} else {
+			throw new BusinessException(112, "仅可查看发布中，已完成货源的详情");
+		}
+	}
+	
 }

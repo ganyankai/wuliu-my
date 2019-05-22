@@ -1,15 +1,13 @@
 package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,233 +22,201 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * 货源
+ */
 @Setter
 @Getter
-@ApiModel(value = "货源entry")
 @Entity
-@Table(name = "cargo")
+@Table(name = "`cargo`")
 public class Cargo extends BaseEntity implements Serializable {
 
-    private static final long serialVersionUID = -1555792098489335740L;
+	/** 货源装卸地 */
+	@Transient
+	private List<Loading> cargoLocations;
 
-    /**
-     * 主键，自增
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(value = "货源Id", required = false)
-    private Integer id;
+	private static final long serialVersionUID = -1555792098489335740L;
 
-    @ApiModelProperty(value = "货物介质", required = false)
-    @Column(name = "`name`")
-    private String name;
+	/**
+	 * 主键，自增
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @ApiModelProperty(value = "货物logo", required = false)
-    @Column(name = "`logo`")
-    private String logo;
+	/** 货物介质 */
+	@Column(name = "`name`")
+	private String name;
 
-    @ApiModelProperty(value = "货物数量", required = false)
-    @Column(name = "`qty`")
-    private Integer qty;
+	/** 货物logo */
+	@Column(name = "`logo`")
+	private String logo;
 
-    @ApiModelProperty(value = "重量单位", required = false)
-    @Column(name = "`weight_unit`")
-    private String weightUnit;
+	/** 货物数量 */
+	@Column(name = "`qty`")
+	private Integer qty;
 
-    @ApiModelProperty(value = "重量单位", required = false)
-    @Transient
-    private String weightUnitCN;
+	/** 是否多点装货 */
+	@Column
+	private Boolean mulShipment;
 
-    @ApiModelProperty(value = "发标方式", required = false)
-    @Column(name = "`tender_way`")
-    private String tenderWay;
+	/** 是否多点卸货 */
+	@Column
+	private Boolean mulUnload;
 
-    @ApiModelProperty(value = "发标方式", required = false)
-    @Transient
-    private String tenderWayCN;
+	/** 是否有包装 */
+	@Column
+	private Boolean packaged;
 
-    @ApiModelProperty(value = "付款方式", required = false)
-    @Column
-    private String payType;
+	/** 发标价 */
+	@Column
+	private BigDecimal matterPrice;
 
-    @ApiModelProperty(value = "付款方式", required = false)
-    @Transient
-    private String payTypeCN;
+	/** 中标价 */
+	@Column
+	private BigDecimal realPrice;
 
-    @ApiModelProperty(value = "是否多点装货", required = false)
-    @Column
-    private Boolean mulShipment;
+	/** 市场价 */
+	@Column
+	private BigDecimal marketPrice;
 
-    @ApiModelProperty(value = "多点装货地址集合", required = false)
-    @Transient
-    private List<Loading> mulShipmentList;
+	/** 出发省 */
+	@Column
+	private String startProvince;
 
-    @ApiModelProperty(value = "是否多点卸货", required = false)
-    @Column
-    private Boolean mulUnload;
+	/** 出发市 */
+	@Column
+	private String startCity;
 
-    @ApiModelProperty(value = "多点卸货地址集合", required = false)
-    @Transient
-    private List<Loading> mulUnloadList;
+	/** 出发县 */
+	@Column
+	private String startCountry;
 
-    @ApiModelProperty(value = "是否有包装", required = false)
-    @Column
-    private Boolean packaged;
+	/** 达到省 */
+	@Column
+	private String endProvince;
 
-    @ApiModelProperty(value = "发标价", required = false)
-    @Column
-    private Double matterPrice;
+	/** 达到市 */
+	@Column
+	private String endCity;
 
-    @ApiModelProperty(value = "中标价", required = false)
-    @Column
-    private Double realPrice;
+	/** 达到县 */
+	@Column
+	private String endCountry;
 
-    @ApiModelProperty(value = "市场价", required = false)
-    @Column
-    private Double marketPrice;
+	/** 路线 */
+	@Column
+	private String line;
 
-    @ApiModelProperty(value = "价格单位", required = false)
-    @Column
-    private String priceUnit;
+	/** 是否拼单 */
+	@Column
+	private Boolean canShare;
 
-    @ApiModelProperty(value = "价格单位", required = false)
-    @Transient
-    private String priceUnitCN;
+	/** 送达日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column
+	private Date arrivalDate;
 
-    @ApiModelProperty(value = "价格类型", required = false)
-    @Column
-    private String priceType;
+	/** 提货日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column
+	private Date pickupDate;
 
-    @ApiModelProperty(value = "价格类型", required = false)
-    @Transient
-    private String priceTypeCN;
+	/** 截止日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column
+	private Date endDate;
 
-    @ApiModelProperty(value = "出发省", required = false)
-    @Column
-    private String startProvince;
+	/** 备注 */
+	@Column
+	private String remark;
 
-    @ApiModelProperty(value = "出发市", required = false)
-    @Column
-    private String startCity;
+	/** 创建人 */
+	@Column
+	private Integer createBy;
 
-    @ApiModelProperty(value = "出发县", required = false)
-    @Column
-    private String startCountry;
+	/** 创建日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column
+	private Date createDate;
 
-    @ApiModelProperty(value = "达到省", required = false)
-    @Column
-    private String endProvince;
+	/** 重量单位 */
+	@Column(name = "`weight_unit`")
+	private String weightUnit;
 
-    @ApiModelProperty(value = "达到市", required = false)
-    @Column
-    private String endCity;
+	/** 发标方式 */
+	@Column(name = "`tender_way`")
+	private String tenderWay;
 
-    @ApiModelProperty(value = "达到县", required = false)
-    @Column
-    private String endCountry;
+	/** 付款方式 */
+	@Column
+	private String payType;
 
-    @ApiModelProperty(value = "路线", required = false)
-    @Column
-    private String line;
+	/** 价格单位 */
+	@Column
+	private String priceUnit;
 
-    @ApiModelProperty(value = "是否拼单", required = false)
-    @Column
-    private Boolean canShare;
+	/** 价格类型 */
+	@Column
+	private String priceType;
 
-    @ApiModelProperty(value = "车辆类型", required = false)
-    @Column
-    private String carType;
+	/** 车辆类型 */
+	@Column
+	private String carType;
 
-    @ApiModelProperty(value = "车辆类型", required = false)
-    @Transient
-    private String carTypeCN;
+	/** 状态 */
+	@Column(name = "`status`")
+	private String status;
 
-    @ApiModelProperty(value = "状态", required = false)
-    @Column(name = "`status`")
-    private String status;
+	public String getWeightUnitCN() {
+		if (StringUtils.isNotBlank(weightUnit)) {
+			return DictionaryUtil.getValue(CarConstants.CAR_UNIT, weightUnit);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "状态", required = false)
-    @Transient
-    private String statusCN;
+	public String getTenderWayCN() {
+		if (StringUtils.isNotBlank(tenderWay)) {
+			return DictionaryUtil.getValue(CargoConstant.PUSH_MARK_WAY, tenderWay);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "送达日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Column
-    private Date arrivalDate;
+	public String getPayTypeCN() {
+		if (StringUtils.isNotBlank(payType)) {
+			return DictionaryUtil.getValue(CargoConstant.PAY_TYPE, payType);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "提货日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Column
-    private Date pickupDate;
+	public String getPriceUnitCN() {
+		if (StringUtils.isNotBlank(priceUnit)) {
+			return DictionaryUtil.getValue(CargoConstant.PRICE_UNIT, priceUnit);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "截止日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Column
-    private Date endDate;
+	public String getPriceTypeCN() {
+		if (StringUtils.isNotBlank(priceType)) {
+			return DictionaryUtil.getValue(CargoConstant.PRICE_TYPE, priceType);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "备注", required = false)
-    @Column
-    private String remark;
+	public String getCarTypeCN() {
+		if (StringUtils.isNotBlank(carType)) {
+			return DictionaryUtil.getValue(CarConstants.CAR_TYPE, carType);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "创建人", required = false)
-    @Column
-    private Integer createBy;
+	public String getStatusCN() {
+		if (StringUtils.isNotBlank(status)) {
+			return DictionaryUtil.getValue(CargoConstant.CARGO_SOURCE_STATUS, status);
+		}
+		return "";
+	}
 
-    @ApiModelProperty(value = "创建日期", required = false, example = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Column
-    private Date createDate;
-
-
-    @Transient
-    private String userAccount;
-
-    @Transient
-    private String tel;
-
-    @ApiModelProperty(value = "参考总价", required = false)
-    @Transient
-    private BigDecimal totalPrice;
-
-    public String getWeightUnitCN() {
-        if (!StringUtils.isEmpty(weightUnit)) {
-            return DictionaryUtil.getValue(CargoConstant.WEIGHT_UNIT, weightUnit);
-        }
-        return weightUnitCN;
-    }
-
-    public String getTenderWayCN() {
-        if (!StringUtils.isEmpty(tenderWay)) {
-            return DictionaryUtil.getValue(CargoConstant.PUSH_MARK_WAY, tenderWay);
-        }
-        return tenderWayCN;
-    }
-
-    public String getPayTypeCN() {
-        if (!StringUtils.isEmpty(payType)) {
-            return DictionaryUtil.getValue(CargoConstant.PAY_TYPE, payType);
-        }
-        return payTypeCN;
-    }
-
-    public String getPriceTypeCN() {
-        if (!StringUtils.isEmpty(priceType)) {
-            return DictionaryUtil.getValue(CargoConstant.PRICE_TYPE, priceType);
-        }
-        return priceTypeCN;
-    }
-
-    public String getCarTypeCN() {
-        if (!StringUtils.isEmpty(carType)) {
-            return DictionaryUtil.getValue(CargoConstant.CAR_TYPE, carType);
-        }
-        return carTypeCN;
-    }
-
-    public String getStatusCN() {
-        if (!StringUtils.isEmpty(status)) {
-            return DictionaryUtil.getValue(CargoConstant.CARGO_GOODS_STATUS, status);
-        }
-        return statusCN;
-    }
 }

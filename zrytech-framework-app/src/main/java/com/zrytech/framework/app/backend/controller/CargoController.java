@@ -1,7 +1,9 @@
 package com.zrytech.framework.app.backend.controller;
 
 
+import com.zrytech.framework.app.ano.AdminRole;
 import com.zrytech.framework.app.dto.CargoDto;
+import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -13,7 +15,11 @@ import com.zrytech.framework.common.enums.CommonResult;
 import com.zrytech.framework.common.enums.ResultEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +32,18 @@ public class CargoController {
 
 
     @Autowired
-    private CargoService cargoService;
+    private CargoService service;
+    
+	@AdminRole
+	@Valid
+	@PostMapping("/adminCheckCargoSource")
+	public ServerResponse adminCheckCargoSource(@RequestBody @Valid RequestParams<ApproveDto> requestParams,
+			BindingResult result) {
+		return service.adminCheckCargoSource(requestParams.getParams());
+	}
+    
+    
+    
 
     /**
      * Desintion:货源分页列表信息
@@ -42,7 +59,7 @@ public class CargoController {
         if (cargoDto == null) {
             cargoDto = new CargoDto();
         }
-        return cargoService.cargoPage(cargoDto, requestParams.getPage());
+        return service.cargoPage(cargoDto, requestParams.getPage());
     }
 
     /**
@@ -58,7 +75,7 @@ public class CargoController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.get(requestParams.getParams());
+        return service.get(requestParams.getParams());
     }
 
     /**
@@ -68,6 +85,7 @@ public class CargoController {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+    @Deprecated
     @PostMapping("/auditSource")
     @ApiOperation(value = "货源审核")
     public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams) {
@@ -76,7 +94,7 @@ public class CargoController {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         User user = RequestUtil.getCurrentUser(User.class);
-        return cargoService.auditSource(requestParams.getParams(), user);
+        return service.auditSource(requestParams.getParams(), user);
     }
 
 
@@ -95,7 +113,7 @@ public class CargoController {
         }
         SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         requestParams.getParams().setCreateBy(sysCustomer.getId());
-        return cargoService.pushResource(requestParams.getParams());
+        return service.pushResource(requestParams.getParams());
     }
 
     /**
@@ -105,13 +123,14 @@ public class CargoController {
      * @param:CargoDto货源dto
      * @return:ServerResponse
      */
+    @Deprecated
     @PostMapping("/cancelResource")
     @ApiOperation(value = "取消发布货源")
     public ServerResponse cancelResource(@RequestBody RequestParams<CargoDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.cancelResource(requestParams.getParams());
+        return service.cancelResource(requestParams.getParams());
     }
 
     /**
@@ -128,7 +147,7 @@ public class CargoController {
                 || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.updateSource(requestParams.getParams());
+        return service.updateSource(requestParams.getParams());
     }
 
     /**
@@ -145,7 +164,7 @@ public class CargoController {
                 || requestParams.getParams().getId() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.deleteSource(requestParams.getParams());
+        return service.deleteSource(requestParams.getParams());
     }
 
     /**
@@ -161,6 +180,6 @@ public class CargoController {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        return cargoService.invitationOffer(requestParams.getParams());
+        return service.invitationOffer(requestParams.getParams());
     }
 }

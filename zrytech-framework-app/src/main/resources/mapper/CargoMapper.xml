@@ -493,4 +493,45 @@
     </update>
 
 
+
+	<select id="cargoSearch" resultMap="cargo" parameterType="Object">
+        select * from `cargo`
+        <where>
+            <if test="cargo.name != null and cargo.name != ''">
+                and `name` like CONCAT('%', #{cargo.name}, '%')
+            </if>
+            <if test="cargo.startProvince != null and cargo.startProvince != ''">
+                and `start_province` = #{cargo.startProvince}
+            </if>
+            <if test="cargo.startCity != null and cargo.startCity != ''">
+                and `start_city` = #{cargo.startCity}
+            </if>
+            <if test="cargo.startCountry != null and cargo.startCountry != ''">
+                and `start_country` = #{cargo.startCountry}
+            </if>
+            <if test="cargo.endProvince != null and cargo.endProvince !=''">
+                and `end_province` = #{cargo.endProvince}
+            </if>
+            <if test="cargo.endCity != null and cargo.endCity != ''">
+                and `end_city` = #{cargo.endCity}
+            </if>
+            <if test="cargo.endCountry != null and cargo.endCountry != ''">
+                and `end_country` = #{cargo.endCountry}
+            </if>
+            <if test="cargo.status != null and cargo.status !=''">
+                and `status` = #{cargo.status}
+            </if>
+            <if test="cargo.createBy != null">
+                and `create_by` = #{cargo.createBy}
+            </if>
+            <if test="cargo.tenderWay != null and cargo.tenderWay != ''">
+                and `tender_way` = #{cargo.tenderWay}
+            </if>
+        </where>
+        ORDER BY `id` DESC
+    </select>
+
+
+
+
 </mapper>

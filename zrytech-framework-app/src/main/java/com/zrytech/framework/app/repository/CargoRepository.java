@@ -7,5 +7,8 @@ import com.zrytech.framework.base.repository.BaseRepository;
 
 @Repository
 public interface CargoRepository extends BaseRepository<Cargo, Integer> {
+	
+	Cargo findByIdAndCreateBy(Integer id, Integer createBy);
+	
 
 }

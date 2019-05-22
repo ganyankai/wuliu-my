@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -42,11 +43,11 @@ public class Loading extends BaseEntity implements Serializable {
 
 	@ApiModelProperty(value = "经度", required = false)
 	@Column(name = "`longitude`")
-	private Double longitude;
+	private BigDecimal longitude;
 
 	@ApiModelProperty(value = "纬度", required = false)
 	@Column(name = "`latitude`")
-	private Double latitude;
+	private BigDecimal latitude;
 
 	@ApiModelProperty(value = "省", required = false)
 	@Column(name = "`province`")
@@ -104,7 +105,7 @@ public class Loading extends BaseEntity implements Serializable {
 
 	public String getTypeCN() {
 		if (!StringUtils.isEmpty(type)) {
-			return DictionaryUtil.getValue(CargoConstant.loading_unloading_type, type);
+			return DictionaryUtil.getValue(CargoConstant.LOAD_TYPE, type);
 		}
 		return typeCN;
 	}

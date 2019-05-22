@@ -248,3 +248,53 @@
     "msg": "success"
 }
 ```
+
+
+
+
+
+
+
+
+## 5.管理员 - 货源审核 ##
+
+**URL**
+>/goodsSource/adminCheckCargoSource
+
+**备注**
+
+    管理员审批货源，货源状态必须是待审批核才可以操作
+
+**请求参数**
+
+    {
+    	"params": {
+            "businessId": "",     （必填）（int）货源Id
+            "content": "",        （必填）（str）审核意见
+            "result": ""          （必填）（str）审核结果（字典取值）
+    	},
+    	"token": ""
+	}
+
+**测试入参**
+
+    {
+    	"params": {
+            "businessId": "1", 
+            "content": "审核意见,同意",   
+            "result": "agree"     
+    	},
+    	"token": ""
+	}
+
+**响应示例**
+
+    {
+	    "code": 1,
+	    "msg": "success",
+	    "data": "审批"
+    }
+
+    
+    
+    

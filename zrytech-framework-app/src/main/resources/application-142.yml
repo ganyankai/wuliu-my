@@ -45,4 +45,4 @@ mapper:
 
 upload:
   file:
-    dir: d:/tmp
+    dir: /home/admin/tmp

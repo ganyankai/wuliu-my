@@ -44,44 +44,70 @@ public class CargoConstant {
     /**
      * cargo_goods_status:货源状态;
      * */
-    public static final String CARGO_GOODS_STATUS = "cargo_source_status";
-
+//    public static final String CARGO_GOODS_STATUS = "cargo_source_status";
     /**source_draft:草稿;*/
-    public static final String SOURCE_DRAFT = "source_draft";
+//    public static final String SOURCE_DRAFT = "source_draft";
     /**wait_audit:审核中;*/
-    public static final String WAIT_AUDIT = "wait_audit";
+//    public static final String WAIT_AUDIT = "wait_audit";
     /**source_refuse:审核拒绝 */
-    public static final String SOURCE_REFUSE = "source_refuse";
+//    public static final String SOURCE_REFUSE = "source_refuse";
     /**source_up:竞标中(上架);*/
-    public static final String SOURCE_UP = "source_up";
+//    public static final String SOURCE_UP = "source_up";
     /**source_expired:已过期;*/
-    public static final String SOURCE_EXPIRED = "source_expired";
+//    public static final String SOURCE_EXPIRED = "source_expired";
     /**source_winning:中标;(中标)*/
-    public static final String SOURCE_WINNING = "source_winning";
+//    public static final String SOURCE_WINNING = "source_winning";
     /**source_winning:已取消;*/
-    public static final String SOURCE_CANCEL = "source_cancel";
+//    public static final String SOURCE_CANCEL = "source_cancel";
 
 
+    
+    // cat
+    
+	/** 货源状态; */
+	public static final String CARGO_SOURCE_STATUS = "cargo_source_status";
+	/** 货源状态 :下架; */
+	public static final String CARGO_SOURCE_STATUS_DOWN = "cargo_source_status_down";
+	/** 货源状态 :待审核; */
+	public static final String CARGO_SOURCE_STATUS_WAIT_CHECK = "cargo_source_status_wait_check";
+	/** 货源状态 :已取消; */
+	public static final String CARGO_SOURCE_STATUS_CANCELED = "cargo_source_status_canceled";
+	/** 货源状态 :审核不通过; */
+	//public static final String CARGO_SOURCE_STATUS_CHECK_REJECTED = "cargo_source_status_check_rejected";
+	/** 货源状态 :发布中（上架）; */
+	public static final String CARGO_SOURCE_STATUS_RELEASE = "cargo_source_status_release";
+	/** 货源状态 :已过期; */
+	public static final String CARGO_SOURCE_STATUS_EXPIRED = "cargo_source_status_expired";
+	/** 货源状态 :已完成; */
+	public static final String CARGO_SOURCE_STATUS_COMPLETED = "cargo_source_status_completed";
+    
+    
+    
+    
+    
     /**
      * Loading_unloading_type:装卸类型;
      * */
-    public static final String loading_unloading_type = "Loading_unloading_type";
+    public static final String LOAD_TYPE = "Loading_unloading_type";
 
     /**loading_type:装货;*/
     public static final String LOADING_TYPE = "loading_type";
     /**unloading_type:卸货;*/
     public static final String UNLOADING_TYPE = "unloading_type";
+    
+    public static final String REG_EX_LOAD_TYPE = "^(" + LOADING_TYPE + ")|(" + UNLOADING_TYPE + ")|()$";
+	public static final String REG_EX_LOAD_TYPE_ERR_MSG = "装卸类型有误";
+    
 
 
-    /**
-     * push_mark_way:发标方式;
-     * */
-    public static final String PUSH_MARK_WAY = "push_mark_way";
-
-    /**tender_mark:招标;*/
-    public static final String TENDER_MARK = "tender_mark";
-    /**tender_mark:抢标;*/
-    public static final String BID_MARK = "bid_mark";
+	/**
+	 * 发标方式
+	 */
+	public static final String PUSH_MARK_WAY = "push_mark_way";
+	/** 发标方式:招标 */
+	public static final String TENDER_MARK = "tender_mark";
+	/** 发标方式:抢标 */
+	public static final String BID_MARK = "bid_mark";
 
 
     /**
@@ -150,38 +176,36 @@ public class CargoConstant {
 
 
 
-    /**
-     *pay_type:付款方式
-     */
-    public static final String PAY_TYPE="pay_type";
-    /**offline_pay - 线下支付*/
-    public static final String OFFLINE_PAY = "offline_pay";
-    /**wechat -微信支付*/
-    public static final String WECHAT = "wechat";
-    /**alipay - 支付宝支付*/
-    public static final String ALIPAY = "alipay";
-    /**bankpay -银行卡支付*/
-    public static final String BANKPAY = "bankpay";
+	/**
+	 * 付款方式
+	 */
+	public static final String PAY_TYPE = "pay_type";
+	/** 付款方式:线下支付 */
+	public static final String OFFLINE_PAY = "offline_pay";
+	/** 付款方式:微信支付 */
+	public static final String WECHAT = "wechat";
+	/** 付款方式:支付宝支付 */
+	public static final String ALIPAY = "alipay";
+	/** 付款方式:银行卡支付 */
+	public static final String BANKPAY = "bankpay";
 
 
     /**
      *weight_unit:重量单位
      */
-    public static final String WEIGHT_UNIT="weight_unit";
+    //public static final String WEIGHT_UNIT="weight_unit";
     /**ton - 吨*/
-    public static final String TON = "ton";
+    //public static final String TON = "ton";
     /**rise -升*/
-    public static final String RISE = "rise";
+   // public static final String RISE = "rise";
 
 
-    /**
-     *price_unit:价格单位
-     */
-    public static final String PRICE_UNIT="price_unit";
-    /**price_yuan -人民币*/
-    public static final String PRICE_YUAN = "price_yuan";
-    /**price_dollar -美元*/
-    public static final String PRICE_DOLLAR = "price_dollar";
+	/** 价格单位 */
+	public static final String PRICE_UNIT = "price_unit";
+	/** 价格单位:人民币 */
+	public static final String PRICE_YUAN = "price_yuan";
+	/** 价格单位:美元 */
+	public static final String PRICE_DOLLAR = "price_dollar";
 
 
     /**
@@ -221,7 +245,7 @@ public class CargoConstant {
     /**
      *car_type:车辆类型
      */
-    public static final String CAR_TYPE="car_type";
+   // public static final String CAR_TYPE="car_type";
 
 
     /**

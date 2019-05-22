@@ -1,10 +1,13 @@
 package com.zrytech.framework.app.mapper;
 
 import com.github.pagehelper.PageInfo;
+import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
 import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.app.entity.Offer;
 import com.zrytech.framework.base.entity.Page;
+
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.Date;
 import java.util.List;
@@ -29,4 +32,10 @@ public interface CargoMapper {
     Offer getOfferWill(@Param("cargoId") Integer cargoId,@Param("carOwnnerId") Integer carOwnnerId);
 
     int updateMatter(@Param("cargoId") Integer cargoId,@Param("offerPromissed") String offerPromissed,@Param("cargd") Integer cargd);
+
+    @Update("update `cargo` set `status` = #{status} where `id` = #{id}")
+    int updateStatusById(@Param("id") Integer id, @Param("status") String status);
+    
+    List<Cargo> cargoSearch(@Param("cargo") CargoSourceSearchDto dto);
+
 }

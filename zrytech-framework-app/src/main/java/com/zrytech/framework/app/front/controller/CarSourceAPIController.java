@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.constants.CarSourceConstants;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
@@ -22,6 +23,7 @@ import com.zrytech.framework.app.dto.carsourcecar.CarSourceCarSaveDto;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarSourceService;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -85,6 +87,34 @@ public class CarSourceAPIController {
 		return ServerResponse.successWithData(pageData);
 	}
 
+	
+	@Valid
+	@PostMapping("/openCarSourcePage")
+	public ServerResponse openCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
+			BindingResult result) {
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null)
+			pageNum = 1;
+		if (pageSize == null)
+			pageSize = 10;
+		CarSourcePageDto dto = requestParams.getParams();
+		dto.setStatus(CarSourceConstants.STATUS_RELEASE);
+		PageData<CarSource> pageData = carSourceService.carSourcePage(dto, pageNum, pageSize);
+		return ServerResponse.successWithData(pageData);
+	}
+
+	@Valid
+	@PostMapping("/openDetails")
+	public ServerResponse openDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
+			BindingResult result) {
+		return carSourceService.openDetails(requestParams.getParams());
+	}
+	
 	
 	/**
 	 * 车主及车主子账号 - 车源详情

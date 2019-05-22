@@ -158,8 +158,8 @@ public class WaybillServiceImpl extends ServiceImpl<WaybillRepository,Waybill,In
 
     public void updateCargoAndMatter(Cargo cargo, Integer carId) {
         Offer offer = cargoDao.getOfferWill(cargo.getId(), carId);//报价单价格:应标价格
-        cargo.setStatus(CargoConstant.SOURCE_WINNING);
-        cargo.setRealPrice(offer.getMatterPrice());
+        //cargo.setStatus(CargoConstant.SOURCE_WINNING);
+        //cargo.setRealPrice(offer.getMatterPrice());
         cargoDao.updateAudit(cargo);//修改货源状态以及中标时的价格;
         int num = cargoDao.updateMatter(cargo.getId(), CargoConstant.OFFER_DRAFT, null);//修改报价单状态;将其余没有中标变为草稿状态;
         if (num > 0) {

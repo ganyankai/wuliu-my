@@ -1,6 +1,8 @@
 package com.zrytech.framework.app.mapper;
 
 import com.zrytech.framework.app.entity.Loading;
+
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,4 +18,7 @@ public interface LoadingMapper {
     void batchAdds(@Param("list") List<Loading> batchAdds,@Param("cargoId") Integer cargoId);
 
     void batchUpdate(@Param("list") List<Loading> updateList);
+    
+    @Delete("delete from `cargo_location` where `cargo_id` = #{cargoId}")
+    int deleteByCargoId(Integer cargoId);
 }

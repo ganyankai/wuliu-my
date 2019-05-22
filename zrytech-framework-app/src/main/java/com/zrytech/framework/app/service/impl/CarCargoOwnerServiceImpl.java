@@ -238,6 +238,18 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		return ServerResponse.success();
 	}
 	
+	@Override
+	public ServerResponse checkTel(String tel) {
+		customerService.assertTelNotExist(tel);
+		return ServerResponse.success();
+	}
+	
+	@Override
+	public ServerResponse checkUserAccount(String userAccount) {
+		customerService.assertUserAccountNotExist(userAccount);
+		return ServerResponse.success();
+	}
+	
 	@Autowired
 	private ApproveLogService approveLogService;
 	
