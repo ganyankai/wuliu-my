@@ -83,7 +83,7 @@ public class CargoMatter extends BaseEntity {
 	/**状态*/
 	public String getStatusCN() {
 		if (StringUtils.isNotBlank(status)) {
-            return DictionaryUtil.getValue(CargoMatterConstants.STATUS, status);
+            return DictionaryUtil.getValue(CargoMatterConstants.CARGO_MATTER_STATUS, status);
         }
         return status;
 	}
