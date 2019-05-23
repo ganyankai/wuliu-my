@@ -23,4 +23,8 @@ public class CargoMatterUpdateDto {
 	/**价格*/
 	@NotNull(message = "价格不能为空")
 	private BigDecimal matterPrice;
+	
+	/** 单价 */
+	@NotNull(message = "单价不能为空")
+	private BigDecimal unitPrice;
 }

@@ -10,16 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
-import com.zrytech.framework.app.dto.DetailsDto;
-import com.zrytech.framework.app.dto.approve.ApproveDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.entity.CargoMatter;
 import com.zrytech.framework.app.service.CargoMatterService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
-import com.zrytech.framework.base.util.RequestUtil;
-import com.zrytech.framework.common.entity.User;
 
 /**
  * 后台管理系统 - 报价单
@@ -148,23 +145,9 @@ public class CargoMatterController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		return cargoMatterService.adminDetails(requestParams.getParams());
 	}
 	
 	
-	/**
-	 * 管理员 - 报价单详情审批
-	 * @author cat
-	 * 
-	 * @param requestParams
-	 * @param result
-	 * @return
-	 */
-	@Valid
-	@RequestMapping("/approve")
-	public ServerResponse approve(@RequestBody @Valid RequestParams<ApproveDto> requestParams, BindingResult result) {
-		User user = RequestUtil.getCurrentUser(User.class);
-		return cargoMatterService.adminApprove(requestParams.getParams(), user);
-	}
 }
