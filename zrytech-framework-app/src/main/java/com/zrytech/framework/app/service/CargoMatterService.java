@@ -4,14 +4,11 @@ import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
-import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
 import com.zrytech.framework.app.entity.CargoMatter;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.base.entity.User;
 
 @Service
 public interface CargoMatterService {
@@ -25,7 +22,7 @@ public interface CargoMatterService {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageData<CargoMatter> cargoMatterPage(CargoMatterPageDto dto, Integer pageNum, Integer pageSize);
+	PageData<CargoMatter> cargoMatterPage(CargoMatterPageDto dto, Integer pageNum, Integer pageSize);
 	
 	/**
 	 * 管理员 - 报价单详情
@@ -34,19 +31,7 @@ public interface CargoMatterService {
 	 * @param dto
 	 * @return
 	 */
-	public ServerResponse adminDetails(DetailsDto dto);
-	
-	/**
-	 * 管理员 -  报价单审批
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param user
-	 * @return
-	 */
-	public ServerResponse adminApprove(ApproveDto dto, User user);
-	
-	
+	ServerResponse adminDetails(CommonDto dto);
 	
 	
 

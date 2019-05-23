@@ -14,18 +14,12 @@ import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CargoMatterRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
 import com.zrytech.framework.app.repository.WaybillRepository;
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
-import com.zrytech.framework.app.constants.ApproveConstants;
-import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.constants.CargoMatterConstants;
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
-import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
-import com.zrytech.framework.app.dto.cargomatter.CargoMatterNeedApproveUpdateDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Cargo;
@@ -34,12 +28,10 @@ import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.app.mapper.CargoMapper;
 import com.zrytech.framework.app.mapper.CargoMatterMapper;
-import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CargoMatterService;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.base.entity.User;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.base.util.TradeNoUtil;
@@ -69,9 +61,6 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	private CargoService cargoService;
 	
 	@Autowired
-	private ApproveLogService approveLogService;
-	
-	@Autowired
 	private TradeNoUtil tradeNoUtil;
 	
 	@Autowired
@@ -80,7 +69,16 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	@Autowired
 	private CargoMapper cargoMapper;
 	 
-	 
+	
+	@Override
+	public ServerResponse adminDetails(CommonDto dto) {
+		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
+		cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
+		cargoMatter = this.bindingCargo(cargoMatter);
+		return ServerResponse.successWithData(cargoMatter);
+	}
+	
+	
 	
 	@Override
 	public PageData<CargoMatter> cargoMatterPage(CargoMatterPageDto dto, Integer pageNum, Integer pageSize) {
@@ -93,88 +91,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	}
 	
 	
-	@Override
-	public ServerResponse adminDetails(DetailsDto dto) {
-		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
-		/*cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
-		cargoMatter = this.bindingCargo(cargoMatter);
-		CargoMatterNeedApproveUpdateDto temp = JSON.parseObject(cargoMatter.getApproveContent(),
-				CargoMatterNeedApproveUpdateDto.class);
-		cargoMatter.setApproveContentCN(temp);*/
-		return ServerResponse.successWithData(cargoMatter);
-	}
 	
-	@Override
-	public ServerResponse adminApprove(ApproveDto dto, User user) {
-		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getBusinessId());
-		/*if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(cargoMatter.getApproveStatus())) {
-			throw new BusinessException(112, "审批失败：报价单的状态不是待审批");
-		}
-		this.approve(cargoMatter, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
-		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_MATTER);*/
-		return ServerResponse.successWithData("审批成功");
-	}
-	
-	
-	/**
-	 * 报价单的审批
-	 * @author cat
-	 * 
-	 * @param cargoMatter
-	 * @param result
-	 */
-	private void approve(CargoMatter cargoMatter, Boolean result) {
-		Integer id = cargoMatter.getId();
-		/*if (result) {
-			CargoMatterNeedApproveUpdateDto temp = JSON.parseObject(cargoMatter.getApproveContent(),
-					CargoMatterNeedApproveUpdateDto.class);
-			BeanUtils.copyProperties(temp, cargoMatter);
-			cargoMatter.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-			cargoMatter.setId(id);
-			if (cargoMatter.getStatus().equalsIgnoreCase(CargoMatterConstants.CARGO_MATTER_STATUS_UNCERTIFIED)) {
-				cargoMatter.setStatus(CargoMatterConstants.CARGO_MATTER_STATUS_RELEASE);
-			}
-		} else {
-			cargoMatter.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
-		}*/
-		cargoMatterRepository.save(cargoMatter);
-	}
-	
-	
-	/**
-	 * 为报价单设置车主、货主企业名称
-	 * @author cat
-	 * 
-	 * @param cargoMatter
-	 * @return
-	 */
-	CargoMatter bindingCarCargoOwnerName(CargoMatter cargoMatter) {
-		Integer carOwnerId = cargoMatter.getCarOwnnerId();
-		if (carOwnerId != null) {
-			cargoMatter.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
-		}
-		Integer cargoOwnerId = cargoMatter.getCargoOwnerId();
-		if (cargoOwnerId != null) {
-			cargoMatter.setCargoOwnerName(carCargoOwnnerRepository.findNameById(cargoOwnerId));
-		}
-		return cargoMatter;
-	}
-	
-	/**
-	 * 为报价单设置货源
-	 * @author cat
-	 * 
-	 * @param cargoMatter
-	 * @return
-	 */
-	CargoMatter bindingCargo(CargoMatter cargoMatter) {
-		Integer cargoId = cargoMatter.getCargoId();
-		if (cargoId != null) {
-			Cargo cargo = cargoRepository.findOne(cargoId);
-			cargoMatter.setCargo(cargo);
-		}
-		return cargoMatter;
-	}
 	
 	/**
 	 * 断言报价单存在
@@ -343,6 +260,42 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		return ServerResponse.success();
 	}
 	
+	
+	
+	/**
+	 * 为报价单设置车主、货主企业名称
+	 * @author cat
+	 * 
+	 * @param cargoMatter
+	 * @return
+	 */
+	private CargoMatter bindingCarCargoOwnerName(CargoMatter cargoMatter) {
+		Integer carOwnerId = cargoMatter.getCarOwnnerId();
+		if (carOwnerId != null) {
+			cargoMatter.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
+		}
+		Integer cargoOwnerId = cargoMatter.getCargoOwnerId();
+		if (cargoOwnerId != null) {
+			cargoMatter.setCargoOwnerName(carCargoOwnnerRepository.findNameById(cargoOwnerId));
+		}
+		return cargoMatter;
+	}
+	
+	/**
+	 * 为报价单设置货源
+	 * @author cat
+	 * 
+	 * @param cargoMatter
+	 * @return
+	 */
+	private CargoMatter bindingCargo(CargoMatter cargoMatter) {
+		Integer cargoId = cargoMatter.getCargoId();
+		if (cargoId != null) {
+			Cargo cargo = cargoRepository.findOne(cargoId);
+			cargoMatter.setCargo(cargo);
+		}
+		return cargoMatter;
+	}
 	
 	
 	
