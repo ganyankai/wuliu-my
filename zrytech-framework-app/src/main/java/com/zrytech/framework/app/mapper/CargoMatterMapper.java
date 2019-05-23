@@ -48,7 +48,7 @@ public interface CargoMatterMapper {
      * @return
      */
 	@Update("update `cargo_matter` set `status` = '" + CargoMatterConstants.CARGO_MATTER_STATUS_UN_TENDER
-			+ "' where `id` != #{id} and `cargo_id` = #{cargo_id} and status = '"
+			+ "' where `id` != #{id} and `cargo_id` = #{cargoId} and status = '"
 			+ CargoMatterConstants.CARGO_MATTER_STATUS_RELEASE + "'")
 	int updateStatusByIdAndCargoId(@Param("id") Integer id, @Param("cargoId") Integer cargoId);
 }

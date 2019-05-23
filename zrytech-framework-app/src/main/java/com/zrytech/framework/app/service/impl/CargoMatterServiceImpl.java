@@ -96,22 +96,22 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	@Override
 	public ServerResponse adminDetails(DetailsDto dto) {
 		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getId());
-		cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
+		/*cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
 		cargoMatter = this.bindingCargo(cargoMatter);
 		CargoMatterNeedApproveUpdateDto temp = JSON.parseObject(cargoMatter.getApproveContent(),
 				CargoMatterNeedApproveUpdateDto.class);
-		cargoMatter.setApproveContentCN(temp);
+		cargoMatter.setApproveContentCN(temp);*/
 		return ServerResponse.successWithData(cargoMatter);
 	}
 	
 	@Override
 	public ServerResponse adminApprove(ApproveDto dto, User user) {
 		CargoMatter cargoMatter = this.assertCargoMatterExist(dto.getBusinessId());
-		if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(cargoMatter.getApproveStatus())) {
+		/*if(!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(cargoMatter.getApproveStatus())) {
 			throw new BusinessException(112, "审批失败：报价单的状态不是待审批");
 		}
 		this.approve(cargoMatter, ApproveConstants.RESULT_AGREE.equals(dto.getResult()));
-		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_MATTER);
+		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_MATTER);*/
 		return ServerResponse.successWithData("审批成功");
 	}
 	
@@ -125,7 +125,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 	 */
 	private void approve(CargoMatter cargoMatter, Boolean result) {
 		Integer id = cargoMatter.getId();
-		if (result) {
+		/*if (result) {
 			CargoMatterNeedApproveUpdateDto temp = JSON.parseObject(cargoMatter.getApproveContent(),
 					CargoMatterNeedApproveUpdateDto.class);
 			BeanUtils.copyProperties(temp, cargoMatter);
@@ -136,7 +136,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 			}
 		} else {
 			cargoMatter.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
-		}
+		}*/
 		cargoMatterRepository.save(cargoMatter);
 	}
 	
@@ -261,6 +261,11 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 			throw new BusinessException(112, "报价失败：货源状态不是发布中");
 		}
 
+		String tenderWay = cargo.getTenderWay();
+		if(CargoConstant.BID_MARK.equalsIgnoreCase(tenderWay)) {
+			throw new BusinessException(112, "报价失败：抢标的货源无法报价");
+		}
+		
 		// 新建报价单
 		CargoMatter cargoMatter = new CargoMatter();
 		BeanUtils.copyProperties(dto, cargoMatter);
@@ -305,6 +310,38 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		return ServerResponse.successWithData(cargoMatter);
 	}
 
+	@Transactional
+	@Override
+	public ServerResponse bid(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Integer carOwnerId = customer.getCarOwner().getId();
+		Integer cargoId = dto.getId();
+		
+		Cargo cargo = cargoRepository.findOne(cargoId);
+		if (!CargoConstant.CARGO_SOURCE_STATUS_RELEASE.equalsIgnoreCase(cargo.getStatus())) {
+			throw new BusinessException(112, "抢标失败：货源的状态不是发布中");
+		}
+
+		// 生成运单
+		Waybill waybill = new Waybill();
+		waybill.setBillNo(tradeNoUtil.genTradeNo());
+		waybill.setCargoId(cargoId);
+		waybill.setCargoOwnnerId(cargo.getCreateBy());
+		waybill.setCarOwnnerId(carOwnerId);
+		waybill.setTotalMoney(cargo.getMatterPrice());
+		waybill.setPayType(cargo.getPayType());
+		waybill.setQty(cargo.getQty());
+		waybill.setWeightUnit(cargo.getWeightUnit());
+		waybill.setStatus(CargoConstant.AWAIT_GENERATE);
+		waybill.setCreateDate(new Date());
+		waybill.setCreateBy(customer.getId());
+		waybillRepository.save(waybill);
+
+		// 修改货源的状态
+		cargoMapper.updateStatusById(cargoId, CargoConstant.CARGO_SOURCE_STATUS_COMPLETED);
+
+		return ServerResponse.success();
+	}
 	
 	
 	
@@ -366,11 +403,11 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		waybill.setCargoId(cargoId);
 		waybill.setCargoOwnnerId(cargoOwnerId);
 		waybill.setCarOwnnerId(cargoMatter.getCarOwnnerId());
-		if (cargo.getTenderWay().equalsIgnoreCase(CargoConstant.BID_MARK)) {
-			waybill.setTotalMoney(cargo.getMatterPrice());
-		} else {
-			waybill.setTotalMoney(cargoMatter.getMatterPrice());
-		}
+		// if (cargo.getTenderWay().equalsIgnoreCase(CargoConstant.BID_MARK)) {
+		// waybill.setTotalMoney(cargo.getMatterPrice());
+		// } else {
+		waybill.setTotalMoney(cargoMatter.getMatterPrice());
+		// }
 		waybill.setPayType(cargo.getPayType());
 		waybill.setQty(cargo.getQty());
 		waybill.setWeightUnit(cargo.getWeightUnit());
@@ -384,6 +421,5 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 
 		return ServerResponse.success();
 	}
-	
-	
+
 }

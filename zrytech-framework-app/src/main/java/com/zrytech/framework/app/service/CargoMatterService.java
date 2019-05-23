@@ -97,6 +97,16 @@ public interface CargoMatterService {
 	 */
 	ServerResponse carOwnerCargoMatterDetails(CommonDto dto);
 	
+	/**
+	 * 车主 - 抢标
+	 * @author cat
+	 * 
+	 * @param dto	货源Id
+	 * @return
+	 */
+	ServerResponse bid(CommonDto dto);
+	
+	
 	
 	
 	/**
@@ -107,7 +117,6 @@ public interface CargoMatterService {
 	 * @return
 	 */
 	ServerResponse cargoOwnerGetCargoMatterByCargoId(CargoMatterPageDto dto);
-	
 	
 	/**
 	 * 货主 - 中标
