@@ -72,8 +72,6 @@ public class CargoConstant {
 	public static final String CARGO_SOURCE_STATUS_WAIT_CHECK = "cargo_source_status_wait_check";
 	/** 货源状态 :已取消; */
 	public static final String CARGO_SOURCE_STATUS_CANCELED = "cargo_source_status_canceled";
-	/** 货源状态 :审核不通过; */
-	//public static final String CARGO_SOURCE_STATUS_CHECK_REJECTED = "cargo_source_status_check_rejected";
 	/** 货源状态 :发布中（上架）; */
 	public static final String CARGO_SOURCE_STATUS_RELEASE = "cargo_source_status_release";
 	/** 货源状态 :已过期; */

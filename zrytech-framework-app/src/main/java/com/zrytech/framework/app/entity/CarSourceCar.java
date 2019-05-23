@@ -6,20 +6,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.zrytech.framework.base.entity.BaseEntity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
  * 车源车辆关系
  *
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "`car_source_car`")
 public class CarSourceCar extends BaseEntity {
+	
+	
+	@Transient
+	private Car car;
 	
 	/**
 	 * 

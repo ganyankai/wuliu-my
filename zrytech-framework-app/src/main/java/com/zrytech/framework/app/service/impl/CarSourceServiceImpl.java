@@ -99,6 +99,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 			carSource = this.bindingCarRecordPlace(carSource);
 			carSource = this.bindingCarOwnerName(carSource);
 			carSource = this.bindingCustomerUserName(carSource);
+			carSource = this.bindingCarSourceCar(carSource);
 		}
 		return new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
@@ -126,6 +127,11 @@ public class CarSourceServiceImpl implements CarSourceService {
 		Integer carSourceId = carSource.getId();
 		if (carSourceId != null) {
 			List<CarSourceCar> carSourceCars = carSourceCarRepository.findByCarSourceId(carSourceId);
+			for (CarSourceCar carSourceCar : carSourceCars) {
+				Integer carId = carSourceCar.getCarId();
+				Car car = carService.assertCarAvailable(carId);
+				carSourceCar.setCar(car);
+			}
 			carSource.setCarSourceCars(carSourceCars);
 		}
 		return carSource;
