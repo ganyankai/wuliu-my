@@ -86,7 +86,8 @@ public class FocusOnServiceImpl implements FocusOnService {
         SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         Focus focus = BeanUtil.copy(focusDto, Focus.class);
         focus.setCreateDate(new Date());
-        focus.setFocuserId(sysCustomer.getId());
+//        focus.setFocuserId(sysCustomer.getId());
+        focus.setFocuserId(focusDto.getId());
         //TODO: focus.setFocusType();设置关注类型
         int num = focusOnDao.add(focus);
         CheckFieldUtils.assertSuccess(num);
@@ -103,7 +104,8 @@ public class FocusOnServiceImpl implements FocusOnService {
     public ServerResponse selectMyFocus(FocusDto focusDto) {
         SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
         //CheckFieldUtils.checkObjecField(focusDto.getFocuserId());
-        focusDto.setFocuserId(sysCustomer.getId());
+//        focusDto.setFocuserId(sysCustomer.getId());
+        focusDto.setFocuserId(focusDto.getFocuserId());
         List<FocusLine> focusLineList=focusLineDao.selectCreateBy(focusDto.getFocuserId());
         List<Focus> focusList=focusOnDao.selectCreateBy(focusDto.getFocuserId());
         Map map=new HashMap();

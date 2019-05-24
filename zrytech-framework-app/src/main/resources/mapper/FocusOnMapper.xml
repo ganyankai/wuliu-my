@@ -15,10 +15,9 @@
     </sql>
 
     <select id="focusPage" resultMap="focus">
-        select
-        <include refid="columns"/>,owner.name
+        select  focus.id,focus.focuser_id,focus.be_focuser_id,focus.focus_type,focus.create_date,owner.name
         from my_focus_person focus JOIN car_cargo_ownner owner ON
-        focus.be_focuser_id=owner.cusomer_id
+        focus.be_focuser_id=owner.id
         <trim prefix="where " prefixOverrides="and ">
             1=1
             <if test="focusOn.focuserId != null">
@@ -34,7 +33,7 @@
         ORDER BY focus.create_date DESC
     </select>
 
-    <insert id="addFocus" useGeneratedKeys="true" keyProperty="id">
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
         insert into my_focus_person
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="focuserId != null">
@@ -68,10 +67,9 @@
     </insert>
 
     <select id="get" resultMap="focus">
-        select
-        <include refid="columns"/>,owner.name
+        select  focus.id,focus.focuser_id,focus.be_focuser_id,focus.focus_type,focus.create_date,owner.name
         from my_focus_person focus JOIN car_cargo_ownner owner ON
-        focus.be_focuser_id=owner.cusomer_id
+        focus.be_focuser_id=owner.id
         where id =#{id}
     </select>
 
@@ -81,10 +79,9 @@
     </delete>
 
     <select id="selectCreateBy" resultMap="focus">
-        select
-        <include refid="columns"/>,owner.name
+        select  focus.id,focus.focuser_id,focus.be_focuser_id,focus.focus_type,focus.create_date,owner.name
         from my_focus_person focus JOIN car_cargo_ownner owner ON
-        focus.be_focuser_id=owner.cusomer_id
+        focus.be_focuser_id=owner.id
         <trim prefix="where " prefixOverrides="and ">
             1=1
             <if test="focuserId != null">
