@@ -25,7 +25,7 @@ public class IdcardApplicationTests {
      /*   Double d = 123.123d;
         BigDecimal bigDecimal = new BigDecimal(d);*/
         Map<String, Object> map = new HashMap<>();
-        System.out.println(map.get(CargoConstant.AWAIT_GENERATE));
+//        System.out.println(map.get(CargoConstant.AWAIT_GENERATE));
     }
 
 }

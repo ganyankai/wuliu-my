@@ -6,18 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 添加运单入参
- * 
- * @author cat
- *
+ * 更新运单项入参
  */
 @Setter
 @Getter
-public class WaybillDetailAddDto {
+public class WaybillDetailUpdateDto {
 
-	/** 运单Id */
-	@NotNull(message = "运单Id不能为空")
-	private Integer waybillId;
+	/** 运单项Id */
+	@NotNull(message = "运单项Id不能为空")
+	private Integer waybillDetailId;
 
 	/** 车辆Id */
 	@NotNull(message = "车辆Id不能为空")

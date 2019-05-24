@@ -9,9 +9,6 @@ import lombok.Setter;
 
 /**
  * 新增运单装卸地入参
- * 
- * @author cat
- *
  */
 @Setter
 @Getter

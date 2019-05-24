@@ -1,6 +1,6 @@
 package com.zrytech.framework.app.backend.controller;
 
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.WaybillPageDto;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.app.service.WaybillService;
@@ -87,7 +87,6 @@ public class WayBillController {
 		return ServerResponse.successWithData(pageData);
 	}
     
-    
 	/**
 	 * 管理员 - 运单分页
 	 * @author cat
@@ -109,7 +108,6 @@ public class WayBillController {
 		return ServerResponse.successWithData(pageData);
 	}
 	
-	
 	/**
 	 * 管理员 - 运单详情
 	 * @author cat
@@ -120,7 +118,7 @@ public class WayBillController {
 	 */
 	@Valid
 	@RequestMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		return waybillService.adminDetails(requestParams.getParams());
 	}
 	

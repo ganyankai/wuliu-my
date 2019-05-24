@@ -108,28 +108,48 @@ public class CargoConstant {
 	public static final String BID_MARK = "bid_mark";
 
 
-    /**
-     * waybill_status:运单状态
-     * */
-    public static final String WAYBILL_STATUS="waybill_status";
+	/**
+	 * 运单状态
+	 */
+	public static final String WAYBILL_STATUS = "waybill_status";
 
-    /**await_generate:待生成运单*/
-    public static final String AWAIT_GENERATE="await_generate";
-    /**await_determine:待确定运单*/
-    public static final String AWAIT_DETERMINE="await_determine";
-    /**await_loading:待装货运单*/
-    public static final String AWAIT_LOADING="await_loading";
-    /**await_accept:待收货运单*/
-    public static final String AWAIT_ACCEPT="await_accept";
+	/** 运单状态:待生成 */
+	public static final String WAYBILL_STATUS_WAIT_GENERATE = "waybill_status_wait_generate";
 
+	/** 运单状态:待确定 */
+	public static final String WAYBILL_STATUS_WAIT_DETERMINE = "waybill_status_wait_determine";
+
+	/** 运单状态:已完成 */
+	public static final String WAYBILL_STATUS_COMPLETED = "waybill_status_completed";
+
+	/** 运单状态:已取消 */
+	public static final String WAYBILL_STATUS_CANCELLED = "waybill_status_cancelled";
+
+	/** 运单状态:待评价 */
+	public static final String WAYBILL_STATUS_WAIT_COMMENT = "waybill_status_wait_comment";
+
+	/** 运单状态:运输中 */
+	public static final String WAYBILL_STATUS_IN_TRANSIT = "waybill_status_in_transit";
+
+	/** 运单状态:待支付首付款 */
+	public static final String WAYBILL_STATUS_WAIT_PAY_ADVANCE_MONEY = "waybill_status_wait_pay_advance_moeny";
+
+	/** 运单状态:待支付尾款 */
+	public static final String WAYBILL_STATUS_WAIT_PAY_FINAL_MONEY = "waybill_status_wait_pay_final_money";
+    
+    
+    
+    
+    /**运单状态:待装货运单*/
+    //public static final String AWAIT_LOADING="await_loading";
+    /**运单状态:待收货运单*/
+    //public static final String AWAIT_ACCEPT="await_accept";
     /**sign_paied:已签收待支付运单*/
-    public static final String SIGN_PAY="sign_pay";
+    //public static final String SIGN_PAY="sign_pay";
     /**is_evaluation:已支付待评价运单*/
-    public static final String PAIED_EVALUATION="paied_evaluation";
-    /**completed:已完成运单*/
-    public static final String COMPLETED="completed";
-    /**cancelled:已取消运单*/
-    public static final String CANCELLED="cancelled";
+    //public static final String PAIED_EVALUATION="paied_evaluation";
+    
+    
 
     /**
      * message_type：消息类型

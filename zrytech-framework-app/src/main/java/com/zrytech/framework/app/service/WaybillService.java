@@ -2,16 +2,15 @@ package com.zrytech.framework.app.service;
 
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.dto.DeleteDto;
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.WaybillDto;
 import com.zrytech.framework.app.entity.Waybill;
-import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.PageData;
 
 import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.WaybillUpdateDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
-import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailUpdateDto;
 import com.zrytech.framework.base.entity.ServerResponse;
 
 @Service
@@ -26,7 +25,7 @@ public interface WaybillService {
      * @param pageSize
      * @return
      */
-	public PageData<Waybill> waybillPage(WaybillPageDto dto, Integer pageNum, Integer pageSize);
+	PageData<Waybill> waybillPage(WaybillPageDto dto, Integer pageNum, Integer pageSize);
 	
 	/**
      * 管理员 - 运单详情
@@ -35,8 +34,7 @@ public interface WaybillService {
      * @param dto
      * @return
      */
-    public ServerResponse adminDetails(DetailsDto dto);
-    
+    ServerResponse adminDetails(CommonDto dto);
     
 	 /**
      * 断言运单属于当前登录车主
@@ -45,75 +43,25 @@ public interface WaybillService {
      * @param waybillId    运单Id
      * @param carOwnerId 车主Id
      */
-	public Waybill assertWaybillBelongToCurrentUser(Integer waybillId, Integer carOwnerId);
-
-	
+	Waybill assertWaybillBelongToCurrentUser(Integer waybillId, Integer carOwnerId);
 
     /**
-     * @return
-     * @Desinition:创建运单
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse createIndent(WaybillDto waybillDto);
-
-    /**
-     * @return
-     * @Desinition:待确认运单
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse confirmIndent(WaybillDto waybillDto);
-
-    /**
-     * @return
-     * @Desinition:运单分页列表展示
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse indentPage(WaybillDto waybillDto, Page page);
-
-    /**
-     * @return
-     * @Desinition:运单统计
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse coundIndent(WaybillDto waybillDto);
-
-    /**
-     * @return
-     * @Desinition:运单详情
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse get(WaybillDto waybillDto);
-
-    /**
-     * @return
-     * @Desinition:更改运单
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse changeIndent(WaybillDto waybillDto);
-
-    /**
-     * @return
-     * @Desinition:删除运单
-     * @param:requestParams
-     * @param:WaybillDto运单dto
-     */
-    ServerResponse delete(WaybillDto waybillDto);
-
-    /**
-     * 车主或车主子账号 - 运单详情
+     * 货主 - 运单详情
      * @author cat
      *
      * @param dto 运单Id
      * @return
      */
-    public ServerResponse details(DetailsDto dto, Customer customer);
-
+    ServerResponse cargoOwnerDetails(CommonDto dto);
+    
+    /**
+     * 车主 - 运单详情
+     * @author cat
+     *
+     * @param dto 运单Id
+     * @return
+     */
+    ServerResponse carOwnerDetails(CommonDto dto);
 
     /**
      * 车主及车主子账号 - 删除运单项及运单项下的装卸地（物理删除）
@@ -123,8 +71,7 @@ public interface WaybillService {
      * @param customer 当前登录人
      * @return
      */
-    public ServerResponse deleteWaybillDetail(DeleteDto dto, Customer customer);
-
+    ServerResponse deleteWaybillDetail(CommonDto dto);
     
     /**
      * 车主及车主子账号 - 删除运单装卸地（物理删除）
@@ -134,32 +81,69 @@ public interface WaybillService {
      * @param customer 当前登录人
      * @return
      */
-    public ServerResponse deleteBillLocation(DeleteDto dto, Customer customer);
-    
+    ServerResponse deleteBillLocation(CommonDto dto);
     
     /**
      * 车主及车主子账号 - 新增运单项
      * @author cat
      *
      * @param dto
-     * @param customer
      * @return
      */
-    public ServerResponse addWaybillDetail(WaybillDetailAddDto dto, Customer customer);
+    ServerResponse addWaybillDetail(WaybillDetailAddDto dto);
 
     /**
+     * 车主及车主子账号 - 修改运单项
+     * @author cat
+     *
+     * @param dto
      * @return
-     * @Desinition:取消运单
-     * @param:requestParams
-     * @param:WaybillDto运单dto
      */
-    ServerResponse cancelIndent(WaybillDto waybillDto);
-
+    ServerResponse updateWaybillDetail(WaybillDetailUpdateDto dto);
+    
     /**
+     * 车主 - 提交运单
+     * <p>车主修改完运单信息之后，提交运单，将运单状态改为：待确认</p>
+     * @author cat
+     *
+     * @param dto	运单Id
      * @return
-     * @Desinition:签收订单(已收货待支付状态)
-     * @param:requestParams
-     * @param:WaybillDto运单dto
      */
-    ServerResponse signAccpet(WaybillDto waybillDto);
+    ServerResponse submit(CommonDto dto);
+    
+    /**
+     * 货主 - 确认运单
+     * @author cat
+     * 
+     * @param dto	运单Id
+     * @return
+     */
+    ServerResponse confirm(CommonDto dto);
+    
+    /**
+     * 车主 - 修改运单基本信息
+     * @author cat
+     * 
+     * @param dto
+     * @return
+     */
+    ServerResponse update(WaybillUpdateDto dto);
+    
+    /**
+     * 车主 - 取消运单
+     * @author cat
+     * 
+     * @param dto	运单Id
+     * @return
+     */
+    ServerResponse cancel(CommonDto dto);
+    
+    
+    
+    /**
+	 * 运单统计
+	 */
+	@Deprecated
+	ServerResponse coundIndent(WaybillDto waybillDto);
+    
 }

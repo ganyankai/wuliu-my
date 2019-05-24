@@ -249,7 +249,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		waybill.setPayType(cargo.getPayType());
 		waybill.setQty(cargo.getQty());
 		waybill.setWeightUnit(cargo.getWeightUnit());
-		waybill.setStatus(CargoConstant.AWAIT_GENERATE);
+		waybill.setStatus(CargoConstant.WAYBILL_STATUS_WAIT_GENERATE);
 		waybill.setCreateDate(new Date());
 		waybill.setCreateBy(customer.getId());
 		waybillRepository.save(waybill);
@@ -364,7 +364,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		waybill.setPayType(cargo.getPayType());
 		waybill.setQty(cargo.getQty());
 		waybill.setWeightUnit(cargo.getWeightUnit());
-		waybill.setStatus(CargoConstant.AWAIT_GENERATE);
+		waybill.setStatus(CargoConstant.WAYBILL_STATUS_WAIT_GENERATE);
 		waybill.setCreateDate(new Date());
 		waybill.setCreateBy(customer.getId());
 		waybillRepository.save(waybill);

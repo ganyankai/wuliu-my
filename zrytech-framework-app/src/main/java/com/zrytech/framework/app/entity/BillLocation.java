@@ -10,17 +10,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zrytech.framework.base.entity.BaseEntity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 运单装卸地
- *
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "`bill_location`")
 public class BillLocation extends BaseEntity {
@@ -86,13 +86,11 @@ public class BillLocation extends BaseEntity {
 
 	/** 装卸日期 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`load_date`")
 	private Date loadDate;
 
 	/** 截止日期 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`end_date`")
 	private Date endDate;
 
@@ -106,7 +104,6 @@ public class BillLocation extends BaseEntity {
 
 	/** 创建日期 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "`create_date`")
 	private Date createDate;
 

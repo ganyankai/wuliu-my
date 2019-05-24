@@ -27,6 +27,7 @@ import com.zrytech.framework.app.service.BillLocationService;
 import com.zrytech.framework.app.service.WaybillService;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.util.RequestUtil;
 
 /**
  * 运单装卸地
@@ -67,7 +68,8 @@ public class BillLocationServiceImpl implements BillLocationService {
 	
 	@Transactional
 	@Override
-	public ServerResponse addBillLocation(BillLocationAddDto dto, Customer customer) {
+	public ServerResponse addBillLocation(BillLocationAddDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		Loading cargoLocation = this.paramsCheck(dto, customer.getCarOwner().getId());
 		this.saveBillLocation(dto, cargoLocation);
 		return ServerResponse.success();
@@ -115,7 +117,7 @@ public class BillLocationServiceImpl implements BillLocationService {
 				dto.getWaybillId(), dto.getWaybillDetailId(), dto.getCargoLocationId());
 		Integer count = billLocationRepository.countQtyByWaybillIdAndCargoLocationId(dto.getWaybillId(),
 				dto.getCargoLocationId());
-		if(count == null) {
+		if (count == null) {
 			count = 0;
 		}
 		if (billLocation == null) { // 运单装卸地不存在：新加

@@ -37,7 +37,7 @@ public interface BillLocationService {
 	 * @param customer
 	 * @return
 	 */
-	public ServerResponse addBillLocation(BillLocationAddDto dto, Customer customer);
+	ServerResponse addBillLocation(BillLocationAddDto dto);
 	
 	/**
 	 * 查询运单项下的全部装卸地
