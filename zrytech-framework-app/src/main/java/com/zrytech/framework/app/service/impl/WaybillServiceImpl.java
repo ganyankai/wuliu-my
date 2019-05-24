@@ -483,7 +483,7 @@ public class WaybillServiceImpl implements WaybillService {
 		Integer waybillId = dto.getId();
 		this.assertWaybillBelongToCurrentUser(waybillId, carOwner.getId());
 		int i = waybillMapper.submit(waybillId);
-		if (i == 1) {
+		if (i != 1) {
 			throw new BusinessException(112, "提交失败");
 		} else {
 			return ServerResponse.success();
