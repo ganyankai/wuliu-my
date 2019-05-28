@@ -113,10 +113,10 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		this.check(dto);
 		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
 		if (dto.getJump()) { // 跳过资料认证，资料默认为空
-			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);
+			carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_UNCERTIFIED);
 		} else {
+			carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_INCERTIFIED);
 			BeanUtils.copyProperties(dto, carCargoOwner);
-			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 			if (dto.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) { // 企业
 				OrganizeInfoUpdateDto temp = new OrganizeInfoUpdateDto();
 				BeanUtils.copyProperties(dto, temp);
@@ -126,7 +126,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 				PersonInfoUpdateDto temp = new PersonInfoUpdateDto();
 				BeanUtils.copyProperties(dto, temp);
 				carCargoOwner.setApproveContent(JSON.toJSONString(temp));
-				carCargoOwner.setName(null);
+				carCargoOwner.setName(temp.getLegalerName());
 				carCargoOwner.setCreditCode(null);
 				carCargoOwner.setBusinessLicense(null);
 			}
@@ -137,7 +137,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwner.setRefereesId(referrerId);
 		carCargoOwner.setCreateDate(new Date());
 		carCargoOwner.setAvoidAudit(false);
-		carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_UNCERTIFIED);
+		carCargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		carCargoOwnnerRepository.save(carCargoOwner);
 		return carCargoOwner;
 	}
@@ -257,6 +257,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Override
 	public ServerResponse adminApproveCarOwner(ApproveDto dto, User user) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
+		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(carOwner.getStatus())) {
+			throw new BusinessException(112, "审批失败：车主暂未填写认证信息");
+		}
 		if (!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			throw new BusinessException(112, "审批失败：车主状态不是待审批");
 		}
@@ -269,6 +272,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Override
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
+		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(cargoOwner.getStatus())) {
+			throw new BusinessException(112, "审批失败：货主暂未填写认证信息");
+		}
 		if (!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			throw new BusinessException(112, "审批失败：货主状态不是待审批");
 		}
@@ -387,6 +393,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
 			if (carCargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 				carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_CERTIFIED);
+			}
+			if (carCargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) { // 个人
+				carCargoOwner.setName(temp.getLegalerName());
 			}
 		} else {
 			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_NOT_APPROVED);

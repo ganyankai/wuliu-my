@@ -10,15 +10,11 @@
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="load_date" property="loadDate" jdbcType="TIMESTAMP" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
-    <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="cargo_owner_id" property="cargoOwnerId" jdbcType="INTEGER" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List" >
-	id, cargo_id, car_ownner_id, cargo_owner_id, matter_price, status,
-	load_date, create_date, approve_status, approve_content, create_by
-  </sql>
-  
   
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
   	select * from `cargo_matter`
@@ -44,9 +40,6 @@
 	  	<if test="status != null and status != ''">
 	  		and `status` = #{status}
 	  	</if>
-	  	<if test="approveStatus != null and approveStatus != ''">
-	  		and `approve_status` = #{approveStatus}
-	  	</if>
 	  	<if test="id != null">
 	  		and `id` = #{id}
 	  	</if>
@@ -54,118 +47,5 @@
 	 order by `create_date` desc
   </select>
   
-  <!-- 车主搜索报价单 -->
-  <select id="carOwnerSelectSelective" parameterType="Object" resultMap="BaseResultMap">
-  	select * from `cargo_matter` where `car_ownner_id` = #{carOwnerId}
-  	<if test="dto.status != null and dto.status != ''">
-  		and `status` = #{dto.status}
-  	</if>
-  	<if test="dto.createBy != null">
-  		and `create_by` = #{dto.createBy}
-  	</if>
-	order by `create_date` desc
-  </select>
   
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from cargo_matter
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from cargo_matter
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.zrytech.framework.app.entity.CargoMatter" >
-    insert into cargo_matter (id, cargo_id, car_ownner_id, 
-      matter_price, status, load_date, 
-      create_date)
-    values (#{id,jdbcType=INTEGER}, #{cargoId,jdbcType=INTEGER}, #{carOwnnerId,jdbcType=INTEGER}, 
-      #{matterPrice,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, #{loadDate,jdbcType=TIMESTAMP}, 
-      #{createDate,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zrytech.framework.app.entity.CargoMatter" >
-    insert into cargo_matter
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="cargoId != null" >
-        cargo_id,
-      </if>
-      <if test="carOwnnerId != null" >
-        car_ownner_id,
-      </if>
-      <if test="matterPrice != null" >
-        matter_price,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="loadDate != null" >
-        load_date,
-      </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="cargoId != null" >
-        #{cargoId,jdbcType=INTEGER},
-      </if>
-      <if test="carOwnnerId != null" >
-        #{carOwnnerId,jdbcType=INTEGER},
-      </if>
-      <if test="matterPrice != null" >
-        #{matterPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="loadDate != null" >
-        #{loadDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.app.entity.CargoMatter" >
-    update cargo_matter
-    <set >
-      <if test="cargoId != null" >
-        cargo_id = #{cargoId,jdbcType=INTEGER},
-      </if>
-      <if test="carOwnnerId != null" >
-        car_ownner_id = #{carOwnnerId,jdbcType=INTEGER},
-      </if>
-      <if test="matterPrice != null" >
-        matter_price = #{matterPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="loadDate != null" >
-        load_date = #{loadDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createDate != null" >
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.app.entity.CargoMatter" >
-    update cargo_matter
-    set cargo_id = #{cargoId,jdbcType=INTEGER},
-      car_ownner_id = #{carOwnnerId,jdbcType=INTEGER},
-      matter_price = #{matterPrice,jdbcType=DECIMAL},
-      status = #{status,jdbcType=VARCHAR},
-      load_date = #{loadDate,jdbcType=TIMESTAMP},
-      create_date = #{createDate,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 </mapper>

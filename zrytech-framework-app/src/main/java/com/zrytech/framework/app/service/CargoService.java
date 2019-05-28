@@ -221,4 +221,15 @@ public interface CargoService {
 	 */
 	ServerResponse adminCheckCargoSource(ApproveDto dto);
 	
+	/**
+	 * 货主 - 我的货源分页
+	 * @author cat
+	 * 
+	 * @param pageNum
+	 * @param pageSize
+	 * @param dto
+	 * @return
+	 */
+	ServerResponse myCargoSourcePage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto);
+	
 }

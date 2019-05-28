@@ -528,7 +528,15 @@
                 and `tender_way` = #{cargo.tenderWay}
             </if>
         </where>
-        ORDER BY `id` DESC
+        <if test="cargo.sort != null and cargo.sort != ''">
+        	ORDER BY ${cargo.sort}
+        	<if test="cargo.direction != null and cargo.direction != ''">
+        		${cargo.direction}
+       		</if>
+        </if>
+        <if test="cargo.sort == null">
+        	ORDER BY `id`
+        </if>
     </select>
 
 

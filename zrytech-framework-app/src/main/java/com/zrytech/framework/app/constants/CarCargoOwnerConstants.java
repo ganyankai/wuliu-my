@@ -14,8 +14,10 @@ public class CarCargoOwnerConstants {
 	public static final String STATUS_CERTIFIED = "certified";
 	/**未认证*/
 	public static final String STATUS_UNCERTIFIED = "uncertified";
+	/**认证中*/
+	public static final String STATUS_INCERTIFIED = "incertified";
 	
-	public static final String REG_EX_STATUS = "^(" + STATUS_CERTIFIED + ")|(" + STATUS_UNCERTIFIED + ")|()$";
+	public static final String REG_EX_STATUS = "^(" + STATUS_CERTIFIED + ")|(" + STATUS_UNCERTIFIED + ")|(" + STATUS_INCERTIFIED +")|()$";
 	public static final String REG_EX_STATUS_ERR_MSG = "状态有误";
 	
 	

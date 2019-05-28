@@ -88,6 +88,7 @@ public class CarCargoOwnerController {
 		CarCargoOwnnerPageDto dto = requestParams.getParams();
 		dto.setType(CarCargoOwnerConstants.TYPE_CAR_OWNER);
 		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		dto.setStatus(CarCargoOwnerConstants.STATUS_UNCERTIFIED);
 		PageData<CarCargoOwnner> pageData = carCargoOwnerService.carCargoOwnerPage(dto, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}
@@ -195,6 +196,7 @@ public class CarCargoOwnerController {
 		CarCargoOwnnerPageDto dto = requestParams.getParams();
 		dto.setType(CarCargoOwnerConstants.TYPE_CARGO_OWNER);
 		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
+		dto.setStatus(CarCargoOwnerConstants.STATUS_UNCERTIFIED);
 		PageData<CarCargoOwnner> pageData = carCargoOwnerService.carCargoOwnerPage(dto, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}

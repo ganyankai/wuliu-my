@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.constants.CargoMatterConstants;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
@@ -46,7 +47,11 @@ public class CargoMatter extends BaseEntity {
 	/** 货主企业名称 */
 	@Transient
 	private String cargoOwnerName;
-
+	
+	/** 价格单位 */
+	@Column(name = "`unit`")
+	private String unit;
+	
 	/**
 	 * 
 	 */
@@ -109,4 +114,12 @@ public class CargoMatter extends BaseEntity {
 		return "";
 	}
 
+	/** 价格单位 */
+	public String getUnitCN() {
+		if (StringUtils.isNotBlank(unit)) {
+			return DictionaryUtil.getValue(CargoConstant.PRICE_UNIT, unit);
+		}
+		return "";
+	}
+	
 }

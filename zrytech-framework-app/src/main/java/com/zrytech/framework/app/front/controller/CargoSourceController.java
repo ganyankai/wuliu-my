@@ -9,7 +9,6 @@ import com.zrytech.framework.app.dto.cargosource.CargoSourceAddDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceCheckUpdateDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
-import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.RequestParams;
@@ -121,13 +120,7 @@ public class CargoSourceController {
 		if (pageSize == null) {
 			pageSize = 10;
 		}
-		CargoSourceSearchDto dto = requestParams.getParams();
-
-		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		Integer id = customer.getCargoOwner().getId();
-		dto.setCreateBy(id);
-
-		return service.search(pageNum, pageSize, dto);
+		return service.myCargoSourcePage(pageNum, pageSize, requestParams.getParams());
 	}
 
 	@CargoOwnerRole

@@ -1,12 +1,12 @@
 package com.zrytech.framework.app.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.constants.CargoMatterConstants;
 import com.zrytech.framework.app.dao.CargoCustomerDao;
 import com.zrytech.framework.app.dao.CargoDao;
 import com.zrytech.framework.app.dao.LoadingDao;
@@ -27,7 +27,9 @@ import com.zrytech.framework.app.enums.LogisticsResultEnum;
 import com.zrytech.framework.app.mapper.CargoMapper;
 import com.zrytech.framework.app.mapper.LoadingMapper;
 import com.zrytech.framework.app.repository.ApproveLogRepository;
+import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.CargoLocationRepository;
+import com.zrytech.framework.app.repository.CargoMatterRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
 import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CargoService;
@@ -44,14 +46,12 @@ import com.zrytech.framework.common.entity.SysCustomer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 @Service
@@ -608,6 +608,7 @@ public class CargoServiceImpl implements CargoService {
      * @return:ServerResponse
      */
     @Override
+    @Deprecated
     public ServerResponse mySourcePage(CargoDto cargoDto, Page page) {
         Cargo cargoCustomer = BeanUtil.copy(cargoDto, Cargo.class);
         String orderField = "create_date";
@@ -615,20 +616,69 @@ public class CargoServiceImpl implements CargoService {
         return ServerResponse.successWithData(pageInfo);
     }
     
-    
+	@Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
+	
 	public ServerResponse search(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
 		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
 		List<Cargo> list = cargoMapper.cargoSearch(dto);
+		for (Cargo cargo : list) {
+			String cargoOwnerName = carCargoOwnnerRepository.findNameById(cargo.getCreateBy());
+			cargo.setCargoOwnerName(cargoOwnerName);
+		}
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
 	}
-    
+	
+	@Autowired
+	private CargoMatterRepository cargoMatterRepository;
+	
+	@Override
+	public ServerResponse myCargoSourcePage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer id = cargoOwner.getId();
+		dto.setCreateBy(id);
+
+		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+		List<Cargo> list = cargoMapper.cargoSearch(dto);
+		for (Cargo cargo : list) {
+			if (cargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
+				cargo.setCargoOwnerName(cargoOwner.getLegalerName());
+			} else {
+				cargo.setCargoOwnerName(cargoOwner.getName());
+			}
+			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
+			cargo.setCargoMatterCount(countByCargoId);
+		}
+
+		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
+	
 	
 	public ServerResponse details(CommonDto dto) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		CarCargoOwnner cargoOwner = customer.getCargoOwner();
 		Integer cargoOwnerId = cargoOwner.getId();
 		Cargo cargo = this.assertCargoBelongToCurrentCargoOwner(dto.getId(), cargoOwnerId);
+		cargo.setCargoOwnerName(cargoOwner.getName());
+		cargo.setCargoOwnerTel(cargoOwner.getTel());
+		int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
+		cargo.setCargoMatterCount(countByCargoId);
+		if (cargo.getStatus().equalsIgnoreCase(CargoConstant.CARGO_SOURCE_STATUS_COMPLETED)) {
+			List<CargoMatter> cargoMatters = cargoMatterRepository.findByCargoIdAndStatus(cargo.getId(),
+					CargoMatterConstants.CARGO_MATTER_STATUS_TENDER);
+			CargoMatter cargoMatter = cargoMatters.get(0);
+			Integer carOwnnerId = cargoMatter.getCarOwnnerId();
+			CarCargoOwnner carOwner = carCargoOwnnerRepository.findOne(carOwnnerId);
+			if (carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
+				cargoMatter.setCarOwnerName(carOwner.getLegalerName());
+			} else {
+				cargoMatter.setCarOwnerName(carOwner.getName());
+			}
+			cargo.setCargoMatter(cargoMatter);
+		}
 		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
 		cargo.setCargoLocations(list);
 		return ServerResponse.successWithData(cargo);
@@ -754,6 +804,10 @@ public class CargoServiceImpl implements CargoService {
 				|| CargoConstant.CARGO_SOURCE_STATUS_COMPLETED.equalsIgnoreCase(cargo.getStatus())) {
 			List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
 			cargo.setCargoLocations(list);
+			Integer createBy = cargo.getCreateBy();
+			CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(createBy);
+			cargo.setCargoOwnerName(cargoOwner.getName());
+			cargo.setCargoOwnerTel(cargoOwner.getTel());
 			return ServerResponse.successWithData(cargo);
 		} else {
 			throw new BusinessException(112, "仅可查看发布中，已完成货源的详情");

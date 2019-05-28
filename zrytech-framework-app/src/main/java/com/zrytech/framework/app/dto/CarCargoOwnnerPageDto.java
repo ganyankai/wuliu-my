@@ -43,6 +43,10 @@ public class CarCargoOwnnerPageDto {
 	/** 状态 */
 	@Pattern(regexp = CarCargoOwnerConstants.REG_EX_STATUS, message = CarCargoOwnerConstants.REG_EX_STATUS_ERR_MSG)
 	private String status;
+	
+	/** 状态 */
+	@Pattern(regexp = CarCargoOwnerConstants.REG_EX_STATUS, message = CarCargoOwnerConstants.REG_EX_STATUS_ERR_MSG)
+	private String unstatus;
 
 	/** 用户类型 */
 	@Pattern(regexp = CarCargoOwnerConstants.REG_EX_CUSTOMER_TYPE, message = CarCargoOwnerConstants.REG_EX_CUSTOMER_TYPE_ERR_MSG)

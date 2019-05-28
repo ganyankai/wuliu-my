@@ -191,7 +191,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		cargoMatter.setStatus(CargoMatterConstants.CARGO_MATTER_STATUS_RELEASE);
 		cargoMatter.setCreateBy(customer.getId());
 		cargoMatter.setCreateDate(new Date());
-
+		cargoMatter.setUnit(cargo.getPriceUnit());
 		cargoMatterRepository.save(cargoMatter);
 
 		return ServerResponse.successWithData("报价成功");

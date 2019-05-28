@@ -17,4 +17,8 @@ public interface CargoMatterRepository extends BaseRepository<CargoMatter, Integ
 
 	List<CargoMatter> findByCargoIdAndCarOwnnerId(Integer cargoId, Integer carOwnnerId);
 	
+	int countByCargoId(Integer cargoId);
+	
+	List<CargoMatter> findByCargoIdAndStatus(Integer cargoId, String status);
+	
 }
