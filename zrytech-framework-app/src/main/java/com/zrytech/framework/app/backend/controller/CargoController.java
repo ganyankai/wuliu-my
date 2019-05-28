@@ -1,20 +1,13 @@
 package com.zrytech.framework.app.backend.controller;
 
-
 import com.zrytech.framework.app.ano.AdminRole;
-import com.zrytech.framework.app.dto.CargoDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
+import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
 import com.zrytech.framework.app.service.CargoService;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
-import com.zrytech.framework.base.exception.BusinessException;
-import com.zrytech.framework.base.util.RequestUtil;
-import com.zrytech.framework.common.entity.SysCustomer;
-import com.zrytech.framework.common.entity.User;
-import com.zrytech.framework.common.enums.CommonResult;
-import com.zrytech.framework.common.enums.ResultEnum;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 import javax.validation.Valid;
 
@@ -25,15 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(description = "货源相关api")
+/**
+ * 货源
+ */
 @RestController
 @RequestMapping("/goodsSource")
 public class CargoController {
 
+	@Autowired
+	private CargoService service;
 
-    @Autowired
-    private CargoService service;
-    
 	@AdminRole
 	@Valid
 	@PostMapping("/adminCheckCargoSource")
@@ -41,145 +35,32 @@ public class CargoController {
 			BindingResult result) {
 		return service.adminCheckCargoSource(requestParams.getParams());
 	}
-    
-    
-    
 
-    /**
-     * Desintion:货源分页列表信息
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @PostMapping("/page")
-    @ApiOperation(value = "货源分页列表信息")
-    public ServerResponse cargoPage(@RequestBody RequestParams<CargoDto> requestParams) {
-        CargoDto cargoDto = requestParams.getParams();
-        if (cargoDto == null) {
-            cargoDto = new CargoDto();
-        }
-        return service.cargoPage(cargoDto, requestParams.getPage());
-    }
+	@AdminRole
+	@Valid
+	@PostMapping("/page")
+	public ServerResponse cargoPage(@RequestBody @Valid RequestParams<CargoSourceSearchDto> requestParams,
+			BindingResult result) {
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		return service.adminPage(pageNum, pageSize, requestParams.getParams());
+	}
 
-    /**
-     * Desintion:货源详情
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @PostMapping("/get")
-    @ApiOperation(value = "货源详情")
-    public ServerResponse get(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        return service.get(requestParams.getParams());
-    }
+	@AdminRole
+	@Valid
+	@PostMapping("/get")
+	public ServerResponse get(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
+		return service.adminDetails(requestParams.getParams());
+	}
 
-    /**
-     * Desintion:货源审核
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @Deprecated
-    @PostMapping("/auditSource")
-    @ApiOperation(value = "货源审核")
-    public ServerResponse auditSource(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null
-                || requestParams.getParams().getId() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        User user = RequestUtil.getCurrentUser(User.class);
-        return service.auditSource(requestParams.getParams(), user);
-    }
-
-
-    /**
-     * Desintion:发布货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @PostMapping("/pushResource")
-    @ApiOperation(value = "发布货源")
-    public ServerResponse pushResource(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
-        requestParams.getParams().setCreateBy(sysCustomer.getId());
-        return service.pushResource(requestParams.getParams());
-    }
-
-    /**
-     * Desintion:取消发布货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @Deprecated
-    @PostMapping("/cancelResource")
-    @ApiOperation(value = "取消发布货源")
-    public ServerResponse cancelResource(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        return service.cancelResource(requestParams.getParams());
-    }
-
-    /**
-     * Desintion:修改货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @PostMapping("/updateSource")
-    @ApiOperation(value = "修改货源")
-    public ServerResponse updateSource(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null
-                || requestParams.getParams().getId() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        return service.updateSource(requestParams.getParams());
-    }
-
-    /**
-     * Desintion:删除货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @PostMapping("/deleteSource")
-    @ApiOperation(value = "删除货源")
-    public ServerResponse deleteSource(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null
-                || requestParams.getParams().getId() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        return service.deleteSource(requestParams.getParams());
-    }
-
-    /**
-     * Desintion:邀请报价(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @PostMapping("/invitationOffer")
-    @ApiOperation(value = "邀请报价")
-    public ServerResponse invitationOffer(@RequestBody RequestParams<CargoDto> requestParams) {
-        if (requestParams.getParams() == null) {
-            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
-        }
-        return service.invitationOffer(requestParams.getParams());
-    }
 }

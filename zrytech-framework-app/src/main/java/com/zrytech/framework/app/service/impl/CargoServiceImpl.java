@@ -79,90 +79,55 @@ public class CargoServiceImpl implements CargoService {
     
     @Autowired
     private CargoMapper cargoMapper;
-    
-
    
     
+
+	@Override
+	public ServerResponse adminPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
+		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+		List<Cargo> list = cargoMapper.cargoSearch(dto);
+		for (Cargo cargo : list) {
+			CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(cargo.getCreateBy());
+			cargo.setCargoOwnerName(cargoOwner.getName());
+			cargo.setCargoOwnerTel(cargoOwner.getTel());
+			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
+			cargo.setCargoMatterCount(countByCargoId);
+		}
+		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
     
-    /**
-     * Desintion:货源分页列表信息
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
     @Override
-    public ServerResponse cargoPage(CargoDto cargoDto, Page page) {
-        Cargo cargoCustomer = BeanUtil.copy(cargoDto, Cargo.class);
-        String orderField = "pickup_date";
-        PageInfo<Cargo> pageInfo = cargoDao.cargoPage(cargoCustomer, orderField, page);
-        return ServerResponse.successWithData(pageInfo);
-    }
-
-    /**
-     * Desintion:货源详情
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @Override
-    public ServerResponse get(CargoDto cargoDto) {
-        CheckFieldUtils.checkObjecField(cargoDto.getId());
-        Cargo cargo = cargoDao.get(cargoDto.getId());
-        //获取多点装货地址
-        List<Loading> lodingList = loadingDao.selectLoadingList(cargo.getId(), CargoConstant.LOADING_TYPE);
-        if (lodingList != null && lodingList.size() > 0) {
-            //cargo.setMulShipmentList(lodingList);
-        }
-        //获取多点卸货地址
-        List<Loading> unLodingList = loadingDao.selectLoadingList(cargo.getId(), CargoConstant.UNLOADING_TYPE);
-        if (unLodingList != null && unLodingList.size() > 0) {
-            //cargo.setMulUnloadList(unLodingList);
-        }
-        return ServerResponse.successWithData(cargo);
-    }
-
+	public ServerResponse adminDetails(CommonDto dto) {
+		Cargo cargo = this.assertCargoAvailable(dto.getId());
+		Integer createBy = cargo.getCreateBy();
+		CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(createBy);
+		cargo.setCargoOwnerName(cargoOwner.getName());
+		cargo.setCargoOwnerTel(cargoOwner.getTel());
+		int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
+		cargo.setCargoMatterCount(countByCargoId);
+		if (cargo.getStatus().equalsIgnoreCase(CargoConstant.CARGO_SOURCE_STATUS_COMPLETED)) {
+			List<CargoMatter> cargoMatters = cargoMatterRepository.findByCargoIdAndStatus(cargo.getId(),
+					CargoMatterConstants.CARGO_MATTER_STATUS_TENDER);
+			CargoMatter cargoMatter = cargoMatters.get(0);
+			Integer carOwnnerId = cargoMatter.getCarOwnnerId();
+			CarCargoOwnner carOwner = carCargoOwnnerRepository.findOne(carOwnnerId);
+			if (carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
+				cargoMatter.setCarOwnerName(carOwner.getLegalerName());
+			} else {
+				cargoMatter.setCarOwnerName(carOwner.getName());
+			}
+			cargo.setCargoMatter(cargoMatter);
+		}
+		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
+		cargo.setCargoLocations(list);
+		return ServerResponse.successWithData(cargo);
+	}
+    
+    
     @Autowired
     private ApproveLogRepository approveLogRepository;
 
-    /**
-     * Desintion:货源审核
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @Deprecated
-    @Override
-    public ServerResponse auditSource(CargoDto cargoDto, User user) {
-        CheckFieldUtils.checkObjecField(cargoDto.getStatus());
-        CheckFieldUtils.checkObjecField(cargoDto.getDescribe());
-        //TODO:拒绝后需填写拒绝理由;添加审核记录
-        Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
-        //TODO:审核通过,系统通过发标方式推送给相应的车主(考虑是否是免审核用户)
-        Cargo cargoGoods = cargoDao.get(cargoDto.getId());
-        //添加审核记录
-        ApproveLog entity = new ApproveLog();
-        entity.setApproveBy(user.getId());
-        entity.setApproveContent(cargoDto.getDescribe());
-        entity.setApproveResult(cargoDto.getStatus());
-        entity.setApproveTime(new Date());
-        //entity.setApproveType(ApproveLogConstants.APPROVE_TYPE_GOODS_SOURCE);
-        entity.setBusinessId(cargoDto.getId());
-        approveLogRepository.save(entity);
-        /*if (CargoConstant.CARGO_SOURCE_STATUS_CHECK_REJECTED.equalsIgnoreCase(cargoDto.getStatus())) {//审核被拒绝:下架
-            //TODO:短信通知
-            cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);//变为草稿状态
-            int num = cargoDao.updateAudit(cargo);
-            CheckFieldUtils.assertSuccess(num);
-            return ServerResponse.success();
-        }*/
-        pushGoodSource(cargoGoods);
-        int num = cargoDao.updateAudit(cargo);
-        CheckFieldUtils.assertSuccess(num);
-        return ServerResponse.success();
-    }
     
     
     
@@ -421,66 +386,7 @@ public class CargoServiceImpl implements CargoService {
     
     
     
-    /**
-     * Desintion:发布货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-	@Deprecated
-    @Override
-    public ServerResponse pushResource(CargoDto cargoDto) {
-        //验证
-        CheckFieldUtils.checkObjecField(cargoDto.getName());
-        CheckFieldUtils.checkObjecField(cargoDto.getQty());
-        CheckFieldUtils.checkObjecField(cargoDto.getMatterPrice());
-        CheckFieldUtils.checkObjecField(cargoDto.getStartCity());
-        CheckFieldUtils.checkObjecField(cargoDto.getEndCity());
-        //TODO:判断当前用户是否为免审核用户;如果是免审核则系统直接通过招标方式通知相应的车主
-        Certification certification = shipperDao.getCustomerId(cargoDto.getCreateBy());
-        if (certification == null || certification.getStatus() == null || !certification.getStatus().equalsIgnoreCase(CargoConstant.AUDIT_PASS)) {
-            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.PERMISSED_NOT_FAIL));
-        }
-        Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
-        cargo.setCreateDate(new Date());
-        cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);
-        int num = cargoDao.pushSave(cargo);
-        CheckFieldUtils.assertSuccess(num);
-        List<Loading> loadingList = cargoDto.getMulShipmentList();
-        if (loadingList != null && loadingList.size() > 0) {
-            //批量添加装货地址
-            loadingDao.batchSave(loadingList, CargoConstant.LOADING_TYPE, cargo.getId());
-        }
-        List<Loading> unLoadingList = cargoDto.getMulUnloadList();
-        if (loadingList != null && loadingList.size() > 0) {
-            //批量添加卸货地址
-            loadingDao.batchSave(unLoadingList, CargoConstant.UNLOADING_TYPE, cargo.getId());
-        }
-        if (certification != null && certification.getAvoidAudit() != null && certification.getAvoidAudit()) {//ture表示是免审核用户;则货源无需经过后台审核直接推送
-            cargo.setId(cargo.getId());
-            pushGoodSource(cargo);
-        }
-        return ServerResponse.success();
-    }
 
-    /**
-     * Desintion:修改货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-	@Deprecated
-    @Override
-    public ServerResponse updateSource(CargoDto cargoDto) {
-        List<Loading> loadingList = cargoDto.getMulShipmentList();//多点装货地址
-        List<Loading> unloadingList = cargoDto.getMulUnloadList();//多点卸货地址
-        updateOrSave(loadingList, unloadingList, cargoDto.getId());
-        Cargo cargo = BeanUtil.copy(cargoDto, Cargo.class);
-        cargoDao.updateSource(cargo);
-        return ServerResponse.success();
-    }
 
     /**
      * @Desinition:多点卸货和多点装货修改
@@ -538,28 +444,6 @@ public class CargoServiceImpl implements CargoService {
         }
     }
 
-    /**
-     * Desintion:删除货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-	@Deprecated
-    @Override
-    public ServerResponse deleteSource(CargoDto cargoDto) {
-        Cargo cargo = cargoDao.get(cargoDto.getId());
-        if (CargoConstant.AUDIT_PASS.equalsIgnoreCase(cargo.getStatus())) {
-            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.GOODS_SOURCE_UP));
-        }
-        SysCustomer sysCustomer = RequestUtil.getCurrentUser(SysCustomer.class);
-        if (cargo.getCreateBy() != sysCustomer.getId()) {
-            throw new BusinessException(new LogisticsResult(LogisticsResultEnum.USER_DELETE_FAIL));
-        }
-        int num = cargoDao.deleteSource(cargoDto.getId());
-        CheckFieldUtils.assertSuccess(num);
-        return ServerResponse.success();
-    }
 
     /**
      * Desintion:邀请报价(前端)
@@ -730,24 +614,6 @@ public class CargoServiceImpl implements CargoService {
 	
 	
 
-    /**
-     * Desintion:取消发布货源(前端)
-     *
-     * @author:jiangxiaoxiang
-     * @param:CargoDto货源dto
-     * @return:ServerResponse
-     */
-    @Deprecated
-    @Override
-    public ServerResponse cancelResource(CargoDto cargoDto) {
-        /*Cargo cargo = cargoDao.get(cargoDto.getId());
-        if (CargoConstant.SOURCE_UP.equalsIgnoreCase(cargo.getStatus())) {//针对报价中的货源,取消发布
-            cargo.setStatus(CargoConstant.SOURCE_CANCEL);//状态改为:已取消状态
-            cargoDao.updateAudit(cargo);
-            //TODO:是否删除推送记录和报价信息
-        }*/
-        return ServerResponse.success();
-    }
 
     
     @Transactional

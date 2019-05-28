@@ -12,8 +12,12 @@ import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.SysCustomer;
+import com.zrytech.framework.common.enums.CommonResult;
+import com.zrytech.framework.common.enums.ResultEnum;
+
 import io.swagger.annotations.ApiOperation;
 
 import javax.validation.Valid;
@@ -203,5 +207,21 @@ public class CargoSourceController {
 			cargoDto = new CargoDto();
 		}
 		return service.mySourcePage(cargoDto, requestParams.getPage());
+	}
+	
+	/**
+	 * Desintion:邀请报价(前端)
+	 *
+	 * @author:jiangxiaoxiang
+	 * @param:CargoDto货源dto
+	 * @return:ServerResponse
+	 */
+	@PostMapping("/invitationOffer")
+	@ApiOperation(value = "邀请报价")
+	public ServerResponse invitationOffer(@RequestBody RequestParams<CargoDto> requestParams) {
+		if (requestParams.getParams() == null) {
+			throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+		}
+		return service.invitationOffer(requestParams.getParams());
 	}
 }
