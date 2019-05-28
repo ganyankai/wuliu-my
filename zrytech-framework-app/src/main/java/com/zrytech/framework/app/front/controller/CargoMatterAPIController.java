@@ -83,8 +83,12 @@ public class CargoMatterAPIController {
 		return service.carOwnerCargoMatterDetails(requestParams.getParams());
 	}
 	
-	
-	
+	@CarOwnerRole
+	@Valid
+	@RequestMapping("/bid")
+	public ServerResponse bid(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
+		return service.bid(requestParams.getParams());
+	}
 	
 	
 	

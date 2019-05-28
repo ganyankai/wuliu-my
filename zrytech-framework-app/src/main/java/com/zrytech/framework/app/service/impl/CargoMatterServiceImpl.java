@@ -78,20 +78,16 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		return ServerResponse.successWithData(cargoMatter);
 	}
 	
-	
-	
 	@Override
 	public PageData<CargoMatter> cargoMatterPage(CargoMatterPageDto dto, Integer pageNum, Integer pageSize) {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CargoMatter> list = cargoMatterMapper.selectSelective(dto);
 		for (CargoMatter cargoMatter : list) {
 			cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
+			cargoMatter = this.bindingCargo(cargoMatter);
 		}
 		return new PageData<CargoMatter>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
-	
-	
-	
 	
 	/**
 	 * 断言报价单存在
@@ -207,6 +203,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		List<CargoMatter> list = cargoMatterMapper.selectSelective(dto);
 		for (CargoMatter cargoMatter : list) {
 			cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
+			cargoMatter = this.bindingCargo(cargoMatter);
 		}
 		PageData<CargoMatter> pageData = new PageData<CargoMatter>(result.getPageSize(), result.getPageNum(),
 				result.getTotal(), list);
@@ -314,7 +311,10 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 
 		dto.setCargoOwnerId(cargoOwnerId);
 		List<CargoMatter> list = cargoMatterMapper.selectSelective(dto);
-
+		for (CargoMatter cargoMatter : list) {
+			cargoMatter = this.bindingCarCargoOwnerName(cargoMatter);
+		}
+		
 		Map<String, Object> result = new HashMap<>();
 		result.put("total", list.size());
 		result.put("list", list);

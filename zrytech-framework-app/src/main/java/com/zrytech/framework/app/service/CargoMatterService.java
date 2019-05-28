@@ -92,8 +92,6 @@ public interface CargoMatterService {
 	ServerResponse bid(CommonDto dto);
 	
 	
-	
-	
 	/**
 	 * 货主 - 查看货源的报价单列表
 	 * @author cat
