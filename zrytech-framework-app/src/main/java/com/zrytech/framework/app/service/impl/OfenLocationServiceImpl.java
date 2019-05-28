@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class OfenLocationServiceImpl implements OfenLocationService {
 
 
@@ -60,6 +59,7 @@ public class OfenLocationServiceImpl implements OfenLocationService {
      */
 
 //    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public ServerResponse add(OfenLocationAddDto ofenLocationAddDto) {
 
         OfenLocation ofenLocation = BeanUtil.copy(ofenLocationAddDto, OfenLocation.class);
@@ -94,6 +94,7 @@ public class OfenLocationServiceImpl implements OfenLocationService {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public ServerResponse update(OfenLocationUpdateDto ofenLocationUpdateDto) {
         OfenLocation ofenLocation=BeanUtil.copy(ofenLocationUpdateDto,OfenLocation.class);
         int num=ofenLocationDao.update(ofenLocation);
@@ -109,6 +110,7 @@ public class OfenLocationServiceImpl implements OfenLocationService {
      * @return:ServerResponse
      */
 //    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public ServerResponse delete(OfenLocationCommonDto ofenLocationCommonDto) {
         CheckFieldUtils.checkObjecField(ofenLocationCommonDto.getId());
         int num=ofenLocationDao.delete(ofenLocationCommonDto.getId());
