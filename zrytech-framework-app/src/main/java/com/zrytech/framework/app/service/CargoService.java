@@ -1,8 +1,5 @@
 package com.zrytech.framework.app.service;
 
-import java.util.List;
-
-import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.dto.CargoDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
@@ -11,15 +8,10 @@ import com.zrytech.framework.app.dto.cargosource.CargoSourceAddDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceCheckUpdateDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
-import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Cargo;
-import com.zrytech.framework.app.entity.Customer;
-import com.zrytech.framework.app.entity.Loading;
 import com.zrytech.framework.base.entity.Page;
-import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.entity.User;
-import com.zrytech.framework.base.util.RequestUtil;
 
 public interface CargoService {
     /**
@@ -231,5 +223,18 @@ public interface CargoService {
 	 * @return
 	 */
 	ServerResponse myCargoSourcePage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto);
+	
+	
+	/**
+	 * 公开货源分页
+	 * @author cat
+	 * 
+	 * @param pageNum
+	 * @param pageSize
+	 * @param dto
+	 * @return
+	 */
+	ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto);
+	
 	
 }

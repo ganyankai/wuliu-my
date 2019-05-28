@@ -1,7 +1,6 @@
 package com.zrytech.framework.app.front.controller;
 
 import com.zrytech.framework.app.ano.CargoOwnerRole;
-import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.dto.CargoDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationUpdateDto;
@@ -156,10 +155,7 @@ public class CargoSourceController {
 		if (pageSize == null) {
 			pageSize = 10;
 		}
-		CargoSourceSearchDto dto = requestParams.getParams();
-		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
-
-		return service.search(pageNum, pageSize, dto);
+		return service.openPage(pageNum, pageSize, requestParams.getParams());
 	}
 	
 	@Valid

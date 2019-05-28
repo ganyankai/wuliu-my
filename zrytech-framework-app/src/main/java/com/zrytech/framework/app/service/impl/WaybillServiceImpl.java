@@ -158,6 +158,16 @@ public class WaybillServiceImpl implements WaybillService {
 			List<WaybillDetail> waybillDetails = waybillDetailRepository.findByBillNo(billNo);
 			for (WaybillDetail waybillDetail : waybillDetails) {
 				waybillDetail = this.bindingBillLocation(waybillDetail);
+				CarPerson driver = carPersonService.assertDriverAvailable(waybillDetail.getDriverId());
+				CarPerson supercargo = carPersonService.assertSupercargoAvailable(waybillDetail.getSupercargoId());
+				Car car = carService.assertCarAvailable(waybillDetail.getCarId());
+				waybillDetail.setCarNo(car.getCarNo());
+				waybillDetail.setDriverIdCard(driver.getIdCard());
+				waybillDetail.setDriverName(driver.getName());
+				waybillDetail.setDriverTel(driver.getTel());
+				waybillDetail.setSupercargoIdCard(supercargo.getIdCard());
+				waybillDetail.setSupercargoName(supercargo.getName());
+				waybillDetail.setSupercargoTel(supercargo.getTel());
 			}
 			waybill.setWaybillDetails(waybillDetails);
 		}

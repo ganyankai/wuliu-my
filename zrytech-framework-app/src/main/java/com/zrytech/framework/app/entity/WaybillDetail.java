@@ -30,7 +30,35 @@ import org.springframework.util.StringUtils;
 @Entity
 @Table(name = "`waybill_detail`")
 public class WaybillDetail extends BaseEntity {
-
+	
+	/** 车牌号 */
+	@Transient
+	private String carNo;
+	
+	/** 司机姓名 */
+	@Transient
+	private String driverName;
+	
+	/** 司机身份证 */
+	@Transient
+	private String driverIdCard;
+	
+	/** 司机电话 */
+	@Transient
+	private String driverTel;
+	
+	/** 压货人姓名 */
+	@Transient
+	private String supercargoName;
+	
+	/** 压货人身份证 */
+	@Transient
+	private String supercargoIdCard;
+	
+	/** 压货人电话 */
+	@Transient
+	private String supercargoTel;
+	
 	/**
 	 * 运单装卸地
 	 */

@@ -32,6 +32,14 @@ import org.apache.commons.lang3.StringUtils;
 @Entity
 @Table(name = "`cargo`")
 public class Cargo extends BaseEntity implements Serializable {
+	
+	/** 是否已报价 */
+	@Transient
+	private Boolean isOffer;
+	
+	/** 是否已关注 */
+	@Transient
+	private Boolean isFocus;
 
 	/** 货源装卸地 */
 	@Transient
