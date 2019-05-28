@@ -21,7 +21,6 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarSourceConstants;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceAddDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
@@ -105,7 +104,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	}
 	
 	@Override
-	public ServerResponse adminDetails(DetailsDto dto) {
+	public ServerResponse adminDetails(CommonDto dto) {
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCarRecordPlace(carSource);
@@ -388,7 +387,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	}
 
 	@Override
-	public ServerResponse details(DetailsDto dto, Customer customer) {
+	public ServerResponse details(CommonDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		this.assertCarSourceBolongToCurrentUser(carOwner, carSource);
@@ -621,7 +620,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 	}
 
 	@Override
-	public ServerResponse openDetails(DetailsDto dto) {
+	public ServerResponse openDetails(CommonDto dto) {
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		if (!CarSourceConstants.STATUS_RELEASE.equalsIgnoreCase(carSource.getStatus())) {
 			throw new BusinessException(112, "仅可查看发布中的车源详情");

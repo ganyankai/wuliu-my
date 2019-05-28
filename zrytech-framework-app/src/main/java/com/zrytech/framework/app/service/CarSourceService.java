@@ -3,7 +3,6 @@ package com.zrytech.framework.app.service;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
@@ -42,7 +41,7 @@ public interface CarSourceService {
 	 * @param dto	车源Id
 	 * @return
 	 */
-	public ServerResponse adminDetails(DetailsDto dto);
+	public ServerResponse adminDetails(CommonDto dto);
 	
 	/**
 	 * 管理员 - 车源审批
@@ -74,9 +73,9 @@ public interface CarSourceService {
 	 * @param customer	车主及车主子账号
 	 * @return
 	 */
-	public ServerResponse details(DetailsDto dto, Customer customer);
+	public ServerResponse details(CommonDto dto, Customer customer);
 	
-	ServerResponse openDetails(DetailsDto dto);
+	ServerResponse openDetails(CommonDto dto);
 	
 	
 	/**

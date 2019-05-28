@@ -28,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.dto.CustomerPageDto;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.repository.LogisticsCustomerRepository;
@@ -82,27 +81,6 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
 		return list.get(0);
 	}
 
-    /**
-     * @param pageNumber
-     * @param pageSize
-     * @param dto
-     * @return
-     */
-    public Page<Customer> page(Integer pageNumber, Integer pageSize, CustomerPageDto dto) {
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(dto, customer);
-
-        Sort sort = new Sort(Direction.DESC, "createDate");
-
-        Pageable pageable = new PageRequest(pageNumber - 1, pageSize, sort);
-
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withMatcher("carType", GenericPropertyMatchers.contains());
-
-        Example<Customer> example = Example.of(customer, matcher);
-
-        return customerRepository.findAll(example, pageable);
-    }
 
     @Autowired
     private CargoCustomerDao cargoCustomerDao;

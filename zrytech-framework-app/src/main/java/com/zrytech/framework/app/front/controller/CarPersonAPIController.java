@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
-import com.zrytech.framework.app.dto.DeleteDto;
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonEnabledDto;
@@ -83,7 +82,7 @@ public class CarPersonAPIController {
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/delete")
-	public ServerResponse delete(@RequestBody @Valid RequestParams<DeleteDto> requestParams, BindingResult result) {
+	public ServerResponse delete(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.delete(requestParams.getParams(), customer);
 	}
@@ -133,7 +132,7 @@ public class CarPersonAPIController {
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carPersonService.details(requestParams.getParams(), customer);
 	}

@@ -3,8 +3,6 @@ package com.zrytech.framework.app.service;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DeleteDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
 import com.zrytech.framework.app.dto.carperson.AdminSupercargoPageDto;
@@ -85,7 +83,7 @@ public interface CarPersonService {
 	 * @param customer	当前登录人
 	 * @return
 	 */
-	public ServerResponse details(DetailsDto dto, Customer customer);
+	public ServerResponse details(CommonDto dto, Customer customer);
 	
 	/**
 	 * 车主及车主子账号 - 删除司机或压货人（逻辑删除）
@@ -95,7 +93,7 @@ public interface CarPersonService {
 	 * @param customer
 	 * @return
 	 */
-	public ServerResponse delete(DeleteDto dto, Customer customer);
+	public ServerResponse delete(CommonDto dto, Customer customer);
 	
 	/**
 	 * 车主及车主子账号 - 司机账号的禁用与启用
@@ -275,7 +273,7 @@ public interface CarPersonService {
 	 * @param dto	司机Id
 	 * @return
 	 */
-	public ServerResponse adminDriverDetails(DetailsDto dto);
+	public ServerResponse adminDriverDetails(CommonDto dto);
 	
 	/**
 	 * 管理员 - 压货人详情
@@ -284,7 +282,7 @@ public interface CarPersonService {
 	 * @param dto	压货人Id
 	 * @return
 	 */
-	public ServerResponse adminSupercargoDetails(DetailsDto dto);
+	public ServerResponse adminSupercargoDetails(CommonDto dto);
 	
 	/**
 	 * 管理员 - 司机审批

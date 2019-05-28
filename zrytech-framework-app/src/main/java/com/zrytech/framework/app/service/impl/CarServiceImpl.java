@@ -17,8 +17,7 @@ import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarConstants;
-import com.zrytech.framework.app.dto.DeleteDto;
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.car.CarAddDto;
 import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
@@ -85,7 +84,7 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public ServerResponse adminDetails(DetailsDto dto) {
+	public ServerResponse adminDetails(CommonDto dto) {
 		Car car = this.assertCarExist(dto.getId());
 		car = this.bindingCarOwner(car);
 		car = this.bindingDriver(car);
@@ -244,7 +243,7 @@ public class CarServiceImpl implements CarService {
 	
 	
 	@Override
-	public ServerResponse details(DetailsDto dto, Customer customer) {
+	public ServerResponse details(CommonDto dto, Customer customer) {
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		car = this.bindingCarOwner(car);
 		car = this.bindingDriver(car);
@@ -313,7 +312,7 @@ public class CarServiceImpl implements CarService {
 
 	@Transactional
 	@Override
-	public ServerResponse delete(DeleteDto dto, Customer customer) {
+	public ServerResponse delete(CommonDto dto, Customer customer) {
 		Car car = this.assertCarBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		if (!car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "删除失败：仅可删除未认证的车辆");

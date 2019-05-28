@@ -14,7 +14,6 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
@@ -105,7 +104,7 @@ public class CarCargoOwnerController {
 	@AdminRole
 	@Valid
 	@PostMapping("/carOwnerDetails")
-	public ServerResponse carOwnerDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
+	public ServerResponse carOwnerDetails(@RequestBody @Valid RequestParams<CommonDto> requestParams,
 			BindingResult result) {
 		return carCargoOwnerService.adminCarOwnerDetails(requestParams.getParams());
 	}
@@ -213,7 +212,7 @@ public class CarCargoOwnerController {
 	@AdminRole
 	@Valid
 	@PostMapping("/cargoOwnerDetails")
-	public ServerResponse cargoOwnerDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
+	public ServerResponse cargoOwnerDetails(@RequestBody @Valid RequestParams<CommonDto> requestParams,
 			BindingResult result) {
 		return carCargoOwnerService.adminCargoOwnerDetails(requestParams.getParams());
 	}
@@ -254,7 +253,6 @@ public class CarCargoOwnerController {
 		return carCargoOwnerService.adminApproveCargoOwner(requestParams.getParams(), user);
 	}
 	
-	
 	/**
 	 * 管理员 - 启用车主
 	 * @author cat
@@ -264,6 +262,7 @@ public class CarCargoOwnerController {
 	 * @param user
 	 * @return
 	 */
+	@Deprecated
 	@AdminRole
 	@Valid
 	@PostMapping("/enableCarOwner")
@@ -283,6 +282,7 @@ public class CarCargoOwnerController {
 	 * @param user
 	 * @return
 	 */
+	@Deprecated
 	@AdminRole
 	@Valid
 	@PostMapping("/disableCarOwner")
@@ -302,6 +302,7 @@ public class CarCargoOwnerController {
 	 * @param user
 	 * @return
 	 */
+	@Deprecated
 	@AdminRole
 	@Valid
 	@PostMapping("/enableCargoOwner")
@@ -321,6 +322,7 @@ public class CarCargoOwnerController {
 	 * @param user
 	 * @return
 	 */
+	@Deprecated
 	@AdminRole
 	@Valid
 	@PostMapping("/disableCargoOwner")
@@ -329,4 +331,21 @@ public class CarCargoOwnerController {
 		User user = RequestUtil.getCurrentUser(User.class);
 		return carCargoOwnerService.adminDisableCargoOwner(requestParams.getParams(), user);
 	}
+	
+	@AdminRole
+	@Valid
+	@PostMapping("/updateCargoOwnerIsActive")
+	public ServerResponse updateCargoOwnerIsActive(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		return carCargoOwnerService.updateCargoOwnerIsActive(requestParams.getParams());
+	}
+	
+	@AdminRole
+	@Valid
+	@PostMapping("/updateCarOwnerIsActive")
+	public ServerResponse updateCarOwnerIsActive(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		return carCargoOwnerService.updateCarOwnerIsActive(requestParams.getParams());
+	}
+	
 }

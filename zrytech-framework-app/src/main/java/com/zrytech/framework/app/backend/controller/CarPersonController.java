@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.AdminRole;
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
 import com.zrytech.framework.app.dto.carperson.AdminSupercargoPageDto;
@@ -183,7 +183,7 @@ public class CarPersonController {
 	@AdminRole
 	@Valid
 	@PostMapping("/driverDetails")
-	public ServerResponse driverDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
+	public ServerResponse driverDetails(@RequestBody @Valid RequestParams<CommonDto> requestParams,
 			BindingResult result) {
 		return carPersonService.adminDriverDetails(requestParams.getParams());
 	}
@@ -200,7 +200,7 @@ public class CarPersonController {
 	@AdminRole
 	@Valid
 	@PostMapping("/supercargoDetails")
-	public ServerResponse supercargoDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
+	public ServerResponse supercargoDetails(@RequestBody @Valid RequestParams<CommonDto> requestParams,
 			BindingResult result) {
 		return carPersonService.adminSupercargoDetails(requestParams.getParams());
 	}

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
 import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
@@ -47,7 +46,7 @@ public interface CarCargoOwnerService {
 	 * @param dto	车主Id
 	 * @return
 	 */
-	public ServerResponse adminCarOwnerDetails(DetailsDto dto);
+	public ServerResponse adminCarOwnerDetails(CommonDto dto);
 	
 	/**
 	 * 管理员 - 修改车主免审核状态
@@ -76,7 +75,7 @@ public interface CarCargoOwnerService {
 	 * @param dto	货主Id
 	 * @return
 	 */
-	public ServerResponse adminCargoOwnerDetails(DetailsDto dto);
+	public ServerResponse adminCargoOwnerDetails(CommonDto dto);
 	
 	/**
 	 * 管理员 - 启用车主
@@ -87,6 +86,25 @@ public interface CarCargoOwnerService {
 	 * @return
 	 */
 	public ServerResponse adminEnableCarOwner(CommonDto dto, User user);
+	
+	
+	/**
+	 * 管理员 - 车主的启用禁用
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	ServerResponse updateCarOwnerIsActive(CommonDto dto);
+	
+	/**
+	 * 管理员 - 货主的启用禁用
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	ServerResponse updateCargoOwnerIsActive(CommonDto dto);
 	
 	/**
 	 * 管理员 - 禁用车主

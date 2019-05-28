@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.WaybillDto;
 import com.zrytech.framework.app.entity.*;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -20,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
-import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.WaybillPageDto;
 import com.zrytech.framework.app.dto.waybill.WaybillUpdateDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailUpdateDto;
@@ -522,9 +521,11 @@ public class WaybillServiceImpl implements WaybillService {
      */
     @Override
     @Deprecated
-    public ServerResponse coundIndent(WaybillDto waybillDto) {
-        CheckFieldUtils.checkObjecField(waybillDto.getCargoOwnnerId());
-        List<String> typeCount = waybillMapper.coundIndent(waybillDto.getCargoOwnnerId());
+    public ServerResponse coundIndent() {
+        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+		Integer cargoOwnerId = cargoOwner.getId();
+		List<String> typeCount = waybillMapper.coundIndent(cargoOwnerId);
         Map<String, Object> map = countList(typeCount);
         return ServerResponse.successWithData(map);
     }

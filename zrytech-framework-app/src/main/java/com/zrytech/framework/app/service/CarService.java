@@ -2,8 +2,7 @@ package com.zrytech.framework.app.service;
 
 import org.springframework.stereotype.Service;
 
-import com.zrytech.framework.app.dto.DeleteDto;
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.car.CarAddDto;
 import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
@@ -45,7 +44,7 @@ public interface CarService {
 	 * @param dto
 	 * @return
 	 */
-	public ServerResponse adminDetails(DetailsDto dto);
+	public ServerResponse adminDetails(CommonDto dto);
 	
 	
 	/**
@@ -88,7 +87,7 @@ public interface CarService {
 	 * @param customer	当前登录人
 	 * @return
 	 */
-	public ServerResponse delete(DeleteDto dto, Customer customer);
+	public ServerResponse delete(CommonDto dto, Customer customer);
 	
 	
 	
@@ -132,7 +131,7 @@ public interface CarService {
 	 * @param customer	当前登录人
 	 * @return
 	 */
-	public ServerResponse details(DetailsDto dto, Customer customer);
+	public ServerResponse details(CommonDto dto, Customer customer);
 	
 	
 }

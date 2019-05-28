@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
+@Deprecated
 @Setter
 @Getter
 @ApiModel(value = "认证资料对象")

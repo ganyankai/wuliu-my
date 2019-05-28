@@ -26,9 +26,6 @@ public class OftenAddressController {
     /**
      * Desintion:常用地址分页列表信息
      *
-     * @author:jiangxiaoxiang
-     * @param:OftenAddressDto常用地址dto
-     * @return:ServerResponse
      */
     @PostMapping("/page")
     @ApiOperation(value = "常用地址分页列表信息")

@@ -7,6 +7,7 @@ import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.entity.User;
 import com.zrytech.framework.common.entity.SysCustomer;
 
+@Deprecated
 public interface ShipperService {
 
     /**
@@ -16,7 +17,7 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse perSonOrOrganizeCertification(CertificationDto certificationDto, SysCustomer sysCustomer);
+//    ServerResponse perSonOrOrganizeCertification(CertificationDto certificationDto, SysCustomer sysCustomer);
 
     /**
      * Desintion:认证资料详情
@@ -25,7 +26,7 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse get(CertificationDto certificationDto);
+//    ServerResponse get(CertificationDto certificationDto);
 
     /**
      * Desintion:客户基本信息详情
@@ -34,7 +35,7 @@ public interface ShipperService {
      * @param:CargoCustomer客户基本信息对象
      * @return:ServerResponse
      */
-    ServerResponse id(CargoCustomerDto cargoCustomerDto);
+//    ServerResponse id(CargoCustomerDto cargoCustomerDto);
 
     /**
      * Desintion:客户修改头像接口
@@ -43,7 +44,7 @@ public interface ShipperService {
      * @param:CargoCustomerDto客户基本信息对象
      * @return:ServerResponse
      */
-    ServerResponse update(CargoCustomerDto cargoCustomerDto);
+//    ServerResponse update(CargoCustomerDto cargoCustomerDto);
 
     /**
      * Desintion:客户启用禁用设置
@@ -52,7 +53,7 @@ public interface ShipperService {
      * @param:CargoCustomerDto客户dto
      * @return:ServerResponse
      */
-    ServerResponse enableOrUnable(CargoCustomerDto cargoCustomerDto);
+//    ServerResponse enableOrUnable(CargoCustomerDto cargoCustomerDto);
 
     /**
      * Desintion:客户基本信息分页列表
@@ -61,7 +62,7 @@ public interface ShipperService {
      * @param:CargoCustomerDto客户基本信息对象
      * @return:ServerResponse
      */
-    ServerResponse selectCargoPage(CargoCustomerDto cargoCustomerDto, Page page);
+//    ServerResponse selectCargoPage(CargoCustomerDto cargoCustomerDto, Page page);
 
     /**
      * Desintion:认证资料分页列表信息
@@ -70,7 +71,7 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse certificationPage(CertificationDto certificationDto, Page page);
+//    ServerResponse certificationPage(CertificationDto certificationDto, Page page);
 
     /**
      * Desintion:认证资料详情
@@ -79,7 +80,7 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse detail(CertificationDto certificationDto);
+//    ServerResponse detail(CertificationDto certificationDto);
 
     /**
      * Desintion:认证资料审核
@@ -88,7 +89,7 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse certificationAudit(CertificationDto certificationDto,User user);
+//    ServerResponse certificationAudit(CertificationDto certificationDto,User user);
 
     /**
      * Desintion:设置免审核(认证资料)
@@ -97,5 +98,5 @@ public interface ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    ServerResponse withOutAudit(CertificationDto certificationDto);
+//    ServerResponse withOutAudit(CertificationDto certificationDto);
 }

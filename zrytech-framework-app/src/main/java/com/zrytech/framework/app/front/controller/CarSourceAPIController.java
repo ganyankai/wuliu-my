@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.constants.CarSourceConstants;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceSaveDto;
 import com.zrytech.framework.app.dto.carsource.CarSourceAddDto;
@@ -110,7 +109,7 @@ public class CarSourceAPIController {
 
 	@Valid
 	@PostMapping("/openDetails")
-	public ServerResponse openDetails(@RequestBody @Valid RequestParams<DetailsDto> requestParams,
+	public ServerResponse openDetails(@RequestBody @Valid RequestParams<CommonDto> requestParams,
 			BindingResult result) {
 		return carSourceService.openDetails(requestParams.getParams());
 	}
@@ -127,7 +126,7 @@ public class CarSourceAPIController {
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		return carSourceService.details(requestParams.getParams(), customer);
 	}

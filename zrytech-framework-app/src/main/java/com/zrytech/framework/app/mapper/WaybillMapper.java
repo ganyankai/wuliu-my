@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.constants.CargoConstant;
-import com.zrytech.framework.app.dto.WaybillPageDto;
 import com.zrytech.framework.app.dto.waybill.CarOwnerWaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.WaybillPageDto;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.base.entity.Page;
 import org.apache.ibatis.annotations.Param;

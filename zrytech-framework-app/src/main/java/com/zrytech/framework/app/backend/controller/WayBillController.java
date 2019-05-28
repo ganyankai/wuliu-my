@@ -1,9 +1,11 @@
 package com.zrytech.framework.app.backend.controller;
 
+import com.zrytech.framework.app.ano.AdminRole;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.WaybillPageDto;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.app.service.WaybillService;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -26,13 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping("admin/waybill")
+@RequestMapping("/admin/waybill")
 public class WayBillController {
 
     @Autowired
-    private WaybillService waybillService;
-    
-
+    private WaybillService service;
     
     /**
      * 管理员 - 某一个车主的运单分页
@@ -42,24 +42,30 @@ public class WayBillController {
      * @param result
      * @return
      */
-    @Valid
-    @PostMapping("/oneCarOwnerWaybillPage")
+	@AdminRole
+	@Valid
+	@PostMapping("/oneCarOwnerWaybillPage")
 	public ServerResponse oneCarOwnerWaybillPage(@RequestBody @Valid RequestParams<WaybillPageDto> requestParams,
 			BindingResult result) {
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null)
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
 			pageNum = 1;
-		if (pageSize == null)
+		}
+		if (pageSize == null) {
 			pageSize = 10;
+		}
 		WaybillPageDto dto = requestParams.getParams();
 		if (dto.getCarOwnerId() == null) {
 			throw new BusinessException(112, "车主不能为空");
 		}
-		PageData<Waybill> pageData = waybillService.waybillPage(dto, pageNum, pageSize);
+		PageData<Waybill> pageData = service.waybillPage(dto, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}
-    
     
     /**
      * 管理员 - 某一个货主的运单分页
@@ -69,21 +75,28 @@ public class WayBillController {
      * @param result
      * @return
      */
+	@AdminRole
 	@Valid
 	@PostMapping("/oneCargoOwnerWaybillPage")
 	public ServerResponse oneCargoOwnerWaybillPage(@RequestBody @Valid RequestParams<WaybillPageDto> requestParams,
 			BindingResult result) {
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null)
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
 			pageNum = 1;
-		if (pageSize == null)
+		}
+		if (pageSize == null) {
 			pageSize = 10;
+		}
 		WaybillPageDto dto = requestParams.getParams();
 		if (dto.getCargoOwnerId() == null) {
 			throw new BusinessException(112, "货主不能为空");
 		}
-		PageData<Waybill> pageData = waybillService.waybillPage(dto, pageNum, pageSize);
+		PageData<Waybill> pageData = service.waybillPage(dto, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}
     
@@ -95,16 +108,23 @@ public class WayBillController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@PostMapping("/page")
 	public ServerResponse page(@RequestBody @Valid RequestParams<WaybillPageDto> requestParams, BindingResult result) {
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null)
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
 			pageNum = 1;
-		if (pageSize == null)
+		}
+		if (pageSize == null) {
 			pageSize = 10;
-		PageData<Waybill> pageData = waybillService.waybillPage(requestParams.getParams(), pageNum, pageSize);
+		}
+		PageData<Waybill> pageData = service.waybillPage(requestParams.getParams(), pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}
 	
@@ -116,10 +136,11 @@ public class WayBillController {
 	 * @param result
 	 * @return
 	 */
+	@AdminRole
 	@Valid
 	@RequestMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
-		return waybillService.adminDetails(requestParams.getParams());
+		return service.adminDetails(requestParams.getParams());
 	}
 	
 }

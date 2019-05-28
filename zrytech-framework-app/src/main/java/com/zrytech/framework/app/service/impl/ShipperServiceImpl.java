@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+@Deprecated
 @Service
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class ShipperServiceImpl implements ShipperService {
@@ -42,7 +43,7 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse perSonOrOrganizeCertification(CertificationDto certificationDto, SysCustomer sysCustomer) {
         CheckFieldUtils.checkObjecField(certificationDto.getCustomerType());
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
@@ -63,7 +64,7 @@ public class ShipperServiceImpl implements ShipperService {
         certification.setAvoidAudit(false);
         shipperDao.updateCertification(certification);
         return ServerResponse.success();
-    }
+    }*/
 
     /**
      * Desintion:认证资料详情
@@ -72,12 +73,12 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse get(CertificationDto certificationDto) {
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
         Certification cer = shipperDao.get(certification.getId());
         return ServerResponse.successWithData(cer);
-    }
+    }*/
 
     /**
      * Desintion:客户基本信息详情
@@ -86,7 +87,7 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CargoCustomer客户基本信息对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse id(CargoCustomerDto cargoCustomerDto) {
         CargoCustomer cargoCustomer = cargoCustomerDao.id(cargoCustomerDto.getId());
         if (cargoCustomer != null && cargoCustomer.getId() != null) {
@@ -96,7 +97,7 @@ public class ShipperServiceImpl implements ShipperService {
             }
         }
         return ServerResponse.successWithData(cargoCustomer);
-    }
+    }*/
 
     /**
      * Desintion:客户修改头像接口
@@ -105,12 +106,12 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CargoCustomerDto客户基本信息对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse update(CargoCustomerDto cargoCustomerDto) {
         CargoCustomer cargoCustomer = BeanUtil.copy(cargoCustomerDto, CargoCustomer.class);
         cargoCustomerDao.update(cargoCustomer);
         return ServerResponse.success();
-    }
+    }*/
 
     /**
      * Desintion:客户启用禁用设置
@@ -119,12 +120,12 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CargoCustomerDto客户dto
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse enableOrUnable(CargoCustomerDto cargoCustomerDto) {
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getIsActive());
         cargoCustomerDao.setUpEnable(cargoCustomerDto.getId(), cargoCustomerDto.getIsActive());
         return ServerResponse.success();
-    }
+    }*/
 
     /**
      * Desintion:客户基本信息分页列表
@@ -133,12 +134,12 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CargoCustomerDto客户基本信息对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse selectCargoPage(CargoCustomerDto cargoCustomerDto, Page page) {
         CargoCustomer cargoCustomer = BeanUtil.copy(cargoCustomerDto, CargoCustomer.class);
         PageInfo<CargoCustomer> pageInfo = cargoCustomerDao.selectCustomerPage(cargoCustomer, page);
         return ServerResponse.successWithData(pageInfo);
-    }
+    }*/
 
     /**
      * Desintion:认证资料分页列表信息
@@ -147,12 +148,12 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse certificationPage(CertificationDto certificationDto, Page page) {
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
         PageInfo<Certification> pageInfo = shipperDao.certificationPage(certification, page);
         return ServerResponse.successWithData(pageInfo);
-    }
+    }*/
 
     /**
      * Desintion:认证资料详情
@@ -161,14 +162,14 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse detail(CertificationDto certificationDto) {
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
         Certification cer = shipperDao.get(certification.getId());
         return ServerResponse.successWithData(cer);
-    }
+    }*/
 
-    @Autowired private ApproveLogRepository approveLogRepository;
+//    @Autowired private ApproveLogRepository approveLogRepository;
 
     /**
      * Desintion:认证资料审核
@@ -177,7 +178,7 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse certificationAudit(CertificationDto certificationDto,User user) {
         Certification certification = shipperDao.get(certificationDto.getId());
         CargoCustomer cargoCustomer = null;
@@ -201,7 +202,7 @@ public class ShipperServiceImpl implements ShipperService {
         entity.setBusinessId(certification.getId());
         approveLogRepository.save(entity);
         return ServerResponse.success();
-    }
+    }*/
 
     /**
      * Desintion:设置免审核(认证资料)
@@ -210,12 +211,12 @@ public class ShipperServiceImpl implements ShipperService {
      * @param:CertificationDto认证资料对象
      * @return:ServerResponse
      */
-    @Override
+    /*@Override
     public ServerResponse withOutAudit(CertificationDto certificationDto) {
         CheckFieldUtils.checkObjecField(certificationDto.getAvoidAudit());
         Certification certification = BeanUtil.copy(certificationDto, Certification.class);
         int num = shipperDao.avoidAudit(certification);
         CheckFieldUtils.assertSuccess(num);
         return ServerResponse.success();
-    }
+    }*/
 }

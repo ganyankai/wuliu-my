@@ -20,8 +20,6 @@ import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarPersonConstants;
 import com.zrytech.framework.app.constants.CustomerConstants;
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.DeleteDto;
-import com.zrytech.framework.app.dto.DetailsDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
 import com.zrytech.framework.app.dto.carperson.AdminSupercargoPageDto;
@@ -144,7 +142,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 	
 	@Override
-	public ServerResponse adminDriverDetails(DetailsDto dto) {
+	public ServerResponse adminDriverDetails(CommonDto dto) {
 		CarPerson carPerson = this.assertDriverExist(dto.getId());
 		carPerson = this.bindingCarOwner(carPerson);
 		carPerson = this.bindingDriverCustomerStatus(carPerson);
@@ -152,7 +150,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 
 	@Override
-	public ServerResponse adminSupercargoDetails(DetailsDto dto) {
+	public ServerResponse adminSupercargoDetails(CommonDto dto) {
 		CarPerson carPerson = this.assertSupercargoExist(dto.getId());
 		carPerson = this.bindingCarOwner(carPerson);
 		return ServerResponse.successWithData(carPerson);
@@ -378,7 +376,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	
 	@Transactional
 	@Override
-	public ServerResponse delete(DeleteDto dto, Customer customer) {
+	public ServerResponse delete(CommonDto dto, Customer customer) {
 		CarPerson carPerson = this.assertCarPersonBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		if (!carPerson.getStatus().equalsIgnoreCase(CarPersonConstants.PERSON_STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "仅可删除未认证的司机或压货人");
@@ -551,7 +549,7 @@ public class CarPersonServiceImpl implements CarPersonService {
 	}
 	
 	@Override
-	public ServerResponse details(DetailsDto dto, Customer customer) {
+	public ServerResponse details(CommonDto dto, Customer customer) {
 		CarPerson carPerson = this.assertCarPersonBelongToCurrentUser(dto.getId(), customer.getCarOwner().getId());
 		carPerson = this.bindingCarOwner(carPerson);
 		return ServerResponse.successWithData(carPerson);

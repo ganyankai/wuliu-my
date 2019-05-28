@@ -1,4 +1,4 @@
-package com.zrytech.framework.app.dto;
+package com.zrytech.framework.app.dto.waybill;
 
 import lombok.Getter;
 import lombok.Setter;

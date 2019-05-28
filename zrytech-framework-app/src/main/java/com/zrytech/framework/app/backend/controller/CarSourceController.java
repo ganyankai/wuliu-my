@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.AdminRole;
 import com.zrytech.framework.app.constants.ApproveConstants;
-import com.zrytech.framework.app.dto.DetailsDto;
+import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
 import com.zrytech.framework.app.entity.CarSource;
@@ -127,7 +127,7 @@ public class CarSourceController {
 	@AdminRole
 	@Valid
 	@PostMapping("/details")
-	public ServerResponse details(@RequestBody @Valid RequestParams<DetailsDto> requestParams, BindingResult result) {
+	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		return carSourceService.adminDetails(requestParams.getParams());
 	}
 	

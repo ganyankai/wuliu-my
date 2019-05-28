@@ -3,11 +3,9 @@ package com.zrytech.framework.app.service;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.CommonDto;
-import com.zrytech.framework.app.dto.WaybillDto;
 import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.base.entity.PageData;
-
-import com.zrytech.framework.app.dto.WaybillPageDto;
+import com.zrytech.framework.app.dto.waybill.WaybillPageDto;
 import com.zrytech.framework.app.dto.waybill.WaybillUpdateDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailAddDto;
 import com.zrytech.framework.app.dto.waybilldetail.WaybillDetailUpdateDto;
@@ -144,6 +142,6 @@ public interface WaybillService {
 	 * 运单统计
 	 */
 	@Deprecated
-	ServerResponse coundIndent(WaybillDto waybillDto);
+	ServerResponse coundIndent();
     
 }
