@@ -1,18 +1,13 @@
 package com.zrytech.framework.app.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.zrytech.framework.app.entity.Evaluate;
 
 public interface EvaluateMapper {
-	
-    int deleteByPrimaryKey(Integer id);
 
-    int insert(Evaluate record);
+	List<Evaluate> search(@Param("evaluate") Evaluate evaluate);
 
-    int insertSelective(Evaluate record);
-
-    Evaluate selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(Evaluate record);
-
-    int updateByPrimaryKey(Evaluate record);
 }

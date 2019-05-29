@@ -5,6 +5,7 @@ import com.zrytech.framework.app.entity.Evaluation;
 import com.zrytech.framework.base.entity.Page;
 import org.apache.ibatis.annotations.Param;
 
+@Deprecated
 public interface CommentsMapper {
     PageInfo<Evaluation> evaluationPage(@Param("evaluation") Evaluation evaluation, Page page);
 

@@ -12,6 +12,7 @@ import java.util.Date;
 @Setter
 @Getter
 @ApiModel(value = "评价dto")
+@Deprecated
 public class EvaluationDto implements Serializable {
 
     private static final long serialVersionUID = -1555792098489335740L;

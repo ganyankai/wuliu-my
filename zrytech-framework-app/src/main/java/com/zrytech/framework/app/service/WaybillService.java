@@ -14,6 +14,8 @@ import com.zrytech.framework.base.entity.ServerResponse;
 @Service
 public interface WaybillService {
 	
+	Waybill assertWaybillExist(Integer waybillId);
+	
     /**
      * 运单分页
      * @author cat
@@ -42,6 +44,10 @@ public interface WaybillService {
      * @param carOwnerId 车主Id
      */
 	Waybill assertWaybillBelongToCurrentUser(Integer waybillId, Integer carOwnerId);
+	
+	Waybill assertWaybillBelongToCurrentCarOwner(Integer waybillId, Integer carOwnerId);
+	
+	Waybill assertWaybillBelongToCurrentCargoOwner(Integer waybillId, Integer cargoOwnerId);
 
     /**
      * 货主 - 运单详情

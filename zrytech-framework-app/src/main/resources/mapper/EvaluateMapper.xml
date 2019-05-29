@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zrytech.framework.app.mapper.EvaluateMapper" >
+
   <resultMap id="BaseResultMap" type="com.zrytech.framework.app.entity.Evaluate" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
@@ -10,123 +11,35 @@
     <result column="evaluate_type" property="evaluateType" jdbcType="VARCHAR" />
     <result column="evaluate_level" property="evaluateLevel" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="waybill_id" property="waybillId" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, bill_no, appraiser_id, appraiser_by_id, content, evaluate_type, evaluate_level, 
-    create_date
-  </sql>
   
-  
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from evaluate
-    where id = #{id,jdbcType=INTEGER}
+  <select id="search" resultMap="BaseResultMap" parameterType="com.zrytech.framework.app.entity.Evaluate">
+  	select * from `evaluate`
+  	<where>
+  		<if test="evaluate.id != null">
+  			and `id` = #{evaluate.id}
+  		</if>
+  		<if test="evaluate.billNo != null and evaluate.billNo != ''">
+  			and `bill_no` = #{evaluate.billNo}
+  		</if>
+  		<if test="evaluate.appraiserId != null">
+  			and `appraiser_id` = #{evaluate.appraiserId}
+  		</if>
+  		<if test="evaluate.appraiserById != null">
+  			and `appraiser_by_id` = #{evaluate.appraiserById}
+  		</if>
+  		<if test="evaluate.evaluateType != null and evaluate.evaluateType != ''">
+  			and `evaluate_type` = #{evaluate.evaluateType}
+  		</if>
+  		<if test="evaluate.evaluateLevel != null">
+  			and `evaluate_level` = #{evaluate.evaluateLevel}
+  		</if>
+  		<if test="evaluate.waybillId != null">
+  			and `waybill_id` = #{evaluate.waybillId}
+  		</if>
+  	</where>
+  	order by `id` desc
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from evaluate
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.zrytech.framework.app.entity.Evaluate" >
-    insert into evaluate (id, bill_no, appraiser_id, 
-      appraiser_by_id, content, evaluate_type, 
-      evaluate_level, create_date)
-    values (#{id,jdbcType=INTEGER}, #{billNo,jdbcType=VARCHAR}, #{appraiserId,jdbcType=INTEGER}, 
-      #{appraiserById,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{evaluateType,jdbcType=VARCHAR}, 
-      #{evaluateLevel,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zrytech.framework.app.entity.Evaluate" >
-    insert into evaluate
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="billNo != null" >
-        bill_no,
-      </if>
-      <if test="appraiserId != null" >
-        appraiser_id,
-      </if>
-      <if test="appraiserById != null" >
-        appraiser_by_id,
-      </if>
-      <if test="content != null" >
-        content,
-      </if>
-      <if test="evaluateType != null" >
-        evaluate_type,
-      </if>
-      <if test="evaluateLevel != null" >
-        evaluate_level,
-      </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="billNo != null" >
-        #{billNo,jdbcType=VARCHAR},
-      </if>
-      <if test="appraiserId != null" >
-        #{appraiserId,jdbcType=INTEGER},
-      </if>
-      <if test="appraiserById != null" >
-        #{appraiserById,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateType != null" >
-        #{evaluateType,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateLevel != null" >
-        #{evaluateLevel,jdbcType=INTEGER},
-      </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.app.entity.Evaluate" >
-    update evaluate
-    <set >
-      <if test="billNo != null" >
-        bill_no = #{billNo,jdbcType=VARCHAR},
-      </if>
-      <if test="appraiserId != null" >
-        appraiser_id = #{appraiserId,jdbcType=INTEGER},
-      </if>
-      <if test="appraiserById != null" >
-        appraiser_by_id = #{appraiserById,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateType != null" >
-        evaluate_type = #{evaluateType,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateLevel != null" >
-        evaluate_level = #{evaluateLevel,jdbcType=INTEGER},
-      </if>
-      <if test="createDate != null" >
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zrytech.framework.app.entity.Evaluate" >
-    update evaluate
-    set bill_no = #{billNo,jdbcType=VARCHAR},
-      appraiser_id = #{appraiserId,jdbcType=INTEGER},
-      appraiser_by_id = #{appraiserById,jdbcType=INTEGER},
-      content = #{content,jdbcType=VARCHAR},
-      evaluate_type = #{evaluateType,jdbcType=VARCHAR},
-      evaluate_level = #{evaluateLevel,jdbcType=INTEGER},
-      create_date = #{createDate,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  
 </mapper>

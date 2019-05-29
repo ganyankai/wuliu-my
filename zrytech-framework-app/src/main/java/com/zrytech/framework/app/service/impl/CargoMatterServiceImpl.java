@@ -240,6 +240,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		Waybill waybill = new Waybill();
 		waybill.setBillNo(tradeNoUtil.genTradeNo());
 		waybill.setCargoId(cargoId);
+		waybill.setName(cargo.getName());
 		waybill.setCargoOwnnerId(cargo.getCreateBy());
 		waybill.setCarOwnnerId(carOwnerId);
 		waybill.setTotalMoney(cargo.getMatterPrice());
@@ -354,6 +355,7 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		Waybill waybill = new Waybill();
 		waybill.setBillNo(tradeNoUtil.genTradeNo());
 		waybill.setCargoId(cargoId);
+		waybill.setName(cargo.getName());
 		waybill.setCargoOwnnerId(cargoOwnerId);
 		waybill.setCarOwnnerId(cargoMatter.getCarOwnnerId());
 		// if (cargo.getTenderWay().equalsIgnoreCase(CargoConstant.BID_MARK)) {

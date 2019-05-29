@@ -48,7 +48,12 @@ public class CarCargoOwnerAPIController {
 	@Valid
 	@RequestMapping("/checkTel")
 	public ServerResponse checkTel(@RequestBody @Valid RequestParams<TelDto> requestParams, BindingResult result) {
-		return carCargoOwnerService.checkTel(requestParams.getParams().getTel());
+		try {
+			carCargoOwnerService.checkTel(requestParams.getParams().getTel());
+		} catch (Exception e) {
+			return ServerResponse.successWithData(true);
+		}
+		return ServerResponse.successWithData(false);
 	}
 
 	
@@ -64,7 +69,12 @@ public class CarCargoOwnerAPIController {
 	@RequestMapping("/checkUserAccount")
 	public ServerResponse checkUserAccount(@RequestBody @Valid RequestParams<UserAccountDto> requestParams,
 			BindingResult result) {
-		return carCargoOwnerService.checkUserAccount(requestParams.getParams().getUserAccount());
+		try {
+			carCargoOwnerService.checkUserAccount(requestParams.getParams().getUserAccount());
+		} catch (Exception e) {
+			return ServerResponse.successWithData(true);
+		}
+		return ServerResponse.successWithData(false);
 	}
 	
 	/**

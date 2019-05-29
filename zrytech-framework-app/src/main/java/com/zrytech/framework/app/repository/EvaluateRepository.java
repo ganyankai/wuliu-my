@@ -11,4 +11,11 @@ import com.zrytech.framework.base.repository.BaseRepository;
 public interface EvaluateRepository extends BaseRepository<Evaluate, Integer> {
 
 	List<Evaluate> findByBillNo(String billNo);
+
+	Evaluate findByWaybillIdAndAppraiserId(Integer waybillId, Integer appraiserId);
+
+	Evaluate findByWaybillIdAndAppraiserIdAndEvaluateType(Integer waybillId, Integer appraiserId, String evaluateType);
+
+	List<Evaluate> findByAppraiserById(Integer appraiserById);
+
 }

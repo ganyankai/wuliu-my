@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(description = "评论相关api")
 @RestController
 @RequestMapping("/comments")
+@Deprecated
 public class CommentsController {
 
     @Autowired

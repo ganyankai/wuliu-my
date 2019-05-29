@@ -259,22 +259,20 @@ public class CargoConstant {
     public static final String FOCUS_CAR_OWNER = "focus_car_owner";
 
 
-    /**
-     *evaluation_type:评价类型
-     */
-    public static final String EVALUATION_TYPE="evaluation_type";
-    /**cargo_comments_car -货主评价车主*/
-    public static final String CARGO_COMMENTS_CAR = "cargo_comments_car";
-    /**car_comments_cargo -车主评价货主*/
-    public static final String CAR_COMMENTS_CARGO = "car_comments_cargo";
-    /**cargo_comments_driver -货主评价司机*/
-    public static final String CARGO_COMMENTS_DRIVER = "cargo_comments_driver";
-    /**driver_comments_cargo -司机评价货主*/
-    public static final String DRIVER_COMMENTS_CARGO = "driver_comments_cargo";
+	/**
+	 * 评价类型
+	 */
+	public static final String EVALUATE_TYPE = "evaluate_type";
+	/** 评价类型:货主评价车主 */
+	public static final String EVALUATE_TYPE_CARGO_COMMENTS_CAR = "evaluate_type_cargo_comments_car";
+	/** 评价类型:车主评价货主 */
+	public static final String EVALUATE_TYPE_CAR_COMMENTS_CARGO = "evaluate_type_car_comments_cargo";
+	/** 评价类型:货主评价司机 */
+	public static final String EVALUATE_TYPE_CARGO_COMMENTS_DRIVER = "evaluate_type_cargo_comments_driver";
+	/** 评价类型:司机评价货主 */
+	public static final String EVALUATE_TYPE_DRIVER_COMMENTS_CARGO = "evaluate_type_driver_comments_cargo";
+	
+	
 
-    /**
-     *bill_type:运单类型
-     */
-    public static final String BILL_TYPE="bill_type";
 }
 

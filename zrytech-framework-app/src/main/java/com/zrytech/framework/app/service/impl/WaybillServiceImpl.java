@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.entity.*;
-import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -111,6 +110,20 @@ public class WaybillServiceImpl implements WaybillService {
 			throw new BusinessException(112, "运单不存在");
 		return waybill;
 	}
+	
+	public Waybill assertWaybillBelongToCurrentCargoOwner(Integer waybillId, Integer cargoOwnerId) {
+		Waybill waybill = this.assertWaybillExist(waybillId);
+		if (!waybill.getCargoOwnnerId().equals(cargoOwnerId))
+			throw new BusinessException(112, "运单不存在");
+		return waybill;
+	}
+
+	public Waybill assertWaybillBelongToCurrentCarOwner(Integer waybillId, Integer carOwnerId) {
+		Waybill waybill = this.assertWaybillExist(waybillId);
+		if (!waybill.getCarOwnnerId().equals(carOwnerId))
+			throw new BusinessException(112, "运单不存在");
+		return waybill;
+	}
     
 	/**
 	 * 断言运单存在
@@ -119,7 +132,7 @@ public class WaybillServiceImpl implements WaybillService {
 	 * @param waybillId	运单Id
 	 * @return
 	 */
-    private Waybill assertWaybillExist(Integer waybillId) {
+    public Waybill assertWaybillExist(Integer waybillId) {
 		Waybill waybill = waybillRepository.findOne(waybillId);
 		if (waybill == null)
 			throw new BusinessException(112, "运单不存在");

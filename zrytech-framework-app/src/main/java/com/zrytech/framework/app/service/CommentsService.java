@@ -5,6 +5,7 @@ import com.zrytech.framework.app.entity.Evaluation;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 
+@Deprecated
 public interface CommentsService {
     /**
      * Desintion:评论分页列表信息

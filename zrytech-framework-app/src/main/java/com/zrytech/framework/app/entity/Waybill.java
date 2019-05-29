@@ -19,17 +19,24 @@ import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.springframework.util.StringUtils;
 
 /**
  * 运单
  *
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "`waybill`")
 public class Waybill extends BaseEntity {
+	
+	/**货物介质*/
+	@Column(name = "`name`")
+    private String name;
 	
 	/**
 	 * 
@@ -167,13 +174,6 @@ public class Waybill extends BaseEntity {
 			return DictionaryUtil.getValue(CargoConstant.PAY_WAY, payWay);
 		}
 		return payWayCN;
-	}
-
-	public String getBillTypeCN() {
-		if (!StringUtils.isEmpty(billType)) {
-			return DictionaryUtil.getValue(CargoConstant.BILL_TYPE, billType);
-		}
-		return billTypeCN;
 	}
 
 	public String getStatusCN() {

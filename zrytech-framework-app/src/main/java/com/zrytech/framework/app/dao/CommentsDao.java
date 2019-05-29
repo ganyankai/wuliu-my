@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.entity.Evaluation;
 import com.zrytech.framework.base.entity.Page;
 
+@Deprecated
 public interface CommentsDao {
     PageInfo<Evaluation> evaluationPage(Evaluation evaluation, Page page);
 
