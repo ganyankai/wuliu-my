@@ -72,7 +72,7 @@ public interface EvaluateService {
 	ServerResponse toCar(EvaluateSearchDto dto, Integer pageNum, Integer pageSize);
 	
 	/**
-	 * 公开 - 车主的评价
+	 * 公开的被评价人的评价分页
 	 * @author cat
 	 * 
 	 * @param dto
@@ -80,18 +80,6 @@ public interface EvaluateService {
 	 * @param pageSize
 	 * @return
 	 */
-	ServerResponse openCar(EvaluateSearchDto dto, Integer pageNum, Integer pageSize);
+	ServerResponse openPage(EvaluateSearchDto dto, Integer pageNum, Integer pageSize);
 		
-	/**
-	 * 公开 - 货主的评价
-	 * @author cat
-	 * 
-	 * @param dto
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	ServerResponse openCargo(EvaluateSearchDto dto, Integer pageNum, Integer pageSize);
-		
-	
 }

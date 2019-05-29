@@ -240,7 +240,6 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		Waybill waybill = new Waybill();
 		waybill.setBillNo(tradeNoUtil.genTradeNo());
 		waybill.setCargoId(cargoId);
-		waybill.setName(cargo.getName());
 		waybill.setCargoOwnnerId(cargo.getCreateBy());
 		waybill.setCarOwnnerId(carOwnerId);
 		waybill.setTotalMoney(cargo.getMatterPrice());
@@ -250,6 +249,8 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		waybill.setStatus(CargoConstant.WAYBILL_STATUS_WAIT_GENERATE);
 		waybill.setCreateDate(new Date());
 		waybill.setCreateBy(customer.getId());
+		waybill.setName(cargo.getName());
+		waybill.setPriceUnit(cargo.getPriceUnit());
 		waybillRepository.save(waybill);
 
 		// 修改货源的状态

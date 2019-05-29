@@ -242,5 +242,12 @@ public class Cargo extends BaseEntity implements Serializable {
 		}
 		return "";
 	}
+	
+	public String getNameCN() {
+		if (StringUtils.isNotBlank(name)) {
+			return DictionaryUtil.getValue(CargoConstant.MEDIUM, name);
+		}
+		return "";
+	}
 
 }

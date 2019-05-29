@@ -167,6 +167,7 @@ public class EvaluateServiceImpl implements EvaluateService {
 		evaluate.setQty(waybill.getQty());
 		evaluate.setTotalMoney(waybill.getTotalMoney());
 		evaluate.setWeightUnit(waybill.getWeightUnit());
+		evaluate.setPriceUnit(waybill.getPriceUnit());
 		return evaluate;
 	}
 	
@@ -272,22 +273,10 @@ public class EvaluateServiceImpl implements EvaluateService {
 	}
 	
 	@Override
-	public ServerResponse openCar(EvaluateSearchDto dto, Integer pageNum, Integer pageSize) {
+	public ServerResponse openPage(EvaluateSearchDto dto, Integer pageNum, Integer pageSize) {
 		Integer appraiserById = dto.getAppraiserById();
 		if (appraiserById == null) {
-			throw new BusinessException(112, "车主Id不能为空");
-		}
-		Evaluate evaluate = new Evaluate();
-		evaluate.setAppraiserById(appraiserById);
-		PageData<Evaluate> pageData = this.pageSearch(evaluate, pageNum, pageSize);
-		return ServerResponse.successWithData(pageData);
-	}
-
-	@Override
-	public ServerResponse openCargo(EvaluateSearchDto dto, Integer pageNum, Integer pageSize) {
-		Integer appraiserById = dto.getAppraiserById();
-		if (appraiserById == null) {
-			throw new BusinessException(112, "货主Id不能为空");
+			throw new BusinessException(112, "被评价人Id不能为空");
 		}
 		Evaluate evaluate = new Evaluate();
 		evaluate.setAppraiserById(appraiserById);

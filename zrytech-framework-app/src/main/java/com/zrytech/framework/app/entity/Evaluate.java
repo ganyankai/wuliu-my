@@ -11,7 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CarConstants;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Getter;
@@ -28,23 +33,48 @@ import lombok.Setter;
 @Entity
 @Table(name = "`evaluate`")
 public class Evaluate extends BaseEntity {
-	
-	/**运单介质*/
+
+	/** 运单介质 */
 	@Transient
 	private String name;
 	
-	/**运单数量*/
+	public String getNameCN() {
+		if (StringUtils.isNotBlank(name)) {
+			return DictionaryUtil.getValue(CargoConstant.MEDIUM, name);
+		}
+		return "";
+	}
+
+	/** 价格单位 */
+	@Transient
+	private String priceUnit;
+
+	public String getPriceUnitCN() {
+		if (StringUtils.isNotBlank(priceUnit)) {
+			return DictionaryUtil.getValue(CargoConstant.PRICE_UNIT, priceUnit);
+		}
+		return "";
+	}
+
+	/** 运单数量 */
 	@Transient
 	private Integer qty;
-	
-	/**运单数量单位*/
+
+	/** 运单数量单位 */
 	@Transient
 	private String weightUnit;
-	
-	/**运单总价*/
+
+	public String getWeightUnitCN() {
+		if (StringUtils.isNotBlank(weightUnit)) {
+			return DictionaryUtil.getValue(CarConstants.CAR_UNIT, weightUnit);
+		}
+		return "";
+	}
+
+	/** 运单总价 */
 	@Transient
 	private BigDecimal totalMoney;
-	
+
 	/** 评价人名称 */
 	@Transient
 	private String appraiserName;
@@ -52,8 +82,7 @@ public class Evaluate extends BaseEntity {
 	/** 被评价人名称 */
 	@Transient
 	private String appraiserByName;
-	
-	
+
 	/**
 	 * 
 	 */
@@ -96,5 +125,12 @@ public class Evaluate extends BaseEntity {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "`create_date`")
 	private Date createDate;
+
+	public String getEvaluateTypeCN() {
+		if (StringUtils.isNotBlank(evaluateType)) {
+			return DictionaryUtil.getValue(CargoConstant.EVALUATE_TYPE, evaluateType);
+		}
+		return "";
+	}
 
 }

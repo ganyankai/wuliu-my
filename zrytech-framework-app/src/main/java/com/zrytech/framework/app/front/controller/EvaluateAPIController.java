@@ -128,8 +128,8 @@ public class EvaluateAPIController {
 	}
 
 	@Valid
-	@PostMapping("/openCar")
-	public ServerResponse openCar(@RequestBody @Valid RequestParams<EvaluateSearchDto> requestParams,
+	@PostMapping("/openPage")
+	public ServerResponse openPage(@RequestBody @Valid RequestParams<EvaluateSearchDto> requestParams,
 			BindingResult result) {
 		Page page = requestParams.getPage();
 		if (page == null) {
@@ -143,26 +143,7 @@ public class EvaluateAPIController {
 		if (pageSize == null) {
 			pageSize = 10;
 		}
-		return service.openCar(requestParams.getParams(), pageNum, pageSize);
-	}
-
-	@Valid
-	@PostMapping("/openCargo")
-	public ServerResponse openCargo(@RequestBody @Valid RequestParams<EvaluateSearchDto> requestParams,
-			BindingResult result) {
-		Page page = requestParams.getPage();
-		if (page == null) {
-			page = new Page(1, 10);
-		}
-		Integer pageNum = page.getPageNum();
-		Integer pageSize = page.getPageSize();
-		if (pageNum == null) {
-			pageNum = 1;
-		}
-		if (pageSize == null) {
-			pageSize = 10;
-		}
-		return service.openCargo(requestParams.getParams(), pageNum, pageSize);
+		return service.openPage(requestParams.getParams(), pageNum, pageSize);
 	}
 
 }

@@ -6,6 +6,19 @@ package com.zrytech.framework.app.constants;
  * @create: 2019/02/14 10:02
  */
 public class CargoConstant {
+	
+	
+	/**
+	 * 介质
+	 */
+	public static final String MEDIUM = "medium";
+	/** 介质:天然气 */
+	public static final String MEDIUM_LNG = "medium_lng";
+	
+	
+	
+	
+	
 
     /**
      * cargo_status:资料认证状态;

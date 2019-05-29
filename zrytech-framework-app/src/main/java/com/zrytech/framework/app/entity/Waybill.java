@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zrytech.framework.app.constants.CarConstants;
@@ -21,8 +23,6 @@ import com.zrytech.framework.base.entity.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import org.springframework.util.StringUtils;
 
 /**
  * 运单
@@ -37,6 +37,17 @@ public class Waybill extends BaseEntity {
 	/**货物介质*/
 	@Column(name = "`name`")
     private String name;
+	
+	/**价格单位*/
+	@Column(name = "`price_unit`")
+	private String priceUnit;
+	
+	public String getPriceUnitCN() {
+		if (StringUtils.isNotBlank(priceUnit)) {
+			return DictionaryUtil.getValue(CargoConstant.PRICE_UNIT, priceUnit);
+		}
+		return "";
+	}
 	
 	/**
 	 * 
@@ -163,30 +174,37 @@ public class Waybill extends BaseEntity {
 	private List<Evaluate> evaluates;
 
 	public String getPayTypeCN() {
-		if (!StringUtils.isEmpty(payType)) {
+		if (StringUtils.isNotBlank(payType)) {
 			return DictionaryUtil.getValue(CargoConstant.PAY_TYPE, payType);
 		}
 		return payTypeCN;
 	}
 
 	public String getPayWayCN() {
-		if (!StringUtils.isEmpty(payWay)) {
+		if (StringUtils.isNotBlank(payWay)) {
 			return DictionaryUtil.getValue(CargoConstant.PAY_WAY, payWay);
 		}
 		return payWayCN;
 	}
 
 	public String getStatusCN() {
-		if (!StringUtils.isEmpty(status)) {
+		if (StringUtils.isNotBlank(status)) {
 			return DictionaryUtil.getValue(CargoConstant.WAYBILL_STATUS, status);
 		}
 		return statusCN;
 	}
 
 	public String getWeightUnitCN() {
-		if (!StringUtils.isEmpty(weightUnit)) {
+		if (StringUtils.isNotBlank(weightUnit)) {
 			return DictionaryUtil.getValue(CarConstants.CAR_UNIT, weightUnit);
 		}
 		return weightUnitCN;
+	}
+	
+	public String getNameCN() {
+		if (StringUtils.isNotBlank(name)) {
+			return DictionaryUtil.getValue(CargoConstant.MEDIUM, name);
+		}
+		return "";
 	}
 }
