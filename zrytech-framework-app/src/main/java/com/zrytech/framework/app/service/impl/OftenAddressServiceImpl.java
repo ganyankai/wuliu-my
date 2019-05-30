@@ -64,6 +64,17 @@ public class OftenAddressServiceImpl implements OftenAddressService {
 	@Override
 	public ServerResponse update(OftenAddressUpdateDto dto) {
 		OftenAddress address = this.assertBelongToCurrentCustomer(dto.getId());
+		
+		OftenAddress temp = new OftenAddress();
+		BeanUtils.copyProperties(dto, temp);
+		temp.setId(null);
+		temp.setCustomerId(address.getCustomerId());
+		Example<OftenAddress> example = Example.of(temp);
+		List<OftenAddress> list = repository.findAll(example);
+		if (!list.isEmpty()) {
+			throw new BusinessException(112, "常用路线已存在");
+		}
+		
 		BeanUtils.copyProperties(dto, address);
 		repository.save(address);
 		return ServerResponse.successWithData(address);

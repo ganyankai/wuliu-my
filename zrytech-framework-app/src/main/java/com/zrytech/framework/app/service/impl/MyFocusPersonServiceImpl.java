@@ -55,6 +55,7 @@ public class MyFocusPersonServiceImpl implements MyFocusPersonService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public ServerResponse addOrDelFoucsCargo(MyFocusPersonAddDto dto) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
