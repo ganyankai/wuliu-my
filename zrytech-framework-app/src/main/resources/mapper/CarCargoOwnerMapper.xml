@@ -261,7 +261,7 @@
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.app.entity.CarCargoOwnner" >
     update car_cargo_ownner
-    <set >
+    <set>
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>

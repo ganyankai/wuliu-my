@@ -36,6 +36,13 @@ public class CarCargoOwnerAPIController {
 
 	@Autowired
 	private CarCargoOwnerService carCargoOwnerService;
+	
+	
+	@RequestMapping("/getCustomer")
+	public ServerResponse getCustomer() {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		return ServerResponse.successWithData(customer);
+	}
 
 	/**
 	 * 验证手机号是否已注册
