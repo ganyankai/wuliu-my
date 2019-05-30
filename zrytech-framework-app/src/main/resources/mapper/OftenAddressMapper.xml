@@ -14,6 +14,12 @@
         <result column="create_date" property="createDate"/>
     </resultMap>
 
+	<select id="selectByCustomerId" resultMap="oftenAddress" parameterType="Integer">
+		select * from `address` where `customer_id` = #{customerId} order by `id` desc
+	</select>
+	
+	
+
     <sql id="columns">
        id,customer_id,cargo_name,begin_province,begin_city,begin_county,end_province,end_city,end_county,create_date
     </sql>

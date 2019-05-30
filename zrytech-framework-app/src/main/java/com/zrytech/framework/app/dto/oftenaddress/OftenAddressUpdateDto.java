@@ -1,19 +1,21 @@
 package com.zrytech.framework.app.dto.oftenaddress;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 添加常用地址入参
- * 
- * @author cat
- *
+ * 更新常用地址入参
  */
 @Setter
 @Getter
-public class OftenAddressAddDto {
+public class OftenAddressUpdateDto {
+
+	@NotNull(message = "Id不能为空")
+	private Integer id;
 
 	/** 货物介质 */
 	@NotBlank(message = "货物介质不能为空")

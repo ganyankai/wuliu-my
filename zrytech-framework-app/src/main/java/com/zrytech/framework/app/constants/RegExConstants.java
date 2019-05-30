@@ -34,6 +34,6 @@ public class RegExConstants {
 	
 	
 	public static void main(String[] args) {
-		System.out.println("".matches(RegExConstants.PASSWORD));
+		System.out.println("A123456".matches(RegExConstants.PASSWORD));
 	}
 }

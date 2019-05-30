@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 public interface OftenAddressMapper {
+	
+	List<OftenAddress> selectByCustomerId(@Param("customerId") Integer customerId);
 
     void batchSave(@Param("cargoId") int cargoId, @Param("list") List<OftenAddress> list, @Param("date") Date date);
 
