@@ -115,8 +115,9 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
     @Override
     public ServerResponse addAccount(CargoCustomerDto cargoCustomerDto) {
         Certification certification = shipperDao.getCustomerId(cargoCustomerDto.getCreateBy());//企业认证同时是认证通过的用户才有权限添加子账号
-        if (certification != null && certification.getStatus() != null && CargoConstant.AUDIT_PASS.equalsIgnoreCase(certification.getStatus()) &&
-                CargoConstant.CERTIFICATION_ORGANIZE.equalsIgnoreCase(certification.getCustomerType())) {
+        if (certification != null && certification.getStatus() != null 
+        		/*&& CargoConstant.AUDIT_PASS.equalsIgnoreCase(certification.getStatus()) */ // TODO
+        		&& CargoConstant.CERTIFICATION_ORGANIZE.equalsIgnoreCase(certification.getCustomerType())) {
             //TODO:添加子账号并授权
             CargoCustomer cargoCustomer = BeanUtil.copy(cargoCustomerDto, CargoCustomer.class);
             cargoCustomer.setCreateDate(new Date());

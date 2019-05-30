@@ -23,14 +23,14 @@ public class CargoConstant {
     /**
      * cargo_status:资料认证状态;
      * */
-    public static final String CARGO_STATUS = "approve_status";
+    //public static final String CARGO_STATUS = "approve_status";
 
     /**audit_process:认证中*/
-    public static final String AUDIT_PROCESS = "audit_process";
+    //public static final String AUDIT_PROCESS = "audit_process";
     /**audit_refuse:认证被拒绝*/
-    public static final String AUDIT_REFUSE = "audit_refuse";
+    //public static final String AUDIT_REFUSE = "audit_refuse";
     /**audit_pass:认证通过*/
-    public static final String AUDIT_PASS = "audit_pass";
+    //public static final String AUDIT_PASS = "audit_pass";
 
     /**
      * cargo_certification_type:客户认证资料类型;
@@ -272,6 +272,17 @@ public class CargoConstant {
     public static final String FOCUS_CAR_OWNER = "focus_car_owner";
 
 
+	/**
+	 * 车主货主关注类型
+	 */
+	public static final String MY_FOCUS_PERSON_TYPE = "my_focus_person_type";
+	/** 车主货主关注类型：关注车主 */
+	public static final String FOCUS_CAR = "focus_car";
+	/** 车主货主关注类型：关注货主 */
+	public static final String FOCUS_CARGO = "focus_cargo";
+    
+    
+    
 	/**
 	 * 评价类型
 	 */

@@ -94,13 +94,13 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
         if (certification == null) {
             certification = new Certification();
             certification.setRefereesId(refereesList.get(0).getId());
-            certification.setStatus(CargoConstant.AUDIT_PROCESS);
+            // certification.setStatus(CargoConstant.AUDIT_PROCESS); TODO
             certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         } else {
             checkCertification(certification);
             certification.setRefereesId(refereesList.get(0).getId());
-            certification.setStatus(CargoConstant.AUDIT_PROCESS);
+            // certification.setStatus(CargoConstant.AUDIT_PROCESS); TODO
             certification.setCusomerId(cargoCustomer.getId());
             certification.setCreateDate(new Date());
         }

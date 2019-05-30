@@ -129,10 +129,11 @@ public class Certification implements Serializable {
         return customerTypeCN;
     }
 
-    public String getStatusCN() {
+    // TODO
+    /*public String getStatusCN() {
         if (!StringUtils.isEmpty(status)) {
             return DictionaryUtil.getValue(CargoConstant.CARGO_STATUS, status);
         }
         return statusCN;
-    }
+    }*/
 }

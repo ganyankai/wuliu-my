@@ -409,7 +409,8 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		if (!cargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
 			throw new BusinessException(112, "修改失败：无访问权限");
 		}
-		if (cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)
+				&& !cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
 		cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
@@ -425,7 +426,8 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		if (!carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
 			throw new BusinessException(112, "修改失败：无访问权限");
 		}
-		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)
+				&& !carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
 		carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
@@ -441,7 +443,8 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		if (!cargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) {
 			throw new BusinessException(112, "修改失败：无访问权限");
 		}
-		if (cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (cargoOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)
+				&& !cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
 		cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
@@ -457,7 +460,8 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		if (!carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_ORGANIZE)) {
 			throw new BusinessException(112, "修改失败：无访问权限");
 		}
-		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)
+				&& !carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
 		carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
