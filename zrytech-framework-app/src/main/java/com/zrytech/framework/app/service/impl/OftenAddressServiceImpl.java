@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +39,15 @@ public class OftenAddressServiceImpl implements OftenAddressService {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		OftenAddress address = new OftenAddress();
 		BeanUtils.copyProperties(dto, address);
-		address.setCreateDate(new Date());
 		address.setCustomerId(customer.getId());
+		
+		Example<OftenAddress> example = Example.of(address);
+		List<OftenAddress> list = repository.findAll(example);
+		if (!list.isEmpty()) {
+			throw new BusinessException(112, "常用路线已存在");
+		}
+		
+		address.setCreateDate(new Date());
 		repository.save(address);
 		return ServerResponse.successWithData(address);
 	}
