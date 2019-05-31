@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
+@Deprecated
 @Api(description = "客户相关api")
 @RestController
 @RequestMapping("/customer")
@@ -41,14 +41,14 @@ public class CustomerController {
      * @param:CargoCustomerDto客户对象
      * @return:ServerResponse
      */
-    @PostMapping("/register")
+    /*@PostMapping("/register")
     @ApiOperation(value = "客户注册")
     public ServerResponse register(@RequestBody RequestParams<CargoCustomerDto> requestParams) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
         return cargoCustomerService.register(requestParams.getParams());
-    }
+    }*/
 
     /**
      * Desintion:客户登录
@@ -57,7 +57,7 @@ public class CustomerController {
      * @param:DefaultCustomer
      * @return:ServerResponse
      */
-    @PostMapping("/font/login")
+    /*@PostMapping("/font/login")
     @ApiOperation(value = "客户登录")
     public ServerResponse login(@RequestBody RequestParams<DefaultCustomer> requestParams) {
         DefaultCustomer defaultCustomer = requestParams.getParams();
@@ -71,7 +71,7 @@ public class CustomerController {
         currentCustomer.setPwd(null);
         map.put("customer", currentCustomer);
         return ServerResponse.successWithData(map);
-    }
+    }*/
 
     /**
      * @Desinition:忘记密码
@@ -137,14 +137,14 @@ public class CustomerController {
      * @param:CargoCustomer
      * @param:DefaultCustomer
      **/
-    private void checkLogin(CargoCustomer dbCustomer, DefaultCustomer webUser) {
+    /*private void checkLogin(CargoCustomer dbCustomer, DefaultCustomer webUser) {
         if (!dbCustomer.getPwd().equalsIgnoreCase(webUser.getPwd())) {
             throw new BusinessException(new CommonResult(ResultEnum.INCORRECT_CREDENTIALS_ERROR));
         }
         if (dbCustomer.getIsActive() !=null&& dbCustomer.getIsActive()) {//isActive:true表示禁用;false表示启用
             throw new BusinessException(new CommonResult(ResultEnum.LOCKED_ACCOUNT_ERROR));
         }
-    }
+    }*/
 
     public static class DefaultCustomer extends CargoCustomer implements Serializable {
         private static final long serialVersionUID = 5389110833420368253L;

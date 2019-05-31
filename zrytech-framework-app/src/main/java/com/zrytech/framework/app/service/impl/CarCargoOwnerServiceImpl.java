@@ -41,6 +41,7 @@ import com.zrytech.framework.app.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
+import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
 
 @Service
@@ -390,7 +391,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			BeanUtils.copyProperties(temp, carCargoOwner);
 			carCargoOwner.setId(id);
 			carCargoOwner.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
-			if (carCargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
+			if (carCargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_INCERTIFIED)) {
 				carCargoOwner.setStatus(CarCargoOwnerConstants.STATUS_CERTIFIED);
 			}
 			if (carCargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) { // 个人
@@ -413,6 +414,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 				&& !cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
+		if(cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
+			cargoOwner.setStatus(CarCargoOwnerConstants.STATUS_INCERTIFIED);
+		}
 		cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		cargoOwner.setApproveContent(JSON.toJSONString(dto));
 		carCargoOwnnerRepository.save(cargoOwner);
@@ -429,6 +433,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)
 				&& !carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
+		}
+		if(carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
+			carOwner.setStatus(CarCargoOwnerConstants.STATUS_INCERTIFIED);
 		}
 		carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		carOwner.setApproveContent(JSON.toJSONString(dto));
@@ -447,6 +454,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 				&& !cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
 		}
+		if(cargoOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
+			cargoOwner.setStatus(CarCargoOwnerConstants.STATUS_INCERTIFIED);
+		}
 		cargoOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		cargoOwner.setApproveContent(JSON.toJSONString(dto));
 		carCargoOwnnerRepository.save(cargoOwner);
@@ -463,6 +473,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		if (carOwner.getApproveStatus().contentEquals(ApproveConstants.STATUS_APPROVAL_PENDING)
 				&& !carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
 			throw new BusinessException(112, "修改失败：待审批状态下不能修改资料");
+		}
+		if(carOwner.getStatus().equalsIgnoreCase(CarCargoOwnerConstants.STATUS_UNCERTIFIED)) {
+			carOwner.setStatus(CarCargoOwnerConstants.STATUS_INCERTIFIED);
 		}
 		carOwner.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		carOwner.setApproveContent(JSON.toJSONString(dto));
@@ -576,6 +589,25 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			// 启用子账号 TODO
 		}
 		return ServerResponse.successWithData(customer.getIsActive() ? false : true);
+	}
+
+	@Override
+	public ServerResponse getCustomer() {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Integer customerId = customer.getId();
+		customer = customerRepository.findOne(customerId);
+		List<CarCargoOwnner> list = carCargoOwnnerRepository.findByCustomerId(customerId);
+		if (list == null || list.size() == 0) {
+			throw new BusinessException(112, "用户不存在");
+		}
+		CarCargoOwnner carCargoOwner = list.get(0);
+		String type = carCargoOwner.getType();
+		if (type.equalsIgnoreCase(CarCargoOwnerConstants.TYPE_CARGO_OWNER)) {
+			customer.setCargoOwner(carCargoOwner);
+		} else {
+			customer.setCarOwner(carCargoOwner);
+		}
+		return ServerResponse.successWithData(customer);
 	}
 	
 }

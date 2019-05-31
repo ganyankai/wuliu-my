@@ -18,6 +18,8 @@ import com.zrytech.framework.common.entity.User;
 
 @Service
 public interface CarCargoOwnerService {
+	
+	ServerResponse getCustomer();
 
 	/**
 	 * 车主货主分页

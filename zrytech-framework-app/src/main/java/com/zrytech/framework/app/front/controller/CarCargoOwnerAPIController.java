@@ -40,8 +40,7 @@ public class CarCargoOwnerAPIController {
 	
 	@RequestMapping("/getCustomer")
 	public ServerResponse getCustomer() {
-		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		return ServerResponse.successWithData(customer);
+		return carCargoOwnerService.getCustomer();
 	}
 
 	/**

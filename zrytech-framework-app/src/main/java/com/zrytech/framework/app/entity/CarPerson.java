@@ -22,16 +22,24 @@ import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import com.zrytech.framework.base.entity.BaseEntity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 车辆司机与压货人
  * @author cat
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "`car_person`")
 public class CarPerson extends BaseEntity {
+	
+	@Transient
+	private String customerUserAccount;
+	
+	@Transient
+	private String customerTel;
 	
 	/**
 	 * 

@@ -49,6 +49,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
      * @param:CargoCustomerDto客户对象
      * @return:ServerResponse
      */
+    @Deprecated
     @Override
     public ServerResponse register(CargoCustomerDto cargoCustomerDto) {
         CheckFieldUtils.checkObjecField(cargoCustomerDto.getLoginCounter());  //字段非空校验
@@ -111,6 +112,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
     /**
      * 个人认证或企业认证校验
      */
+    @Deprecated
     public void checkCertification(Certification certification) {
         if (certification.getCustomerType() != null && certification.getCustomerType().equalsIgnoreCase(CargoConstant.CERTIFICATION_PERSON)) {
             CheckFieldUtils.checkObjecField(certification.getLegalerIdCardFront());  //字段非空校验
@@ -138,6 +140,7 @@ public class CargoCustomerServiceImpl implements CargoCustomerService {
      * @param:DefaultCustomer
      * @return:ServerResponse
      */
+    @Deprecated
     @Override
     public CargoCustomer findByCargoCustomerCount(CargoCustomer currentCustomer) {
         CheckFieldUtils.checkObjecField(currentCustomer.getLoginCounter());

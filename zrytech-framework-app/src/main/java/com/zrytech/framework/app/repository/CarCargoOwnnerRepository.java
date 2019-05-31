@@ -17,6 +17,7 @@ public interface CarCargoOwnnerRepository extends BaseRepository<CarCargoOwnner,
 	
 	List<CarCargoOwnner> findByCustomerIdAndType(Integer customerId, String type);
 	
+	List<CarCargoOwnner> findByCustomerId(Integer customerId);
 	
 	/**
 	 * 获取车主或者货主企业名称

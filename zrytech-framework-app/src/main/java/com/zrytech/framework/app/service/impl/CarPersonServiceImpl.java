@@ -91,6 +91,11 @@ public class CarPersonServiceImpl implements CarPersonService {
 		for (CarPerson carPerson : list) {
 			carPerson.setCarOwnerName(carCargoOwnnerRepository.findNameById(carPerson.getCarOwnerId()));
 			carPerson = this.bindingDriverCustomerStatus(carPerson);
+			if (carPerson.getPersonType().equalsIgnoreCase(CarPersonConstants.PERSON_TYPE_DRIVER)) {
+				Customer customer = customerRepository.findOne(carPerson.getCustomerId());
+				carPerson.setCustomerTel(customer.getTel());
+				carPerson.setCustomerUserAccount(customer.getUserAccount());
+			}
 		}
 		return new PageData<CarPerson>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}

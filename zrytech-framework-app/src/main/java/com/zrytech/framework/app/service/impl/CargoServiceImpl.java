@@ -32,6 +32,7 @@ import com.zrytech.framework.app.repository.CargoMatterRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
 import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CargoService;
+import com.zrytech.framework.app.service.MyFocusPersonService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.PageData;
@@ -540,48 +541,7 @@ public class CargoServiceImpl implements CargoService {
 	}
 	
 	
-	@Override
-	public ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
-		String name = null;
-		Integer carOwnerId = null;
-		try {
-			Customer customer = RequestUtil.getCurrentUser(Customer.class);
-			CarCargoOwnner carOwner = customer.getCarOwner();
-			if (carOwner != null) {
-				name = carOwner.getName();
-				carOwnerId = carOwner.getId();
-			}
-		} catch (Exception e) {
-
-		}
-
-		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
-		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
-		List<Cargo> list = cargoMapper.cargoSearch(dto);
-		for (Cargo cargo : list) {
-			if (name != null) {
-				cargo.setCargoOwnerName(name);
-			} else {
-				cargo.setCargoOwnerName(carCargoOwnnerRepository.findNameById(cargo.getCreateBy()));
-			}
-			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
-			cargo.setCargoMatterCount(countByCargoId);
-			if (carOwnerId != null) {
-				// 是否已报价
-				List<CargoMatter> temp = cargoMatterRepository.findByCargoIdAndCarOwnnerId(cargo.getId(), carOwnerId);
-				if (!temp.isEmpty()) {
-					cargo.setIsOffer(true);
-				} else {
-					cargo.setIsOffer(false);
-				}
-				// 是否已关注 TODO
-
-			}
-		}
-
-		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
-		return ServerResponse.successWithData(pageData);
-	}
+	
 	
 	
 	
@@ -611,10 +571,6 @@ public class CargoServiceImpl implements CargoService {
 		cargo.setCargoLocations(list);
 		return ServerResponse.successWithData(cargo);
 	}
-	
-	
-
-
     
     @Transactional
 	@Override
@@ -707,6 +663,29 @@ public class CargoServiceImpl implements CargoService {
 		return ServerResponse.success();
 	}
 
+	@Autowired
+	private MyFocusPersonService myFocusPersonService;
+	
+	@Override
+	public ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
+		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
+		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+		List<Cargo> list = cargoMapper.cargoSearch(dto);
+		for (Cargo cargo : list) {
+			CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(cargo.getCreateBy());
+			cargo.setCargoOwnerName(cargoOwner.getName());
+			cargo.setCargoOwnerTel(cargoOwner.getTel());
+
+			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
+			cargo.setCargoMatterCount(countByCargoId);
+
+			cargo = this.bindFocusAndOffer(cargo);
+		}
+
+		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
+	
 	@Override
 	public ServerResponse openDetails(CommonDto dto) {
 		Cargo cargo = this.assertCargoAvailable(dto.getId());
@@ -718,10 +697,50 @@ public class CargoServiceImpl implements CargoService {
 			CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(createBy);
 			cargo.setCargoOwnerName(cargoOwner.getName());
 			cargo.setCargoOwnerTel(cargoOwner.getTel());
+
+			cargo = this.bindFocusAndOffer(cargo);
+
 			return ServerResponse.successWithData(cargo);
 		} else {
 			throw new BusinessException(112, "仅可查看发布中，已完成货源的详情");
 		}
+	}
+	
+	/**
+	 * 为货源绑定是否已关注，是否已报价
+	 * @author cat
+	 * 
+	 * @param cargo
+	 * @return
+	 */
+	private Cargo bindFocusAndOffer(Cargo cargo) {
+		Integer createBy = cargo.getCreateBy();
+		// 如果当前有用户登录，且登录人是车主，则判断是否已关注货源的货主
+		try {
+			Customer customer = RequestUtil.getCurrentUser(Customer.class);
+			if (customer != null) {
+				CarCargoOwnner carOwner = customer.getCarOwner();
+				if (carOwner != null) {
+					Integer carOwnerId = carOwner.getId();
+
+					// 是否已关注
+					boolean focus = myFocusPersonService.isFocus(carOwnerId, createBy);
+					cargo.setIsFocus(focus);
+
+					// 是否已报价
+					List<CargoMatter> temp = cargoMatterRepository.findByCargoIdAndCarOwnnerId(cargo.getId(),
+							carOwnerId);
+					if (!temp.isEmpty()) {
+						cargo.setIsOffer(true);
+					} else {
+						cargo.setIsOffer(false);
+					}
+				}
+			}
+		} catch (Exception e) {
+			// nothing to do
+		}
+		return cargo;
 	}
 	
 }
