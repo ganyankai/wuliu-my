@@ -20,6 +20,8 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public interface CarPersonService {
 	
+	void assertCarPersonCertified(Integer carPersonId);
+	
 	/**
 	 * 断言司机已认证
 	 * @author cat

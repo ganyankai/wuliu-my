@@ -94,4 +94,9 @@ public class Customer extends User {
 	/**货主*/
 	@Transient
 	private CarCargoOwnner cargoOwner;
+	
+	/**司机*/
+	@Transient
+	private CarPerson dirver;
+	
 }

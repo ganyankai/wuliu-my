@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.evaluate.EvaluateAddDto;
 import com.zrytech.framework.app.dto.evaluate.EvaluateSearchDto;
 import com.zrytech.framework.app.service.EvaluateService;
@@ -31,6 +32,7 @@ public class EvaluateAPIController {
 	@Autowired
 	private EvaluateService service;
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/carEvaluateCargo")
@@ -39,6 +41,7 @@ public class EvaluateAPIController {
 		return service.carEvaluateCargo(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/cargoEvaluateCar")
@@ -47,6 +50,7 @@ public class EvaluateAPIController {
 		return service.cargoEvaluateCar(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/fromCargo")
@@ -67,6 +71,7 @@ public class EvaluateAPIController {
 		return service.fromCargo(requestParams.getParams(), pageNum, pageSize);
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/toCargo")
@@ -87,6 +92,7 @@ public class EvaluateAPIController {
 		return service.toCargo(requestParams.getParams(), pageNum, pageSize);
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/fromCar")
@@ -107,6 +113,7 @@ public class EvaluateAPIController {
 		return service.fromCar(requestParams.getParams(), pageNum, pageSize);
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/toCar")

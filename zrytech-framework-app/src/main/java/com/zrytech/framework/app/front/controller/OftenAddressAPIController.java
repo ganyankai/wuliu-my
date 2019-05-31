@@ -1,5 +1,6 @@
 package com.zrytech.framework.app.front.controller;
 
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressAddDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressUpdateDto;
@@ -34,6 +35,7 @@ public class OftenAddressAPIController {
 		return service.list();
 	}
 
+	@NeedCertified
 	@Valid
 	@PostMapping("/add")
 	public ServerResponse add(@RequestBody @Valid RequestParams<OftenAddressAddDto> requestParams,
@@ -41,12 +43,14 @@ public class OftenAddressAPIController {
 		return service.save(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@Valid
 	@PostMapping("/get")
 	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		return service.details(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@Valid
 	@PostMapping("/update")
 	public ServerResponse update(@RequestBody @Valid RequestParams<OftenAddressUpdateDto> requestParams,
@@ -54,6 +58,7 @@ public class OftenAddressAPIController {
 		return service.update(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@Valid
 	@PostMapping("/delete")
 	public ServerResponse delete(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {

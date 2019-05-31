@@ -44,5 +44,7 @@ public interface CarRepository extends BaseRepository<Car, Integer>{
 	
 	List<Car> findByCarNo(String carNo);
 	
+	List<Car> findByIsDeleteAndCarOwnerId(Boolean isDelete, Integer carOwnerId);
+	
 	
 }

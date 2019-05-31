@@ -60,6 +60,7 @@ public class CarCargoOwnerController {
 			pageSize = 10;
 		CarCargoOwnnerPageDto dto = requestParams.getParams();
 		dto.setType(CarCargoOwnerConstants.TYPE_CAR_OWNER);
+		dto.setStatus(CarCargoOwnerConstants.STATUS_CERTIFIED);
 		PageData<CarCargoOwnner> pageData = carCargoOwnerService.carCargoOwnerPage(dto, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}
@@ -168,6 +169,7 @@ public class CarCargoOwnerController {
 			pageSize = 10;
 		CarCargoOwnnerPageDto dto = requestParams.getParams();
 		dto.setType(CarCargoOwnerConstants.TYPE_CARGO_OWNER);
+		dto.setStatus(CarCargoOwnerConstants.STATUS_CERTIFIED);
 		PageData<CarCargoOwnner> pageData = carCargoOwnerService.carCargoOwnerPage(dto, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}

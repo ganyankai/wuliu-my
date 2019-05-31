@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.front.controller;
 
 import com.zrytech.framework.app.ano.CargoOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CargoDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationUpdateDto;
@@ -43,7 +44,7 @@ public class CargoSourceController {
 	@Autowired
 	private CargoService service;
 	
-
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/saveCargoSource")
@@ -52,6 +53,7 @@ public class CargoSourceController {
 		return service.saveCargoSource(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/updateCargoLocations")

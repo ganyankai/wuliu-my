@@ -2,6 +2,7 @@ package com.zrytech.framework.app.front.controller;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.billlocation.BillLocationAddDto;
 import com.zrytech.framework.app.dto.waybill.WaybillPageDto;
@@ -40,6 +41,7 @@ public class WaybillApiController {
 	@Autowired
 	private BillLocationService billLocationService;
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/confirm")
@@ -47,6 +49,7 @@ public class WaybillApiController {
 		return service.confirm(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/cargoOwnerWaybillPage")
@@ -71,6 +74,7 @@ public class WaybillApiController {
 		return ServerResponse.successWithData(pageData);
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@PostMapping("/cargoOwnerDetails")
@@ -81,6 +85,7 @@ public class WaybillApiController {
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/addWaybillDetail")
@@ -89,6 +94,7 @@ public class WaybillApiController {
 		return service.addWaybillDetail(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/updateWaybillDetail")
@@ -97,6 +103,7 @@ public class WaybillApiController {
 		return service.updateWaybillDetail(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/submit")
@@ -104,6 +111,7 @@ public class WaybillApiController {
 		return service.submit(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/cancel")
@@ -118,6 +126,7 @@ public class WaybillApiController {
 	 * 如果指定的运单装卸地已存在则更新，根据运单Id,运单项Id,货源装卸地Id确认运单装卸地
 	 * </pre>
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/addBillLocation")
@@ -126,6 +135,7 @@ public class WaybillApiController {
 		return billLocationService.addBillLocation(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/deleteWaybillDetail")
@@ -134,6 +144,7 @@ public class WaybillApiController {
 		return service.deleteWaybillDetail(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/deleteBillLocation")
@@ -142,6 +153,7 @@ public class WaybillApiController {
 		return service.deleteBillLocation(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/update")
@@ -150,6 +162,7 @@ public class WaybillApiController {
 		return service.update(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/carOwnerWaybillPage")
@@ -174,6 +187,7 @@ public class WaybillApiController {
 		return ServerResponse.successWithData(pageData);
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/carOwnerDetails")

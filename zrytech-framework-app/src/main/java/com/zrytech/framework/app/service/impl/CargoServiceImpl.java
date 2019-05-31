@@ -31,6 +31,7 @@ import com.zrytech.framework.app.repository.CargoLocationRepository;
 import com.zrytech.framework.app.repository.CargoMatterRepository;
 import com.zrytech.framework.app.repository.CargoRepository;
 import com.zrytech.framework.app.service.ApproveLogService;
+import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.app.service.MyFocusPersonService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
@@ -128,9 +129,6 @@ public class CargoServiceImpl implements CargoService {
     
     @Autowired
     private ApproveLogRepository approveLogRepository;
-
-    
-    
     
     @Autowired
 	private ApproveLogService approveLogService;
@@ -218,12 +216,7 @@ public class CargoServiceImpl implements CargoService {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
 		CarCargoOwnner cargoOwner = customer.getCargoOwner();
 		Integer cargoOwnerId = cargoOwner.getId();
-		// 验证货主是否已认证
-		String status = cargoOwner.getStatus();
-		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(status)) {
-			throw new BusinessException(112, "货主未认证，无法发布货源");
-		}
-
+		
 		// 车源装卸地
 		List<CargoLocationAddDto> cargoLocationList = dto.getCargoLocationList();
 		

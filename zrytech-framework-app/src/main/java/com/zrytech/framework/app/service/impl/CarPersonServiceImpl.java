@@ -574,4 +574,11 @@ public class CarPersonServiceImpl implements CarPersonService {
 		}
 	}
 	
+	@Override
+	public void assertCarPersonCertified(Integer carPersonId) {
+		CarPerson carPerson = carPersonRepository.findOne(carPersonId);
+		if (carPerson.getStatus().equalsIgnoreCase(CarPersonConstants.PERSON_STATUS_UNCERTIFIED)) {
+			throw new BusinessException(112, "未认证");
+		}
+	}
 }

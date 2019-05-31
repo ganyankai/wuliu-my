@@ -7,6 +7,12 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.zrytech.framework.app.constants.CustomerConstants;
+import com.zrytech.framework.app.entity.CarCargoOwnner;
+import com.zrytech.framework.app.entity.CarPerson;
+import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.app.service.CarCargoOwnerService;
+import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.app.utils.JwtUtils;
 import com.zrytech.framework.base.cache.ICache;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -71,5 +77,29 @@ public class AopRoleValidationHandler {
 			throw new BusinessException(112, "无访问权限");
 		}
 	}
+	
+	@Autowired
+	private CarCargoOwnerService carCargoOwnerService;
+	
+	@Autowired
+	private CarPersonService carPersonService;
+	
+	@Before("@annotation(com.zrytech.framework.app.ano.NeedCertified)")
+	public void NeedCertified(JoinPoint joinPoint) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		String customerType = customer.getCustomerType();
+		if (CustomerConstants.TYPE_CAR_OWNER.equalsIgnoreCase(customerType)) {
+			CarCargoOwnner carOwner = customer.getCarOwner();
+			carCargoOwnerService.assertCarCargoCertified(carOwner.getId());
+		} else if (CustomerConstants.TYPE_CARGO_OWNER.equalsIgnoreCase(customerType)) {
+			CarCargoOwnner cargoOwner = customer.getCargoOwner();
+			carCargoOwnerService.assertCarCargoCertified(cargoOwner.getId());
+		} else if (CustomerConstants.TYPE_DRIVER.equalsIgnoreCase(customerType)) {
+			CarPerson dirver = customer.getDirver();
+			carPersonService.assertCarPersonCertified(dirver.getId());
+		} else {
 
+		}
+	}
+	
 }

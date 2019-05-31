@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
+import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
 import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
@@ -251,11 +252,22 @@ public class CarServiceImpl implements CarService {
 		return ServerResponse.successWithData(car);
 	}
 
+	private void personCheck(CarCargoOwnner carOwner) {
+		if(carOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
+			List<Car> list = carRepository.findByIsDeleteAndCarOwnerId(false, carOwner.getId());
+			if(!list.isEmpty()) {
+				throw new BusinessException(112, "个人车主最多只能添加一辆车");
+			}
+		}
+	}
+	
 	@Transactional
 	@Override
 	public ServerResponse add(CarAddDto dto, Customer customer) {
-		this.assertCarNoNotExist(dto.getCarNo()); // 车牌号全局唯一
 		CarCargoOwnner carOwner = customer.getCarOwner();
+		this.personCheck(carOwner);
+		
+		this.assertCarNoNotExist(dto.getCarNo()); // 车牌号全局唯一
 		Car car = new Car();
 		BeanUtils.copyProperties(dto, car);
 		car.setCreateBy(customer.getId());

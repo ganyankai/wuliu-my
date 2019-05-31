@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonAddDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonCheckUpdateDto;
@@ -45,6 +46,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/create")
@@ -62,6 +64,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/enabled")
@@ -79,6 +82,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/delete")
@@ -95,6 +99,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/updateNoCheck")
@@ -112,6 +117,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/updateNeedApprove")
@@ -129,6 +135,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/details")
@@ -145,6 +152,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/myDriver")
@@ -169,6 +177,7 @@ public class CarPersonAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/mySupercargo")

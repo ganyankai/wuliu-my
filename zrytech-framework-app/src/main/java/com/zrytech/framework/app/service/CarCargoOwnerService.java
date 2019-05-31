@@ -19,6 +19,14 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public interface CarCargoOwnerService {
 	
+	/**
+	 * 确认车主货主已认证
+	 * @author cat
+	 * 
+	 * @param carCargoId
+	 */
+	void assertCarCargoCertified(Integer carCargoId);
+	
 	ServerResponse getCustomer();
 
 	/**

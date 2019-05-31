@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.focus.MyFocusPersonAddDto;
 import com.zrytech.framework.app.service.MyFocusPersonService;
 import com.zrytech.framework.base.entity.RequestParams;
@@ -28,6 +29,7 @@ public class MyFocusPersonAPIController {
 	@Autowired
 	private MyFocusPersonService service;
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/addOrDelFoucsCar")
@@ -36,6 +38,7 @@ public class MyFocusPersonAPIController {
 		return service.addOrDelFoucsCar(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/foucsCarList")
@@ -43,6 +46,7 @@ public class MyFocusPersonAPIController {
 		return service.foucsCarList();
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/addOrDelFoucsCargo")
@@ -51,6 +55,7 @@ public class MyFocusPersonAPIController {
 		return service.addOrDelFoucsCargo(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/foucsCargoList")

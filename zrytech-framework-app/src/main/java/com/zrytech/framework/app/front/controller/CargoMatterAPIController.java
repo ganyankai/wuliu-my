@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
@@ -32,6 +33,7 @@ public class CargoMatterAPIController {
 	@Autowired
 	private CargoMatterService service;
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/add")
@@ -40,6 +42,7 @@ public class CargoMatterAPIController {
 		return service.add(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/update")
@@ -48,6 +51,7 @@ public class CargoMatterAPIController {
 		return service.update(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/delete")
@@ -83,6 +87,7 @@ public class CargoMatterAPIController {
 		return service.carOwnerCargoMatterDetails(requestParams.getParams());
 	}
 	
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/bid")
@@ -106,6 +111,7 @@ public class CargoMatterAPIController {
 		return service.cargoOwnerGetCargoMatterByCargoId(requestParams.getParams());
 	}
 
+	@NeedCertified
 	@CargoOwnerRole
 	@Valid
 	@RequestMapping("/tender")

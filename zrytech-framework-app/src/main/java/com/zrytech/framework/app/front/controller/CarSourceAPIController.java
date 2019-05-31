@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.constants.CarSourceConstants;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.carrecordplace.CarRecordPlaceDelDto;
@@ -51,6 +52,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/add")
@@ -68,6 +70,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/myCarSourcePage")
@@ -86,7 +89,6 @@ public class CarSourceAPIController {
 		return ServerResponse.successWithData(pageData);
 	}
 
-	
 	@Valid
 	@PostMapping("/openCarSourcePage")
 	public ServerResponse openCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
@@ -123,6 +125,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/details")
@@ -159,6 +162,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/saveLine")
@@ -177,6 +181,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/delLine")
@@ -194,6 +199,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/saveCarSourceCar")
@@ -211,6 +217,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/delCarSourceCar")
@@ -227,6 +234,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/updateNoCheck")
@@ -244,6 +252,7 @@ public class CarSourceAPIController {
 	 * @param result
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@PostMapping("/down")

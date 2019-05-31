@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.car.CarAddDto;
 import com.zrytech.framework.app.dto.car.CarCheckUpdateDto;
@@ -46,6 +47,7 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/delete")
@@ -64,6 +66,7 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/updateNoCheck")
@@ -83,6 +86,7 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/updateCheck")
@@ -102,6 +106,7 @@ public class CarAPIController {
 	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
+	@NeedCertified
 	@CarOwnerRole
 	@Valid
 	@RequestMapping("/add")

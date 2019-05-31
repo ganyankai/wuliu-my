@@ -217,6 +217,14 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		oftenAddressRepository.save(save);
 	}
 	
+	@Override
+	public void assertCarCargoCertified(Integer carCargoId) {
+		CarCargoOwnner carCargoOwner = carCargoOwnnerRepository.findOne(carCargoId);
+		if(!CarCargoOwnerConstants.STATUS_CERTIFIED.equalsIgnoreCase(carCargoOwner.getStatus())) {
+			throw new BusinessException(112, "未认证");
+		}
+	}
+	
 	@Transactional
 	@Override
 	public ServerResponse register(CustomerRegisterDto dto) {
@@ -304,6 +312,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
 		List<CarCargoOwnner> list = carCargoOwnerMapper.selectSelective(dto);
 		for (CarCargoOwnner carCargoOwnner : list) {
+			CarCargoOwnerNeedApproveDto temp = JSON.parseObject(carCargoOwnner.getApproveContent(),
+					CarCargoOwnerNeedApproveDto.class);
+			carCargoOwnner.setApproveContentCN(temp);
 			carCargoOwnner = this.bindingCustomer(carCargoOwnner);
 		}
 		return new PageData<CarCargoOwnner>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
