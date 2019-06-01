@@ -194,10 +194,10 @@ public class CargoServiceImpl implements CargoService {
 		List<CargoLocationAddDto> cargoLocationList = dto.getCargoLocationList();
 
 		cargo = this.cargoLocationCheck(cargo, cargoLocationList);
-		List<CargoLocationAddDto> cargoLocations = this.cargoLocationSort(cargoLocationList);
+		// cargoLocationList = this.cargoLocationSort(cargoLocationList);
 
-		CargoLocationAddDto firstCargoLocation = cargoLocations.get(0);
-		CargoLocationAddDto lastCargoLocation = cargoLocations.get(cargoLocations.size() - 1);
+		CargoLocationAddDto firstCargoLocation = cargoLocationList.get(0);
+		CargoLocationAddDto lastCargoLocation = cargoLocationList.get(cargoLocationList.size() - 1);
 
 		cargo = this.setCargoLine(cargo, firstCargoLocation, lastCargoLocation);
 		cargoRepository.save(cargo);
@@ -205,7 +205,7 @@ public class CargoServiceImpl implements CargoService {
 
 		loadingMapper.deleteByCargoId(cargoId);
 		
-		List<Loading> list = this.setCargoLocations(cargoLocations, cargoId);
+		List<Loading> list = this.setCargoLocations(cargoLocationList, cargoId);
 		cargoLocationRepository.save(list);
 
 		return ServerResponse.success();
@@ -223,10 +223,10 @@ public class CargoServiceImpl implements CargoService {
 		Cargo cargo = new Cargo();
 		cargo = this.cargoLocationCheck(cargo, cargoLocationList);
 		
-		List<CargoLocationAddDto> cargoLocations = this.cargoLocationSort(cargoLocationList);
+		// cargoLocationList = this.cargoLocationSort(cargoLocationList);
 
-		CargoLocationAddDto firstCargoLocation = cargoLocations.get(0);
-		CargoLocationAddDto lastCargoLocation = cargoLocations.get(cargoLocations.size() - 1);
+		CargoLocationAddDto firstCargoLocation = cargoLocationList.get(0);
+		CargoLocationAddDto lastCargoLocation = cargoLocationList.get(cargoLocationList.size() - 1);
 
 		BeanUtils.copyProperties(dto, cargo);
 		cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);
@@ -236,7 +236,7 @@ public class CargoServiceImpl implements CargoService {
 		cargo = cargoRepository.save(cargo);
 		Integer cargoId = cargo.getId();
 
-		List<Loading> list = this.setCargoLocations(cargoLocations, cargoId);
+		List<Loading> list = this.setCargoLocations(cargoLocationList, cargoId);
 		cargoLocationRepository.save(list);
 
 		return ServerResponse.success();
@@ -285,8 +285,6 @@ public class CargoServiceImpl implements CargoService {
 		return cargo;
 	}
     
-    
-    
     /**
      * 将货源装卸地按照时间先后顺序排序，同时会验证第一个必须是装货地，最后一个必须是卸货地
      * @author cat
@@ -322,7 +320,36 @@ public class CargoServiceImpl implements CargoService {
 		return cargoLocations;
 	}
 	
-    
+	private Cargo cargoLocationCheck(Cargo cargo, List<CargoLocationAddDto> cargoLocationList) {
+		int load = 0; // 装货地的数量
+		int unload = 0; // 卸货地的数量
+		for (CargoLocationAddDto cargoLocationAddDto : cargoLocationList) {
+			if (CargoConstant.LOADING_TYPE.equalsIgnoreCase(cargoLocationAddDto.getType())) {
+				load++;
+			} else {
+				unload++;
+			}
+		}
+
+		if (load == 0) {
+			throw new BusinessException(112, "至少有一个装货地");
+		} else if (load == 1) {
+			cargo.setMulShipment(false);
+		} else {
+			cargo.setMulShipment(true);
+		}
+
+		if (unload == 0) {
+			throw new BusinessException(112, "至少有一个卸货地");
+		} else if (unload == 1) {
+			cargo.setMulUnload(false);
+		} else {
+			cargo.setMulUnload(true);
+		}
+		
+		return cargo;
+	}
+	
     /**
      * 货源装卸地验证
      * @author cat
@@ -332,7 +359,7 @@ public class CargoServiceImpl implements CargoService {
      * @param cargoLocationList	货源装卸地列表
      * @return	货源装货地总装货数量
      */
-	private Cargo cargoLocationCheck(Cargo cargo, List<CargoLocationAddDto> cargoLocationList) {
+	/*private Cargo cargoLocationCheck(Cargo cargo, List<CargoLocationAddDto> cargoLocationList) {
 		int load = 0; // 装货地的数量
 		int unload = 0; // 卸货地的数量
 		Integer loadQty = 0; // 所有装货地运输数量之和
@@ -376,11 +403,8 @@ public class CargoServiceImpl implements CargoService {
 		cargo.setQty(loadQty);
 		
 		return cargo;
-	}
+	}*/
     
-    
-    
-
 
     /**
      * @Desinition:多点卸货和多点装货修改

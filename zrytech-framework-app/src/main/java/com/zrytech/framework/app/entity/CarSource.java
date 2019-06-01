@@ -36,6 +36,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "`car_source`")
 public class CarSource extends BaseEntity {
+	
+	/** 货主是否已关注车主 */
+	@Transient
+	private Boolean isFocus;
 
 	/**
 	 * 

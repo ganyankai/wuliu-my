@@ -115,15 +115,15 @@ public class BillLocationServiceImpl implements BillLocationService {
 	private void saveBillLocation(BillLocationAddDto dto, Loading cargoLocation) {
 		BillLocation billLocation = billLocationRepository.findByWaybillIdAndWaybillDetailIdAndCargoLocationId(
 				dto.getWaybillId(), dto.getWaybillDetailId(), dto.getCargoLocationId());
-		Integer count = billLocationRepository.countQtyByWaybillIdAndCargoLocationId(dto.getWaybillId(),
+		/*Integer count = billLocationRepository.countQtyByWaybillIdAndCargoLocationId(dto.getWaybillId(),
 				dto.getCargoLocationId());
 		if (count == null) {
 			count = 0;
-		}
+		}*/
 		if (billLocation == null) { // 运单装卸地不存在：新加
-			if (dto.getQty() + count > cargoLocation.getQty()) {
+			/*if (dto.getQty() + count > cargoLocation.getQty()) {
 				throw new BusinessException(112, "运单装卸数量不能大于货源装卸地可分配数量");
-			}
+			}*/
 			billLocation = new BillLocation();
 			BeanUtils.copyProperties(cargoLocation, billLocation);
 			BeanUtils.copyProperties(dto, billLocation);
@@ -131,9 +131,9 @@ public class BillLocationServiceImpl implements BillLocationService {
 			billLocation.setStatus(BillLocationConstants.STATUS_DEFAULT);
 			billLocation.setWeightUnit(cargoLocation.getWeightUnit());
 		} else { // 运单装卸地已存在：更新
-			if (dto.getQty() + count - billLocation.getQty() > cargoLocation.getQty()) {
+			/*if (dto.getQty() + count - billLocation.getQty() > cargoLocation.getQty()) {
 				throw new BusinessException(112, "运单装卸数量不能大于货源装卸地可分配数量");
-			}
+			}*/
 			billLocation.setQty(dto.getQty());
 			if (StringUtils.isNoneBlank(dto.getRemark())) {
 				billLocation.setRemark(dto.getRemark());

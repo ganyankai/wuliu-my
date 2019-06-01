@@ -39,12 +39,15 @@ import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.CarRecordPlace;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.entity.CarSourceCar;
+import com.zrytech.framework.app.entity.Cargo;
+import com.zrytech.framework.app.entity.CargoMatter;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.mapper.CarSourceMapper;
 import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.app.service.CarService;
 import com.zrytech.framework.app.service.CarSourceService;
+import com.zrytech.framework.app.service.MyFocusPersonService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
@@ -88,7 +91,33 @@ public class CarSourceServiceImpl implements CarSourceService {
 	@Autowired
 	private ApproveLogService approveLogService;
 	
+	@Autowired
+	private MyFocusPersonService myFocusPersonService;
 	
+	/**
+	 * 为车源绑定是否已关注
+	 * @author cat
+	 * 
+	 * @param carSource
+	 * @return
+	 */
+	private CarSource bindFocus(CarSource carSource) {
+		Integer carOwnerId = carSource.getCarOwnerId();
+		// 如果当前有用户登录，且登录人是货主，则判断是否已关注车源的车主
+		try {
+			Customer customer = RequestUtil.getCurrentUser(Customer.class);
+			if (customer != null) {
+				CarCargoOwnner cargoOwner = customer.getCargoOwner();
+				if (cargoOwner != null) {
+					boolean focus = myFocusPersonService.isFocus(cargoOwner.getId(), carOwnerId);
+					carSource.setIsFocus(focus);
+				}
+			}
+		} catch (Exception e) {
+			// nothing to do
+		}
+		return carSource;
+	}
 	
 	@Override
 	public PageData<CarSource> carSourcePage(CarSourcePageDto dto, Integer pageNum, Integer pageSize) {
@@ -99,6 +128,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 			carSource = this.bindingCarOwnerName(carSource);
 			carSource = this.bindingCustomerUserName(carSource);
 			carSource = this.bindingCarSourceCar(carSource);
+			carSource = this.bindFocus(carSource);
 		}
 		return new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
@@ -629,6 +659,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCustomerUserName(carSource);
 		carSource = this.bindingCarOwnerName(carSource);
+		carSource = this.bindFocus(carSource);
 		return ServerResponse.successWithData(carSource);
 	}
 	

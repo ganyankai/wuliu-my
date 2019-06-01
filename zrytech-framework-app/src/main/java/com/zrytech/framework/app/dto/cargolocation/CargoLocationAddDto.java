@@ -48,7 +48,7 @@ public class CargoLocationAddDto {
 	private String addressDetail;
 
 	/** 装卸数量 */
-	@NotNull(message = "装卸数量不能为空")
+//	@NotNull(message = "装卸数量不能为空")
 	private Integer qty;
 
 	/** 备注 */
@@ -58,12 +58,12 @@ public class CargoLocationAddDto {
 	private Integer seqNo;
 
 	/** 装卸日期 */
-	@NotNull(message = "装卸日期不能为空")
+//	@NotNull(message = "装卸日期不能为空")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date loadDate;
 
 	/** 截止日期 */
-	@NotNull(message = "截止日期不能为空")
+//	@NotNull(message = "截止日期不能为空")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date endDate;
 
