@@ -85,6 +85,8 @@ public class WaybillServiceImpl implements WaybillService {
 		for (Waybill waybill : list) {
 			waybill = this.bindingCarOwnerName(waybill);
 			waybill = this.bindingCargoOwnerName(waybill);
+			waybill = this.bindingCargo(waybill);
+			waybill = this.bindingWaybillDetail(waybill);
 		}
 		return new PageData<Waybill>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
