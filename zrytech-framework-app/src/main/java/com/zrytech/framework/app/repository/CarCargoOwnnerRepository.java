@@ -44,6 +44,10 @@ public interface CarCargoOwnnerRepository extends BaseRepository<CarCargoOwnner,
 	@Query(value = "update CarCargoOwnner set avoidAudit = ?1 where id = ?2")
 	public void updateAvoidAuditById(Boolean avoidAudit, Integer id);
 	
+	@Transactional
+	@Modifying
+	@Query(value = "update CarCargoOwnner set approveStatus = ?1 where id = ?2")
+	public void updateApproveStatusById(String approveStatus, Integer id);
 	
 	public CarCargoOwnner findByIdAndType(Integer id, String type);
 	

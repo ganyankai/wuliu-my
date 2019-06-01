@@ -37,6 +37,10 @@ public class CarCargoOwnerAPIController {
 	@Autowired
 	private CarCargoOwnerService carCargoOwnerService;
 	
+	@RequestMapping("/cancel")
+	public ServerResponse cancel() {
+		return carCargoOwnerService.cancel();
+	}
 	
 	@RequestMapping("/getCustomer")
 	public ServerResponse getCustomer() {

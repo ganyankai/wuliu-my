@@ -20,6 +20,14 @@ import com.zrytech.framework.common.entity.User;
 public interface CarCargoOwnerService {
 	
 	/**
+	 * 取消审核
+	 * @author cat
+	 * 
+	 * @return
+	 */
+	ServerResponse cancel();
+	
+	/**
 	 * 确认车主货主已认证
 	 * @author cat
 	 * 

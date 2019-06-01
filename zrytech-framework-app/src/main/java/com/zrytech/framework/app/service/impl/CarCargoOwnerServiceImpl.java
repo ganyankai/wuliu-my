@@ -16,6 +16,7 @@ import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.ApproveLogConstants;
 import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
+import com.zrytech.framework.app.constants.CustomerConstants;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
@@ -62,6 +63,32 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Autowired
 	private OftenAddressRepository oftenAddressRepository;
 	
+	
+	
+	@Transactional
+	@Override
+	public ServerResponse cancel() {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner carCargoOwner;
+		if (customer.getCustomerType().equalsIgnoreCase(CustomerConstants.TYPE_CAR_OWNER)) {
+			CarCargoOwnner carOwner = customer.getCarOwner();
+			carCargoOwner = this.assertCarOwnerExist(carOwner.getId());
+		} else if (customer.getCustomerType().equalsIgnoreCase(CustomerConstants.TYPE_CARGO_OWNER)) {
+			CarCargoOwnner cargoOwner = customer.getCargoOwner();
+			carCargoOwner = this.assertCargoOwnerExist(cargoOwner.getId());
+		} else {
+			throw new BusinessException(112, "服务器繁忙");
+		}
+
+		String approveStatus = carCargoOwner.getApproveStatus();
+		if (!approveStatus.equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			throw new BusinessException(112, "仅待审核状态可以取消");
+		}
+
+		carCargoOwnnerRepository.updateApproveStatusById(ApproveConstants.STATUS_CANCEL, carCargoOwner.getId());
+
+		return ServerResponse.successWithData("修改成功");
+	}
 	
 	
 	/**
