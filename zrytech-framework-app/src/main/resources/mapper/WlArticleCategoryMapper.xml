@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+	Created by util on 2018-5-3.
+-->
+<mapper namespace="com.zrytech.framework.app.mapper.WlArticleCategoryMapper">
+    <resultMap id="articleCategory" type="com.zrytech.framework.app.entity.WlArticleCategory">
+        <id property="id" column="id"/>
+        <result property="articleCategoryName" column="article_category_name"/>
+        <result property="articleCategoryDesc" column="article_category_desc"/>
+        <result property="articleCategoryStatus" column="article_category_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="columns">
+            id ,article_category_name ,article_category_desc ,article_category_status ,create_time ,update_time
+    </sql>
+
+    <insert id="insertArticleCategory" useGeneratedKeys="true" keyProperty="article_category_id">
+        insert into sys_article_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="articleCategoryName != null">
+                article_category_name,
+            </if>
+            <if test="articleCategoryDesc != null">
+                article_category_desc,
+            </if>
+            <if test="articleCategoryStatus != null">
+                article_category_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id} ,
+            </if>
+            <if test="articleCategoryName != null">
+                #{articleCategoryName} ,
+            </if>
+            <if test="articleCategoryDesc != null">
+                #{articleCategoryDesc} ,
+            </if>
+            <if test="articleCategoryStatus != null">
+                #{articleCategoryStatus} ,
+            </if>
+            <if test="createTime != null">
+                #{createTime} ,
+            </if>
+            <if test="updateTime != null">
+                #{updateTime} ,
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteArticleCategory">
+        delete from sys_article_category
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="articleCategoryName != null">
+                and article_category_name = #{articleCategoryName}
+            </if>
+            <if test="articleCategoryDesc != null">
+                and article_category_desc = #{articleCategoryDesc}
+            </if>
+            <if test="articleCategoryStatus != null">
+                and article_category_status = #{articleCategoryStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </trim>
+    </delete>
+
+    <update id="updateArticleCategory">
+        update sys_article_category
+        <set>
+            <if test="articleCategoryName != null">
+                article_category_name = #{articleCategoryName},
+            </if>
+            <if test="articleCategoryDesc != null">
+                article_category_desc = #{articleCategoryDesc},
+            </if>
+            <if test="articleCategoryStatus != null">
+                article_category_status = #{articleCategoryStatus},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectArticleCategoryById" resultMap="articleCategory">
+        select
+        <include refid="columns" />
+        from sys_article_category
+        where id = #{id}
+    </select>
+
+    <select id="selectArticleCategoryList" resultMap="articleCategory">
+        select
+        <include refid="columns" />
+        from sys_article_category
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="articleCategoryName != null and articleCategoryName != ''">
+                and article_category_name = #{articleCategoryName}
+            </if>
+            <if test="articleCategoryDesc != null">
+                and article_category_desc = #{articleCategoryDesc}
+            </if>
+            <if test="articleCategoryStatus != null">
+                and article_category_status = #{articleCategoryStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectArticleCategoryPage" resultMap="articleCategory">
+        select
+        <include refid="columns" />
+        from sys_article_category
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="articleCategory.id != null">
+                and id = #{articleCategory.id}
+            </if>
+            <if test="articleCategory.articleCategoryName != null">
+                and article_category_name = #{articleCategory.articleCategoryName}
+            </if>
+            <if test="articleCategory.articleCategoryDesc != null">
+                and article_category_desc = #{articleCategory.articleCategoryDesc}
+            </if>
+            <if test="articleCategory.articleCategoryStatus != null">
+                and article_category_status = #{articleCategory.articleCategoryStatus}
+            </if>
+            <if test="articleCategory.createTime != null">
+                and create_time = #{articleCategory.createTime}
+            </if>
+            <if test="articleCategory.updateTime != null">
+                and update_time = #{articleCategory.updateTime}
+            </if>
+        </trim>
+    </select>
+</mapper>

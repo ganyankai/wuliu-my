@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zrytech.framework.app.mapper.WlArticleLikeCollectMapper">
+    <insert id="insertArticleLikeCollect">
+        insert into sys_article_like_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="likeStatus != null">
+                like_status,
+            </if>
+            <if test="collectStatus != null">
+                collect_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">
+                #{articleId} ,
+            </if>
+            <if test="userId != null">
+                #{userId} ,
+            </if>
+            <if test="likeStatus != null">
+                #{likeStatus} ,
+            </if>
+            <if test="collectStatus != null">
+                #{collectStatus} ,
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateArticleLikeCollect">
+        update sys_article_like_collect
+        <set>
+            <if test="articleId != null">
+                article_id = #{articleId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="likeStatus != null">
+                like_status = #{likeStatus},
+            </if>
+            <if test="collectStatus != null">
+                collect_status = #{collectStatus},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryObject" resultMap="sysArticleLikeCollect">
+        select * from sys_article_like_collect
+        where article_id = #{id}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM sys_article_like_collect WHERE article_id = #{articleId}
+    </delete>
+
+    <resultMap type="com.zrytech.framework.app.entity.WlArticleLikeCollect" id="sysArticleLikeCollect">
+        <id property="id" column="id"/>
+        <result property="articleId" column="article_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="likeStatus" column="like_status"/>
+        <result property="collectStatus" column="collect_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+	Created by util on 2018-5-3.
+-->
+<mapper namespace="com.zrytech.framework.app.mapper.WlArticleCommentMapper">
+    <resultMap id="articleComment" type="com.zrytech.framework.app.entity.WlArticleComment">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="article_id" property="articleId" jdbcType="INTEGER"/>
+        <result column="article_comment_user_id" property="articleCommentUserId" jdbcType="INTEGER"/>
+        <result column="article_comment_content" property="articleCommentContent" jdbcType="VARCHAR"/>
+        <result column="article_comment_parent_id" property="articleCommentParentId" jdbcType="INTEGER"/>
+        <result column="article_comment_parent_user_id" property="articleCommentParentUserId" jdbcType="INTEGER"/>
+        <result column="article_comment_viewed" property="articleCommentViewed" jdbcType="TINYINT"/>
+        <result column="article_comment_status" property="articleCommentStatus" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="comment_user_type" property="commentUserType" jdbcType="VARCHAR"/>
+        <result column="comment_parent_user_type" property="commentParentUserType" jdbcType="VARCHAR"/>
+
+        <result column="short_name" property="shortName" jdbcType="VARCHAR"/>
+        <result column="head_img" property="headImg" jdbcType="VARCHAR"/>
+        <result column="reply_name" property="replyName" jdbcType="VARCHAR"/>
+        <collection property="replyName"
+                    column="{articleCommentParentId=article_comment_parent_id,articleId=article_id}"
+                    select="selectReplyName"/>
+    </resultMap>
+
+    <select id="selectReplyName" resultType="java.lang.String">
+		SELECT DISTINCT customer.short_name AS replyName FROM sys_customer customer JOIN
+        (select b.article_comment_parent_user_id
+        FROM sys_article_comment a JOIN sys_article_comment b ON a.id = b.article_comment_parent_id
+        WHERE b.article_comment_parent_id=#{articleCommentParentId} and a.article_id=#{articleId}) test
+        ON customer.id=test.article_comment_parent_user_id
+    </select>
+
+    <sql id="columns">
+        id, article_id, article_comment_user_id, article_comment_content, article_comment_parent_id,
+        article_comment_parent_user_id, article_comment_viewed, article_comment_status, create_time,
+        update_time, comment_user_type, comment_parent_user_type
+    </sql>
+
+    <sql id="columnspage">
+        sac.id, article_id, article_comment_user_id, article_comment_content, article_comment_parent_id,
+        article_comment_parent_user_id, article_comment_viewed, article_comment_status, sac.create_time,
+        sac.update_time, comment_user_type, comment_parent_user_type
+    </sql>
+
+    <insert id="insertArticleComment">
+        insert into sys_article_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="articleCommentUserId != null">
+                article_comment_user_id,
+            </if>
+            <if test="articleCommentContent != null">
+                article_comment_content,
+            </if>
+            <if test="articleCommentParentId != null">
+                article_comment_parent_id,
+            </if>
+            <if test="articleCommentParentUserId != null">
+                article_comment_parent_user_id,
+            </if>
+            <if test="articleCommentViewed != null">
+                article_comment_viewed,
+            </if>
+            <if test="articleCommentStatus != null">
+                article_comment_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">
+                #{articleId} ,
+            </if>
+            <if test="articleCommentUserId != null">
+                #{articleCommentUserId} ,
+            </if>
+            <if test="articleCommentContent != null">
+                #{articleCommentContent} ,
+            </if>
+            <if test="articleCommentParentId != null">
+                #{articleCommentParentId} ,
+            </if>
+            <if test="articleCommentParentUserId != null">
+                #{articleCommentParentUserId} ,
+            </if>
+            <if test="articleCommentViewed != null">
+                #{articleCommentViewed} ,
+            </if>
+            <if test="articleCommentStatus != null">
+                #{articleCommentStatus} ,
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteArticleComment">
+        delete from sys_article_comment
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="articleCommentUserId != null">
+                and article_comment_user_id = #{articleCommentUserId}
+            </if>
+            <if test="articleCommentContent != null">
+                and article_comment_content = #{articleCommentContent}
+            </if>
+            <if test="articleCommentParentId != null">
+                and article_comment_parent_id = #{articleCommentParentId}
+            </if>
+            <if test="articleCommentParentUserId != null">
+                and article_comment_parent_user_id = #{articleCommentParentUserId}
+            </if>
+            <if test="articleCommentViewed != null">
+                and article_comment_viewed = #{articleCommentViewed}
+            </if>
+            <if test="articleCommentStatus != null">
+                and article_comment_status = #{articleCommentStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteParentArticleIds">
+        delete from sys_article_comment where id in
+        <foreach collection="list" item="articleId" separator="," open="(" close=")">
+            #{articleId}
+        </foreach>
+    </delete>
+
+    <update id="updateArticleComment">
+        update sys_article_comment
+        <set>
+            <if test="articleId != null">
+                article_id = #{articleId},
+            </if>
+            <if test="articleCommentUserId != null">
+                article_comment_user_id = #{articleCommentUserId},
+            </if>
+            <if test="articleCommentContent != null">
+                article_comment_content = #{articleCommentContent},
+            </if>
+            <if test="articleCommentParentId != null">
+                article_comment_parent_id = #{articleCommentParentId},
+            </if>
+            <if test="articleCommentParentUserId != null">
+                article_comment_parent_user_id = #{articleCommentParentUserId},
+            </if>
+            <if test="articleCommentViewed != null">
+                article_comment_viewed = #{articleCommentViewed},
+            </if>
+            <if test="articleCommentStatus != null">
+                article_comment_status = #{articleCommentStatus},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where article_comment_id = #{id}
+    </update>
+
+    <select id="selectArticleCommentById" resultMap="articleComment">
+        select
+        <include refid="columns"/>,(select c.head_img from sys_customer c where article_comment_user_id=c.id) AS
+        head_img
+        from sys_article_comment
+        where id = #{id}
+    </select>
+
+    <select id="selectArticleCommentList" resultMap="articleComment">
+        select
+        <include refid="columns"/>
+        from sys_article_comment
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="articleCommentUserId != null">
+                and article_comment_user_id = #{articleCommentUserId}
+            </if>
+            <if test="articleCommentContent != null">
+                and article_comment_content = #{articleCommentContent}
+            </if>
+            <if test="articleCommentParentId != null">
+                and article_comment_parent_id = #{articleCommentParentId}
+            </if>
+            <if test="articleCommentParentUserId != null">
+                and article_comment_parent_user_id = #{articleCommentParentUserId}
+            </if>
+            <if test="articleCommentViewed != null">
+                and article_comment_viewed = #{articleCommentViewed}
+            </if>
+            <if test="articleCommentStatus != null">
+                and article_comment_status = #{articleCommentStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectArticleCommentPage" resultMap="articleComment">
+        select
+        <include refid="columnspage"/>,su.short_name,su.head_img
+        from sys_article_comment sac left join sys_customer su on sac.article_comment_user_id = su.id
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="articleComment.id != null">
+                and sac.id = #{articleComment.id}
+            </if>
+            <if test="articleComment.articleId != null">
+                and article_id = #{articleComment.articleId}
+            </if>
+            <if test="articleComment.articleCommentUserId != null">
+                and article_comment_user_id = #{articleComment.articleCommentUserId}
+            </if>
+            <if test="articleComment.articleCommentContent != null and articleComment.articleCommentContent != ''">
+                and article_comment_content like concat("%",#{articleComment.articleCommentContent},"%")
+            </if>
+            <if test="articleComment.shortName != null and articleComment.shortName != ''">
+                and su.short_name like concat("%",#{articleComment.shortName},"%")
+            </if>
+            <if test="articleComment.articleCommentParentId != null">
+                and article_comment_parent_id = #{articleComment.articleCommentParentId}
+            </if>
+            <if test="articleComment.articleCommentParentUserId != null">
+                and article_comment_parent_user_id = #{articleComment.articleCommentParentUserId}
+            </if>
+            <if test="articleComment.articleCommentViewed != null">
+                and article_comment_viewed = #{articleComment.articleCommentViewed}
+            </if>
+            <if test="articleComment.articleCommentStatus != null">
+                and article_comment_status = #{articleComment.articleCommentStatus}
+            </if>
+            <if test="articleComment.createTime != null">
+                and sac.create_time = #{articleComment.createTime}
+            </if>
+            <if test="articleComment.updateTime != null">
+                and sac.update_time = #{articleComment.updateTime}
+            </if>
+        </trim>
+        ORDER by create_time DESC
+    </select>
+
+    <select id="selectReply" resultMap="articleComment">
+        select
+        b.*
+        FROM sys_article_comment a JOIN sys_article_comment b ON a.id = b.article_comment_parent_id
+        WHERE a.article_comment_user_id=#{articleComment.articleCommentUserId} and a.article_id=#{articleComment.articleId}
+    </select>
+
+    <resultMap id="articleCommentDto" type="com.zrytech.framework.common.dto.ArticleCommentDto">
+        <id property="id" column="id"/>
+        <result property="articleId" column="article_id"/>
+        <result property="articleCommentUserId" column="article_comment_user_id"/>
+        <result property="articleCommentContent" column="article_comment_content"/>
+        <result property="articleCommentParentId" column="article_comment_parent_id"/>
+        <result property="articleCommentParentUserId" column="article_comment_parent_user_id"/>
+        <result property="articleCommentViewed" column="article_comment_viewed"/>
+        <result property="articleCommentStatus" column="article_comment_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="articleCommentUserNm" column="update_time"/>
+        <result property="articleCommentUserIcon" column="update_time"/>
+        <result property="articleCommentUserParentNm" column="update_time"/>
+        <result property="articleCommentUserParentIcon" column="update_time"/>
+    </resultMap>
+
+    <select id="selectParentArticleIds" resultType="int">
+        select id from (
+              select t1.id,
+              if(find_in_set(article_comment_parent_id, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+              from (
+                   select id,article_comment_parent_id from sys_article_comment t where t.article_comment_status = 1 order by article_comment_parent_id, id
+                  ) t1,
+                  (select @pids := #{articleCommentParentId}) t2
+             ) t3 where ischild != 0
+    </select>
+</mapper>

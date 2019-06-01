@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+	Created by util on 2018-5-3.
+-->
+<mapper namespace="com.zrytech.framework.app.mapper.WlArticleMapper">
+    <resultMap id="article" type="com.zrytech.framework.app.entity.WlArticle">
+        <id property="id" column="id"/>
+        <result property="articleCategoryId" column="article_category_id"/>
+        <result property="articleTitle" column="article_title"/>
+        <result property="articleCover" column="article_cover"/>
+        <result property="articleContent" column="article_content"/>
+        <result property="articleLikeCount" column="article_like_count"/>
+        <result property="articleCollectCount" column="article_collect_count"/>
+        <result property="articleCreateUserId" column="article_create_user_id"/>
+        <result property="articleStatus" column="article_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="attachIds" column="attach_ids"/>
+        <result property="attachNames" column="attach_names"/>
+        <result property="sourceUrl" column="source_url"/>
+    </resultMap>
+
+    <sql id="columns">
+            id ,article_category_id ,article_title ,article_cover ,article_content ,article_like_count ,article_collect_count ,article_create_user_id ,article_status ,create_time ,update_time,
+            attach_ids,attach_names, source_url
+    </sql>
+
+    <insert id="insertArticle">
+        insert into sys_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleCategoryId != null">
+                article_category_id,
+            </if>
+            <if test="articleTitle != null">
+                article_title,
+            </if>
+            <if test="articleCover != null">
+                article_cover,
+            </if>
+            <if test="articleContent != null">
+                article_content,
+            </if>
+            <if test="articleLikeCount != null">
+                article_like_count,
+            </if>
+            <if test="articleCollectCount != null">
+                article_collect_count,
+            </if>
+            <if test="articleCreateUserId != null">
+                article_create_user_id,
+            </if>
+            <if test="articleStatus != null">
+                article_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+
+            <if test="attachIds != null">
+                attach_ids,
+            </if>
+            <if test="attachNames != null">
+                attach_names,
+            </if>
+            <if test="sourceUrl != null and sourceUrl != ''">
+                source_url,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleCategoryId != null">
+                #{articleCategoryId} ,
+            </if>
+            <if test="articleTitle != null">
+                #{articleTitle} ,
+            </if>
+            <if test="articleCover != null">
+                #{articleCover} ,
+            </if>
+            <if test="articleContent != null">
+                #{articleContent} ,
+            </if>
+            <if test="articleLikeCount != null">
+                #{articleLikeCount} ,
+            </if>
+            <if test="articleCollectCount != null">
+                #{articleCollectCount} ,
+            </if>
+            <if test="articleCreateUserId != null">
+                #{articleCreateUserId} ,
+            </if>
+            <if test="articleStatus != null">
+                #{articleStatus} ,
+            </if>
+            <if test="createTime != null">
+                #{createTime} ,
+            </if>
+            <if test="updateTime != null">
+                #{updateTime} ,
+            </if>
+
+            <if test="attachIds != null">
+                #{attachIds} ,
+            </if>
+            <if test="attachNames != null">
+                #{attachNames} ,
+            </if>
+            <if test="sourceUrl != null and sourceUrl != ''">
+                #{sourceUrl} ,
+            </if>
+            
+        </trim>
+    </insert>
+
+    <delete id="deleteArticle">
+        delete from sys_article
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="articleCategoryId != null">
+                and article_category_id = #{articleCategoryId}
+            </if>
+            <if test="articleTitle != null">
+                and article_title = #{articleTitle}
+            </if>
+            <if test="articleCover != null">
+                and article_cover = #{articleCover}
+            </if>
+            <if test="articleContent != null">
+                and article_content = #{articleContent}
+            </if>
+            <if test="articleLikeCount != null">
+                and article_like_count = #{articleLikeCount}
+            </if>
+            <if test="articleCollectCount != null">
+                and article_collect_count = #{articleCollectCount}
+            </if>
+            <if test="articleCreateUserId != null">
+                and article_create_user_id = #{articleCreateUserId}
+            </if>
+            <if test="articleStatus != null">
+                and article_status = #{articleStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </trim>
+    </delete>
+
+    <update id="updateArticle">
+        update sys_article
+        <set>
+            <if test="articleCategoryId != null">
+                article_category_id = #{articleCategoryId},
+            </if>
+            <if test="articleTitle != null">
+                article_title = #{articleTitle},
+            </if>
+            <if test="articleCover != null">
+                article_cover = #{articleCover},
+            </if>
+            <if test="articleContent != null">
+                article_content = #{articleContent},
+            </if>
+            <if test="articleLikeCount != null">
+                article_like_count = #{articleLikeCount},
+            </if>
+            <if test="articleCollectCount != null">
+                article_collect_count = #{articleCollectCount},
+            </if>
+            <if test="articleCreateUserId != null">
+                article_create_user_id = #{articleCreateUserId},
+            </if>
+            <if test="articleStatus != null">
+                article_status = #{articleStatus},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+
+            <if test="attachIds != null">
+                attach_ids = #{attachIds},
+            </if>
+            <if test="attachNames != null">
+                attach_names = #{attachNames},
+            </if>
+            <if test="sourceUrl != null">
+                source_url = #{sourceUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectArticleById" resultMap="article">
+        select
+        <include refid="columns" />
+        from sys_article
+        where id = #{id}
+    </select>
+
+    <select id="selectArticleList" resultMap="article">
+        select
+        <include refid="columns" />
+        from sys_article
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="articleCategoryId != null">
+                and article_category_id = #{articleCategoryId}
+            </if>
+            <if test="articleTitle != null">
+                and article_title  like concat('%',#{articleTitle},'%')
+            </if>
+            <if test="articleCover != null">
+                and article_cover = #{articleCover}
+            </if>
+            <if test="articleContent != null">
+                and article_content = #{articleContent}
+            </if>
+            <if test="articleLikeCount != null">
+                and article_like_count = #{articleLikeCount}
+            </if>
+            <if test="articleCollectCount != null">
+                and article_collect_count = #{articleCollectCount}
+            </if>
+            <if test="articleCreateUserId != null">
+                and article_create_user_id = #{articleCreateUserId}
+            </if>
+            <if test="articleStatus != null">
+                and article_status = #{articleStatus}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </trim>
+        ORDER BY  create_time  DESC
+    </select>
+
+    <select id="selectArticlePage" resultMap="article">
+        select
+        <include refid="columns" />
+        from sys_article
+        <trim prefix="where " prefixOverrides="and ">
+            <if test="article.id != null">
+                and id = #{article.id}
+            </if>
+            <if test="article.articleCategoryId != null">
+                and article_category_id = #{article.articleCategoryId}
+            </if>
+            <if test="article.articleTitle != null and article.articleTitle!=''">
+                and article_title like concat('%',#{article.articleTitle},'%')
+            </if>
+            <if test="article.articleCover != null">
+                and article_cover = #{article.articleCover}
+            </if>
+            <if test="article.articleContent != null">
+                and article_content = #{article.articleContent}
+            </if>
+            <if test="article.articleLikeCount != null">
+                and article_like_count = #{article.articleLikeCount}
+            </if>
+            <if test="article.articleCollectCount != null">
+                and article_collect_count = #{article.articleCollectCount}
+            </if>
+            <if test="article.articleCreateUserId != null">
+                and article_create_user_id = #{article.articleCreateUserId}
+            </if>
+            <if test="article.articleStatus != null">
+                and article_status = #{article.articleStatus}
+            </if>
+            <if test="article.createTime != null">
+                and create_time = #{article.createTime}
+            </if>
+            <if test="article.updateTime != null">
+                and update_time = #{article.updateTime}
+            </if>
+        </trim>
+        ORDER BY  create_time  DESC
+    </select>
+</mapper>
