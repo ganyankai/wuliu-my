@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.backend.controller;
 
 import com.zrytech.framework.app.ano.AdminRole;
+import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
@@ -56,6 +57,30 @@ public class CargoController {
 		return service.adminPage(pageNum, pageSize, requestParams.getParams());
 	}
 
+	
+	@AdminRole
+	@Valid
+	@PostMapping("/waitCheckPage")
+	public ServerResponse waitCheckPage(@RequestBody @Valid RequestParams<CargoSourceSearchDto> requestParams,
+			BindingResult result) {
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		CargoSourceSearchDto dto = requestParams.getParams();
+		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_WAIT_CHECK);
+		return service.adminPage(pageNum, pageSize, dto);
+	}
+	
+	
 	@AdminRole
 	@Valid
 	@PostMapping("/get")
