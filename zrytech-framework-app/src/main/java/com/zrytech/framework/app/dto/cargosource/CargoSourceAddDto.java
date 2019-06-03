@@ -1,6 +1,8 @@
 package com.zrytech.framework.app.dto.cargosource;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.constants.RegExConstants;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationAddDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,6 +21,10 @@ import org.hibernate.validator.constraints.Range;
 @Setter
 @Getter
 public class CargoSourceAddDto {
+	
+	@Pattern(regexp = "^(" + CargoConstant.CARGO_SOURCE_STATUS_WAIT_CHECK + ")|("
+			+ CargoConstant.CARGO_SOURCE_STATUS_DOWN + ")|()$", message = "状态有误")
+	private String status;
 
 	/** 货物介质 */
 	@NotBlank(message = "货物介质不能为空")

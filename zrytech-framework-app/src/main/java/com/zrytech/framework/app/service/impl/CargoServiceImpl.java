@@ -44,6 +44,7 @@ import com.zrytech.framework.base.util.BeanUtil;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.SysCustomer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -229,7 +230,11 @@ public class CargoServiceImpl implements CargoService {
 		CargoLocationAddDto lastCargoLocation = cargoLocationList.get(cargoLocationList.size() - 1);
 
 		BeanUtils.copyProperties(dto, cargo);
-		cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_DOWN);
+		if (StringUtils.isNotBlank(dto.getStatus())) {
+			cargo.setStatus(dto.getStatus());
+		} else {
+			cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_WAIT_CHECK);
+		}
 		cargo.setCreateDate(new Date());
 		cargo.setCreateBy(cargoOwnerId);
 		cargo = this.setCargoLine(cargo, firstCargoLocation, lastCargoLocation);
