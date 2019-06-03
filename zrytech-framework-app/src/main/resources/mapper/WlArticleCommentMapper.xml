@@ -27,7 +27,7 @@
     </resultMap>
 
     <select id="selectReplyName" resultType="java.lang.String">
-		SELECT DISTINCT customer.short_name AS replyName FROM sys_customer customer JOIN
+		SELECT DISTINCT customer.user_name AS replyName FROM sys_customer customer JOIN
         (select b.article_comment_parent_user_id
         FROM sys_article_comment a JOIN sys_article_comment b ON a.id = b.article_comment_parent_id
         WHERE b.article_comment_parent_id=#{articleCommentParentId} and a.article_id=#{articleId}) test
@@ -221,7 +221,7 @@
 
     <select id="selectArticleCommentPage" resultMap="articleComment">
         select
-        <include refid="columnspage"/>,su.short_name,su.head_img
+        <include refid="columnspage"/>,su.user_name,su.logo
         from sys_article_comment sac left join sys_customer su on sac.article_comment_user_id = su.id
         <trim prefix="where " prefixOverrides="and ">
             <if test="articleComment.id != null">
@@ -237,7 +237,7 @@
                 and article_comment_content like concat("%",#{articleComment.articleCommentContent},"%")
             </if>
             <if test="articleComment.shortName != null and articleComment.shortName != ''">
-                and su.short_name like concat("%",#{articleComment.shortName},"%")
+                and su.user_name like concat("%",#{articleComment.shortName},"%")
             </if>
             <if test="articleComment.articleCommentParentId != null">
                 and article_comment_parent_id = #{articleComment.articleCommentParentId}
