@@ -16,6 +16,7 @@ import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.service.CarSourceService;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -51,12 +52,18 @@ public class CarSourceController {
 	@PostMapping("/page")
 	public ServerResponse carSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
 			BindingResult result) {
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null)
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
 			pageNum = 1;
-		if (pageSize == null)
+		}
+		if (pageSize == null) {
 			pageSize = 10;
+		}
 		PageData<CarSource> pageData = carSourceService.carSourcePage(requestParams.getParams(), pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}
@@ -75,12 +82,18 @@ public class CarSourceController {
 	@PostMapping("/oneCarOwnerCarSourcePage")
 	public ServerResponse oneCarOwnerCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
 			BindingResult result) {
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null)
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
 			pageNum = 1;
-		if (pageSize == null)
+		}
+		if (pageSize == null) {
 			pageSize = 10;
+		}
 		CarSourcePageDto dto = requestParams.getParams();
 		if (dto.getCarOwnerId() == null) {
 			throw new BusinessException(112, "车主不能为空");
@@ -103,12 +116,18 @@ public class CarSourceController {
 	@PostMapping("/approvePendingCarSourcePage")
 	public ServerResponse approvePendingCarSourcePage(@RequestBody @Valid RequestParams<CarSourcePageDto> requestParams,
 			BindingResult result) {
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
-		if (pageNum == null)
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
 			pageNum = 1;
-		if (pageSize == null)
+		}
+		if (pageSize == null) {
 			pageSize = 10;
+		}
 		CarSourcePageDto dto = requestParams.getParams();
 		dto.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		PageData<CarSource> pageData = carSourceService.carSourcePage(dto, pageNum, pageSize);
