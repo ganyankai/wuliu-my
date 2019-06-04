@@ -245,7 +245,7 @@
   	AND sys_customer.`is_active` = true  
   	<if test="waybillId != null">
 	  	AND `car_person`.`id` not in 
-	  	(select `driver_id` from `bill_location` where `bill_location`.`waybill_id` = #{waybillId})
+	  	(select `driver_id` from `waybill_detail` where `waybill_detail`.`waybill_id` = #{waybillId})
   	</if>
   	<if test="carOwnerId != null">
   		and `car_person`.`car_owner_id` = #{carOwnerId}
@@ -271,7 +271,7 @@
   	<where>
   		<if test="waybillId != null">
 		  	AND `id` not in 
-		  	(select `supercargo_id` from `bill_location` where `bill_location`.`waybill_id` = #{waybillId})
+		  	(select `supercargo_id` from `waybill_detail` where `waybill_detail`.`waybill_id` = #{waybillId})
 	  	</if>
 	  	<if test="carOwnerId != null">
 	  		and `car_owner_id` = #{carOwnerId}
