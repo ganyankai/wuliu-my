@@ -14,6 +14,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CarPersonPageDto {
+	
+	private String waybillId;
+	
+	private String unstatus;
 
 	/** 主键 */
 	private Integer id;

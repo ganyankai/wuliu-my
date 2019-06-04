@@ -544,6 +544,45 @@ public class CarPersonServiceImpl implements CarPersonService {
 		dto.setPersonType(CarPersonConstants.PERSON_TYPE_DRIVER);
 		return page(dto, pageNum, pageSize);
 	}
+	
+	public ServerResponse myDrivers(CarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
+		dto.setCarOwnerId(customer.getCarOwner().getId());
+		dto.setIsDelete(false);
+		dto.setPersonType(CarPersonConstants.PERSON_TYPE_DRIVER);
+		dto.setUnstatus(CarPersonConstants.PERSON_STATUS_UNCERTIFIED);
+
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
+		List<CarPerson> list = carPersonMapper.selectDriver(dto);
+		for (CarPerson carPerson : list) {
+			carPerson.setCarOwnerName(carCargoOwnnerRepository.findNameById(carPerson.getCarOwnerId()));
+			Customer temp = customerRepository.findOne(carPerson.getCustomerId());
+			carPerson.setCustomerTel(temp.getTel());
+			carPerson.setCustomerUserAccount(temp.getUserAccount());
+			carPerson.setIsActive(temp.getIsActive());
+		}
+
+		PageData<CarPerson> pageData = new PageData<CarPerson>(result.getPageSize(), result.getPageNum(),
+				result.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
+	
+	
+	public ServerResponse mySupercargos(CarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {
+		dto.setCarOwnerId(customer.getCarOwner().getId());
+		dto.setIsDelete(false);
+		dto.setPersonType(CarPersonConstants.PERSON_TYPE_SUPERCARGO);
+		dto.setUnstatus(CarPersonConstants.PERSON_STATUS_UNCERTIFIED);
+
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
+		List<CarPerson> list = carPersonMapper.selectDriver(dto);
+		for (CarPerson carPerson : list) {
+			carPerson.setCarOwnerName(carCargoOwnnerRepository.findNameById(carPerson.getCarOwnerId()));
+		}
+
+		PageData<CarPerson> pageData = new PageData<CarPerson>(result.getPageSize(), result.getPageNum(),
+				result.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
 
 	@Override
 	public ServerResponse mySupercargo(CarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer) {

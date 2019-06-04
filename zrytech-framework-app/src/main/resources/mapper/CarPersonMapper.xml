@@ -240,4 +240,56 @@
   </select>
   
   
+  <select id="selectDriver" parameterType="Object" resultMap="BaseResultMap">
+  	SELECT `car_person`.* FROM `car_person`, `sys_customer` WHERE `car_person`.`customer_id` = `sys_customer`.`id` 
+  	AND sys_customer.`is_active` = true  
+  	<if test="waybillId != null">
+	  	AND `car_person`.`id` not in 
+	  	(select `driver_id` from `bill_location` where `bill_location`.`waybill_id` = #{waybillId})
+  	</if>
+  	<if test="carOwnerId != null">
+  		and `car_person`.`car_owner_id` = #{carOwnerId}
+  	</if>
+  	<if test="status != null and status != ''">
+  		and `car_person`.`status` = #{status}
+  	</if>
+  	<if test="unstatus != null and unstatus != ''">
+  		and `car_person`.`status` != #{unstatus}
+  	</if>
+  	<if test="personType != null and personType != ''">
+  		and `car_person`.`person_type` = #{personType}
+  	</if>
+  	<if test="isDelete != null">
+	  		and `car_person`.`is_delete` = #{isDelete}
+	  	</if>
+  	order by `car_person`.`create_date` desc
+  </select>
+  
+  
+  <select id="selectSupercaogo" parameterType="Object" resultMap="BaseResultMap">
+  	select * from `car_person` 
+  	<where>
+  		<if test="waybillId != null">
+		  	AND `id` not in 
+		  	(select `supercargo_id` from `bill_location` where `bill_location`.`waybill_id` = #{waybillId})
+	  	</if>
+	  	<if test="carOwnerId != null">
+	  		and `car_owner_id` = #{carOwnerId}
+	  	</if>
+	  	<if test="status != null and status != ''">
+	  		and `status` = #{status}
+	  	</if>
+	  	<if test="unstatus != null and unstatus != ''">
+	  		and `status` != #{unstatus}
+	  	</if>
+	  	<if test="personType != null and personType != ''">
+	  		and `person_type` = #{personType}
+	  	</if>
+	  	<if test="isDelete != null">
+	  		and `is_delete` = #{isDelete}
+	  	</if>
+  	</where>
+  	order by `create_date` desc
+  </select>
+  
 </mapper>

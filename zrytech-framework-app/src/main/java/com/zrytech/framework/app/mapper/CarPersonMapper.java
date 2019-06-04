@@ -20,5 +20,9 @@ public interface CarPersonMapper {
 	int updateByPrimaryKey(CarPerson record);
 
 	List<CarPerson> selectSelective(CarPersonPageDto dto);
+	
+	List<CarPerson> selectDriver(CarPersonPageDto dto);
+	
+	List<CarPerson> selectSupercargo(CarPersonPageDto dto);
 
 }

@@ -19,6 +19,7 @@ import com.zrytech.framework.app.dto.carperson.CarPersonNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonPageDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.service.CarPersonService;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.RequestUtil;
@@ -168,6 +169,54 @@ public class CarPersonAPIController {
 		CarPersonPageDto dto = requestParams.getParams();
 		return carPersonService.myDriver(dto, pageNum, pageSize, customer);
 	}
+	
+	
+	@NeedCertified
+	@CarOwnerRole
+	@Valid
+	@PostMapping("/myDrivers")
+	public ServerResponse myDrivers(@RequestBody @Valid RequestParams<CarPersonPageDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		CarPersonPageDto dto = requestParams.getParams();
+		return carPersonService.myDrivers(dto, pageNum, pageSize, customer);
+	}
+	
+	@NeedCertified
+	@CarOwnerRole
+	@Valid
+	@PostMapping("/mySupercargos")
+	public ServerResponse mySupercargos(@RequestBody @Valid RequestParams<CarPersonPageDto> requestParams,
+			BindingResult result) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		CarPersonPageDto dto = requestParams.getParams();
+		return carPersonService.mySupercargos(dto, pageNum, pageSize, customer);
+	}
+	
 	
 	/**
 	 * 车主及车主子账号 - 我的压货人

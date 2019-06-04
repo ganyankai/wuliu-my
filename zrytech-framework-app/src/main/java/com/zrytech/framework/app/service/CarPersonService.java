@@ -1,7 +1,11 @@
 package com.zrytech.framework.app.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.zrytech.framework.app.constants.CarPersonConstants;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.carperson.AdminDriverPageDto;
@@ -13,6 +17,7 @@ import com.zrytech.framework.app.dto.carperson.CarPersonNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.carperson.CarPersonPageDto;
 import com.zrytech.framework.app.entity.CarPerson;
 import com.zrytech.framework.app.entity.Customer;
+import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.common.entity.User;
 
@@ -20,6 +25,10 @@ import com.zrytech.framework.common.entity.User;
 @Service
 public interface CarPersonService {
 	
+	ServerResponse myDrivers(CarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+	
+	ServerResponse mySupercargos(CarPersonPageDto dto, Integer pageNum, Integer pageSize, Customer customer);
+		
 	void assertCarPersonCertified(Integer carPersonId);
 	
 	/**
