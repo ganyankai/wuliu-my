@@ -25,11 +25,7 @@ import com.zrytech.framework.app.enums.LogisticsResult;
 import com.zrytech.framework.app.enums.LogisticsResultEnum;
 import com.zrytech.framework.app.mapper.CargoMapper;
 import com.zrytech.framework.app.mapper.LoadingMapper;
-import com.zrytech.framework.app.repository.ApproveLogRepository;
-import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
-import com.zrytech.framework.app.repository.CargoLocationRepository;
-import com.zrytech.framework.app.repository.CargoMatterRepository;
-import com.zrytech.framework.app.repository.CargoRepository;
+import com.zrytech.framework.app.repository.*;
 import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.app.service.CargoService;
@@ -82,8 +78,9 @@ public class CargoServiceImpl implements CargoService {
     
     @Autowired
     private CargoMapper cargoMapper;
-   
-    
+
+	@Autowired
+	private LogisticsCustomerRepository logisticsCustomerRepository;
 
 	@Override
 	public ServerResponse adminPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
@@ -556,6 +553,8 @@ public class CargoServiceImpl implements CargoService {
 			}
 			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
 			cargo.setCargoMatterCount(countByCargoId);
+			//設置logo為用戶logo
+			cargo.setLogo(customer.getLogo());
 		}
 
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
@@ -588,6 +587,8 @@ public class CargoServiceImpl implements CargoService {
 				cargoMatter.setCarOwnerName(carOwner.getName());
 			}
 			cargo.setCargoMatter(cargoMatter);
+			//設置logo為用戶logo
+			cargo.setLogo(customer.getLogo());
 		}
 		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
 		cargo.setCargoLocations(list);
@@ -700,6 +701,11 @@ public class CargoServiceImpl implements CargoService {
 
 			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
 			cargo.setCargoMatterCount(countByCargoId);
+
+			//根据用户id获取用户logo
+			Integer customerId = cargoOwner.getCustomerId();
+			Customer customer = logisticsCustomerRepository.findOne(customerId);
+			cargo.setLogo(customer.getLogo());
 
 			cargo = this.bindFocusAndOffer(cargo);
 		}
