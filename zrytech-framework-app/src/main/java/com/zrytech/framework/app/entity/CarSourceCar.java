@@ -24,6 +24,11 @@ import lombok.Setter;
 @Table(name = "`car_source_car`")
 public class CarSourceCar extends BaseEntity {
 	
+	@Transient
+	private CarPerson driver;
+	
+	@Transient
+	private CarPerson supercargo;
 	
 	@Transient
 	private Car car;

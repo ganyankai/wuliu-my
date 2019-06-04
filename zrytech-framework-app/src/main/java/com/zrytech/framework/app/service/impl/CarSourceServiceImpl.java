@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
+import com.zrytech.framework.app.repository.CarPersonRepository;
 import com.zrytech.framework.app.repository.CarRecordPlaceRepository;
 import com.zrytech.framework.app.repository.CarSourceCarRepository;
 import com.zrytech.framework.app.repository.CarSourceRepository;
@@ -36,6 +37,7 @@ import com.zrytech.framework.app.dto.carsource.CarSourceNoCheckUpdateDto;
 import com.zrytech.framework.app.dto.carsource.CarSourcePageDto;
 import com.zrytech.framework.app.entity.Car;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
+import com.zrytech.framework.app.entity.CarPerson;
 import com.zrytech.framework.app.entity.CarRecordPlace;
 import com.zrytech.framework.app.entity.CarSource;
 import com.zrytech.framework.app.entity.CarSourceCar;
@@ -125,7 +127,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		List<CarSource> list = carSourceMapper.selectSelective(dto);
 		for (CarSource carSource : list) {
 			carSource = this.bindingCarRecordPlace(carSource);
-			carSource = this.bindingCarOwnerName(carSource);
+			carSource = this.bindingCarOwnerNameAndTel(carSource);
 			carSource = this.bindingCustomerUserName(carSource);
 			carSource = this.bindingCarSourceCar(carSource);
 			carSource = this.bindFocus(carSource);
@@ -138,12 +140,15 @@ public class CarSourceServiceImpl implements CarSourceService {
 		CarSource carSource = this.assertCarSourceExist(dto.getId());
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCarRecordPlace(carSource);
-		carSource = this.bindingCarOwnerName(carSource);
+		carSource = this.bindingCarOwnerNameAndTel(carSource);
 		carSource = this.bindingCustomerUserName(carSource);
 		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(), CarSourceCheckUpdateDto.class);
 		carSource.setApproveContentCN(temp);
 		return ServerResponse.successWithData(carSource);
 	}
+	
+	@Autowired
+	private CarPersonRepository carPersonRepository;
 	
 	/**
 	 * 为车源设置车辆列表
@@ -157,9 +162,14 @@ public class CarSourceServiceImpl implements CarSourceService {
 		if (carSourceId != null) {
 			List<CarSourceCar> carSourceCars = carSourceCarRepository.findByCarSourceId(carSourceId);
 			for (CarSourceCar carSourceCar : carSourceCars) {
-				Integer carId = carSourceCar.getCarId();
-				Car car = carService.assertCarAvailable(carId);
+				Car car = carService.assertCarAvailable(carSourceCar.getCarId());
 				carSourceCar.setCar(car);
+				
+				CarPerson driver = carPersonRepository.findOne(carSourceCar.getDriverId());
+				carSourceCar.setDriver(driver);
+				
+				CarPerson supercargo = carPersonRepository.findOne(carSourceCar.getSupercargoId());
+				carSourceCar.setSupercargo(supercargo);
 			}
 			carSource.setCarSourceCars(carSourceCars);
 		}
@@ -189,10 +199,13 @@ public class CarSourceServiceImpl implements CarSourceService {
 	 * @param carSource
 	 * @return
 	 */
-	private CarSource bindingCarOwnerName(CarSource carSource) {
+	private CarSource bindingCarOwnerNameAndTel(CarSource carSource) {
 		Integer carOwnerId = carSource.getCarOwnerId();
 		if (carOwnerId != null) {
-			carSource.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
+			// carSource.setCarOwnerName(carCargoOwnnerRepository.findNameById(carOwnerId));
+			CarCargoOwnner carOwner = carCargoOwnnerRepository.findOne(carOwnerId);
+			carSource.setCarOwnerName(carOwner.getName());
+			carSource.setCarOwnerTel(carOwner.getTel());
 		}
 		return carSource;
 	}
@@ -424,7 +437,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource = this.bindingCarRecordPlace(carSource);
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCustomerUserName(carSource);
-		carSource = this.bindingCarOwnerName(carSource);
+		carSource = this.bindingCarOwnerNameAndTel(carSource);
 		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(), CarSourceCheckUpdateDto.class);
 		carSource.setApproveContentCN(temp);
 		return ServerResponse.successWithData(carSource);
@@ -658,7 +671,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource = this.bindingCarRecordPlace(carSource);
 		carSource = this.bindingCarSourceCar(carSource);
 		carSource = this.bindingCustomerUserName(carSource);
-		carSource = this.bindingCarOwnerName(carSource);
+		carSource = this.bindingCarOwnerNameAndTel(carSource);
 		carSource = this.bindFocus(carSource);
 		return ServerResponse.successWithData(carSource);
 	}
