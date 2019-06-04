@@ -6,6 +6,7 @@ import com.zrytech.framework.app.constants.ApproveConstants;
 import com.zrytech.framework.app.constants.CarConstants;
 import com.zrytech.framework.app.constants.CarSourceConstants;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,4 +44,32 @@ public class CarSourcePageDto {
 	/** 车主企业名称 */
 	private String carOwnerName;
 
+
+
+	@ApiModelProperty(value = "出发省", required = false)
+	private String startProvince;
+
+	@ApiModelProperty(value = "出发市", required = false)
+	private String startCity;
+
+	@ApiModelProperty(value = "出发县", required = false)
+	private String startCountry;
+
+	@ApiModelProperty(value = "达到省", required = false)
+	private String endProvince;
+
+	@ApiModelProperty(value = "达到市", required = false)
+	private String endCity;
+
+	@ApiModelProperty(value = "达到县", required = false)
+	private String endCountry;
+
+	//空闲运输量
+	private Integer freeQty;
+
+	@Pattern(regexp = "^(free_qty)|()$", message = "排序方式有误")
+	private String sort;
+
+	@Pattern(regexp = "^(asc)|(desc)|()$", message = "排序方向有误")
+	private String direction;
 }

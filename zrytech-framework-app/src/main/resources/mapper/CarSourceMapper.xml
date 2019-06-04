@@ -19,10 +19,12 @@
 
   
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
-  	select * from `car_source` 
+  	select * from `car_source` cs,`car_record_place` crp ,`car_source_car` csc
   	<where>
+		cs.id = crp.car_source_id
+		and cs.id=csc.car_source_id
 	  	<if test="carOwnerName != null and carOwnerName != ''">
-	  		`car_owner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
+			and `car_owner_id` in (select `id` from `car_cargo_ownner` where `name` like CONCAT('%', #{carOwnerName}, '%'))
 	  	</if>
 	  	<if test="createBy != null">
 	  		and `create_by` = #{createBy}
@@ -42,8 +44,40 @@
 	  	<if test="id != null">
 	  		and `id` = #{id}
 	  	</if>
+
+		<if test="startProvince != null and startProvince != ''">
+			and crp.`start_province` = #{startProvince}
+		</if>
+		<if test="startCity != null and startCity != ''">
+			and crp.`start_city` = #{startCity}
+		</if>
+		<if test="startCountry != null and startCountry != ''">
+			and crp.`start_country` = #{startCountry}
+		</if>
+		<if test="endProvince != null and endProvince !=''">
+			and crp.`end_province` = #{endProvince}
+		</if>
+		<if test="endCity != null and endCity != ''">
+			and crp.`end_city` = #{endCity}
+		</if>
+		<if test="endCountry != null and endCountry != ''">
+			and crp.`end_country` = #{endCountry}
+		</if>
+		<if test="endCountry != null and endCountry != ''">
+			and crp.`end_country` = #{endCountry}
+		</if>
   	</where>
-  	order by `create_date` desc
+
+	  <if test="sort != null and sort != ''">
+		  ORDER BY csc.${sort}
+		  <if test="direction != null and direction != ''">
+			  ${direction}
+		  </if>
+	  </if>
+	  <if test="sort == null">
+		  order by cs.`create_date` desc
+	  </if>
+
   </select>
   
   
