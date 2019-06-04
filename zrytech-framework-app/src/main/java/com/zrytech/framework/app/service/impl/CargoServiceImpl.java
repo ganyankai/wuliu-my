@@ -727,7 +727,10 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoOwnerTel(cargoOwner.getTel());
 
 			cargo = this.bindFocusAndOffer(cargo);
-
+            //根据用户id获取用户logo
+            Integer customerId = cargoOwner.getCustomerId();
+            Customer customer = logisticsCustomerRepository.findOne(customerId);
+            cargo.setLogo(customer.getLogo());
 			return ServerResponse.successWithData(cargo);
 		} else {
 			throw new BusinessException(112, "仅可查看发布中，已完成货源的详情");
