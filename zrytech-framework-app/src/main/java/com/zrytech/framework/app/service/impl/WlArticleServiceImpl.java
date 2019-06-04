@@ -67,7 +67,7 @@ public class WlArticleServiceImpl implements WlArticleService {
         }
         wlArticle.setArticleCreateUserId(user.getId());
         if (WlArticleType.RECEPTIONROOM.getIndex() == wlArticleDto.getArticleCategoryId()) {
-            checkFileId(wlArticle);
+//            checkFileId(wlArticle);
         }
         wlArticleDao.insertArticle(wlArticle);
         return ServerResponse.success();
@@ -85,6 +85,12 @@ public class WlArticleServiceImpl implements WlArticleService {
         Process process = null;
         String localTempFile = createLocalTempFile();
         String ffmpepPath = DictionUtil.getValue(WlConstant.UNIX_FFMPEG, WlConstant.UNIX_FFMPEG_KEY);
+        System.out.println("ffmpepPath:");
+        System.out.println(ffmpepPath);
+        if (ffmpepPath == null){
+            ffmpepPath = "/usr/bin/ffmpeg";
+        }
+        System.out.println(ffmpepPath);
         try {
             process = processBuilder.command(ffmpepPath, "-i",
                     wlArticle.getSourceUrl(), "-t", "0.01", localTempFile).start();

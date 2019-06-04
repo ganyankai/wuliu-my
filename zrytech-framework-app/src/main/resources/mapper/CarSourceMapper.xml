@@ -15,8 +15,8 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="is_share" property="isShare" />
   </resultMap>
-  
-  
+
+
   
   <select id="selectSelective" parameterType="Object" resultMap="BaseResultMap">
   	select * from `car_source` 
