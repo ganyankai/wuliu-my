@@ -231,7 +231,9 @@ public class WlArticleServiceImpl implements WlArticleService {
         }
         WlArticle wlArticle = new WlArticle();
         wlArticle.setId(wlArticleDto.getId());
-        wlArticle.setArticleStatus(wlArticleDto.getArticleStatus());
+        Integer articleStatus = 0;
+        articleStatus = articleStatus==0?1:0;
+        wlArticle.setArticleStatus(articleStatus);
         wlArticleDao.updateArticle(wlArticle);
         return ServerResponse.success();
     }
