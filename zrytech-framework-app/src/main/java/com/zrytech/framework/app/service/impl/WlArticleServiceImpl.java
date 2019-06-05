@@ -229,10 +229,14 @@ public class WlArticleServiceImpl implements WlArticleService {
         if (wlArticleDto == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }
-        WlArticle wlArticle = new WlArticle();
-        wlArticle.setId(wlArticleDto.getId());
-        Integer articleStatus = 0;
-        articleStatus = articleStatus==0?1:0;
+        WlArticle wlArticle = wlArticleDao.selectArticleById(wlArticleDto.getId());
+        Integer articleStatus = wlArticle.getArticleStatus();
+        if (articleStatus==0){
+            articleStatus=1;
+        }else{
+            articleStatus=0;
+        }
+
         wlArticle.setArticleStatus(articleStatus);
         wlArticleDao.updateArticle(wlArticle);
         return ServerResponse.success();
