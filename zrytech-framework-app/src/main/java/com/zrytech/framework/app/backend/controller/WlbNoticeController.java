@@ -90,4 +90,13 @@ public class WlbNoticeController {
         return articleService.selectArticleById(param.getParams());
     }
 
+    /**
+     * 发布与取消发布
+     * @param param
+     * @return
+     */
+    @RequestMapping("/updateStatus")
+    public ServerResponse updateStatus(@RequestBody RequestParams<WlArticleDto> param){
+        return articleService.status(param.getParams());
+    }
 }
