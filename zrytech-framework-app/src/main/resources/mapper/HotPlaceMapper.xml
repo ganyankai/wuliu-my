@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zrytech.framework.app.mapper.HotPlaceMapper">
+    <resultMap id="hotPlace" type="com.zrytech.framework.app.entity.HotPlace">
+        <id column="id" property="id"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="country" property="country"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <sql id="columns">
+       id,province,city,country,create_date
+    </sql>
+
+
+    <select id="hotPlacePage" resultMap="hotPlace">
+        select
+        <include refid="columns"/>
+        from hot_place
+        <trim prefix="where " prefixOverrides="and ">
+            1=1
+            <if test="hotPlace.province != null and hotPlace.province !=''">
+                and province=#{hotPlace.province}
+            </if>
+            <if test="hotPlace.city != null and hotPlace.city !=''">
+                and city=#{hotPlace.city}
+            </if>
+            <if test="hotPlace.country != null and hotPlace.country !=''">
+                and country=#{hotPlace.country}
+            </if>
+
+        </trim>
+        ORDER BY create_date DESC
+    </select>
+
+    <update id="update">
+        update hot_place
+        <set>
+            <if test="province != null and province !=''">
+               province=#{province},
+            </if>
+            <if test="city != null and city !=''">
+                city=#{city},
+            </if>
+            <if test="country != null and country !=''">
+               country=#{country}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="get" resultMap="hotPlace" parameterType="int">
+        select
+        <include refid="columns"/>
+        from hot_place
+        where id =#{id}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from hot_place
+        where id = #{id}
+    </delete>
+
+</mapper>
