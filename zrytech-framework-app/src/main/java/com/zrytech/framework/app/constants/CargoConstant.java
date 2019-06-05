@@ -195,13 +195,9 @@ public class CargoConstant {
 	 */
 	public static final String PAY_TYPE = "pay_type";
 	/** 付款方式:线下支付 */
-	public static final String OFFLINE_PAY = "offline_pay";
+	public static final String PAY_TYPE_DEPOSIT = "deposit";
 	/** 付款方式:微信支付 */
-	public static final String WECHAT = "wechat";
-	/** 付款方式:支付宝支付 */
-	public static final String ALIPAY = "alipay";
-	/** 付款方式:银行卡支付 */
-	public static final String BANKPAY = "bankpay";
+	public static final String PAY_TYPE_FULL_PAYOUT = "full_payout";
 
 
     /**
