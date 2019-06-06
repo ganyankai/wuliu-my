@@ -359,4 +359,9 @@
       create_date = #{createDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="randSelectCarOwner" resultType="int">
+    SELECT id FROM car_cargo_ownner cco where type = "car_owner" ORDER BY RAND() LIMIT 5
+  </select>
+
 </mapper>

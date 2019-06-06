@@ -1,6 +1,7 @@
 package com.zrytech.framework.app.mapper;
 
 import com.github.pagehelper.PageInfo;
+import com.zrytech.framework.app.dto.cargosource.CargoRecDto;
 import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
 import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.app.entity.Offer;
@@ -38,4 +39,7 @@ public interface CargoMapper {
     
     List<Cargo> cargoSearch(@Param("cargo") CargoSourceSearchDto dto);
 
+    //推荐货源
+//    List<Cargo> recommendCargo(@Param("carOwnnerId") CargoRecDto dto);
+    List<Cargo> recommendCargo(@Param("carOwnnerId") Integer carOwnnerId);
 }

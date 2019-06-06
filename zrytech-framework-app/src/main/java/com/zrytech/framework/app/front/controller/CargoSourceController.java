@@ -5,10 +5,7 @@ import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CargoDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceAddDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceCheckUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceNoCheckUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
+import com.zrytech.framework.app.dto.cargosource.*;
 import com.zrytech.framework.app.service.CargoService;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.RequestParams;
@@ -226,4 +223,23 @@ public class CargoSourceController {
 		}
 		return service.invitationOffer(requestParams.getParams());
 	}
+
+	/**
+	 * Desintion:推荐货源(前端)
+	 *
+	 * @author:
+	 * @param:CargoDto货源dto
+	 * @return:ServerResponse
+	 */
+	@Valid
+	@PostMapping("/recommendCargo")
+	@ApiOperation(value = "推荐货源")
+	public ServerResponse recommendCargo(@RequestBody @Valid RequestParams<CargoRecDto> requestParams,
+										 BindingResult result) {
+		if (requestParams.getParams() == null) {
+			throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+		}
+		return service.recommendCargo(requestParams.getParams());
+	}
+
 }

@@ -20,5 +20,7 @@ public interface CarCargoOwnerMapper {
     int updateByPrimaryKey(CarCargoOwnner record);
     
     List<CarCargoOwnner> selectSelective(CarCargoOwnnerPageDto dto);
-    
+
+    //随机挑选5条车主
+    List<Integer> randSelectCarOwner();
 }

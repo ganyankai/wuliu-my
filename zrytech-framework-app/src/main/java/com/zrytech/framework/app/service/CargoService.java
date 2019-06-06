@@ -4,10 +4,7 @@ import com.zrytech.framework.app.dto.CargoDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceAddDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceCheckUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceNoCheckUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
+import com.zrytech.framework.app.dto.cargosource.*;
 import com.zrytech.framework.app.entity.Cargo;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -181,6 +178,10 @@ public interface CargoService {
 	 * @return
 	 */
 	ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto);
-	
-	
+
+	/**
+	 * 推荐货源
+	 *
+	 */
+	ServerResponse recommendCargo(CargoRecDto dto);
 }

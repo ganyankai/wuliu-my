@@ -16,13 +16,12 @@ import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationAddDto;
 import com.zrytech.framework.app.dto.cargolocation.CargoLocationUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceAddDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceCheckUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceNoCheckUpdateDto;
-import com.zrytech.framework.app.dto.cargosource.CargoSourceSearchDto;
+import com.zrytech.framework.app.dto.cargosource.*;
+import com.zrytech.framework.app.dto.hotplace.HotPlacePageDto;
 import com.zrytech.framework.app.entity.*;
 import com.zrytech.framework.app.enums.LogisticsResult;
 import com.zrytech.framework.app.enums.LogisticsResultEnum;
+import com.zrytech.framework.app.mapper.CarCargoOwnerMapper;
 import com.zrytech.framework.app.mapper.CargoMapper;
 import com.zrytech.framework.app.mapper.LoadingMapper;
 import com.zrytech.framework.app.repository.*;
@@ -81,6 +80,9 @@ public class CargoServiceImpl implements CargoService {
 
 	@Autowired
 	private LogisticsCustomerRepository logisticsCustomerRepository;
+
+	@Autowired
+	private CarCargoOwnerMapper carCargoOwnerMapper;
 
 	@Override
 	public ServerResponse adminPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
@@ -144,13 +146,17 @@ public class CargoServiceImpl implements CargoService {
 		if (ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())) {
 			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
 			cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
+			//消息推送逻辑
 			this.pushGoodSource(cargo);
+
+
 		} else {
 			cargoMapper.updateStatusById(cargo.getId(), CargoConstant.CARGO_SOURCE_STATUS_DOWN);
 			// TODO 短信通知
 		}
 		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_SOURCE);
-		// TODO 增加消息推送
+
+
 		return ServerResponse.successWithData("审批成功");
 	}
     
@@ -159,11 +165,14 @@ public class CargoServiceImpl implements CargoService {
 
     public void pushGoodSource(Cargo cargoGoods) {
         if (cargoGoods != null && CargoConstant.TENDER_MARK.equalsIgnoreCase(cargoGoods.getTenderWay())) {
-            //TODO:招标方式;
-            List<Integer> list = cargoCustomerDao.selectCarList(cargoGoods, CargoConstant.CUSTOMER_CAR_OWNER);
-            cargoDao.batch(list, cargoGoods.getId(), new Date());//批量添加推送记录
+            //TODO:招标方式; 目前招标不推送
+//            List<Integer> list = cargoCustomerDao.selectCarList(cargoGoods, CargoConstant.CUSTOMER_CAR_OWNER);
+//            cargoDao.batch(list, cargoGoods.getId(), new Date());//批量添加推送记录
         } else {//抢标方式
-            List<Integer> list = cargoCustomerDao.selectCarList(cargoGoods, CargoConstant.CUSTOMER_CAR_OWNER);
+//            List<Integer> list = cargoCustomerDao.selectCarList(cargoGoods, CargoConstant.CUSTOMER_CAR_OWNER);
+			//TODO
+			//随机挑选5名车主推送消息
+			List<Integer> list = carCargoOwnerMapper.randSelectCarOwner();
             cargoDao.batch(list, cargoGoods.getId(), new Date());//批量添加推送记录
         }
     }
@@ -714,7 +723,9 @@ public class CargoServiceImpl implements CargoService {
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
 	}
-	
+
+
+
 	@Override
 	public ServerResponse openDetails(CommonDto dto) {
 		Cargo cargo = this.assertCargoAvailable(dto.getId());
@@ -774,5 +785,24 @@ public class CargoServiceImpl implements CargoService {
 		}
 		return cargo;
 	}
-	
+
+	/**
+	 * 推荐货源
+	 * @param dto
+	 * @return
+	 */
+	public ServerResponse recommendCargo(CargoRecDto dto,Page page) {
+
+		return ServerResponse.successWithData(cargoMapper.recommendCargo(dto.getCarOwnnerId()));
+	}
+
+	/**
+	 * 推荐货源
+	 * @param dto
+	 * @return
+	 */
+	@Override
+	public ServerResponse recommendCargo(CargoRecDto dto) {
+		return ServerResponse.successWithData(cargoMapper.recommendCargo(dto.getCarOwnnerId()));
+	}
 }
