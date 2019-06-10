@@ -22,7 +22,7 @@ public interface CargoMapper {
 
     int pushSave(Cargo cargo);
 
-    void batch(@Param("list") List<Integer> list, @Param("id") Integer id,@Param("date") Date date);
+    void batch(@Param("list") List<Integer> list, @Param("id") Integer id, @Param("date") Date date);
 
     void updateSource(Cargo cargo);
 
@@ -30,9 +30,9 @@ public interface CargoMapper {
 
     int invitationOffer(@Param("list") List<Offer> offerList, @Param("status") String status);
 
-    Offer getOfferWill(@Param("cargoId") Integer cargoId,@Param("carOwnnerId") Integer carOwnnerId);
+    Offer getOfferWill(@Param("cargoId") Integer cargoId, @Param("carOwnnerId") Integer carOwnnerId);
 
-    int updateMatter(@Param("cargoId") Integer cargoId,@Param("offerPromissed") String offerPromissed,@Param("cargd") Integer cargd);
+    int updateMatter(@Param("cargoId") Integer cargoId, @Param("offerPromissed") String offerPromissed, @Param("cargd") Integer cargd);
 
     @Update("update `cargo` set `status` = #{status} where `id` = #{id}")
     int updateStatusById(@Param("id") Integer id, @Param("status") String status);
@@ -42,4 +42,6 @@ public interface CargoMapper {
     //推荐货源
 //    List<Cargo> recommendCargo(@Param("carOwnnerId") CargoRecDto dto);
     List<Cargo> recommendCargo(@Param("carOwnnerId") Integer carOwnnerId);
+
+    PageInfo<Cargo> recommendCargoPage(@Param("carOwnnerId") Integer carOwnnerId, Page page);
 }

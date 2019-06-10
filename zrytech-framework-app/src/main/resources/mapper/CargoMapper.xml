@@ -544,4 +544,9 @@
           WHERE c.id = csr.cargo_id and csr.car_ownner_id = #{carOwnnerId}
     </select>
 
+    <select id="recommendCargoPage" parameterType="int" resultMap="cargo">
+        select * from cargo c,cargo_send_record csr
+         WHERE c.id = csr.cargo_id and csr.car_ownner_id = #{carOwnnerId}
+         ORDER BY c.`create_date`
+    </select>
 </mapper>

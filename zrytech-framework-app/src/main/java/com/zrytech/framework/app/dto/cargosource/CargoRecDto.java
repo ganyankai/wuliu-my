@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 public class CargoRecDto {
 
-	@NotNull(message = "车主id不能为空")
-	private Integer carOwnnerId;
+//	@NotNull(message = "车主id不能为空")
+//	private Integer carOwnnerId;
 
 }

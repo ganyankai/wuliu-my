@@ -787,22 +787,33 @@ public class CargoServiceImpl implements CargoService {
 	}
 
 	/**
-	 * 推荐货源
+	 * 推荐货源分页
 	 * @param dto
 	 * @return
 	 */
-	public ServerResponse recommendCargo(CargoRecDto dto,Page page) {
+	public ServerResponse recommendCargo(Integer pageNum, Integer pageSize,CargoRecDto dto) {
+		Customer cur_customer = RequestUtil.getCurrentUser(Customer.class);
+		//取得车主id
+		Integer id = cur_customer.getCarOwner().getId();
+		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+		List<Cargo> list = cargoMapper.recommendCargo(id);
+		for (Cargo cargo : list) {
+			CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(cargo.getCreateBy());
+			cargo.setCargoOwnerName(cargoOwner.getName());
+			cargo.setCargoOwnerTel(cargoOwner.getTel());
 
-		return ServerResponse.successWithData(cargoMapper.recommendCargo(dto.getCarOwnnerId()));
+			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
+			cargo.setCargoMatterCount(countByCargoId);
+
+			//根据用户id获取用户logo
+			Integer customerId = cargoOwner.getCustomerId();
+			Customer customer = logisticsCustomerRepository.findOne(customerId);
+			cargo.setLogo(customer.getLogo());
+
+			cargo = this.bindFocusAndOffer(cargo);
+		}
+		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
 	}
 
-	/**
-	 * 推荐货源
-	 * @param dto
-	 * @return
-	 */
-	@Override
-	public ServerResponse recommendCargo(CargoRecDto dto) {
-		return ServerResponse.successWithData(cargoMapper.recommendCargo(dto.getCarOwnnerId()));
-	}
 }

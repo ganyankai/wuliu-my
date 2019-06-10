@@ -180,8 +180,10 @@ public interface CargoService {
 	ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto);
 
 	/**
-	 * 推荐货源
+	 * 推荐货源分页
 	 *
 	 */
-	ServerResponse recommendCargo(CargoRecDto dto);
+	ServerResponse recommendCargo(Integer pageNum, Integer pageSize, CargoRecDto dto);
+
+
 }

@@ -1,5 +1,6 @@
 package com.zrytech.framework.app.front.controller;
 
+import com.zrytech.framework.app.ano.CarOwnerRole;
 import com.zrytech.framework.app.ano.CargoOwnerRole;
 import com.zrytech.framework.app.ano.NeedCertified;
 import com.zrytech.framework.app.dto.CargoDto;
@@ -231,6 +232,7 @@ public class CargoSourceController {
 	 * @param:CargoDto货源dto
 	 * @return:ServerResponse
 	 */
+	@CarOwnerRole
 	@Valid
 	@PostMapping("/recommendCargo")
 	@ApiOperation(value = "推荐货源")
@@ -239,7 +241,20 @@ public class CargoSourceController {
 		if (requestParams.getParams() == null) {
 			throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
 		}
-		return service.recommendCargo(requestParams.getParams());
+
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
+		if (pageNum == null) {
+			pageNum = 1;
+		}
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		return service.recommendCargo(pageNum, pageSize,requestParams.getParams());
 	}
 
 }
