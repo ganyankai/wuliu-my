@@ -64,6 +64,10 @@ public class Cargo extends BaseEntity implements Serializable {
 	/** 中标的报价单 */
 	@Transient
 	private CargoMatter cargoMatter;
+	
+	/** 货源的所有报价单 */
+	@Transient
+	private List<CargoMatter> cargoMatters;
 
 	private static final long serialVersionUID = -1555792098489335740L;
 

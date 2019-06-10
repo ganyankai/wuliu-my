@@ -122,6 +122,9 @@ public class CargoServiceImpl implements CargoService {
 			}
 			cargo.setCargoMatter(cargoMatter);
 		}
+		List<CargoMatter> cargoMatters = cargoMatterRepository.findByCargoId(cargo.getId());
+		cargo.setCargoMatters(cargoMatters);
+		
 		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
 		cargo.setCargoLocations(list);
 		return ServerResponse.successWithData(cargo);
