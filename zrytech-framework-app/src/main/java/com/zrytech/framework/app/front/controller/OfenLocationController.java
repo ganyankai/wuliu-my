@@ -40,7 +40,6 @@ public class OfenLocationController {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
-    @NeedCertified
     @Valid
     @PostMapping("/page")
     @ApiOperation(value = "常用地址分页列表信息")
@@ -58,7 +57,6 @@ public class OfenLocationController {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
-    @NeedCertified
     @PostMapping("/add")
     @ApiOperation(value = "常用地址添加")
     public ServerResponse add(@RequestBody @Valid RequestParams<OfenLocationAddDto> requestParams,BindingResult result) {
@@ -75,7 +73,6 @@ public class OfenLocationController {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
-    @NeedCertified
     @Valid
     @PostMapping("/get")
     @ApiOperation(value = "常用地址详情")
@@ -97,7 +94,6 @@ public class OfenLocationController {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
-    @NeedCertified
     @PostMapping("/update")
     @ApiOperation(value = "常用地址修改")
     public ServerResponse update(@RequestBody @Valid RequestParams<OfenLocationUpdateDto> requestParams,BindingResult result) {
@@ -118,7 +114,6 @@ public class OfenLocationController {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
-    @NeedCertified
     @Valid
     @PostMapping("/delete")
     @ApiOperation(value = "常用地址删除")
