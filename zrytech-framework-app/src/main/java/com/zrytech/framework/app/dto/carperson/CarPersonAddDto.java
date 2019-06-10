@@ -57,7 +57,7 @@ public class CarPersonAddDto {
 	// 以下属于账号信息
 
 	/** 账号 */
-	@Pattern(regexp = RegExConstants.USER_ACCOUNT, message = RegExConstants.USER_ACCOUNT_ERR_MSG)
+//	@Pattern(regexp = RegExConstants.USER_ACCOUNT, message = RegExConstants.USER_ACCOUNT_ERR_MSG)
 	private String userAccount;
 
 	/** 账号手机号 */
@@ -65,7 +65,7 @@ public class CarPersonAddDto {
 	private String userTel;
 
 	/** 密码 */
-	@Pattern(regexp = RegExConstants.PASSWORD, message = RegExConstants.PASSWORDERR_MSG)
+//	@Pattern(regexp = RegExConstants.PASSWORD, message = RegExConstants.PASSWORDERR_MSG)
 	private String password;
 
 }

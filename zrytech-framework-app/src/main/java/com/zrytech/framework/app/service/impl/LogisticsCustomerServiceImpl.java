@@ -5,6 +5,7 @@ import com.zrytech.framework.app.constants.CargoConstant;
 import com.zrytech.framework.app.dao.CargoCustomerDao;
 import com.zrytech.framework.app.dao.ShipperDao;
 import com.zrytech.framework.app.dto.CargoCustomerDto;
+import com.zrytech.framework.app.dto.PasswordDto;
 import com.zrytech.framework.app.entity.CargoCustomer;
 import com.zrytech.framework.app.entity.Certification;
 import com.zrytech.framework.app.enums.LogisticsResult;
@@ -15,6 +16,8 @@ import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.BeanUtil;
 
+import com.zrytech.framework.base.util.PasswordUtil;
+import com.zrytech.framework.base.util.RequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.repository.LogisticsCustomerRepository;
 import com.zrytech.framework.app.service.CustomerService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -168,6 +172,33 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
     public ServerResponse deleteAccount(CargoCustomerDto cargoCustomerDto) {
         int num=cargoCustomerDao.deleteAccount(cargoCustomerDto.getId());
         CheckFieldUtils.assertSuccess(num);
+        return ServerResponse.success();
+    }
+
+    @Override
+    @Transactional
+    public ServerResponse updatePassword(PasswordDto passwordDto) {
+        if (passwordDto.getOldPassword().equals(passwordDto.getNewPassword())){
+            throw new BusinessException(112, "新旧密码不得相同");
+        }
+        //数据校验
+        if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmPassword())){
+            throw new BusinessException(112, "两次密码不一致");
+        }
+        Customer customer = RequestUtil.getCurrentUser(Customer.class);
+        System.out.println("customer.getPassword():");
+
+        Customer dataCus = customerRepository.findOne(customer.getId());
+        System.out.println("dataCus.getPassword():");
+        System.out.println(dataCus.getPassword());
+
+        if(!PasswordUtil.encryptPasswordStr(dataCus.getUserAccount(),passwordDto.getOldPassword()).equals(dataCus.getPassword())){
+            throw new BusinessException(112, "原密码错误");
+        }
+
+        String newPasswordEnc = PasswordUtil.encryptPasswordStr(dataCus.getUserAccount(),passwordDto.getNewPassword());
+
+        customerRepository.updatePassword(newPasswordEnc,customer.getId());
         return ServerResponse.success();
     }
 }

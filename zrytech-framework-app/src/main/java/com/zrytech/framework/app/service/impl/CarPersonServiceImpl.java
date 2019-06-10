@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -448,6 +449,10 @@ public class CarPersonServiceImpl implements CarPersonService {
 		// 创建登录账号（目前仅司机创建账号）
 		Integer newCustomerId = null;
 		if (CarPersonConstants.PERSON_TYPE_DRIVER.equalsIgnoreCase(dto.getPersonType())) {
+			//设置账号为用户手机号
+			dto.setUserAccount(dto.getTel());
+			//密码随机生成6位字符串
+			dto.setPassword(RandomStringUtils.randomAlphanumeric(6)+"8#");
 			newCustomerId = this.createDriverCustomer(dto, customer.getId());
 		}
 		// 创建司机或压货人

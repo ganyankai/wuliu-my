@@ -1,9 +1,14 @@
 package com.zrytech.framework.app.backend.controller;
 
 
+import com.zrytech.framework.app.ano.CarOwnerRole;
+import com.zrytech.framework.app.ano.CargoOwnerRole;
+import com.zrytech.framework.app.ano.DriverRole;
 import com.zrytech.framework.app.dto.CargoCustomerDto;
+import com.zrytech.framework.app.dto.PasswordDto;
 import com.zrytech.framework.app.entity.CargoCustomer;
 import com.zrytech.framework.app.service.CargoCustomerService;
+import com.zrytech.framework.app.service.CustomerService;
 import com.zrytech.framework.app.utils.PasswordUtils;
 import com.zrytech.framework.base.entity.RequestParams;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.security.util.Password;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -33,6 +39,9 @@ public class CustomerController {
 
     @Autowired
     private CargoCustomerService cargoCustomerService;
+
+    @Autowired
+    private CustomerService customerService;
 
     /**
      * Desintion:客户注册
@@ -153,4 +162,13 @@ public class CustomerController {
         }
     }
 
+    @CarOwnerRole
+    @PostMapping("/api/updatePassword")
+    @ApiOperation(value = "修改密码")
+    public ServerResponse updatePassword(@RequestBody RequestParams<PasswordDto> requestParams) {
+        if(requestParams.getParams()==null){
+            throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
+        }
+        return customerService.updatePassword(requestParams.getParams());
+    }
 }

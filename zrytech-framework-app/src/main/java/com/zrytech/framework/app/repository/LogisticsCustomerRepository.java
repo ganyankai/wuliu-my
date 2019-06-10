@@ -33,8 +33,9 @@ public interface LogisticsCustomerRepository extends BaseRepository<Customer, In
 	
 	@Query(value = "select isActive from Customer where id = ?1")
 	Boolean findIsActiveById(Integer id);
-	
-	
-	
-	
+
+	@Modifying
+	@Query("update Customer set password = ?1 where id = ?2")
+	int updatePassword(String password, Integer id);
+
 }

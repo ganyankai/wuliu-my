@@ -1,9 +1,11 @@
 package com.zrytech.framework.app.service;
 
 import com.zrytech.framework.app.dto.CargoCustomerDto;
+import com.zrytech.framework.app.dto.PasswordDto;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
+import com.zrytech.framework.base.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -86,4 +88,7 @@ public interface CustomerService {
      * @return:ServerResponse
      * */
     ServerResponse deleteAccount(CargoCustomerDto cargoCustomerDto);
+
+
+	ServerResponse updatePassword(PasswordDto passwordDto);
 }
