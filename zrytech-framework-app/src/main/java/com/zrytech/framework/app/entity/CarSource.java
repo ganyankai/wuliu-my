@@ -1,5 +1,6 @@
 package com.zrytech.framework.app.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "`car_source`")
 public class CarSource extends BaseEntity {
+	
+	/** 平均评论等级 */
+	@Transient
+	private BigDecimal levelAVG;
 	
 	@Transient
 	private String carOwnerTel;

@@ -33,6 +33,10 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "`cargo`")
 public class Cargo extends BaseEntity implements Serializable {
 	
+	/** 平均评论等级 */
+	@Transient
+	private BigDecimal levelAVG;
+	
 	/** 是否已报价 */
 	@Transient
 	private Boolean isOffer;
