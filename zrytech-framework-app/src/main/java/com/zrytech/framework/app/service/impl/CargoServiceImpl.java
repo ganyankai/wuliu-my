@@ -28,6 +28,7 @@ import com.zrytech.framework.app.repository.*;
 import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.app.service.CargoService;
+import com.zrytech.framework.app.service.EvaluateService;
 import com.zrytech.framework.app.service.MyFocusPersonService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
@@ -565,6 +566,7 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoMatterCount(countByCargoId);
 			//設置logo為用戶logo
 			cargo.setLogo(customer.getLogo());
+			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
 
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
@@ -599,6 +601,7 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoMatter(cargoMatter);
 			//設置logo為用戶logo
 			cargo.setLogo(customer.getLogo());
+			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
 		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
 		cargo.setCargoLocations(list);
@@ -699,6 +702,9 @@ public class CargoServiceImpl implements CargoService {
 	@Autowired
 	private MyFocusPersonService myFocusPersonService;
 	
+	@Autowired
+	private EvaluateService evaluateService;
+	
 	@Override
 	public ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
 		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
@@ -718,6 +724,7 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setLogo(customer.getLogo());
 
 			cargo = this.bindFocusAndOffer(cargo);
+			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
 
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
@@ -739,6 +746,7 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoOwnerTel(cargoOwner.getTel());
 
 			cargo = this.bindFocusAndOffer(cargo);
+			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
             //根据用户id获取用户logo
             Integer customerId = cargoOwner.getCustomerId();
             Customer customer = logisticsCustomerRepository.findOne(customerId);

@@ -34,6 +34,14 @@ import lombok.Setter;
 @Table(name = "`waybill`")
 public class Waybill extends BaseEntity {
 	
+	/** 平均评论等级 */
+	@Transient
+	private BigDecimal levelAVG;
+	
+	/** 当前登录人是否已评论运单 */
+	@Transient
+	private Boolean isEvaluate;
+	
 	/**货物介质*/
 	@Column(name = "`name`")
     private String name;

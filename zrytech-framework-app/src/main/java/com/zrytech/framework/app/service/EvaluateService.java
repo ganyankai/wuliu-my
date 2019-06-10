@@ -1,5 +1,7 @@
 package com.zrytech.framework.app.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
 import com.zrytech.framework.app.dto.evaluate.EvaluateAddDto;
@@ -8,6 +10,15 @@ import com.zrytech.framework.base.entity.ServerResponse;
 
 @Service
 public interface EvaluateService {
+	
+	/**
+	 * 评价等级平均值，保留一位小数
+	 * @author cat
+	 * 
+	 * @param appraiserById	被评价人Id
+	 * @return
+	 */
+	BigDecimal levelAVG(Integer appraiserById);
 	
 	/**
 	 * 车主 - 车主评价货主

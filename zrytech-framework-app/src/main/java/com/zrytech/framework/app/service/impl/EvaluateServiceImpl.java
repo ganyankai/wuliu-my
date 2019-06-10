@@ -1,5 +1,6 @@
 package com.zrytech.framework.app.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,16 @@ public class EvaluateServiceImpl implements EvaluateService {
 	
 	@Autowired
 	private CarCargoOwnnerRepository carCargoOwnnerRepository;
+	
+	@Override
+	public BigDecimal levelAVG(Integer appraiserById) {
+		BigDecimal levelAVG = mapper.levelAVG(appraiserById);
+		if (levelAVG != null) {
+			BigDecimal setScale = levelAVG.setScale(1, BigDecimal.ROUND_DOWN);
+			return setScale;
+		}
+		return null;
+	}
 	
 	
 	

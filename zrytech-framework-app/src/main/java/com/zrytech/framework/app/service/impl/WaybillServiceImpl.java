@@ -1,5 +1,6 @@
 package com.zrytech.framework.app.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import com.zrytech.framework.app.repository.WaybillRepository;
 import com.zrytech.framework.app.service.BillLocationService;
 import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.app.service.CarService;
+import com.zrytech.framework.app.service.EvaluateService;
 import com.zrytech.framework.app.service.WaybillDetailService;
 import com.zrytech.framework.app.service.WaybillService;
 import com.zrytech.framework.base.entity.PageData;
@@ -75,7 +77,9 @@ public class WaybillServiceImpl implements WaybillService {
 
 	@Autowired
 	private WaybillDetailService waybillDetailService;
-
+	
+	@Autowired
+	private EvaluateService evaluateService;
 	
     
 	@Override
@@ -87,6 +91,14 @@ public class WaybillServiceImpl implements WaybillService {
 			waybill = this.bindingCargoOwnerName(waybill);
 			waybill = this.bindingCargo(waybill);
 			waybill = this.bindingWaybillDetail(waybill);
+			if (dto.getCarOwnerId() != null) {
+				waybill.setIsEvaluate(this.isEvaluate(CargoConstant.EVALUATE_TYPE_CAR_COMMENTS_CARGO,
+						dto.getCarOwnerId(), waybill.getId()));
+			}
+			if (dto.getCargoOwnerId() != null) {
+				waybill.setIsEvaluate(this.isEvaluate(CargoConstant.EVALUATE_TYPE_CARGO_COMMENTS_CAR,
+						dto.getCargoOwnerId(), waybill.getId()));
+			}
 		}
 		return new PageData<Waybill>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
@@ -267,8 +279,14 @@ public class WaybillServiceImpl implements WaybillService {
     }
 	
     
-	
-	
+	private Boolean isEvaluate(String evaluateType, Integer appraiserId, Integer wayBillId) {
+		Evaluate evaluate = evaluateRepository.findByWaybillIdAndAppraiserIdAndEvaluateType(wayBillId, appraiserId,
+				evaluateType);
+		if (evaluate == null) {
+			return false;
+		}
+		return true;
+	}
 	
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	
@@ -285,6 +303,8 @@ public class WaybillServiceImpl implements WaybillService {
 		waybill = this.bindingCargoOwnerName(waybill);
 		waybill = this.bindingWaybillDetail(waybill);
 		waybill = this.bindingEvaluate(waybill);
+		waybill.setIsEvaluate(this.isEvaluate(CargoConstant.EVALUATE_TYPE_CARGO_COMMENTS_CAR, cargoOwner.getId(), waybill.getId()));
+		waybill.setLevelAVG(evaluateService.levelAVG(cargoOwner.getId()));
 		return ServerResponse.successWithData(waybill);
 	}
     
@@ -318,6 +338,8 @@ public class WaybillServiceImpl implements WaybillService {
 		waybill = this.bindingCargoOwnerName(waybill);
 		waybill = this.bindingWaybillDetail(waybill);
 		waybill = this.bindingEvaluate(waybill);
+		waybill.setIsEvaluate(this.isEvaluate(CargoConstant.EVALUATE_TYPE_CAR_COMMENTS_CARGO, carOwner.getId(), waybill.getId()));
+		waybill.setLevelAVG(evaluateService.levelAVG(carOwner.getId()));
 		return ServerResponse.successWithData(waybill);
 	}
 	

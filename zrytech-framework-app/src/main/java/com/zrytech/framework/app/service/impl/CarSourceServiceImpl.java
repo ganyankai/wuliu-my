@@ -49,6 +49,7 @@ import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarPersonService;
 import com.zrytech.framework.app.service.CarService;
 import com.zrytech.framework.app.service.CarSourceService;
+import com.zrytech.framework.app.service.EvaluateService;
 import com.zrytech.framework.app.service.MyFocusPersonService;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
@@ -131,6 +132,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 			carSource = this.bindingCustomerUserName(carSource);
 			carSource = this.bindingCarSourceCar(carSource);
 			carSource = this.bindFocus(carSource);
+			carSource.setLevelAVG(evaluateService.levelAVG(carSource.getCarOwnerId()));
 		}
 		return new PageData<CarSource>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
@@ -440,6 +442,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource = this.bindingCarOwnerNameAndTel(carSource);
 		CarSourceCheckUpdateDto temp = JSON.parseObject(carSource.getApproveContent(), CarSourceCheckUpdateDto.class);
 		carSource.setApproveContentCN(temp);
+		carSource.setLevelAVG(evaluateService.levelAVG(carSource.getCarOwnerId()));
 		return ServerResponse.successWithData(carSource);
 	}
 
@@ -640,6 +643,9 @@ public class CarSourceServiceImpl implements CarSourceService {
 		return ServerResponse.successWithData("修改失败");
 	}
 
+	@Autowired
+	private EvaluateService evaluateService;
+	
 	
 	@Transactional
 	@Override
@@ -673,6 +679,8 @@ public class CarSourceServiceImpl implements CarSourceService {
 		carSource = this.bindingCustomerUserName(carSource);
 		carSource = this.bindingCarOwnerNameAndTel(carSource);
 		carSource = this.bindFocus(carSource);
+		carSource.setLevelAVG(evaluateService.levelAVG(carSource.getCarOwnerId()));
+		
 		return ServerResponse.successWithData(carSource);
 	}
 	
