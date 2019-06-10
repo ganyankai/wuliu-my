@@ -301,7 +301,7 @@
     </update>
 
     <insert id="batch" parameterType="java.util.List" useGeneratedKeys="true">
-        insert into cargo_send_record
+        insert ignore into cargo_send_record
         (
         cargo_id,
         car_ownner_id,
