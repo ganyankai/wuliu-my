@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.zrytech.framework.app.entity.SysMessage;
 import com.zrytech.framework.app.repository.SysMessageRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -52,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@Slf4j
 public class CarPersonServiceImpl implements CarPersonService {
 	
 	@Autowired
@@ -171,10 +173,13 @@ public class CarPersonServiceImpl implements CarPersonService {
 	public ServerResponse adminDriverApprove(ApproveDto dto, User user) {
 		CarPerson carPerson = this.assertDriverAvailable(dto.getBusinessId());
 		if (!ApproveConstants.STATUS_APPROVAL_PENDING.equalsIgnoreCase(carPerson.getApproveStatus())) {
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下：司机的状态不是待审批",carPerson.getId(),"司机",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
-
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料审核不通过，原因如下：司机的状态不是待审批",carPerson.getId(),"司机",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 			throw new BusinessException(112, "审批失败：司机的状态不是待审批");
 		}
 		this.approve(ApproveConstants.RESULT_AGREE.equals(dto.getResult()), carPerson);
@@ -182,15 +187,22 @@ public class CarPersonServiceImpl implements CarPersonService {
 
 		//人为处理审核成功失败情况
 		if(ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())){
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料已审核通过，请须知",carPerson.getId(),"司机",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料已审核通过，请须知",carPerson.getId(),"司机",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 		}else{
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下:"+dto.getContent(),carPerson.getId(),"司机",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料审核不通过，原因如下:"+dto.getContent(),carPerson.getId(),"司机",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 		}
-
 
 		return ServerResponse.successWithData("审批成功");
 	}

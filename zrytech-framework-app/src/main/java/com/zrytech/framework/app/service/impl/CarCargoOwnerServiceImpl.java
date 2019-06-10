@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.zrytech.framework.app.entity.SysMessage;
 import com.zrytech.framework.app.repository.SysMessageRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ import com.zrytech.framework.common.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
 	@Autowired
@@ -333,18 +335,24 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
 		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(cargoOwner.getStatus())) {
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下：货主暂未填写认证信息",cargoOwner.getId(),"货主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
-
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料审核不通过，原因如下：货主暂未填写认证信息",cargoOwner.getId(),"货主",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 			throw new BusinessException(112, "审批失败：货主暂未填写认证信息");
 		}
 
 		if (!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下：货主状态不是待审批",cargoOwner.getId(),"货主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
-
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料审核不通过，原因如下：货主状态不是待审批",cargoOwner.getId(),"货主",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 			throw new BusinessException(112, "审批失败：货主状态不是待审批");
 		}
 
@@ -353,13 +361,21 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
 		//人为审批失败处理
 		if(ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())){
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料已审核通过,请须知",cargoOwner.getId(),"货主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料已审核通过,请须知",cargoOwner.getId(),"货主",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 		}else{
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下:"+dto.getContent(),cargoOwner.getId(),"货主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			try {
+				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+						"您的认证资料审核不通过，原因如下:"+dto.getContent(),cargoOwner.getId(),"货主",0,null);
+				sysMessageRepository.saveAndFlush(sysMessage);
+			}catch (Exception e){
+				log.warn(e.getMessage());
+			}
 		}
 
 		return ServerResponse.successWithData("审批成功");
