@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
+import com.zrytech.framework.app.entity.SysMessage;
+import com.zrytech.framework.app.repository.SysMessageRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,7 @@ import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
@@ -63,7 +64,8 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Autowired
 	private OftenAddressRepository oftenAddressRepository;
 	
-	
+	@Autowired
+	private SysMessageRepository sysMessageRepository;
 	
 	@Transactional
 	@Override
@@ -288,33 +290,78 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	@Autowired
 	private ApproveLogService approveLogService;
 	
-	@Transactional
+	@Transactional(noRollbackFor = BusinessException.class)
 	@Override
 	public ServerResponse adminApproveCarOwner(ApproveDto dto, User user) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
 		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(carOwner.getStatus())) {
+			//审核失败推送消息
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料审核不通过，原因如下：车主暂未填写认证信息",carOwner.getId(),"车主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+
 			throw new BusinessException(112, "审批失败：车主暂未填写认证信息");
 		}
 		if (!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			//审核失败推送消息
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料审核不通过，原因如下：车主状态不是待审批",carOwner.getId(),"车主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+
 			throw new BusinessException(112, "审批失败：车主状态不是待审批");
 		}
 		this.approveCarCargoOwner(carOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
 		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CAR_OWNER);
+
+		//审核通过推送消息
+		if(ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())){
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料已审核通过,请须知",carOwner.getId(),"车主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+		}else{
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料审核不通过，原因如下:"+dto.getContent(),carOwner.getId(),"车主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+		}
+
+
 		return ServerResponse.successWithData("审批成功");
 	}
 	
-	@Transactional
+	@Transactional(noRollbackFor = BusinessException.class)
 	@Override
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
 		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(cargoOwner.getStatus())) {
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料审核不通过，原因如下：货主暂未填写认证信息",cargoOwner.getId(),"货主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+
 			throw new BusinessException(112, "审批失败：货主暂未填写认证信息");
 		}
+
 		if (!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料审核不通过，原因如下：货主状态不是待审批",cargoOwner.getId(),"货主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+
 			throw new BusinessException(112, "审批失败：货主状态不是待审批");
 		}
+
 		this.approveCarCargoOwner(cargoOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
 		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_OWNER);
+
+		//人为审批失败处理
+		if(ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())){
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料已审核通过,请须知",cargoOwner.getId(),"货主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+		}else{
+			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
+					"您的认证资料审核不通过，原因如下:"+dto.getContent(),cargoOwner.getId(),"货主",0,null);
+			sysMessageRepository.saveAndFlush(sysMessage);
+		}
+
 		return ServerResponse.successWithData("审批成功");
 	}
 	
@@ -387,7 +434,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * 断言货主存在
 	 * @author cat
 	 * 
-	 * @param carOwnerId	货主Id
+	 * @param cargoOwnerId	货主Id
 	 * @return
 	 */
 	public CarCargoOwnner assertCargoOwnerExist(Integer cargoOwnerId) {
@@ -417,7 +464,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * 车主货主审核（修改车主货主状态和待审核的内容）
 	 * @author cat
 	 * 
-	 * @param carOwner	待审核的车主货主
+	 * @param carCargoOwner	待审核的车主货主
 	 * @param result	审核结果
 	 * @return
 	 */
@@ -440,7 +487,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		carCargoOwnnerRepository.save(carCargoOwner);
 	}
-	
+
 	@Transactional
 	public ServerResponse cargoOwnerUpdatePersonInfo(PersonInfoUpdateDto dto, Customer customer) {
 		CarCargoOwnner cargoOwner = customer.getCargoOwner();
