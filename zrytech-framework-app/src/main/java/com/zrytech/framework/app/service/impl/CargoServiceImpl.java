@@ -601,8 +601,8 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoMatter(cargoMatter);
 			//設置logo為用戶logo
 			cargo.setLogo(customer.getLogo());
-			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
+		cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		List<Loading> list = cargoLocationRepository.findByCargoId(cargo.getId());
 		cargo.setCargoLocations(list);
 		return ServerResponse.successWithData(cargo);
