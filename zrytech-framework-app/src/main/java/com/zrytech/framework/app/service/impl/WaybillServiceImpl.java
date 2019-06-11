@@ -548,7 +548,7 @@ public class WaybillServiceImpl implements WaybillService {
 
 		String status = waybill.getStatus();
 		if (CargoConstant.WAYBILL_STATUS_IN_TRANSIT.equalsIgnoreCase(status)) {
-			waybillMapper.updateStatusById(waybillId, CargoConstant.WAYBILL_STATUS_WAIT_PAY_FINAL_MONEY);
+			waybillMapper.updateStatusById(waybillId, CargoConstant.WAYBILL_STATUS_WAIT_COMMENT); // TODO
 		} else {
 			throw new BusinessException(112, "确认收货失败：状态不是运输中");
 		}
