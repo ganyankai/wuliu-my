@@ -639,7 +639,7 @@ public class CargoServiceImpl implements CargoService {
 		return cargo;
 	}
 
-	
+
 	@Transactional
 	@Override
 	public ServerResponse submitChcek(CommonDto dto) {
@@ -736,14 +736,12 @@ public class CargoServiceImpl implements CargoService {
 		}
 
 //		倒过来遍历list,处理抢标的情况
-		System.out.println("bidWaitTime:");
-		System.out.println(bidWaitTime);
 		if(list!=null && list.size()>0){
 			for(int i=list.size()-1;i>=0;i--){
 				Cargo cargoIn = list.get(i);
 				//投标方式为抢标且当前时间 - 创建时间 < 配置时间 , 不展示该结果
 				if (cargoIn.getTenderWay().equals(CargoConstant.BID_MARK)
-						&&(new Date().getTime() - cargoIn.getCreateDate().getTime()< Long.valueOf(bidWaitTime)*3600) ){
+						&&(new Date().getTime() - cargoIn.getCreateDate().getTime()< Long.valueOf(bidWaitTime)*3600*1000) ){
 					list.remove(i);
 				}
 			}
