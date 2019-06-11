@@ -30,7 +30,7 @@ import sun.security.util.Password;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-@Deprecated
+//@Deprecated
 @Api(description = "客户相关api")
 @RestController
 @RequestMapping("/customer")
@@ -162,7 +162,6 @@ public class CustomerController {
         }
     }
 
-    @CarOwnerRole
     @PostMapping("/api/updatePassword")
     @ApiOperation(value = "修改密码")
     public ServerResponse updatePassword(@RequestBody RequestParams<PasswordDto> requestParams) {
