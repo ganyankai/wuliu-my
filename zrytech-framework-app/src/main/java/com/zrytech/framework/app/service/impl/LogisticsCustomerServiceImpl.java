@@ -186,11 +186,7 @@ public class LogisticsCustomerServiceImpl implements CustomerService {
             throw new BusinessException(112, "两次密码不一致");
         }
         Customer customer = RequestUtil.getCurrentUser(Customer.class);
-        System.out.println("customer.getPassword():");
-
         Customer dataCus = customerRepository.findOne(customer.getId());
-        System.out.println("dataCus.getPassword():");
-        System.out.println(dataCus.getPassword());
 
         if(!PasswordUtil.encryptPasswordStr(dataCus.getUserAccount(),passwordDto.getOldPassword()).equals(dataCus.getPassword())){
             throw new BusinessException(112, "原密码错误");
