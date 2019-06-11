@@ -537,7 +537,23 @@ public class WaybillServiceImpl implements WaybillService {
 	}
 	
 	
-    
+	@Transactional
+	@Override
+	public ServerResponse confirmReceipt(CommonDto dto) {
+		Customer customer = RequestUtil.getCurrentUser(Customer.class);
+		CarCargoOwnner cargoOwner = customer.getCargoOwner();
+
+		Integer waybillId = dto.getId();
+		Waybill waybill = this.assertWaybillBelongToCurrentCargoOwner(waybillId, cargoOwner.getId());
+
+		String status = waybill.getStatus();
+		if (CargoConstant.WAYBILL_STATUS_IN_TRANSIT.equalsIgnoreCase(status)) {
+			waybillMapper.updateStatusById(waybillId, CargoConstant.WAYBILL_STATUS_WAIT_PAY_FINAL_MONEY);
+		} else {
+			throw new BusinessException(112, "确认收货失败：状态不是运输中");
+		}
+		return ServerResponse.success();
+	}
 	
 	
 	

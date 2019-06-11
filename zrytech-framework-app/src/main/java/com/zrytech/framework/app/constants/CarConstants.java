@@ -30,8 +30,10 @@ public class CarConstants {
 	public static final String CAR_TYPE = "car_type";
 	/** 车辆类型：牵引车 */
 	public static final String CAR_TYPE_TRACTOR = "car_tractor";
+	/** 罐装车 */
+	public static final String CAR_TYPE_FILLING = "car_filling";
 	/** 车辆类型：正则 */
-	public static final String REG_EX_CAR_TYPE = "^(" + CAR_TYPE_TRACTOR + ")|()$";
+	public static final String REG_EX_CAR_TYPE = "^(" + CAR_TYPE_TRACTOR + ")|(" + CAR_TYPE_FILLING + ")|()$";
 	public static final String REG_EX_CAR_TYPE_ERR_MSG = "车辆类型有误";
 	
 	

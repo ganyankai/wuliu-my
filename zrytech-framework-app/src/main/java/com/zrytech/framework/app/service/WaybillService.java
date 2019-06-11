@@ -14,6 +14,15 @@ import com.zrytech.framework.base.entity.ServerResponse;
 @Service
 public interface WaybillService {
 	
+	/**
+	 * 货主确认收货
+	 * @author cat
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	ServerResponse confirmReceipt(CommonDto dto);
+	
 	Waybill assertWaybillExist(Integer waybillId);
 	
     /**
