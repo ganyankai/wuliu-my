@@ -208,6 +208,7 @@ public class CarSourceServiceImpl implements CarSourceService {
 			CarCargoOwnner carOwner = carCargoOwnnerRepository.findOne(carOwnerId);
 			carSource.setCarOwnerName(carOwner.getName());
 			carSource.setCarOwnerTel(carOwner.getTel());
+			carSource.setLogo(carOwner.getHeadImg());
 		}
 		return carSource;
 	}

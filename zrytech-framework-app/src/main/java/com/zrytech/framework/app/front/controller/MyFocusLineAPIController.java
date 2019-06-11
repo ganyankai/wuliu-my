@@ -29,7 +29,6 @@ public class MyFocusLineAPIController {
 	@Autowired
 	private MyFocusLineService service;
 
-	@NeedCertified
 	@Valid
 	@RequestMapping("/save")
 	public ServerResponse save(@RequestBody @Valid RequestParams<MyFocusLineAddDto> requestParams,
@@ -37,7 +36,6 @@ public class MyFocusLineAPIController {
 		return service.save(requestParams.getParams());
 	}
 
-	@NeedCertified
 	@Valid
 	@RequestMapping("/update")
 	public ServerResponse update(@RequestBody @Valid RequestParams<MyFocusLineUpdateDto> requestParams,
@@ -45,21 +43,18 @@ public class MyFocusLineAPIController {
 		return service.update(requestParams.getParams());
 	}
 
-	@NeedCertified
 	@Valid
 	@RequestMapping("/delete")
 	public ServerResponse delete(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		return service.delete(requestParams.getParams());
 	}
 
-	@NeedCertified
 	@Valid
 	@RequestMapping("/details")
 	public ServerResponse details(@RequestBody @Valid RequestParams<CommonDto> requestParams, BindingResult result) {
 		return service.details(requestParams.getParams());
 	}
 
-	@NeedCertified
 	@Valid
 	@RequestMapping("/list")
 	public ServerResponse list() {

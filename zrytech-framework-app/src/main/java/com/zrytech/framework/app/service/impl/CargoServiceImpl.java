@@ -99,6 +99,7 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoOwnerTel(cargoOwner.getTel());
 			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
 			cargo.setCargoMatterCount(countByCargoId);
+			cargo.setLogo(cargoOwner.getHeadImg());
 		}
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
 		return ServerResponse.successWithData(pageData);
@@ -572,7 +573,8 @@ public class CargoServiceImpl implements CargoService {
 			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
 			cargo.setCargoMatterCount(countByCargoId);
 			//設置logo為用戶logo
-			cargo.setLogo(customer.getLogo());
+			cargo.setLogo(cargoOwner.getHeadImg());
+			
 			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
 
@@ -727,10 +729,10 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoMatterCount(countByCargoId);
 
 			//根据用户id获取用户logo
-			Integer customerId = cargoOwner.getCustomerId();
-			Customer customer = logisticsCustomerRepository.findOne(customerId);
-			cargo.setLogo(customer.getLogo());
-
+			//Integer customerId = cargoOwner.getCustomerId();
+			//Customer customer = logisticsCustomerRepository.findOne(customerId);
+			cargo.setLogo(cargoOwner.getHeadImg());
+			
 			cargo = this.bindFocusAndOffer(cargo);
 			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
