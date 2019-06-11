@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= BaseApplication.class)
+@SpringBootTest(classes = BaseApplication.class)
 public class FamiliarCarTest {
     @Autowired
     private FamiliarCarRepository familiarCarRepository;
@@ -27,16 +27,17 @@ public class FamiliarCarTest {
 
     //ok
     @Test
-    public void test1(){
+    public void test1() {
         List<FamiliarCar> list = familiarCarRepository.findAll();
         System.out.println(list.size());
     }
 
     //ok
     @Test
-    public void test2(){
+    public void test2() {
         PageInfo<FamiliarCar> pageInfo = familiarCarMapper.familiarCarPage(new FamiliarCar(), new Page());
         System.out.println(pageInfo.getList().get(0).getCargoOwnnerId());
     }
+
 
 }

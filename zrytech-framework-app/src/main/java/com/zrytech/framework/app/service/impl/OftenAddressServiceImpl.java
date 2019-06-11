@@ -1,13 +1,19 @@
 package com.zrytech.framework.app.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressAddDto;
+import com.zrytech.framework.app.dto.oftenaddress.OftenAddressQueryDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressUpdateDto;
+import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.entity.OftenAddress;
 import com.zrytech.framework.app.mapper.OftenAddressMapper;
+import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.OftenAddressRepository;
 import com.zrytech.framework.app.service.OftenAddressService;
+import com.zrytech.framework.base.entity.Page;
+import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
@@ -31,8 +37,10 @@ public class OftenAddressServiceImpl implements OftenAddressService {
 	
     @Autowired
     private OftenAddressRepository repository;
-    
-    
+
+    @Autowired
+	private CarCargoOwnnerRepository carCargoOwnnerRepository;
+
 	@Transactional
 	@Override
 	public ServerResponse save(OftenAddressAddDto dto) {
@@ -107,5 +115,22 @@ public class OftenAddressServiceImpl implements OftenAddressService {
 		}
 		return address;
 	}
-	
+
+	@Override
+	public ServerResponse addressPage(Integer pageNum, Integer pageSize, OftenAddressQueryDto dto) {
+		//取得车主id或者货主id
+		Integer id = dto.getId();
+		CarCargoOwnner ownner = carCargoOwnnerRepository.findOne(id);
+		if(ownner==null){
+			throw new BusinessException(112, "用户不存在");
+		}
+		Integer customerId = ownner.getCustomerId();
+
+		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+		List<OftenAddress> list = mapper.selectByCustomerId(customerId);
+		PageData<OftenAddress> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
+		return ServerResponse.successWithData(pageData);
+	}
+
+
 }

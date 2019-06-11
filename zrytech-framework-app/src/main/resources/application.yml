@@ -92,3 +92,7 @@ file:
   tmp:
     dir: /home/admin/tmp
 #    dir: D:\tmp
+#货源抢标方式发布公开展示等待时间,单位为小时
+cargo:
+  bidWaitTime: 24
+

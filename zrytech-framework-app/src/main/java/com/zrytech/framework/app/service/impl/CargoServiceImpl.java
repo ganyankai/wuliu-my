@@ -43,6 +43,7 @@ import com.zrytech.framework.common.entity.SysCustomer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,6 +85,9 @@ public class CargoServiceImpl implements CargoService {
 
 	@Autowired
 	private CarCargoOwnerMapper carCargoOwnerMapper;
+
+	@Value("${cargo.bidWaitTime}")
+	private String bidWaitTime;
 
 	@Override
 	public ServerResponse adminPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
@@ -711,6 +715,7 @@ public class CargoServiceImpl implements CargoService {
 	@Override
 	public ServerResponse openPage(Integer pageNum, Integer pageSize, CargoSourceSearchDto dto) {
 		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
+
 		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
 		List<Cargo> list = cargoMapper.cargoSearch(dto);
 		for (Cargo cargo : list) {
@@ -729,6 +734,21 @@ public class CargoServiceImpl implements CargoService {
 			cargo = this.bindFocusAndOffer(cargo);
 			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
 		}
+
+//		倒过来遍历list,处理抢标的情况
+		System.out.println("bidWaitTime:");
+		System.out.println(bidWaitTime);
+		if(list!=null && list.size()>0){
+			for(int i=list.size()-1;i>=0;i--){
+				Cargo cargoIn = list.get(i);
+				//投标方式为抢标且当前时间 - 创建时间 < 配置时间 , 不展示该结果
+				if (cargoIn.getTenderWay().equals(CargoConstant.BID_MARK)
+						&&(new Date().getTime() - cargoIn.getCreateDate().getTime()< Long.valueOf(bidWaitTime)*3600) ){
+					list.remove(i);
+				}
+			}
+		}
+
 
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);
 		return ServerResponse.successWithData(pageData);

@@ -2,8 +2,10 @@ package com.zrytech.framework.app.service;
 
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressAddDto;
+import com.zrytech.framework.app.dto.oftenaddress.OftenAddressQueryDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressUpdateDto;
 import com.zrytech.framework.app.entity.OftenAddress;
+import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 
 public interface OftenAddressService {
@@ -60,5 +62,6 @@ public interface OftenAddressService {
 	 * @return
 	 */
 	OftenAddress assertBelongToCurrentCustomer(Integer addressId);
-	
+
+	ServerResponse addressPage(Integer pageNum, Integer pageSize, OftenAddressQueryDto params);
 }
