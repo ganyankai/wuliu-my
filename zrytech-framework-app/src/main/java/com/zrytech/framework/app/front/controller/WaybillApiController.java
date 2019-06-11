@@ -195,5 +195,14 @@ public class WaybillApiController {
 			BindingResult result) {
 		return service.carOwnerDetails(requestParams.getParams());
 	}
+	
+	@NeedCertified
+	@CargoOwnerRole
+	@Valid
+	@PostMapping("/confirmReceipt")
+	public ServerResponse confirmReceipt(@RequestBody @Valid RequestParams<CommonDto> requestParams,
+			BindingResult result) {
+		return service.confirmReceipt(requestParams.getParams());
+	}
 
 }
