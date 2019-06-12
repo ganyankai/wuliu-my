@@ -47,5 +47,9 @@ public class CarAddDto {
 	/** 仓位数量 */
 	@NotNull(message = "仓位数量不能为空")
 	private Integer storeQty;
+	
+	private Integer driverId;
+	
+	private Integer supercargoId;
 
 }

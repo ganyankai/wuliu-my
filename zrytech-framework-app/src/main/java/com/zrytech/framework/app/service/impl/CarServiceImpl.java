@@ -115,10 +115,18 @@ public class CarServiceImpl implements CarService {
 	 * @param result
 	 */
 	private void approve(Car car, Boolean result) {
-		Integer id = car.getId();
 		if (result) {
 			CarCheckUpdateDto temp = JSON.parseObject(car.getApproveContent(), CarCheckUpdateDto.class);
+			Integer driverId = car.getDriverId();
+			Integer supercargoId = car.getSupercargoId();
+			Integer id = car.getId();
 			BeanUtils.copyProperties(temp, car);
+			if (temp.getSupercargoId() == null) {
+				car.setSupercargoId(supercargoId);
+			}
+			if (temp.getDriverId() == null) {
+				car.setDriverId(driverId);
+			}
 			car.setApproveStatus(ApproveConstants.STATUS_BE_APPROVED);
 			car.setId(id);
 			if (car.getStatus().equalsIgnoreCase(CarConstants.CAR_STATUS_UNCERTIFIED)) {
@@ -268,6 +276,14 @@ public class CarServiceImpl implements CarService {
 		this.personCheck(carOwner);
 		
 		this.assertCarNoNotExist(dto.getCarNo()); // 车牌号全局唯一
+		
+		if (dto.getDriverId() != null) {
+			carPersonService.assertDriverBelongToCurrentUser(dto.getDriverId(), carOwner.getId());
+		}
+		if (dto.getSupercargoId() != null) {
+			carPersonService.assertSupercargoBelongToCurrentUser(dto.getSupercargoId(), carOwner.getId());
+		}
+		
 		Car car = new Car();
 		BeanUtils.copyProperties(dto, car);
 		car.setCreateBy(customer.getId());
@@ -314,6 +330,14 @@ public class CarServiceImpl implements CarService {
 		if (!dto.getMulStore()) { // 如果不分仓，默认仓位数为【1】
 			dto.setStoreQty(1);
 		}
+		
+		if (dto.getDriverId() != null) {
+			carPersonService.assertDriverBelongToCurrentUser(dto.getDriverId(), customer.getCarOwner().getId());
+		}
+		if (dto.getSupercargoId() != null) {
+			carPersonService.assertSupercargoBelongToCurrentUser(dto.getSupercargoId(), customer.getCarOwner().getId());
+		}
+		
 		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		CarCheckUpdateDto temp = new CarCheckUpdateDto();
 		BeanUtils.copyProperties(dto, temp);
