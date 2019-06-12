@@ -1,3 +1,7 @@
+no_check_token: /hotPlace/page;/api/carSource/openCarSourcePage;
+
+
+
 server:
   tomcat:
     uri-encoding: UTF-8

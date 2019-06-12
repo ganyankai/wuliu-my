@@ -38,6 +38,9 @@ import lombok.Setter;
 @Table(name = "`car_source`")
 public class CarSource extends BaseEntity {
 	
+	@Transient
+	private String logo;
+	
 	/** 平均评论等级 */
 	@Transient
 	private BigDecimal levelAVG;

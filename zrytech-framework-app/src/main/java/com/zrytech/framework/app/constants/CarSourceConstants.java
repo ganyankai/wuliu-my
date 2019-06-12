@@ -16,7 +16,7 @@ public class CarSourceConstants {
 	/** 车源状态：已下架 */
 	public static final String STATUS_DOWN = "down";
 
-	public static final String REG_EX_CAR_SOURCE_STATUS = "^(" + STATUS_UNCERTIFIED + ")|(" + STATUS_RELEASE + ")|()$";
+	public static final String REG_EX_CAR_SOURCE_STATUS = "^(" + STATUS_UNCERTIFIED + ")|(" + STATUS_RELEASE + ")|(" + STATUS_DOWN + ")|()$";
 	public static final String REG_EX_CAR_SOURCE_STATUS_ERR_MSG = "车源状态有误";
 
 }

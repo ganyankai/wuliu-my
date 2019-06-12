@@ -16,7 +16,7 @@ import lombok.Setter;
 public class OftenAddressAddDto {
 
 	/** 货物介质 */
-	@NotBlank(message = "货物介质不能为空")
+	// @NotBlank(message = "货物介质不能为空")
 	private String cargoName;
 
 	/** 出发省 */
