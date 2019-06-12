@@ -39,9 +39,8 @@ public interface CargoMapper {
     
     List<Cargo> cargoSearch(@Param("cargo") CargoSourceSearchDto dto);
 
+    List<Cargo> myCargoSearch(@Param("cargo") CargoSourceSearchDto dto);
     //推荐货源
-//    List<Cargo> recommendCargo(@Param("carOwnnerId") CargoRecDto dto);
     List<Cargo> recommendCargo(@Param("carOwnnerId") Integer carOwnnerId);
 
-    PageInfo<Cargo> recommendCargoPage(@Param("carOwnnerId") Integer carOwnnerId, Page page);
 }

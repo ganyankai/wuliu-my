@@ -562,7 +562,7 @@ public class CargoServiceImpl implements CargoService {
 		dto.setCreateBy(id);
 
 		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
-		List<Cargo> list = cargoMapper.cargoSearch(dto);
+		List<Cargo> list = cargoMapper.myCargoSearch(dto);
 		for (Cargo cargo : list) {
 			if (cargoOwner.getCustomerType().equalsIgnoreCase(CarCargoOwnerConstants.CUSTOMER_TYPE_PERSON)) {
 				cargo.setCargoOwnerName(cargoOwner.getLegalerName());
@@ -571,9 +571,15 @@ public class CargoServiceImpl implements CargoService {
 			}
 			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
 			cargo.setCargoMatterCount(countByCargoId);
-			//設置logo為用戶logo
+			//设置logo为用戶logo
 			cargo.setLogo(customer.getLogo());
 			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
+			//若货源到了截止日期修改状态
+			if (cargo.getEndDate().getTime()<new Date().getTime()){
+				cargo.setStatus(CargoConstant.CARGO_SOURCE_STATUS_EXPIRED);
+				cargoMapper.updateStatusById(cargo.getId(),CargoConstant.CARGO_SOURCE_STATUS_EXPIRED);
+			}
+
 		}
 
 		PageData<Cargo> pageData = new PageData<>(page.getPageSize(), page.getPageNum(), page.getTotal(), list);

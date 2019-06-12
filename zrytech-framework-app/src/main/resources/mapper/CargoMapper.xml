@@ -497,6 +497,7 @@
 	<select id="cargoSearch" resultMap="cargo" parameterType="Object">
         select * from `cargo`
         <where>
+            <![CDATA[ `end_date` >= now()]]>
             <if test="cargo.name != null and cargo.name != ''">
                 and `name` like CONCAT('%', #{cargo.name}, '%')
             </if>
@@ -527,6 +528,7 @@
             <if test="cargo.tenderWay != null and cargo.tenderWay != ''">
                 and `tender_way` = #{cargo.tenderWay}
             </if>
+
         </where>
         <if test="cargo.sort != null and cargo.sort != ''">
         	ORDER BY ${cargo.sort}
@@ -539,14 +541,58 @@
         </if>
     </select>
 
+    <select id="myCargoSearch" resultMap="cargo" parameterType="Object">
+        select * from `cargo`
+        <where>
+            <if test="cargo.name != null and cargo.name != ''">
+                and `name` like CONCAT('%', #{cargo.name}, '%')
+            </if>
+            <if test="cargo.startProvince != null and cargo.startProvince != ''">
+                and `start_province` = #{cargo.startProvince}
+            </if>
+            <if test="cargo.startCity != null and cargo.startCity != ''">
+                and `start_city` = #{cargo.startCity}
+            </if>
+            <if test="cargo.startCountry != null and cargo.startCountry != ''">
+                and `start_country` = #{cargo.startCountry}
+            </if>
+            <if test="cargo.endProvince != null and cargo.endProvince !=''">
+                and `end_province` = #{cargo.endProvince}
+            </if>
+            <if test="cargo.endCity != null and cargo.endCity != ''">
+                and `end_city` = #{cargo.endCity}
+            </if>
+            <if test="cargo.endCountry != null and cargo.endCountry != ''">
+                and `end_country` = #{cargo.endCountry}
+            </if>
+            <if test="cargo.status != null and cargo.status !=''">
+                and `status` = #{cargo.status}
+            </if>
+            <if test="cargo.createBy != null">
+                and `create_by` = #{cargo.createBy}
+            </if>
+            <if test="cargo.tenderWay != null and cargo.tenderWay != ''">
+                and `tender_way` = #{cargo.tenderWay}
+            </if>
+
+        </where>
+        <if test="cargo.sort != null and cargo.sort != ''">
+            ORDER BY ${cargo.sort}
+            <if test="cargo.direction != null and cargo.direction != ''">
+                ${cargo.direction}
+            </if>
+        </if>
+        <if test="cargo.sort == null">
+            ORDER BY `id`
+        </if>
+    </select>
+
     <select id="recommendCargo" parameterType="int" resultMap="cargo">
         select * from cargo c,cargo_send_record csr
           WHERE c.id = csr.cargo_id and csr.car_ownner_id = #{carOwnnerId}
+          and <![CDATA[ c.`end_date` >= now()]]>
+          ORDER BY c.`create_date`
     </select>
 
-    <select id="recommendCargoPage" parameterType="int" resultMap="cargo">
-        select * from cargo c,cargo_send_record csr
-         WHERE c.id = csr.cargo_id and csr.car_ownner_id = #{carOwnnerId}
-         ORDER BY c.`create_date`
-    </select>
+
 </mapper>
