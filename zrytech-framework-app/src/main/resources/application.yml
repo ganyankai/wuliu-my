@@ -1,4 +1,4 @@
-no_check_token: /hotPlace/page;/api/carSource/openCarSourcePage;/api/carSource/openDetails;/api/cargoSource/openPage;/api/cargoSource/openDetails;/api/evaluate/openPage;/api/receptionroom/loungePage;/api/receptionroom/articlebyid;/api/notice/noticePage;/api/notice/get;/api/information/inforPage;/api/information/get
+no_check_token: /api/carCargoOwner/cargoOwnerRegister;/api/carCargoOwner/checkUserAccount;/api/carCargoOwner/checkTel;/api/carCargoOwner/carOwnerRegister;/hotPlace/page;/api/carSource/openCarSourcePage;/api/carSource/openDetails;/api/cargoSource/openPage;/api/cargoSource/openDetails;/api/evaluate/openPage;/api/receptionroom/loungePage;/api/receptionroom/articlebyid;/api/notice/noticePage;/api/notice/get;/api/information/inforPage;/api/information/get
 
 
 
