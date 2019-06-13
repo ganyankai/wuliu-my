@@ -1,8 +1,10 @@
 package com.zrytech.framework.app.dto.car;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.zrytech.framework.app.constants.RegExConstants;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.zrytech.framework.app.constants.CarConstants;
@@ -23,6 +25,11 @@ public class CarCheckUpdateDto {
 	/** 车辆主键 */
 	@NotNull(message = "车辆Id不能为空")
 	private Integer id;
+
+	/** 车牌号 */
+	@NotBlank(message = "车牌号不能为空")
+	@Pattern(regexp = RegExConstants.CAR_NO, message = RegExConstants.CAR_NO_ERR_MSG)
+	private String carNo;
 
 	/** 核载量 */
 	@NotNull(message = "核载量不能为空")
@@ -45,9 +52,9 @@ public class CarCheckUpdateDto {
 	/** 仓位数量 */
 	@NotNull(message = "仓位数量不能为空")
 	private Integer storeQty;
-	
+
 	private Integer driverId;
-	
+
 	private Integer supercargoId;
 
 }

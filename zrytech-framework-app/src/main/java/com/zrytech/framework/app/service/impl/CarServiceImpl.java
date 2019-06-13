@@ -337,10 +337,17 @@ public class CarServiceImpl implements CarService {
 		if (dto.getSupercargoId() != null) {
 			carPersonService.assertSupercargoBelongToCurrentUser(dto.getSupercargoId(), customer.getCarOwner().getId());
 		}
-		
-		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		CarCheckUpdateDto temp = new CarCheckUpdateDto();
 		BeanUtils.copyProperties(dto, temp);
+
+		car.setCarNo(dto.getCarNo());
+		car.setCarLoad(dto.getCarLoad());
+		car.setCarUnit(dto.getCarUnit());
+		car.setCarType(dto.getCarType());
+		car.setMulStore(dto.getMulStore());
+		car.setStoreQty(dto.getStoreQty());
+
+		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		car.setApproveContent(JSON.toJSONString(temp));
 		carRepository.save(car);
 		return ServerResponse.successWithData("修改成功");
