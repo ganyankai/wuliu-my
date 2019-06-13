@@ -30,7 +30,15 @@ public interface CarCargoOwnnerRepository extends BaseRepository<CarCargoOwnner,
 	
 	@Query(value = "select id from CarCargoOwnner where name like CONCAT('%', ?1, '%')")
 	public List<Integer> findIdByName(String name);
-	
+
+	/**
+	 * 获取车主或者货主企业头像
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Query(value = "select headImg from CarCargoOwnner where id = ?1")
+	public String findHeadImgById(Integer id);
 	
 	/**
 	 * 修改车主货主免审核状态

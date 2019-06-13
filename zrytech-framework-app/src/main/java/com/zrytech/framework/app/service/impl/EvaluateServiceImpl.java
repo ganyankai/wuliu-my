@@ -183,7 +183,7 @@ public class EvaluateServiceImpl implements EvaluateService {
 	}
 	
 	/**
-	 * 绑定评价人被评价人名称
+	 * 绑定评价人被评价人名称,被评价人头像
 	 * @author cat
 	 * 
 	 * @param evaluate
@@ -198,6 +198,7 @@ public class EvaluateServiceImpl implements EvaluateService {
 			evaluate.setAppraiserName(carCargoOwnnerRepository.findNameById(appraiserId));
 			evaluate.setAppraiserByName(carCargoOwnnerRepository.findNameById(appraiserById));
 		}
+		evaluate.setAppraiserByImage(carCargoOwnnerRepository.findHeadImgById(appraiserById));
 		return evaluate;
 	}
 	
@@ -291,6 +292,8 @@ public class EvaluateServiceImpl implements EvaluateService {
 		}
 		Evaluate evaluate = new Evaluate();
 		evaluate.setAppraiserById(appraiserById);
+
+
 		PageData<Evaluate> pageData = this.pageSearch(evaluate, pageNum, pageSize);
 		return ServerResponse.successWithData(pageData);
 	}

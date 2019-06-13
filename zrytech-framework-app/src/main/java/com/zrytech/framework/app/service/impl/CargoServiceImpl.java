@@ -725,7 +725,9 @@ public class CargoServiceImpl implements CargoService {
 		dto.setStatus(CargoConstant.CARGO_SOURCE_STATUS_RELEASE);
 
 		com.github.pagehelper.Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+
 		List<Cargo> list = cargoMapper.cargoSearch(dto);
+
 		for (Cargo cargo : list) {
 			CarCargoOwnner cargoOwner = carCargoOwnnerRepository.findOne(cargo.getCreateBy());
 			cargo.setCargoOwnerName(cargoOwner.getName());
@@ -734,9 +736,6 @@ public class CargoServiceImpl implements CargoService {
 			int countByCargoId = cargoMatterRepository.countByCargoId(cargo.getId());
 			cargo.setCargoMatterCount(countByCargoId);
 
-			//根据用户id获取用户logo
-			//Integer customerId = cargoOwner.getCustomerId();
-			//Customer customer = logisticsCustomerRepository.findOne(customerId);
 			cargo.setLogo(cargoOwner.getHeadImg());
 
 			cargo = this.bindFocusAndOffer(cargo);
@@ -751,6 +750,7 @@ public class CargoServiceImpl implements CargoService {
 				if (cargoIn.getTenderWay().equals(CargoConstant.BID_MARK)
 						&&(new Date().getTime() - cargoIn.getCreateDate().getTime()< Long.valueOf(bidWaitTime)*3600*1000) ){
 					list.remove(i);
+					page.setTotal(page.getTotal()-1);
 				}
 			}
 		}
@@ -776,10 +776,8 @@ public class CargoServiceImpl implements CargoService {
 
 			cargo = this.bindFocusAndOffer(cargo);
 			cargo.setLevelAVG(evaluateService.levelAVG(cargo.getCreateBy()));
-            //根据用户id获取用户logo
-            Integer customerId = cargoOwner.getCustomerId();
-            Customer customer = logisticsCustomerRepository.findOne(customerId);
-            cargo.setLogo(customer.getLogo());
+
+			cargo.setLogo(cargoOwner.getHeadImg());
 			return ServerResponse.successWithData(cargo);
 		} else {
 			throw new BusinessException(112, "仅可查看发布中，已完成货源的详情");
@@ -843,9 +841,7 @@ public class CargoServiceImpl implements CargoService {
 			cargo.setCargoMatterCount(countByCargoId);
 
 			//根据用户id获取用户logo
-			Integer customerId = cargoOwner.getCustomerId();
-			Customer customer = logisticsCustomerRepository.findOne(customerId);
-			cargo.setLogo(customer.getLogo());
+			cargo.setLogo(cargoOwner.getHeadImg());
 
 			cargo = this.bindFocusAndOffer(cargo);
 		}

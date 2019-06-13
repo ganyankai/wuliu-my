@@ -590,6 +590,7 @@
     <select id="recommendCargo" parameterType="int" resultMap="cargo">
         select * from cargo c,cargo_send_record csr
           WHERE c.id = csr.cargo_id and csr.car_ownner_id = #{carOwnnerId}
+          and c.status = 'cargo_source_status_release'
           and <![CDATA[ c.`end_date` >= now()]]>
           ORDER BY c.`create_date`
     </select>
