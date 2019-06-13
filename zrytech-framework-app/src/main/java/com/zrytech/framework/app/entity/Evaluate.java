@@ -79,6 +79,10 @@ public class Evaluate extends BaseEntity {
 	@Transient
 	private String appraiserName;
 
+    /** 评价人头像 */
+    @Transient
+    private String appraiserImage;
+
 	/** 被评价人名称 */
 	@Transient
 	private String appraiserByName;
