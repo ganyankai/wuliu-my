@@ -40,11 +40,15 @@ import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.app.service.CustomerService;
 import com.zrytech.framework.app.utils.PasswordUtils;
+import com.zrytech.framework.base.cache.ICache;
+import com.zrytech.framework.base.constant.Constant;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
+import com.zrytech.framework.link.service.SmsService;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -118,6 +122,9 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		return customer;
 	}
 	
+	@Autowired
+    private ICache cache;
+	
 	/**
 	 * 验证码校验
 	 * @author cat
@@ -126,7 +133,10 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * @param tel	手机号
 	 */
 	private void codeCheck(String code, String tel) {
-		// TODO 
+		String cacheCode = cache.get(Constant.VERFI_CODE_PREFIX + tel);
+		if (cacheCode == null || !cacheCode.equalsIgnoreCase(code)) {
+			throw new BusinessException(112, "验证码错误");
+		}
 	}
 	
 	/**

@@ -99,4 +99,12 @@ file:
 #货源抢标方式发布公开展示等待时间,单位为小时
 cargo:
   bidWaitTime: 24
+  
+  
+al:
+  sms:
+    msgSign: 比价网
+    accessKeyId: LTAIKHWPHQURffYs
+    accessKeySecret: scCqYknlfK8MJWCX60AmuRStKbmmfU  
+    templateId: SMS_144385379
 
