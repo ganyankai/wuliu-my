@@ -66,10 +66,17 @@ public class WaybillDetail extends BaseEntity {
 	private List<BillLocation> billLocations;
 
 	/**
+	 * 运单运输介质
+	 */
+	@Transient
+	private String waybillName;
+
+	/**
 	 * 运单Id
 	 */
 	@Column(name = "`waybill_id`")
 	private Integer waybillId;
+
 
 	/**
 	 * 
