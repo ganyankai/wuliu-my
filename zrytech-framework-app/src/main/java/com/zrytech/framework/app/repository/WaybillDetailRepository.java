@@ -18,4 +18,6 @@ public interface WaybillDetailRepository extends BaseRepository<WaybillDetail, I
 	WaybillDetail findByBillNoAndDriverId(String billNo, Integer driverId);
 	
 	WaybillDetail findByBillNoAndSupercargoId(String billNo, Integer supercargoId);
+
+
 }
