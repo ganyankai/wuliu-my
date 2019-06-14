@@ -152,4 +152,11 @@ public class WaybillDetail extends BaseEntity {
 		}
 		return "";
 	}
+
+	public String getWaybillNameCN() {
+		if (!StringUtils.isEmpty(waybillName)) {
+			return DictionaryUtil.getValue(CargoConstant.MEDIUM, waybillName);
+		}
+		return "";
+	}
 }
