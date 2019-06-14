@@ -14,15 +14,31 @@ import java.util.Date;
 import java.util.List;
 
 public interface WaybillDetailMapper {
-      @Select("select wbd.*,cp.* from waybill wb,waybill_detail wbd,car c,car_person cp  where wb.status='waybill_status_in_transit' and wbd.waybill_id = wb.id  and wbd.car_id = c.id "
-              +
-              " and c.driver_id = cp.id and  c.supercargo_id = cp.id  and  wb.car_ownner_id = #{carOwnnerId}")
+      @Select("select wbd.id,c.car_no as carNo,cp.name as driverName,cp.id_card as driverIdCard,\n" +
+              "\t\t     cp2.name as supercargoName,cp2.id_card as supercargoIdCard \n" +
+              "\t\t     from waybill wb,waybill_detail wbd,car c,car_person cp ,car_person cp2\n" +
+              "\n" +
+              "\t\t     where wb.status='waybill_status_in_transit' and wbd.waybill_id = wb.id  and wbd.car_id = c.id\n" +
+              "\t\t\n" +
+              "\t\t     and  wbd.driver_id = cp.id\n" +
+              "\n" +
+              "\t\t     and  wbd.supercargo_id = cp2.id\n" +
+              "\n" +
+              "\t\t     and  wb.car_ownner_id = #{carOwnnerId}")
       List<WaybillDetail> getCarWbdList(@Param("carOwnnerId") Integer carOwnnerId);
 
 
-      @Select("select wbd.*,cp.* from waybill wb,waybill_detail wbd,car c,car_person cp  where wb.status='waybill_status_in_transit' and wbd.waybill_id = wb.id  and wbd.car_id = c.id "
-            +
-            " and c.driver_id = cp.id and  c.supercargo_id = cp.id and wb.cargo_ownner_id = #{cargoOwnnerId}")
+      @Select("select wbd.id,c.car_no as carNo,cp.name as driverName,cp.id_card as driverIdCard,\n" +
+              "\t\t     cp2.name as supercargoName,cp2.id_card as supercargoIdCard \n" +
+              "\t\t     from waybill wb,waybill_detail wbd,car c,car_person cp ,car_person cp2\n" +
+              "\n" +
+              "\t\t     where wb.status='waybill_status_in_transit' and wbd.waybill_id = wb.id  and wbd.car_id = c.id\n" +
+              "\t\t\n" +
+              "\t\t     and  wbd.driver_id = cp.id\n" +
+              "\n" +
+              "\t\t     and  wbd.supercargo_id = cp2.id\n" +
+              "\n" +
+              "\t\t     and  wb.cargo_ownner_id = #{cargoOwnnerId}")
       List<WaybillDetail> getCargoWbdList(@Param("cargoOwnnId") Integer cargoOwnnerId);
 
 
