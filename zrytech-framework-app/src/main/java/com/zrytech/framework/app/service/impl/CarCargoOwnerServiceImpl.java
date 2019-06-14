@@ -714,6 +714,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		CarCargoOwnner carCargoOwner = list.get(0);
 		String type = carCargoOwner.getType();
+		
+		String approveContent = carCargoOwner.getApproveContent();
+		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(approveContent, CarCargoOwnerNeedApproveDto.class);
+		carCargoOwner.setApproveContentCN(temp);
+		
 		if (type.equalsIgnoreCase(CarCargoOwnerConstants.TYPE_CARGO_OWNER)) {
 			customer.setCargoOwner(carCargoOwner);
 		} else {
