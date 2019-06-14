@@ -77,7 +77,7 @@ public class WaybillDetailApiController {
 			Integer cargoId = customer.getCargoOwner().getId();
 			response =  service.getCargoWbdList(pageNum,pageSize,cargoId);
 		}
-		return ServerResponse.successWithData(response);
+		return response;
 	}
 
 
