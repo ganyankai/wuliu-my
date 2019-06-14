@@ -25,7 +25,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         }else if(customer.getCustomerType().equalsIgnoreCase("cargo_owner")){
             //货主
-            Integer cargoId = customer.getCarOwner().getId();
+            Integer cargoId = customer.getCargoOwner().getId();
             response =  getStatisticsCargo(cargoId);
         }
         return response;

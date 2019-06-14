@@ -74,7 +74,7 @@ public class WaybillDetailApiController {
 			response =  service.getCarWbdList(pageNum,pageSize,carId);
 		}else if(customer.getCustomerType().equalsIgnoreCase("cargo_owner")){
 			//货主
-			Integer cargoId = customer.getCarOwner().getId();
+			Integer cargoId = customer.getCargoOwner().getId();
 			response =  service.getCargoWbdList(pageNum,pageSize,cargoId);
 		}
 		return ServerResponse.successWithData(response);
