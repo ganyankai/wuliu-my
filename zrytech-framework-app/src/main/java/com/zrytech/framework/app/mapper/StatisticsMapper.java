@@ -22,7 +22,7 @@ public interface StatisticsMapper {
     Integer recCargoCountCar(@Param("carOwnnerId") Integer carOwnnerId);
 
     //关注货主的数量(车主)
-    @Select("select count(*) from my_focus_person where focuser_id = #{carOwnnerId} and focus_type = 1 \n")
+    @Select("select count(*) from my_focus_person where focuser_id = #{carOwnnerId} and focus_type = 'focus_cargo' \n")
     Integer followCargoOwnerCountCar(@Param("carOwnnerId") Integer carOwnnerId);
 
 
@@ -33,7 +33,7 @@ public interface StatisticsMapper {
     Integer locCarCountCargo(@Param("cargoOwnnerId") Integer cargoOwnnerId);
 
     //关注车主的数量(货主)
-    @Select("select count(*) from my_focus_person where focuser_id = #{cargoOwnnerId} and focus_type = 2 \n")
+    @Select("select count(*) from my_focus_person where focuser_id = #{cargoOwnnerId} and focus_type = 'focus_car' \n")
     Integer followCarOwnerCountCar(@Param("cargoOwnnerId") Integer cargoOwnnerId);
 
     //熟车的数量(货主)
