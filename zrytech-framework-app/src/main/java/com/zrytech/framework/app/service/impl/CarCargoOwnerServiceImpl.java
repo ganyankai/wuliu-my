@@ -133,11 +133,10 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * @param tel	手机号
 	 */
 	private void codeCheck(String code, String tel) {
-// TODO
-//		String cacheCode = cache.get(Constant.VERFI_CODE_PREFIX + tel);
-//		if (cacheCode == null || !cacheCode.equalsIgnoreCase(code)) {
-//			throw new BusinessException(112, "验证码错误");
-//		}
+		String cacheCode = cache.get(Constant.VERFI_CODE_PREFIX + tel);
+		if (cacheCode == null || !cacheCode.equalsIgnoreCase(code)) {
+			throw new BusinessException(112, "验证码超时或错误");
+		}
 	}
 	
 	/**
