@@ -37,7 +37,7 @@ public class CarAddDto {
 
 	/** 车辆类型 */
 	@NotBlank(message = "车辆类型不能为空")
-	@Pattern(regexp = CarConstants.REG_EX_CAR_TYPE, message = CarConstants.REG_EX_CAR_TYPE_ERR_MSG)
+	//@Pattern(regexp = CarConstants.REG_EX_CAR_TYPE, message = CarConstants.REG_EX_CAR_TYPE_ERR_MSG)
 	private String carType;
 
 	/** 是否分仓 */

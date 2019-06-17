@@ -40,7 +40,7 @@ public class CarPageDto {
 	/**
 	 * 车辆类型
 	 */
-	@Pattern(regexp = CarConstants.REG_EX_CAR_TYPE, message = CarConstants.REG_EX_CAR_TYPE_ERR_MSG)
+	//@Pattern(regexp = CarConstants.REG_EX_CAR_TYPE, message = CarConstants.REG_EX_CAR_TYPE_ERR_MSG)
 	private String carType;
 
 	/**
