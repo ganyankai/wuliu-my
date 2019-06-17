@@ -273,7 +273,8 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public ServerResponse add(CarAddDto dto, Customer customer) {
 		CarCargoOwnner carOwner = customer.getCarOwner();
-		this.personCheck(carOwner);
+		//去除个人车主添加车辆数量限制
+//		this.personCheck(carOwner);
 		
 		this.assertCarNoNotExist(dto.getCarNo()); // 车牌号全局唯一
 		
