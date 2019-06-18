@@ -107,4 +107,7 @@ al:
     accessKeyId: LTAIKHWPHQURffYs
     accessKeySecret: scCqYknlfK8MJWCX60AmuRStKbmmfU  
     templateId: SMS_144385379
+    
+code:
+  length: 6
 
