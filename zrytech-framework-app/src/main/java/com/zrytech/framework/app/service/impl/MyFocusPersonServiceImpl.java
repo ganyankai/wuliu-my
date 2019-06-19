@@ -69,7 +69,7 @@ public class MyFocusPersonServiceImpl implements MyFocusPersonService {
 			focusPerson.setCreateDate(new Date());
 			focusPerson.setFocuserId(focuserId);
 			focusPerson.setBeFocuserId(beFocuserId);
-			focusPerson.setFocusType(CargoConstant.FOCUS_CAR);
+			focusPerson.setFocusType(CargoConstant.FOCUS_CARGO);
 			repository.save(focusPerson);
 			return ServerResponse.successWithData(true);
 		} else { // 已关注，取消关注
