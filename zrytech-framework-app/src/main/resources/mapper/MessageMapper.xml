@@ -40,7 +40,7 @@
                 and reveicer_id=#{message.reveicerId}
             </if>
         </trim>
-        ORDER BY create_date DESC
+        ORDER BY sender_date DESC
     </select>
 
     <insert id="addMessage" useGeneratedKeys="true" keyProperty="id">
@@ -132,7 +132,7 @@
                 and reveicer_id=#{reveicerId}
             </if>
         </trim>
-        ORDER BY create_date DESC
+        ORDER BY sender_date DESC
     </select>
 
     <update id="updateMsg">

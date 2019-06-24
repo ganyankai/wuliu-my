@@ -70,6 +70,20 @@ public class SysMessage extends BaseEntity {
         this.readDate = readDate;
     }
 
+    public SysMessage(Object[] objArr) {
+        this.msgType = (String) objArr[0];
+        this.senderId = (Integer) objArr[1];
+        this.senderType = (String) objArr[2];
+        this.senderDate = (Date) objArr[3];
+        this.content = (String) objArr[4];
+        
+        this.reveicerId = (Integer) objArr[5];
+        this.reveicerType = (String) objArr[6];
+        this.markRead = (Integer) objArr[7];
+        this.readDate = (Date) objArr[8];
+    }
+
+
     public SysMessage() {
     }
 }

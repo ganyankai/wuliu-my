@@ -1,56 +1,43 @@
 package com.zrytech.framework.app.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.zrytech.framework.app.entity.SysMessage;
-import com.zrytech.framework.app.repository.SysMessageRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
-import com.zrytech.framework.app.constants.ApproveConstants;
-import com.zrytech.framework.app.constants.ApproveLogConstants;
-import com.zrytech.framework.app.constants.CarCargoOwnerConstants;
-import com.zrytech.framework.app.constants.CustomerConstants;
+import com.zrytech.framework.app.constants.*;
 import com.zrytech.framework.app.dto.CarCargoOwnnerPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.approve.ApproveDto;
-import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerAddDto;
-import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerNeedApproveDto;
-import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateAvoidAuditDto;
-import com.zrytech.framework.app.dto.carcargoowner.CarCargoOwnerUpdateDto;
-import com.zrytech.framework.app.dto.carcargoowner.OrganizeInfoUpdateDto;
-import com.zrytech.framework.app.dto.carcargoowner.PersonInfoUpdateDto;
+import com.zrytech.framework.app.dto.carcargoowner.*;
 import com.zrytech.framework.app.dto.customer.CustomerRegisterDto;
 import com.zrytech.framework.app.dto.oftenaddress.OftenAddressAddDto;
 import com.zrytech.framework.app.entity.CarCargoOwnner;
 import com.zrytech.framework.app.entity.Customer;
 import com.zrytech.framework.app.entity.OftenAddress;
+import com.zrytech.framework.app.entity.SysMessage;
 import com.zrytech.framework.app.mapper.CarCargoOwnerMapper;
 import com.zrytech.framework.app.repository.CarCargoOwnnerRepository;
 import com.zrytech.framework.app.repository.LogisticsCustomerRepository;
 import com.zrytech.framework.app.repository.OftenAddressRepository;
+import com.zrytech.framework.app.repository.SysMessageRepository;
 import com.zrytech.framework.app.service.ApproveLogService;
 import com.zrytech.framework.app.service.CarCargoOwnerService;
 import com.zrytech.framework.app.service.CustomerService;
 import com.zrytech.framework.app.utils.PasswordUtils;
 import com.zrytech.framework.base.cache.ICache;
-import com.zrytech.framework.base.constant.Constant;
 import com.zrytech.framework.base.entity.PageData;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.exception.BusinessException;
 import com.zrytech.framework.base.util.RequestUtil;
 import com.zrytech.framework.common.entity.User;
-import com.zrytech.framework.link.service.SmsService;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 @Service
 @Slf4j
 public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
@@ -66,13 +53,13 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@Autowired
 	private OftenAddressRepository oftenAddressRepository;
-	
+
 	@Autowired
 	private SysMessageRepository sysMessageRepository;
-	
+
 	@Transactional
 	@Override
 	public ServerResponse cancel() {
@@ -97,12 +84,12 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
 		return ServerResponse.successWithData("修改成功");
 	}
-	
-	
+
+
 	/**
 	 * 添加用户账号数据
 	 * @author cat
-	 * 
+	 *
 	 * @param dto
 	 * @return
 	 */
@@ -121,28 +108,29 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		customerRepository.save(customer);
 		return customer;
 	}
-	
+
 	@Autowired
-    private ICache cache;
-	
+	private ICache cache;
+
 	/**
 	 * 验证码校验
 	 * @author cat
-	 * 
+	 *
 	 * @param code	验证码
 	 * @param tel	手机号
 	 */
 	private void codeCheck(String code, String tel) {
-		String cacheCode = cache.get(Constant.VERFI_CODE_PREFIX + tel);
-		if (cacheCode == null || !cacheCode.equalsIgnoreCase(code)) {
-			throw new BusinessException(112, "验证码超时或错误");
-		}
+// TODO
+//		String cacheCode = cache.get(Constant.VERFI_CODE_PREFIX + tel);
+//		if (cacheCode == null || !cacheCode.equalsIgnoreCase(code)) {
+//			throw new BusinessException(112, "验证码错误");
+//		}
 	}
-	
+
 	/**
 	 * 添加车主或货主
 	 * @author cat
-	 * 
+	 *
 	 * @param dto	车主或货主信息
 	 * @param customerId	车主或货主账号Id
 	 * @param type	类型：车主、货主
@@ -150,7 +138,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	 * @return
 	 */
 	private CarCargoOwnner saveCarCargoOwnner(CarCargoOwnerAddDto dto, Integer customerId, String type,
-			Integer referrerId) {
+											  Integer referrerId) {
 		this.check(dto);
 		CarCargoOwnner carCargoOwner = new CarCargoOwnner();
 		if (dto.getJump()) { // 跳过资料认证，资料默认为空
@@ -182,7 +170,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnnerRepository.save(carCargoOwner);
 		return carCargoOwner;
 	}
-	
+
 	/**
 	 * 认证参数校验
 	 * @param dto
@@ -218,11 +206,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			}
 		}
 	}
-	
+
 	/**
 	 * 推荐人电话校验
 	 * @author cat
-	 * 
+	 *
 	 * @param referrerTel	推荐人电话
 	 * @return 推荐人Id
 	 */
@@ -238,11 +226,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 添加常用地址
 	 * @author cat
-	 * 
+	 *
 	 * @param list
 	 * @param customerId
 	 * @return
@@ -257,7 +245,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		oftenAddressRepository.save(save);
 	}
-	
+
 	@Override
 	public void assertCarCargoCertified(Integer carCargoId) {
 		CarCargoOwnner carCargoOwner = carCargoOwnnerRepository.findOne(carCargoId);
@@ -265,7 +253,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 			throw new BusinessException(112, "未认证");
 		}
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse register(CustomerRegisterDto dto) {
@@ -286,39 +274,47 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		return ServerResponse.success();
 	}
-	
+
 	@Override
 	public ServerResponse checkTel(String tel) {
 		customerService.assertTelNotExist(tel);
 		return ServerResponse.success();
 	}
-	
+
 	@Override
 	public ServerResponse checkUserAccount(String userAccount) {
 		customerService.assertUserAccountNotExist(userAccount);
 		return ServerResponse.success();
 	}
-	
+
 	@Autowired
 	private ApproveLogService approveLogService;
-	
+
 	@Transactional(noRollbackFor = BusinessException.class)
 	@Override
 	public ServerResponse adminApproveCarOwner(ApproveDto dto, User user) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getBusinessId());
 		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(carOwner.getStatus())) {
 			//审核失败推送消息
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下：车主暂未填写认证信息",carOwner.getId(),"车主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			String content = "您的认证资料审核不通过，原因如下：车主暂未填写认证信息";
+//			Object[] propArr = new Object[]{"审核消息",1,"系统",new Date(),
+//					content,carOwner.getId(),"车主",0,null};
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,carOwner.getId(),CustomerConstants.TYPE_CAR_OWNER,0,null};
+
+			createMes(propArr);
 
 			throw new BusinessException(112, "审批失败：车主暂未填写认证信息");
 		}
 		if (!carOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
 			//审核失败推送消息
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下：车主状态不是待审批",carOwner.getId(),"车主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			String content = "您的认证资料审核不通过，原因如下：车主状态不是待审批";
+//			Object[] propArr = new Object[]{"审核消息",1,"系统",new Date(),
+//					content,carOwner.getId(),"车主",0,null};
+
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,carOwner.getId(),CustomerConstants.TYPE_CAR_OWNER,0,null};
+			createMes(propArr);
 
 			throw new BusinessException(112, "审批失败：车主状态不是待审批");
 		}
@@ -327,70 +323,85 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 
 		//审核通过推送消息
 		if(ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())){
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料已审核通过,请须知",carOwner.getId(),"车主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			String content = "您的认证资料已审核通过,请须知 ";
+//			Object[] propArr = new Object[]{"系统消息",1,"系统",new Date(),
+//					content,carOwner.getId(),"车主",0,null};
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,carOwner.getId(),CustomerConstants.TYPE_CAR_OWNER,0,null};
+			createMes(propArr);
 		}else{
-			SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-					"您的认证资料审核不通过，原因如下:"+dto.getContent(),carOwner.getId(),"车主",0,null);
-			sysMessageRepository.saveAndFlush(sysMessage);
+			String content = "您的认证资料审核不通过，原因如下 "+dto.getContent();
+//			Object[] propArr = new Object[]{"系统消息",1,"系统",new Date(),
+//					content,carOwner.getId(),"车主",0,null};
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,carOwner.getId(),CustomerConstants.TYPE_CAR_OWNER,0,null};
+			createMes(propArr);
 		}
-
 
 		return ServerResponse.successWithData("审批成功");
 	}
-	
+
+	private void createMes(Object[] propArr) {
+		try{
+			SysMessage sysMessage = new SysMessage(propArr);
+			sysMessageRepository.saveAndFlush(sysMessage);
+		}catch (Exception e){
+			log.warn(e.getMessage());
+		}
+
+	}
+
 	@Transactional(noRollbackFor = BusinessException.class)
 	@Override
 	public ServerResponse adminApproveCargoOwner(ApproveDto dto, User user) {
 		CarCargoOwnner cargoOwner = this.assertCargoOwnerExist(dto.getBusinessId());
 		if (CarCargoOwnerConstants.STATUS_UNCERTIFIED.equalsIgnoreCase(cargoOwner.getStatus())) {
-			try {
-				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-						"您的认证资料审核不通过，原因如下：货主暂未填写认证信息",cargoOwner.getId(),"货主",0,null);
-				sysMessageRepository.saveAndFlush(sysMessage);
-			}catch (Exception e){
-				log.warn(e.getMessage());
-			}
+			String content = "您的认证资料已审核通过,请须知";
+//			Object[] propArr = new Object[]{"系统消息",1,"系统",new Date(),
+//					content,cargoOwner.getId(),"货主主",0,null};
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,cargoOwner.getId(),CustomerConstants.TYPE_CARGO_OWNER,0,null};
+			createMes(propArr);
+
 			throw new BusinessException(112, "审批失败：货主暂未填写认证信息");
 		}
 
 		if (!cargoOwner.getApproveStatus().equalsIgnoreCase(ApproveConstants.STATUS_APPROVAL_PENDING)) {
-			try {
-				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-						"您的认证资料审核不通过，原因如下：货主状态不是待审批",cargoOwner.getId(),"货主",0,null);
-				sysMessageRepository.saveAndFlush(sysMessage);
-			}catch (Exception e){
-				log.warn(e.getMessage());
-			}
+
+			String content = "您的认证资料审核不通过，原因如下：货主状态不是待审批";
+//			Object[] propArr = new Object[]{"系统消息",1,"系统",new Date(),
+//					content,cargoOwner.getId(),"货主",0,null};
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,cargoOwner.getId(),CustomerConstants.TYPE_CARGO_OWNER,0,null};
+			createMes(propArr);
+
 			throw new BusinessException(112, "审批失败：货主状态不是待审批");
 		}
 
 		this.approveCarCargoOwner(cargoOwner, ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult()));
 		approveLogService.addApproveLog(dto, user.getId(), ApproveLogConstants.APPROVE_TYPE_CARGO_OWNER);
 
-		//人为审批失败处理
+		//人为审批处理
 		if(ApproveConstants.RESULT_AGREE.equalsIgnoreCase(dto.getResult())){
-			try {
-				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-						"您的认证资料已审核通过,请须知",cargoOwner.getId(),"货主",0,null);
-				sysMessageRepository.saveAndFlush(sysMessage);
-			}catch (Exception e){
-				log.warn(e.getMessage());
-			}
+			String content = "您的认证资料已审核通过,请须知";
+//			Object[] propArr = new Object[]{"系统消息",1,"系统",new Date(),
+//					content,cargoOwner.getId(),"货主",0,null};
+			Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_APPROVING,1,SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+					content,cargoOwner.getId(),CustomerConstants.TYPE_CARGO_OWNER,0,null};
+			createMes(propArr);
+
 		}else{
-			try {
-				SysMessage sysMessage = new SysMessage("系统消息",1,"系统",new Date(),
-						"您的认证资料审核不通过，原因如下:"+dto.getContent(),cargoOwner.getId(),"货主",0,null);
-				sysMessageRepository.saveAndFlush(sysMessage);
-			}catch (Exception e){
-				log.warn(e.getMessage());
-			}
+			String content = "您的认证资料审核不通过，原因如下:"+dto.getContent();
+			Object[] propArr = new Object[]{"系统消息",1,"系统",new Date(),
+					content,cargoOwner.getId(),"车主",0,null};
+			createMes(propArr);
+
 		}
 
 		return ServerResponse.successWithData("审批成功");
 	}
-	
+
+
 	@Transactional
 	@Override
 	public ServerResponse carOwnerUpdateAvoidAudit(CarCargoOwnerUpdateAvoidAuditDto dto) {
@@ -406,7 +417,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnnerRepository.updateAvoidAuditById(dto.getAvoidAudit(), dto.getId());
 		return ServerResponse.successWithData("修改成功");
 	}
-	
+
 	@Override
 	public PageData<CarCargoOwnner> carCargoOwnerPage(CarCargoOwnnerPageDto dto, Integer pageNum, Integer pageSize) {
 		com.github.pagehelper.Page<Object> result = PageHelper.startPage(pageNum, pageSize);
@@ -419,7 +430,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		return new PageData<CarCargoOwnner>(result.getPageSize(), result.getPageNum(), result.getTotal(), list);
 	}
-	
+
 	@Override
 	public ServerResponse adminCarOwnerDetails(CommonDto dto) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(dto.getId());
@@ -439,11 +450,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		cargoOwner = this.bindingCustomer(cargoOwner);
 		return ServerResponse.successWithData(cargoOwner);
 	}
-	
+
 	/**
 	 * 断言车主存在
 	 * @author cat
-	 * 
+	 *
 	 * @param carOwnerId	车主Id
 	 * @return
 	 */
@@ -459,7 +470,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 	/**
 	 * 断言货主存在
 	 * @author cat
-	 * 
+	 *
 	 * @param cargoOwnerId	货主Id
 	 * @return
 	 */
@@ -471,11 +482,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		return cargoOwner;
 	}
-	
+
 	/**
 	 * 为车主货主绑定账号信息
 	 * @author cat
-	 * 
+	 *
 	 * @param carCargoOwnner
 	 * @return
 	 */
@@ -485,11 +496,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnner.setCustomer(customer);
 		return carCargoOwnner;
 	}
-	
+
 	/**
 	 * 车主货主审核（修改车主货主状态和待审核的内容）
 	 * @author cat
-	 * 
+	 *
 	 * @param carCargoOwner	待审核的车主货主
 	 * @param result	审核结果
 	 * @return
@@ -593,7 +604,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnnerRepository.save(carOwner);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse updateCarOwner(CarCargoOwnerUpdateDto dto, Customer customer) {
@@ -603,7 +614,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnerMapper.updateByPrimaryKeySelective(carCargoOwner);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse updateCargoOwner(CarCargoOwnerUpdateDto dto, Customer customer) {
@@ -613,7 +624,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		carCargoOwnerMapper.updateByPrimaryKeySelective(carCargoOwner);
 		return ServerResponse.successWithData("修改成功");
 	}
-	
+
 	@Override
 	public ServerResponse carOwnerDetails(Customer customer) {
 		CarCargoOwnner carOwner = this.assertCarOwnerExist(customer.getCarOwner().getId());
@@ -651,7 +662,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		// 退出主账号、子账号登录态，禁用子账号 TODO
 		return ServerResponse.success();
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse updateCarOwnerIsActive(CommonDto dto) {
@@ -667,7 +678,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		return ServerResponse.successWithData(customer.getIsActive() ? false : true);
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse adminEnableCargoOwner(CommonDto dto, User user) {
@@ -685,7 +696,7 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		// 退出主账号、子账号登录态，禁用子账号 TODO
 		return ServerResponse.success();
 	}
-	
+
 	@Transactional
 	@Override
 	public ServerResponse updateCargoOwnerIsActive(CommonDto dto) {
@@ -713,11 +724,11 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		CarCargoOwnner carCargoOwner = list.get(0);
 		String type = carCargoOwner.getType();
-		
+
 		String approveContent = carCargoOwner.getApproveContent();
 		CarCargoOwnerNeedApproveDto temp = JSON.parseObject(approveContent, CarCargoOwnerNeedApproveDto.class);
 		carCargoOwner.setApproveContentCN(temp);
-		
+
 		if (type.equalsIgnoreCase(CarCargoOwnerConstants.TYPE_CARGO_OWNER)) {
 			customer.setCargoOwner(carCargoOwner);
 		} else {
@@ -725,5 +736,5 @@ public class CarCargoOwnerServiceImpl implements CarCargoOwnerService {
 		}
 		return ServerResponse.successWithData(customer);
 	}
-	
+
 }

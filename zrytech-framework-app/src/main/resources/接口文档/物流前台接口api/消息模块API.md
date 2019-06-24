@@ -17,14 +17,14 @@
   "openid": "string",
   "page":{"pageNum":1, "pageSize":10},
   "params": 
-{
-       "msg_type":"",//(必传)(string) 消息类型;system_message(系统消息);bidding_message(竞价消息);waybill_message(运单消息);
-       "sender_id": "张三" //(选传)(int) 发送人Id
-       "sender_type":"",//(选传)(string) 发送人类型
-       "content":"",//(选传)(string) 发送内容
-       "reveicer_id":23,//(选传)(int) 接受人Id
-       "reveicer_type":"" //(选传)(string) 接受人类型
-  },
+    {
+           "msg_type":"",//(选传)(string) 消息类型;approving_message(审核消息);bidding_message(竞价消息);waybill_message(运单消息);
+           "sender_id": "张三" //(选传)(int) 发送人Id
+           "sender_type":"",//(选传)(string) 发送人类型
+           "content":"",//(选传)(string) 发送内容
+           "reveicer_id":23,//(选传)(int) 接受人Id
+           "reveicer_type":"" //(选传)(string) 接受人类型
+      },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
 ```
@@ -34,44 +34,44 @@
 
 ``` json
 {
-"code":1,
-"msg":"success",
-"data":
-{
-"pageNum":1,
-"pageSize":10,
-"size":2,
-"startRow":1,
-"endRow":2,
-"total":2,
-"pages":1,
-"list":
+    "code":1,
+    "msg":"success",
+    "data":
+    {
+    "pageNum":1,
+    "pageSize":10,
+    "size":2,
+    "startRow":1,
+    "endRow":2,
+    "total":2,
+    "pages":1,
+    "list":
 [
 {
-                            "id": 8,//消息Id
-                            "msgType": "",//消息类型
-                            "senderName":"",//发送人名称
-                            "senderType": "",//发送人类型
-                            "senderDate": "张三",//发送日期
-                            "content": 123,//发送内容
-                            "reveicerName": "",//接受人名称
-                            "reveicerType": ,//接受人类型
-                            "markRead":true,//是否已读;true:已读;false:未读
-                            "readDate":""//读取日期
+            "id": 8,//消息Id
+            "msgType": "",//消息类型
+            "senderName":"",//发送人名称
+            "senderType": "",//发送人类型
+            "senderDate": "张三",//发送日期
+            "content": 123,//发送内容
+            "reveicerName": "",//接受人名称
+            "reveicerType": ,//接受人类型
+            "markRead":true,//是否已读;true:已读;false:未读
+            "readDate":""//读取日期
 }
 ],
-"prePage":0,
-"nextPage":0,
-"isFirstPage":true,
-"isLastPage":true,
-"hasPreviousPage":false,
-"hasNextPage":false,
-"navigatePages":8,
-"navigatepageNums":[1],
-"navigateFirstPage":1,
-"navigateLastPage":1,
-"firstPage":1,
-"lastPage":1
+        "prePage":0,
+        "nextPage":0,
+        "isFirstPage":true,
+        "isLastPage":true,
+        "hasPreviousPage":false,
+        "hasNextPage":false,
+        "navigatePages":8,
+        "navigatepageNums":[1],
+        "navigateFirstPage":1,
+        "navigateLastPage":1,
+        "firstPage":1,
+        "lastPage":1
 }
 }
 ```
@@ -91,14 +91,14 @@
 **请求参数**
 
 ``` json
-{
-  "openid": "string",
-  "params": 
-{
-                               "content": 123,//发送内容
-  },
-   "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
-}
+    {
+      "openid": "string",
+      "params": 
+    {
+                                   "content": 123,//发送内容
+      },
+       "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
+    }
 ```
 
 
@@ -144,16 +144,16 @@
 "code":1,
 "msg":"success",
 "data":{
-                              "id": 2,//消息Id
-                              "msgType": "",//消息类型
-                              "senderName":"",//发送人名称
-                              "senderType": "",//发送人类型
-                              "senderDate": "张三",//发送日期
-                              "content": 123,//发送内容
-                              "reveicerName": "",//接受人名称
-                              "reveicerType": ,//接受人类型
-                              "markRead":true,//是否已读;true:已读;false:未读
-                              "readDate":""//读取日期
+          "id": 2,//消息Id
+          "msgType": "",//消息类型
+          "senderName":"",//发送人名称
+          "senderType": "",//发送人类型
+          "senderDate": "张三",//发送日期
+          "content": 123,//发送内容
+          "reveicerName": "",//接受人名称
+          "reveicerType": ,//接受人类型
+          "markRead":true,//是否已读;true:已读;false:未读
+          "readDate":""//读取日期
 }
 }
 ```
