@@ -164,7 +164,7 @@
       "openid": "string",
       "params": 
     {
-                                   "content": 123,//发送内容
+       "content": 123,//发送内容
       },
        "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
     }

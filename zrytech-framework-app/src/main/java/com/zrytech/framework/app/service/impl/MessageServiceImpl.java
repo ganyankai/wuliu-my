@@ -5,12 +5,15 @@ import com.zrytech.framework.app.dao.MessageDao;
 import com.zrytech.framework.app.dto.MessageDto;
 import com.zrytech.framework.app.entity.Message;
 import com.zrytech.framework.app.entity.MessageCount;
+import com.zrytech.framework.app.entity.SysMessage;
 import com.zrytech.framework.app.mapper.MessageMapper;
+import com.zrytech.framework.app.repository.SysMessageRepository;
 import com.zrytech.framework.app.service.MessageService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 import com.zrytech.framework.base.util.BeanUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+@Slf4j
 public class MessageServiceImpl implements MessageService {
 
     @Autowired
@@ -29,7 +32,25 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageMapper messageMapper;
 
+    @Autowired
+    private SysMessageRepository sysMessageRepository;
+
+    /**
+     *  创建消息
+      * @param propArr
+     */
     @Override
+    public void createMessage(Object[] propArr) {
+        try{
+            SysMessage sysMessage = new SysMessage(propArr);
+            sysMessageRepository.saveAndFlush(sysMessage);
+        }catch (Exception e){
+            log.warn(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
     public ServerResponse markRead(Integer id, List<Integer> list) {
         messageMapper.markRead(id,listToStr(list));
         return ServerResponse.success();
@@ -87,6 +108,7 @@ public class MessageServiceImpl implements MessageService {
      * @return:ServerResponse
      */
     @Override
+    @Transactional
     public ServerResponse addMessage(MessageDto messageDto) {
         Message message = BeanUtil.copy(messageDto, Message.class);
         message.setSenderDate(new Date());
@@ -104,6 +126,7 @@ public class MessageServiceImpl implements MessageService {
      * @return:ServerResponse
      */
     @Override
+    @Transactional
     public ServerResponse delete(MessageDto messageDto) {
         int num = messageDao.delete(messageDto.getId());
         CheckFieldUtils.assertSuccess(num);

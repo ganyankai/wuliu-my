@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zrytech.framework.app.constants.CustomerConstants;
+import com.zrytech.framework.app.constants.SysMessageConstants;
+import com.zrytech.framework.app.entity.*;
+import com.zrytech.framework.app.service.MessageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +25,6 @@ import com.zrytech.framework.app.dto.CargoMatterPageDto;
 import com.zrytech.framework.app.dto.CommonDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterAddDto;
 import com.zrytech.framework.app.dto.cargomatter.CargoMatterUpdateDto;
-import com.zrytech.framework.app.entity.CarCargoOwnner;
-import com.zrytech.framework.app.entity.Cargo;
-import com.zrytech.framework.app.entity.CargoMatter;
-import com.zrytech.framework.app.entity.Customer;
-import com.zrytech.framework.app.entity.Waybill;
 import com.zrytech.framework.app.mapper.CargoMapper;
 import com.zrytech.framework.app.mapper.CargoMatterMapper;
 import com.zrytech.framework.app.service.CargoMatterService;
@@ -153,6 +152,9 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		return ServerResponse.successWithData("报价单修改成功");
 	}
 
+	@Autowired
+	private MessageService messageService;
+
 	@Transactional
 	@Override
 	public ServerResponse add(CargoMatterAddDto dto) {
@@ -189,6 +191,13 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 		cargoMatter.setCreateDate(new Date());
 		cargoMatter.setUnit(cargo.getPriceUnit());
 		cargoMatterRepository.save(cargoMatter);
+
+		//报价成功存入消息表--sys_message
+		String content = "您发布的货源"+cargo.getNameCN()+"收到"+carOwner.getName()
+				+"（"+carOwner.getTel() +"）报价,金额为"+cargoMatter.getMatterPrice()+",请前往查看";
+		Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_BIDDING,1, SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+				content,cargo.getCreateBy(), CustomerConstants.TYPE_CARGO_OWNER,0,null};
+		messageService.createMessage(propArr);
 
 		return ServerResponse.successWithData("报价成功");
 	}
@@ -255,6 +264,18 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 
 		// 修改货源的状态
 		cargoMapper.updateStatusById(cargoId, CargoConstant.CARGO_SOURCE_STATUS_COMPLETED);
+
+		//抢标成功存入消息表--sys_message
+		//货主
+		String content = "您发布的货源"+cargo.getNameCN()+"已被"+customer.getCarOwner().getName()
+				+"（"+customer.getCarOwner().getTel() +"）抢标,运单已产生,等待车主安排车辆";
+		Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_BIDDING,1, SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+				content, cargo.getCreateBy(), CustomerConstants.TYPE_CARGO_OWNER,0,null};
+		messageService.createMessage(propArr);
+		//车主
+		content = "您对货源"+cargo.getNameCN()+"抢标成功,请前往安排车辆";
+		propArr = new Object[]{SysMessageConstants.MSG_TYPE_BIDDING,1, SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+				content, carOwnerId, CustomerConstants.TYPE_CAR_OWNER,0,null};
 
 		return ServerResponse.success();
 	}
@@ -374,6 +395,12 @@ public class CargoMatterServiceImpl implements CargoMatterService {
 
 		// 修改货源的状态
 		cargoMapper.updateStatusById(cargoId, CargoConstant.CARGO_SOURCE_STATUS_COMPLETED);
+
+		//中标存入消息表--sys_message
+		//车主
+		String content = "您对货源"+cargo.getNameCN()+"的报价已中标,请前往安排车辆";
+		Object[] propArr = new Object[]{SysMessageConstants.MSG_TYPE_BIDDING,1, SysMessageConstants.SEND_TYPE_SYSTEM,new Date(),
+				content, cargoMatter.getCarOwnnerId(), CustomerConstants.TYPE_CAR_OWNER,0,null};
 
 		return ServerResponse.success();
 	}

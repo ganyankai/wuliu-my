@@ -7,6 +7,8 @@ import com.zrytech.framework.base.entity.ServerResponse;
 import java.util.List;
 
 public interface MessageService {
+    public void createMessage(Object[] propArr);
+
     /**
      * 一键已读
      * @param id
