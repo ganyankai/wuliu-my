@@ -86,4 +86,6 @@ public class SysMessage extends BaseEntity {
 
     public SysMessage() {
     }
+
+
 }

@@ -147,17 +147,17 @@ public class CargoConstant {
     
     
 
-    /**
-     * message_type：消息类型
-     * */
-    public static final String MESSAGE_TYPE="message_type";
-
-    /**消息类型 - 系统消息*/
-    public static final String SYSTEM_MESSAGE = "system_message";
-    /**消息类型 - 竞价消息*/
-    public static final String BIDDING_MESSAGE = "bidding_message";
-    /**消息类型 - 运单消息*/
-    public static final String WAYBILL_MESSAGE = "waybill_message";
+//    /**
+//     * message_type：消息类型
+//     * */
+//    public static final String MESSAGE_TYPE="message_type";
+//
+//    /**消息类型 - 系统消息*/
+//    public static final String SYSTEM_MESSAGE = "system_message";
+//    /**消息类型 - 竞价消息*/
+//    public static final String BIDDING_MESSAGE = "bidding_message";
+//    /**消息类型 - 运单消息*/
+//    public static final String WAYBILL_MESSAGE = "waybill_message";
 
     /**
      *offer_status:报价状态

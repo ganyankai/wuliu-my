@@ -2,6 +2,7 @@ package com.zrytech.framework.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zrytech.framework.app.constants.CargoConstant;
+import com.zrytech.framework.app.constants.SysMessageConstants;
 import com.zrytech.framework.app.utils.DictionaryUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -62,14 +63,14 @@ public class Message implements Serializable {
 
     public String getMsgTypeCN() {
         if (!StringUtils.isEmpty(msgType)) {
-            return DictionaryUtil.getValue(CargoConstant.MESSAGE_TYPE, msgType);
+            return DictionaryUtil.getValue(SysMessageConstants.MSG_TYPE, msgType);
         }
         return msgTypeCN;
     }
 
     public String getSenderTypeCN() {
         if (!StringUtils.isEmpty(senderType)) {
-            return DictionaryUtil.getValue(CargoConstant.CUSTOMER_TYPE, senderType);
+            return DictionaryUtil.getValue(SysMessageConstants.SEND_TYPE, senderType);
         }
         return senderTypeCN;
     }
