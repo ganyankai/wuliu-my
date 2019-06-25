@@ -7,20 +7,24 @@
     <result column="car_load" property="carLoad" jdbcType="INTEGER" />
     <result column="car_unit" property="carUnit" jdbcType="VARCHAR" />
     <result column="car_type" property="carType" jdbcType="VARCHAR" />
+
     <result column="driver_id" property="driverId" jdbcType="INTEGER" />
     <result column="supercargo_id" property="supercargoId" jdbcType="INTEGER" />
     <result column="current_longitude" property="currentLongitude" jdbcType="DECIMAL" />
     <result column="current_latitude" property="currentLatitude" jdbcType="DECIMAL" />
     <result column="current_address" property="currentAddress" jdbcType="VARCHAR" />
+
     <result column="mul_store" property="mulStore" jdbcType="BIT" />
     <result column="store_qty" property="storeQty" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="is_delete" property="isDelete" jdbcType="BIT" />
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
+
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="car_owner_id" property="carOwnerId" jdbcType="INTEGER" />
     <result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
     <result column="approve_content" property="approveContent" jdbcType="VARCHAR" />
+    <result column="car_length" property="carLength" jdbcType="VARCHAR" />
   </resultMap>
   <update id="updateByPrimaryKeySelective" parameterType="com.zrytech.framework.app.entity.Car" >
     update car
@@ -69,6 +73,9 @@
       </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carLength != null" >
+        car_length = #{carLength,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

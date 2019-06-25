@@ -2,6 +2,7 @@ package com.zrytech.framework.app.front.controller;
 
 import javax.validation.Valid;
 
+import com.zrytech.framework.base.entity.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +45,6 @@ public class CarAPIController {
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
 	@NeedCertified
@@ -63,7 +63,6 @@ public class CarAPIController {
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
 	@NeedCertified
@@ -83,7 +82,6 @@ public class CarAPIController {
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
 	@NeedCertified
@@ -103,7 +101,7 @@ public class CarAPIController {
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer	车主或者车主子账号
+	 * @param
 	 * @return
 	 */
 	@NeedCertified
@@ -122,7 +120,6 @@ public class CarAPIController {
 	 * 
 	 * @param requestParams
 	 * @param result
-	 * @param customer	车主或者车主子账号
 	 * @return
 	 */
 	@CarOwnerRole
@@ -147,8 +144,12 @@ public class CarAPIController {
 	@RequestMapping("/myCarPage")
 	public ServerResponse myCarPage(@RequestBody @Valid RequestParams<CarPageDto> requestParams, BindingResult result) {
 		Customer customer = RequestUtil.getCurrentUser(Customer.class);
-		Integer pageNum = requestParams.getPage().getPageNum();
-		Integer pageSize = requestParams.getPage().getPageSize();
+		Page page = requestParams.getPage();
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		Integer pageNum = page.getPageNum();
+		Integer pageSize = page.getPageSize();
 		if (pageNum == null)
 			pageNum = 1;
 		if (pageSize == null)

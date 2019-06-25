@@ -108,7 +108,12 @@ public class Car extends BaseEntity {
 	/**车主Id*/
 	@Column(name = "`car_owner_id`")
 	private Integer carOwnerId;
-	
+
+	/**车长*/
+	@Column(name = "`car_length`")
+	private String carLength;
+
+
 	/**车主企业名称*/
 	@Transient
 	private String carOwnerName;
@@ -172,5 +177,11 @@ public class Car extends BaseEntity {
     
     @Transient
     private CarCheckUpdateDto approveContentCN;
-    
+
+	public String getCarLengthCN() {
+		if (StringUtils.isNotBlank(carLength)) {
+			return DictionaryUtil.getValue(CarConstants.CAR_LENGTH, carLength);
+		}
+		return carLength+" meter";
+	}
 }

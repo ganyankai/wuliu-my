@@ -52,4 +52,8 @@ public class CarAddDto {
 	
 	private Integer supercargoId;
 
+	@NotBlank(message = "车辆长度不能为空")
+	@Pattern(regexp = CarConstants.REG_CAR_LENGTH, message = CarConstants.REG_CAR_LENGTH_ERR_MSG)
+	private String carLength;
+	
 }

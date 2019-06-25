@@ -293,6 +293,7 @@ public class CarServiceImpl implements CarService {
 		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		CarCheckUpdateDto temp = new CarCheckUpdateDto();
 		BeanUtils.copyProperties(dto, temp);
+
 		car.setApproveContent(JSON.toJSONString(temp));
 		car.setId(null);
 		car.setCreateDate(new Date());
@@ -347,6 +348,7 @@ public class CarServiceImpl implements CarService {
 		car.setCarType(dto.getCarType());
 		car.setMulStore(dto.getMulStore());
 		car.setStoreQty(dto.getStoreQty());
+		car.setCarLength(dto.getCarLength());
 
 		car.setApproveStatus(ApproveConstants.STATUS_APPROVAL_PENDING);
 		car.setApproveContent(JSON.toJSONString(temp));
