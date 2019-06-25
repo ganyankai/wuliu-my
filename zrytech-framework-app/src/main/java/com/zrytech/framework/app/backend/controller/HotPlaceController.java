@@ -37,7 +37,7 @@ public class HotPlaceController {
      */
     @Valid
     @PostMapping("/page")
-    public ServerResponse hotPlacePage(@RequestBody RequestParams<HotPlacePageDto> requestParams, BindingResult result) {
+    public ServerResponse hotPlacePage(@RequestBody @Valid RequestParams<HotPlacePageDto> requestParams, BindingResult result) {
         if (requestParams.getParams() == null) {
             throw new BusinessException(new CommonResult(ResultEnum.OBJECT_ERROR));
         }

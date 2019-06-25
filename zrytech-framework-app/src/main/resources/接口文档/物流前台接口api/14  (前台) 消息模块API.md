@@ -1,12 +1,81 @@
 
 **本文档接口提交方式统一为：POST**
+### 消息中心
+
+## 一键已读 ##
+
+**URL**
+>/message/markRead
+
+**请求参数**
+    
+    {
+    	"params": {
+             "idsList":[15,16,17]       //(必输)(list)消息id集合,至少输入一个
+    	},
+    	"token": ""
+    }
+
+**测试入参**
+
+    {
+	 "params": 
+	  {
+		    "idsList":[15,16,17]
+	  },
+	  "token": ""
+    }
+
+**响应示例**
+
+	{
+        "code": 1,
+        "msg": "success",
+        "data": null
+    }
+	
 
 
-### 1.消息中心
 
-*** 描述:消息列表展示
+## 未读消息数量查询 ##
+
+**URL**
+>/message/accessMessageCount
+
+**请求参数**
+    
+    {
+    	"params": {
+    	},
+    	"token": ""
+    }
+
+**测试入参**
+
+    {
+	 "params": 
+	  {
+			
+	  },
+	  "token": ""
+    }
+
+**响应示例**
+
+	{
+        "code": 1,
+        "msg": "success",
+        "data": {
+            "allNotRead": 1,            //所有未读
+            "approvingNotRead": 0,      //系统消息未读
+            "biddingNotRead": 1,        //竞价消息未读
+            "waybillNotRead": 0         //运单消息未读
+        }
+    }
+	
 
 
+## 消息列表展示 ##
 **URL**
 >/message/selectTypePage
 
@@ -18,7 +87,7 @@
   "page":{"pageNum":1, "pageSize":10},
   "params": 
     {
-           "msg_type":"",//(选传)(string) 消息类型;approving_message(审核消息);bidding_message(竞价消息);waybill_message(运单消息);
+           "msg_type":"",//(选传)(string) 消息类型;approving_message(审核消息(系统消息));bidding_message(竞价消息);waybill_message(运单消息);
            "sender_id": "张三" //(选传)(int) 发送人Id
            "sender_type":"",//(选传)(string) 发送人类型
            "content":"",//(选传)(string) 发送内容
@@ -78,7 +147,7 @@
 
 
 
-### 1.消息添加
+### 消息添加
 
 *** 描述:添加消息(推送)
 
@@ -114,7 +183,7 @@
 
 
 
-### 1.消息详情
+### 消息详情
 
 *** 描述:查看消息详情.
 
@@ -160,7 +229,7 @@
 
 
 
-### 1.消息删除
+### 消息删除
 
 *** 描述:删除消息.
 
@@ -191,4 +260,5 @@
 "msg":"success"
 }
 ```
+
 

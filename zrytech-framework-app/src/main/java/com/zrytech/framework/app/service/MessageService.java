@@ -4,7 +4,24 @@ import com.zrytech.framework.app.dto.MessageDto;
 import com.zrytech.framework.base.entity.Page;
 import com.zrytech.framework.base.entity.ServerResponse;
 
+import java.util.List;
+
 public interface MessageService {
+    /**
+     * 一键已读
+     * @param id
+     * @param list
+     * @return
+     */
+    ServerResponse markRead(Integer id,List<Integer> list);
+
+    /**
+     * 统计不同分类下未读消息
+     * @param id
+     * @return
+     */
+    ServerResponse accessMessageCount(Integer id);
+
     /**
      * Desintion:消息分页列表信息
      *

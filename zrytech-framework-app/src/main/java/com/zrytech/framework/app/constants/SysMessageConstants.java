@@ -8,7 +8,7 @@ public class SysMessageConstants {
     /**消息类型*/
     public static final String MSG_TYPE = "msg_type";
 
-    //    审核消息
+    //    审核消息(系统消息)
     public static final String MSG_TYPE_APPROVING = "approving_message";
     //    竞价消息
     public static final String MSG_TYPE_BIDDING = "bidding_message";

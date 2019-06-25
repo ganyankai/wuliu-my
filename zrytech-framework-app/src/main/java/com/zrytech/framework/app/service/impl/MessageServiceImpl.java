@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.zrytech.framework.app.dao.MessageDao;
 import com.zrytech.framework.app.dto.MessageDto;
 import com.zrytech.framework.app.entity.Message;
+import com.zrytech.framework.app.entity.MessageCount;
+import com.zrytech.framework.app.mapper.MessageMapper;
 import com.zrytech.framework.app.service.MessageService;
 import com.zrytech.framework.app.utils.CheckFieldUtils;
 import com.zrytech.framework.base.entity.Page;
@@ -23,6 +25,28 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageDao messageDao;
+
+    @Autowired
+    private MessageMapper messageMapper;
+
+    @Override
+    public ServerResponse markRead(Integer id, List<Integer> list) {
+        messageMapper.markRead(id,listToStr(list));
+        return ServerResponse.success();
+    }
+
+    @Override
+    public ServerResponse accessMessageCount(Integer id) {
+        MessageCount messageCount = new MessageCount();
+
+        //统计每个分类下的未读消息
+        messageCount.setAllNotRead(messageMapper.accessAllNotRead(id));
+        messageCount.setApprovingNotRead(messageMapper.accessApprovingNotRead(id));
+        messageCount.setBiddingNotRead(messageMapper.accessBiddingNotRead(id));
+        messageCount.setWaybillNotRead(messageMapper.accessWaybillNotRead(id));
+
+        return ServerResponse.successWithData(messageCount);
+    }
 
     /**
      * Desintion:消息分页列表信息
@@ -121,5 +145,18 @@ public class MessageServiceImpl implements MessageService {
      * */
     public int updateMsg(Integer messageId){
         return  messageDao.updateMsg(messageId,true);
+    }
+
+    private String listToStr(List<Integer> list) {
+        String idsStr = "(";
+        for (int i = 0; i < list.size() ; i++) {
+            if (i==list.size()-1){
+                idsStr = idsStr + list.get(i);
+            }else{
+                idsStr = idsStr + list.get(i) + ",";
+            }
+        }
+        idsStr = idsStr +")";
+        return idsStr;
     }
 }
