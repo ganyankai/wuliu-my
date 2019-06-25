@@ -87,12 +87,12 @@
   "page":{"pageNum":1, "pageSize":10},
   "params": 
     {
-           "msg_type":"",//(选传)(string) 消息类型;approving_message(系统消息);bidding_message(竞价消息);waybill_message(运单消息);
-           "sender_id": "张三" //(选传)(int) 发送人Id
-           "sender_type":"",//(选传)(string) 发送人类型
+           "msgType":"",//(选传)(string) 消息类型;approving_message(系统消息);bidding_message(竞价消息);waybill_message(运单消息);
+           "senderId": "张三" //(选传)(int) 发送人Id
+           "senderType":"",//(选传)(string) 发送人类型
            "content":"",//(选传)(string) 发送内容
-           "reveicer_id":23,//(选传)(int) 接受人Id
-           "reveicer_type":"" //(选传)(string) 接受人类型
+           "reveicerId":23,//(选传)(int) 接受人Id
+           "reveicerType":"" //(选传)(string) 接受人类型
       },
    "device":2 //设备类型1 manage，2PC，3 andriod，4 ios，5 h5
 }
