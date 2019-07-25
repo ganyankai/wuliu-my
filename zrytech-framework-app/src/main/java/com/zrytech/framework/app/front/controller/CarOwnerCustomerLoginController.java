@@ -26,8 +26,8 @@ public class CarOwnerCustomerLoginController extends AbstractLogin {
 	private CarCargoOwnnerRepository carCargoOwnnerRepository;
 
 	@Override
-	protected User findByUserAccount(String userAccount) {
-		Customer customer = customerService.assertCustomerExist(userAccount);
+	protected User findByUserAccount(DefaultUser defaultUser) {
+		Customer customer = customerService.assertCustomerExist(defaultUser.getUserAccount());
 		Integer customerId = customer.getId();
 		List<CarCargoOwnner> list = carCargoOwnnerRepository.findByCustomerIdAndType(customerId,
 				CarCargoOwnerConstants.TYPE_CAR_OWNER);
@@ -38,5 +38,6 @@ public class CarOwnerCustomerLoginController extends AbstractLogin {
 		customer.setCarOwner(carOwner);
 		return customer;
 	}
+
 
 }
