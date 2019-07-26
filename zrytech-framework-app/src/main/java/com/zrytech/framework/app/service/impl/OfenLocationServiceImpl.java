@@ -94,7 +94,7 @@ public class OfenLocationServiceImpl implements OfenLocationService {
      * @param:OfenLocationDto常用地址dto
      * @return:ServerResponse
      */
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional
     public ServerResponse update(OfenLocationUpdateDto ofenLocationUpdateDto) {
         OfenLocation ofenLocation=BeanUtil.copy(ofenLocationUpdateDto,OfenLocation.class);
         int num=ofenLocationDao.update(ofenLocation);
