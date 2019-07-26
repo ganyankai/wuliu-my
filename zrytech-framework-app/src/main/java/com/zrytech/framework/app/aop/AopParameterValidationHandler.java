@@ -21,6 +21,7 @@ import org.springframework.validation.ObjectError;
  */
 @Aspect
 @Component
+
 public class AopParameterValidationHandler {
 	
 	@Pointcut("@annotation(javax.validation.Valid)")
